@@ -1,0 +1,27 @@
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\DegreeProgram>
+ */
+class DegreeProgramFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->unique()->jobTitle,
+            'abbreviation' => $this->faker->unique()->word,
+            'major' => null,
+            'department_id' => $this->faker->numberBetween($min = 1, $max = 35),
+            'is_active' => true,
+        ];
+    }
+}

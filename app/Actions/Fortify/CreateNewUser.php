@@ -29,9 +29,6 @@ class CreateNewUser implements CreatesNewUsers
             $user = User::create([
                 'email' => $input['email'],
                 'password' => Hash::make($input['password']),
-            ]);
-            UserAccount::create([
-                'user_id'=> $user->id,
                 'first_name' => $input['first_name'],
                 'middle_name' => $input['middle_name'],
                 'last_name' => $input['last_name'],
@@ -43,7 +40,7 @@ class CreateNewUser implements CreatesNewUsers
                 'specialization' => $input['specialization'],
                 'curr_position' => $input['position'],
                 'license_no' => $input['license'],
-                'telephone' => $input['telephone'],
+                'landline' => $input['landline'],
                 'mobile' => $input['mobile'],
             ]);
             DB::commit();
@@ -53,7 +50,7 @@ class CreateNewUser implements CreatesNewUsers
         }
         return $user;
     }
-    
+
     /**
      * Get the defined validation rules.
      *

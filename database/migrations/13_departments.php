@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sections', function (Blueprint $table) {
+        Schema::create('departments', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique('sections_name_unique');
-            $table->string('room_no');
+            $table->string('name')->unique('departments_name_unique');
+            $table->string('abbr')->unique('departments_abbr_unique');
+            $table->foreignId('college_id')->constrained('colleges')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sections');
+        Schema::dropIfExists('departments');
     }
 };

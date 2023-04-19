@@ -18,8 +18,9 @@ class DegreeProgramFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->jobTitle,
-            'abbreviation' => $this->faker->unique()->word,
+            'abbr' => $this->faker->unique()->word,
             'major' => null,
+            'group' => $this->faker->randomElement(['bach', 'master', 'doctor']),
             'department_id' => $this->faker->numberBetween($min = 1, $max = 35),
             'is_active' => true,
         ];

@@ -12,7 +12,7 @@ const form = useForm({
     birthdate: '2000-11-22',
     age: '23',
     sex: 'MALE',
-    blood_type: 'O-',
+    //blood_type: 'O-',
     civil_status: 'SINGLE',
     email: '19-1-00255@vsu.edu.ph',
     phone: '09123456789',

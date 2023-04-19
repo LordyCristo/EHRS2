@@ -4,29 +4,40 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Client extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
+    protected $table = 'clients';
     protected $fillable = [
-        'id_number',
         'first_name',
         'middle_name',
         'last_name',
         'suffix',
         'birthdate',
         'age',
-        'sex',
-        'blood_type',
         'civil_status',
-        'email',
         'phone',
+        'email_address',
         'home_address',
         'curr_address',
-        'degree_program_id',
-        'year_level',
-        'department_id',
+        'id_number',
+        'program_id',
+        'year_lvl',
         'client_type_id',
     ];
+
+
+    function fecalysisRecord()
+    {
+        return $this->hasMany(FecalysisRecord::class);
+    }
+
+    function degreeProgram()
+    {
+        return $this->belongsTo(DegreeProgram::class);
+    }
 }

@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('account_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique('account_types_name_unique');
+        Schema::create('fees', function (Blueprint $table) {
+            $table->foreignId('id')->constrained('services')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('client_type')->constrained('client_types')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->decimal('amount', 10, 3);
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('account_types');
+        Schema::dropIfExists('fees');
     }
 };

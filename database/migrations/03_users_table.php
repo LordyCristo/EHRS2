@@ -19,6 +19,19 @@ return new class extends Migration
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
             $table->string('profile_photo_path', 2048)->nullable();
+            $table->string('first_name');
+            $table->string('middle_name')->nullable();
+            $table->string('last_name');
+            $table->string('suffix')->nullable();
+            $table->date('birthdate');
+            $table->integer('age');
+            $table->enum('sex', ['male','female']);
+            $table->foreignId('role')->constrained('account_roles')->cascadeOnUpdate()->restrictOnDelete();
+            $table->string('specialization')->nullable();
+            $table->string('curr_position');
+            $table->string('license_no')->unique('user_license_no_unique');
+            $table->string('landline')->nullable()->unique('user_landline_unique');
+            $table->string('mobile')->nullable()->unique('user_mobile_unique');
             $table->timestamps();
         });
     }

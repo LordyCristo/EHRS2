@@ -1,5 +1,6 @@
 <script setup>
 import InputField from '@/Components/Generic/Forms/InputField.vue';
+import { onMounted } from 'vue';
 defineProps({
     modelValue: [String, Number],
     errorMsg: String,
@@ -9,17 +10,16 @@ defineProps({
     options: [Array, Function],
     class: String,
 });
-
 </script>
 <style>
 .selectElement{
-    @apply sm:p-2 p-1 border w-full overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300;
+    @apply sm:p-2 p-1 border w-full overflow-hidden overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300;
 }
 </style>
 <template>
     <InputField :name="name" :errorMsg="errorMsg" :label="label">
-        <select 
-            :name="name" 
+        <select
+            :name="name"
             :id="id"
             class="selectElement"
             :class="errorMsg?'border-red-300':'border-gray-300'">

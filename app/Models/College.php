@@ -9,9 +9,11 @@ class College extends Model
 {
     use HasFactory;
 
+    protected $table = 'colleges';
+
     protected $fillable = [
         'name',
-        'abbreviation',
+        'abbr',
         'is_active',
     ];
 
@@ -19,4 +21,11 @@ class College extends Model
     {
         return $this->hasMany(Department::class);
     }
+
+    public function degreePrograms()
+    {
+        return $this->hasMany(DegreeProgram::class);
+    }
+
+
 }

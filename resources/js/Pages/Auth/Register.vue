@@ -22,7 +22,7 @@ import Select from '@/Components/Select.vue';
 //     age: '23',
 //     sex: 'MALE',
 //     mobile: null,
-//     telephone: null,
+//     landline: null,
 //     role: '2',
 //     specialization: null,
 //     license:null,
@@ -64,7 +64,7 @@ export default {
                 age: null,
                 sex: null,
                 mobile: null,
-                telephone: null,
+                landline: null,
                 role: null,
                 specialization: null,
                 license: null,
@@ -72,7 +72,7 @@ export default {
                 email: null,
                 password: null,
                 password_confirmation: null,
-                terms: false,
+                terms: true,
             })
         };
     },
@@ -98,6 +98,7 @@ export default {
             console.log(this.form.sex);
         },
         submit() {
+            console.log(this.form);
             this.form.post(route('register'), {
                 onFinish: () => {
                     console.log(this.form.errors);
@@ -217,10 +218,10 @@ export default {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="telephone" value="Telephone" />
-                    <TextInput id="telephone" name="telephone" v-model="form.telephone" type="tel" class="mt-1 block w-full"
-                        autocomplete="telephone" />
-                    <InputError class="mt-2" :message="form.errors.telephone" />
+                    <InputLabel for="landline" value="Landline" />
+                    <TextInput id="landline" name="landline" v-model="form.landline" type="tel" class="mt-1 block w-full"
+                        autocomplete="landline" />
+                    <InputError class="mt-2" :message="form.errors.landline" />
                 </div>
                 <div class="flex items-center justify-between mt-4">
                     <SecondaryButton @click="prevSlide"

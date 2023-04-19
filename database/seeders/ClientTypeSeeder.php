@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\ClientType;
 
 class ClientTypeSeeder extends Seeder
 {
@@ -13,9 +12,17 @@ class ClientTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        ClientType::factory()->create(['name' => 'Student']);
-        ClientType::factory()->create(['name' => 'Faculty']);
-        ClientType::factory()->create(['name' => 'Dependent']);
-        ClientType::factory()->create(['name' => 'Outsider']);
+        $types = [
+            'Student',
+            'Outsider',
+            'Faculty',
+            'Dependent'
+        ];
+
+        foreach ($types as $type) {
+            \App\Models\ClientType::create([
+                'name' => $type,
+            ]);
+        }
     }
 }

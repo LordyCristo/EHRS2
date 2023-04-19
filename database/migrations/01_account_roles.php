@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
+        Schema::create('account_roles', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique('services_name_unique');
-            $table->longText('description');
-            $table->string('schedule');
-            $table->foreignId('section_id')->constrained('sections')->onDelete('cascade')->onUpdate('cascade');
-            $table->boolean('is_active')->default(true);
+            $table->string('name')->unique('acct_role_label_unique');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('account_roles');
     }
 };

@@ -8,7 +8,7 @@ import InputText from '@/Components/Generic/Forms/InputText.vue';
 import SelectElement from '@/Components/Generic/Forms/SelectElement.vue';
 import Datepicker from '@/Components/Generic/Forms/Datepicker.vue';
 import RadioButton from '@/Components/Generic/Forms/RadioButton.vue';
-
+import {Sex, BloodType, CivilStatus, YearLevel} from '@/Legends/legends';
 defineProps({
     form: {
         type: Object,
@@ -28,7 +28,7 @@ defineProps({
             phone: null,
             home_address: null,
             curr_address: null,
-            degree_program_id: null,
+            program_id: null,
             year_level: null,
             department_id: null,
             client_type_id: null,
@@ -36,48 +36,36 @@ defineProps({
     },
 });
 
+const form = useForm({
+    first_name: 'Cristo Rey',
+    middle_name: 'Ceniza',
+    last_name: 'Magdadaro',
+    suffix: null,
+    birthdate: '2000-11-22',
+    age: '23',
+    sex: 'MALE',
+    civil_status: 'SINGLE',
+    phone: '09123456789',
+    email_address: '19-1-00255@vsu.edu.ph',
+    home_address: 'Ormoc City, Leyte',
+    curr_address: 'VSU, Baybay City, Leyte',
+    id_number: '19-1-00255',
+    program_id: 1,
+    year_level: '4th',
+    client_type_id: 1,
+});
 
-
-const sexes = [
-    { value: 'MALE', label: 'Male' },
-    { value: 'FEMALE', label: 'Female' },
-];
-
-const blood_types = [
-    { id: 'O+', name: 'O+' },
-    { id: 'O-', name: 'O-' },
-    { id: 'A+', name: 'A+' },
-    { id: 'A-', name: 'A-' },
-    { id: 'B+', name: 'B+' },
-    { id: 'B-', name: 'B-' },
-    { id: 'AB+', name: 'AB+' },
-    { id: 'AB-', name: 'AB-' },
-];
-
-const civil_statuses = [
-    { id: 'SINGLE', name: 'Single' },
-    { id: 'MARRIED', name: 'Married' },
-    { id: 'WIDOWED', name: 'Widowed' },
-    { id: 'SEPARATED', name: 'Separated' },
-    { id: 'DIVORCED', name: 'Divorced' },
-];
-
-const year_levels = [
-    { id: '1st', name: '1st' },
-    { id: '2nd', name: '2nd' },
-    { id: '3rd', name: '3rd' },
-    { id: '4th', name: '4th' },
-    { id: '5th', name: '5th' },
-    { id: '6th', name: '6th' },
-];
-
+const sexes = Sex;
+const blood_types = BloodType;
+const civil_statuses = CivilStatus;
+const year_levels = YearLevel;
 const degree_programs = ref(Array);
 const departments = ref(Array);
 const client_types = ref(Array);
 
 onMounted(async () => {
     try {
-        const response = await axios.get(route('api.universityDB'));
+        const response = await axios.get(route('api.flags'));
         const data = response.data;
         degree_programs.value = data.degree_programs;
         departments.value = data.departments;
@@ -87,14 +75,16 @@ onMounted(async () => {
     }
 });
 
+
 const submit = () => {
     try {
-        axios.post(route('api.patient.store'), form).then(response => {
-            const data = JSON.stringify(response.data);
-            form.cancel();
-        })
+        form.post(route('api.patient.store'), {
+            onError: (response) => console.log(response),
+            onSuccess: (response) => console.log(response),
+            onFinish: (response) => console.log(response),
+        });
     } catch (error) {
-        console.error(error);
+            console.error(error);
     }
 };
 </script>
@@ -112,10 +102,10 @@ const submit = () => {
         <form @submit.prevent="submit">
             <div class="grid grid-cols-1 max-w-4xl mx-auto sm:p-10 p-1 bg-gray-50 shadow-inner">
                 <div class="grid grid-cols-4">
-                    <InputText v-model="form.id_number" id="id_number" name="id_number" label="IDs number"
-                        :errorMsg="form.errors.id_number" autofocus></InputText>
                     <InputText v-model="form.infirmary_number" id="infirmary_number" name="infirmary_number"
                         label="Infirmary number" :errorMsg="form.errors.infirmary_number"></InputText>
+                    <InputText v-model="form.id_number" id="id_number" name="id_number" label="ID number"
+                        :errorMsg="form.errors.id_number" autofocus></InputText>
                     <SelectElement v-model="form.client_type_id" id="client_type_id" name="client_type_id"
                         label="Client Type" :options="client_types" :errorMsg="form.errors.client_type_id">
                     </SelectElement>
@@ -138,28 +128,28 @@ const submit = () => {
                     </InputText>
                     <RadioButton v-model="form.sex" id="sex" name="sex" label="Sex" :options="sexes"
                         :errorMsg="form.errors.sex"></RadioButton>
-                    <SelectElement v-model="form.blood_type" id="blood_type" name="blood_type" label="Blood Type"
-                        :options="blood_types" :errorMsg="form.errors.blood_type"></SelectElement>
-                </div>
-                <div class="grid grid-cols-4">
+                    <!-- <SelectElement v-model="form.blood_type" id="blood_type" name="blood_type" label="Blood Type"
+                        :options="blood_types" :errorMsg="form.errors.blood_type"></SelectElement> -->
                     <SelectElement v-model="form.civil_status" id="civil_status" name="civil_status" label="Civil Status"
                         :options="civil_statuses" :errorMsg="form.errors.civil_status"></SelectElement>
-                    <InputText v-model="form.email" id="email" name="email" label="Email" type="email"
-                        :errorMsg="form.errors.email"></InputText>
+                </div>
+                <div class="grid grid-cols-2">
+                    <InputText v-model="form.email_address" id="email_address" name="email_address" label="Email" type="email"
+                        :errorMsg="form.errors.email_address"></InputText>
                     <InputText v-model="form.phone" id="phone" name="phone" label="Phone" type="tel"
                         :errorMsg="form.errors.phone"></InputText>
                 </div>
-                <div class="grid grid-rows-2">
+                <div class="grid grid-cols-2">
                     <InputText v-model="form.home_address" id="home_address" name="home_address" label="Home Address"
                         class="w-full" type="text" :errorMsg="form.errors.home_address"></InputText>
                     <InputText v-model="form.curr_address" id="curr_address" name="curr_address" label="Current Address"
                         class="w-full" type="text" :errorMsg="form.errors.curr_address"></InputText>
                 </div>
-                <div class="grid grid-cols-3">
-                    <SelectElement v-model="form.department_id" id="department_id" name="department_id" label="Department"
-                        :options="departments" :errorMsg="form.errors.department_id"></SelectElement>
-                    <SelectElement v-model="form.degree_program_id" id="degree_program_id" name="degree_program_id"
-                        label="Degree Program" :options="degree_programs" :errorMsg="form.errors.degree_program_id">
+                <div class="grid grid-cols-2">
+                    <!-- <SelectElement v-model="form.department_id" id="department_id" name="department_id" label="Department"
+                        :options="departments" :errorMsg="form.errors.department_id"></SelectElement> -->
+                    <SelectElement v-model="form.program_id" id="program_id" name="program_id"
+                        label="Degree Program" :options="degree_programs" :errorMsg="form.errors.program_id">
                     </SelectElement>
                     <SelectElement v-model="form.year_level" id="year_level" name="year_level" label="Year Level"
                         :options="year_levels" :errorMsg="form.errors.year_level"></SelectElement>
@@ -172,7 +162,7 @@ const submit = () => {
             </div>
         </form>
     </template>
-    <template v-else>
+    <!-- <template v-else>
         <form @submit.prevent="submit">
             <div class="grid grid-cols-1 max-w-4xl mx-auto p-10 bg-gray-50 shadow-inner">
                 <div class="grid grid-cols-4">
@@ -222,8 +212,8 @@ const submit = () => {
                 <div class="grid grid-cols-3">
                     <SelectElement v-model="form.department_id" id="department_id" name="department_id" label="Department"
                         :options="departments" :errorMsg="form.errors.department_id"></SelectElement>
-                    <SelectElement v-model="form.degree_program_id" id="degree_program_id" name="degree_program_id"
-                        label="Degree Program" :options="degree_programs" :errorMsg="form.errors.degree_program_id">
+                    <SelectElement v-model="form.program_id" id="program_id" name="program_id"
+                        label="Degree Program" :options="degree_programs" :errorMsg="form.errors.program_id">
                     </SelectElement>
                     <SelectElement v-model="form.year_level" id="year_level" name="year_level" label="Year Level"
                         :options="year_levels" :errorMsg="form.errors.year_level"></SelectElement>
@@ -236,5 +226,5 @@ const submit = () => {
             </div>
         </form>
 
-    </template>
+    </template> -->
 </template>

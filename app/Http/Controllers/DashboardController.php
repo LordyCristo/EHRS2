@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Department;
 use App\Models\DegreeProgram;
+use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
     /**
@@ -14,9 +15,17 @@ class DashboardController extends Controller
     public function index()
     {
         return response()->json([
-            'total_records' => ['Number of Records',Client::all()->count()],
-            'total_departments' => ['Number of Departments',Department::all()->count()],
-            'total_programs' => ['Number of Programs',DegreeProgram::all()->count()],
+            'cards' => [
+                'total_records' => ['Number of Records',Client::all()->count()],
+                'total_departments' => ['Number of Departments',Department::all()->count()],
+                'total_programs' => ['Number of Programs',DegreeProgram::all()->count()],
+            ],
+            'charts' => [
+                'groupBy_sex' => DB::table('clients')
+                ->select('sex', DB::raw('COUNT(id) as count'))
+                ->groupBy('sex')
+                ->get(),
+            ]
         ]);
     }
 

@@ -16,79 +16,89 @@ class DegreeProgramSeeder extends Seeder
         //College of Agriculture and Food Science
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-AEE',
+            'abbr' => 'BSA-AEE',
             'major' => 'Agricultural Education and Extension',
+            'group' => 'bachelor',
             'department_id' => 1,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-AGR',
+            'abbr' => 'BSA-AGR',
             'major' => 'Agronomy',
+            'group' => 'bachelor',
             'department_id' => 2,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-AnSci',
+            'abbr' => 'BSA-AnSci',
             'major' => 'Animal Science',
+            'group' => 'bachelor',
             'department_id' => 3,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Development Communication',
-            'abbreviation' => 'BDC',
+            'abbr' => 'BDC',
+            'group' => 'bachelor',
             'department_id' => 4,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-FST',
+            'abbr' => 'BSA-FST',
             'major' => 'Food Science and Technology',
+            'group' => 'bachelor',
             'department_id' => 5,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-HOR',
+            'abbr' => 'BSA-HOR',
             'major' => 'Horticulture',
+            'group' => 'bachelor',
             'department_id' => 6,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-PM',
+            'abbr' => 'BSA-PM',
             'major' => 'Pest Management',
+            'group' => 'bachelor',
             'department_id' => 7,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-PBG',
+            'abbr' => 'BSA-PBG',
             'major' => 'Plant Breeding and Genetics',
+            'group' => 'bachelor',
             'department_id' => 8,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-PP',
+            'abbr' => 'BSA-PP',
             'major' => 'Plant Pathology',
+            'group' => 'bachelor',
             'department_id' => 9,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
-            'abbreviation' => 'BSA-AE',
+            'abbr' => 'BSA-AE',
             'major' => 'Agricultural Economics ',
+            'group' => 'bachelor',
             'department_id' => 9,
             'is_active' => true,
         ]);
@@ -96,48 +106,54 @@ class DegreeProgramSeeder extends Seeder
         // College of Education
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Elementary Education',
-            'abbreviation' => 'BEED-PSE',
+            'abbr' => 'BEED-PSE',
             'major' => 'Pre-School Education',
+            'group' => 'bachelor',
             'department_id' => 10,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Elementary Education',
-            'abbreviation' => 'BEED-GE',
+            'abbr' => 'BEED-GE',
             'major' => 'General Education',
+            'group' => 'bachelor',
             'department_id' => 10,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Secondary Education',
-            'abbreviation' => 'BEED-BS',
+            'abbr' => 'BEED-BS',
             'major' => 'Biological Sciences',
+            'group' => 'bachelor',
             'department_id' => 10,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Secondary Education',
-            'abbreviation' => 'BEED-SS',
+            'abbr' => 'BEED-SS',
             'major' => 'Social Studies',
+            'group' => 'bachelor',
             'department_id' => 10,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Secondary Education',
-            'abbreviation' => 'BEED-MATH',
+            'abbr' => 'BEED-MATH',
             'major' => 'Mathematics',
+            'group' => 'bachelor',
             'department_id' => 10,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Secondary Education',
-            'abbreviation' => 'BEED-PS',
+            'abbr' => 'BEED-PS',
             'major' => 'Physical Sciences',
+            'group' => 'bachelor',
             'department_id' => 10,
             'is_active' => true,
         ]);
@@ -145,24 +161,27 @@ class DegreeProgramSeeder extends Seeder
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Secondary Education',
-            'abbreviation' => 'BEED-FIL',
+            'abbr' => 'BEED-FIL',
             'major' => 'Filipino',
+            'group' => 'bachelor',
             'department_id' => 10,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Culture and Arts Education',
-            'abbreviation' => 'BCAED',
+            'abbr' => 'BCAED',
             'major' => null,
+            'group' => 'bachelor',
             'department_id' => 11,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Physical Education',
-            'abbreviation' => 'BPED',
+            'abbr' => 'BPED',
             'major' => null,
+            'group' => 'bachelor',
             'department_id' => 11,
             'is_active' => true,
         ]);
@@ -171,68 +190,77 @@ class DegreeProgramSeeder extends Seeder
         // College of Engineering and Technology
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agricultural and Biosystems Engineering',
-            'abbreviation' => 'BSABE',
+            'abbr' => 'BSABE',
             'major' => null,
+            'group' => 'bachelor',
             'department_id' => 14,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Civil Engineering',
-            'abbreviation' => 'BSCE-SE',
+            'abbr' => 'BSCE-SE',
             'major' => 'Structural Engineering',
+            'group' => 'bachelor',
             'department_id' => 15,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Civil Engineering',
-            'abbreviation' => 'BSCE-CE',
+            'abbr' => 'BSCE-CE',
             'major' => 'Construction Engineering',
+            'group' => 'bachelor',
             'department_id' => 15,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Civil Engineering',
-            'abbreviation' => 'BSCE-EE',
+            'abbr' => 'BSCE-EE',
             'major' => 'Environmental Engineering',
+            'group' => 'bachelor',
             'department_id' => 15,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Civil Engineering',
-            'abbreviation' => 'BSCE-WE',
+            'abbr' => 'BSCE-WE',
             'major' => 'Water Resources Engineering',
+            'group' => 'bachelor',
             'department_id' => 15,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Computer Science',
-            'abbreviation' => 'BSCS',
+            'abbr' => 'BSCS',
+            'group' => 'bachelor',
             'department_id' => 16,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Geodetic Engineering',
-            'abbreviation' => 'BSGE',
+            'abbr' => 'BSGE',
+            'group' => 'bachelor',
             'department_id' => 17,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Mechanical Engineering',
-            'abbreviation' => 'BSME',
+            'abbr' => 'BSME',
+            'group' => 'bachelor',
             'department_id' => 18,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Meteorology',
-            'abbreviation' => 'BSMET',
+            'abbr' => 'BSMET',
+            'group' => 'bachelor',
             'department_id' => 19,
             'is_active' => true,
         ]);
@@ -240,150 +268,171 @@ class DegreeProgramSeeder extends Seeder
         //College of
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Biology',
-            'abbreviation' => 'BSBio',
+            'abbr' => 'BSBio',
+            'group' => 'bachelor',
             'department_id' => 20,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Biotechnology',
-            'abbreviation' => 'BSBioTech',
+            'abbr' => 'BSBioTech',
+            'group' => 'bachelor',
             'department_id' => 25,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Chemistry',
-            'abbreviation' => 'BSChem',
+            'abbr' => 'BSChem',
+            'group' => 'bachelor',
             'department_id' => 24,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Applied Physics',
-            'abbreviation' => 'BSAP',
+            'abbr' => 'BSAP',
+            'group' => 'bachelor',
             'department_id' => 22,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Arts in English Language Studies',
-            'abbreviation' => 'BAELS',
+            'abbr' => 'BAELS',
+            'group' => 'bachelor',
             'department_id' => 21,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Arts in Philosophy',
-            'abbreviation' => 'BSPhilo',
+            'abbr' => 'BSPhilo',
+            'group' => 'bachelor',
             'department_id' => 21,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Statistics',
-            'abbreviation' => 'BSStat',
+            'abbr' => 'BSStat',
+            'group' => 'bachelor',
             'department_id' => 23,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Mathematics',
-            'abbreviation' => 'BSMath',
+            'abbr' => 'BSMath',
+            'group' => 'bachelor',
             'department_id' => 22,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Doctor of Veterinary Medicine',
-            'abbreviation' => 'DVM-BVM',
+            'abbr' => 'DVM-BVM',
             'major' => 'Basic Veterinary Medicine',
+            'group' => 'doctor',
             'department_id' => 26,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Doctor of Veterinary Medicine',
-            'abbreviation' => 'DVM-VCS',
+            'abbr' => 'DVM-VCS',
             'major' => 'Veterinary Clinical Sciences',
+            'group' => 'doctor',
             'department_id' => 27,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Doctor of Veterinary Medicine',
-            'abbreviation' => 'DVM',
+            'abbr' => 'DVM',
             'major' => 'Veterinary Para-Clinical Sciences',
+            'group' => 'doctor',
             'department_id' => 28,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Economics',
-            'abbreviation' => 'BSEcon',
+            'abbr' => 'BSEcon',
+            'group' => 'bachelor',
             'department_id' => 32,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Nursing',
-            'abbreviation' => 'BSN',
+            'abbr' => 'BSN',
+            'group' => 'bachelor',
             'department_id' => 29,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Tourism Management',
-            'abbreviation' => 'BSTM',
+            'abbr' => 'BSTM',
+            'group' => 'bachelor',
             'department_id' => 31,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Hospitality Management',
-            'abbreviation' => 'BSHM',
+            'abbr' => 'BSHM',
+            'group' => 'bachelor',
             'department_id' => 31,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Accountancy',
-            'abbreviation' => 'BSA',
+            'abbr' => 'BSA',
+            'group' => 'bachelor',
             'department_id' => 30,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agribusiness',
-            'abbreviation' => 'BSAgriB',
+            'abbr' => 'BSAgriB',
+            'group' => 'bachelor',
             'department_id' => 30,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Forestry',
-            'abbreviation' => 'BSF',
+            'abbr' => 'BSF',
+            'group' => 'bachelor',
             'department_id' => 34,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Environmental Science',
-            'abbreviation' => 'BSES',
+            'abbr' => 'BSES',
+            'group' => 'bachelor',
             'department_id' => 20,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Marine Biology',
-            'abbreviation' => 'MSMB',
+            'abbr' => 'MSMB',
+            'group' => 'bachelor',
             'department_id' => 20,
             'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Food Technology',
-            'abbreviation' => 'BSFT',
+            'abbr' => 'BSFT',
+            'group' => 'bachelor',
             'department_id' => 25,
             'is_active' => true,
         ]);

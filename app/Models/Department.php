@@ -9,10 +9,16 @@ class Department extends Model
 {
     use HasFactory;
 
+    protected $table = 'departments';
     protected $fillable = [
         'name',
-        'abbreviation',
+        'abbr',
         'college_id',
         'is_active',
     ];
+
+    public function college()
+    {
+        return $this->belongsTo(College::class);
+    }
 }

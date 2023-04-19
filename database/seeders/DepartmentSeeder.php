@@ -16,63 +16,63 @@ class DepartmentSeeder extends Seeder
         // College of Agriculture and Food Science
         Department::factory()->create([
             'name' => 'Department of Agricultural Education and Extension',
-            'abbreviation' => 'DAEE',
+            'abbr' => 'DAEE',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Agronomy',
-            'abbreviation' => 'DAGR',
+            'abbr' => 'DAGR',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Animal Science',
-            'abbreviation' => 'DANS',
+            'abbr' => 'DANS',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Development Communication',
-            'abbreviation' => 'DDC',
+            'abbr' => 'DDC',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Food Science & Technology',
-            'abbreviation' => 'DFST',
+            'abbr' => 'DFST',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Horticulture',
-            'abbreviation' => 'DHOR',
+            'abbr' => 'DHOR',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Pest Management',
-            'abbreviation' => 'DPM',
+            'abbr' => 'DPM',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Plant Breeding and Genetics',
-            'abbreviation' => 'DPBG',
+            'abbr' => 'DPBG',
             'college_id' => 1,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Soil Science',
-            'abbreviation' => 'DSS',
+            'abbr' => 'DSS',
             'college_id' => 1,
             'is_active' => true,
         ]);
@@ -80,28 +80,28 @@ class DepartmentSeeder extends Seeder
         // College of Education
         Department::factory()->create([
             'name' => 'Department of Teacher Education',
-            'abbreviation' => 'DTE',
+            'abbr' => 'DTE',
             'college_id' => 2,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Institute of Human Kinetics',
-            'abbreviation' => 'IHK',
+            'abbr' => 'IHK',
             'college_id' => 2,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'VSU Laboratory High School',
-            'abbreviation' => 'VSLHS',
+            'abbr' => 'VSLHS',
             'college_id' => 2,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'VSU Senior High School',
-            'abbreviation' => 'VSSHS',
+            'abbr' => 'VSSHS',
             'college_id' => 2,
             'is_active' => true,
         ]);
@@ -109,42 +109,42 @@ class DepartmentSeeder extends Seeder
         // College of Engineering and Technology
         Department::factory()->create([
             'name' => 'Department of Agricultural and Biosystems Engineering',
-            'abbreviation' => 'DABE',
+            'abbr' => 'DABE',
             'college_id' => 3,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Civil Engineering',
-            'abbreviation' => 'DCE',
+            'abbr' => 'DCE',
             'college_id' => 3,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Computer Science and Technology',
-            'abbreviation' => 'DCST',
+            'abbr' => 'DCST',
             'college_id' => 3,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Geodetic Engineering',
-            'abbreviation' => 'DGE',
+            'abbr' => 'DGE',
             'college_id' => 3,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Mechanical Engineering',
-            'abbreviation' => 'DME',
+            'abbr' => 'DME',
             'college_id' => 3,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Meteorology',
-            'abbreviation' => 'DMET',
+            'abbr' => 'DMET',
             'college_id' => 3,
             'is_active' => true,
         ]);
@@ -152,42 +152,42 @@ class DepartmentSeeder extends Seeder
         // College of Arts and Sciences
         Department::factory()->create([
             'name' => 'Department of Biological Sciences',
-            'abbreviation' => 'DBS',
+            'abbr' => 'DBS',
             'college_id' => 4,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Liberal Arts and Behavioral Sciences',
-            'abbreviation' => 'DLABS',
+            'abbr' => 'DLABS',
             'college_id' => 4,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Mathematics and Physics',
-            'abbreviation' => 'DMP',
+            'abbr' => 'DMP',
             'college_id' => 4,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Statistics',
-            'abbreviation' => 'DSTAT',
+            'abbr' => 'DSTAT',
             'college_id' => 4,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Pure and Applied Chemistry',
-            'abbreviation' => 'DPAC',
+            'abbr' => 'DPAC',
             'college_id' => 4,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Biotechnology',
-            'abbreviation' => 'DBT',
+            'abbr' => 'DBT',
             'college_id' => 4,
             'is_active' => true,
         ]);
@@ -195,21 +195,21 @@ class DepartmentSeeder extends Seeder
         // College of Veterinary Medicine
         Department::factory()->create([
             'name' => 'Department of Basic Veterinary Sciences',
-            'abbreviation' => 'DBVS',
+            'abbr' => 'DBVS',
             'college_id' => 5,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Veterinary Clinical Sciences',
-            'abbreviation' => 'DVCS',
+            'abbr' => 'DVCS',
             'college_id' => 5,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Veterinary Para-Clinical Sciences',
-            'abbreviation' => 'DVPCS',
+            'abbr' => 'DVPCS',
             'college_id' => 5,
             'is_active' => true,
         ]);
@@ -217,7 +217,7 @@ class DepartmentSeeder extends Seeder
         //  College of Nursing
         Department::factory()->create([
             'name' => 'Department of Nursing',
-            'abbreviation' => 'DoN',
+            'abbr' => 'DoN',
             'college_id' => 6,
             'is_active' => true,
         ]);
@@ -225,28 +225,28 @@ class DepartmentSeeder extends Seeder
         // College of Management and Economics
         Department::factory()->create([
             'name' => 'Department of Business and Management',
-            'abbreviation' => 'DBM',
+            'abbr' => 'DBM',
             'college_id' => 7,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Consumer and Hospitality Management',
-            'abbreviation' => 'DCHM',
+            'abbr' => 'DCHM',
             'college_id' => 7,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Department of Economics',
-            'abbreviation' => 'DoE',
+            'abbr' => 'DoE',
             'college_id' => 7,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Institute for Strategic Research and Development Studies',
-            'abbreviation' => 'ISRD',
+            'abbr' => 'ISRD',
             'college_id' => 7,
             'is_active' => true,
         ]);
@@ -254,14 +254,14 @@ class DepartmentSeeder extends Seeder
         // College of Forestry and Environmental Science
         Department::factory()->create([
             'name' => 'Department of Forest Science',
-            'abbreviation' => 'DFS',
+            'abbr' => 'DFS',
             'college_id' => 8,
             'is_active' => true,
         ]);
 
         Department::factory()->create([
             'name' => 'Institute of Tropical Ecology & Environmental Management',
-            'abbreviation' => 'ITEEM',
+            'abbr' => 'ITEEM',
             'college_id' => 8,
             'is_active' => true,
         ]);

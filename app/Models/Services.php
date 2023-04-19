@@ -5,10 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AccountType extends Model
+class Services extends Model
 {
     use HasFactory;
+
+    protected $table = 'services';
+
     protected $fillable = [
         'name',
+        'description',
+        'schedule',
+        'section_name',
+        'room_no',
+        'is_active',
     ];
 }

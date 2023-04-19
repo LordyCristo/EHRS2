@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountType>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AccountRole>
  */
-class AccountTypeFactory extends Factory
+class accountRolesFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,7 @@ class AccountTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->randomElement(['Nurse','Doctor','Receptionist','Administrator']),
+            'name' => $this->faker->role(),
         ];
     }
 }

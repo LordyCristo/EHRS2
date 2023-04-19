@@ -123,8 +123,6 @@ const clearPhotoFileInput = () => {
             <div class="col-span-6 sm:col-span-4">
                 <InputLabel for="name" value="Name" />
                 <div class="flex sm:flex-row flex-col">
-                    <TextInput id="name" v-model="form.name" type="text" class="mt-1 mr-1 block w-full"
-                        autocomplete="name" />
                     <TextInput id="first_name" v-model="form.first_name" type="text" class="mt-1 mr-1 block w-full"
                         autocomplete="first_name" />
                     <InputError :message="form.errors.middle_name" class="mt-2" />

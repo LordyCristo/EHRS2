@@ -21,6 +21,7 @@
         "@headlessui/vue": "^1.7.12",
         "@heroicons/vue": "^2.0.16",
         "@vue-hero-icons/outline": "^1.7.2",
+        "chart.js": "^4.2.1",
         "datatables.net": "^1.13.4",
         "datatables.net-dt": "^1.13.4",
         "datatables.net-staterestore-dt": "^1.2.2",
@@ -28,6 +29,7 @@
         "jquery": "^3.6.4",
         "jszip": "^3.10.1",
         "v-tables-3": "^0.4.7",
+        "vue-chartjs": "^5.2.0",
         "vue-router": "^4.1.6"
     }
 }

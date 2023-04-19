@@ -18,7 +18,7 @@ class CollegeFactory extends Factory
     {
         return [
             'name' => $this->faker->unique()->company,
-            'abbreviation' => $this->faker->unique()->word,
+            'abbr' => $this->faker->unique()->word,
             'is_active' => true,
         ];
     }

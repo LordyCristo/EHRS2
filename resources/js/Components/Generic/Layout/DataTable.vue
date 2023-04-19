@@ -46,7 +46,7 @@ const options = {
             next: 'Next',
             previous: 'Previous',
         },
-    }
+    },
 };
 
 </script>

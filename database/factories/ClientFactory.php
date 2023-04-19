@@ -17,24 +17,28 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_number' => $this->faker->unique()->randomNumber(8),
             'first_name' => $this->faker->firstName,
             'middle_name' => $this->faker->lastName,
             'last_name' => $this->faker->lastName,
-            'suffix' => $this->faker->randomElement(['','Jr.','','Sr.','','III','','I','','II']),
+            'suffix' => $this->faker->suffix(),
             'birthdate' => $this->faker->date(),
-            'age' => $this->faker->numberBetween($min = 18, $max = 60),
-            'sex' => $this->faker->randomElement(['MALE','FEMALE']),
-            'blood_type' => $this->faker->randomElement(['A+','A-','B+','B-','AB+','AB-','O+','O-', null]),
-            'civil_status' => $this->faker->randomElement(['SINGLE','MARRIED','WIDOWED','SEPARATED','DIVORCED']),
-            'email' => $this->faker->unique()->safeEmail,
-            'phone' => $this->faker->unique()->phoneNumber,
-            'home_address' => $this->faker->address,
+            'age' => $this->faker->numberBetween(18, 60),
+            'sex' => $this->faker->randomElement(['male','female']),
+            'civil_status' => $this->faker->randomElement(['Single', 'Married', 'Widowed', 'Separated', 'Divorced']),
+            'phone' => $this->faker->phoneNumber,
+            'email_address' => $this->faker->email,
+            'home_address'  => $this->faker->address,
             'curr_address' => $this->faker->address,
-            'degree_program_id' => $this->faker->numberBetween($min = 1, $max = 49),
-            'year_level' => $this->faker->randomElement(['1st','2nd','3rd','4th','5th','6th']),
-            'department_id' => $this->faker->numberBetween($min = 1, $max = 35),
-            'client_type_id' => $this->faker->numberBetween($min = 1, $max = 4)
+            'id_number' => function () {
+                $year = rand(10, 23);
+                $part1 = str_pad($year, 2, '0', STR_PAD_LEFT);
+                $part2 = rand(1, 4); // Generate a random number between 1-4
+                $part3 = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
+                return "{$part1}-{$part2}-{$part3}";
+            },
+            'program_id' => $this->faker->numberBetween(1,49),
+            'year_lvl' => $this->faker->numberBetween(1,6),
+            'client_type_id' => $this->faker->numberBetween(1,4),
         ];
     }
 }

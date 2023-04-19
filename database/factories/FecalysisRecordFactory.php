@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ClientType>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FecalysisRecord>
  */
-class ClientTypeFactory extends Factory
+class FecalysisRecordFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,8 @@ class ClientTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
+            'id' => $this->faker->numberBetween(1, 100),
+            'client_id' => $this->faker->numberBetween(1, 100),
         ];
     }
 }

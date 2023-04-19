@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('colleges', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique('colleges_name_unique');
-            $table->string('abbreviation')->unique('colleges_abbreviation_unique');
-            $table->boolean('is_active')->default(true);
+        Schema::create('fecalysis_records', function(Blueprint $table){
+            $table->foreignId('id')->constrained('fecalysis')->cascadeOnUpdate()->cascadeOnUpdate();
+            $table->foreignId('client_id')->constrained('clients')->cascadeOnUpdate()->restrictOnDelete();
             $table->timestamps();
         });
     }
@@ -25,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('colleges');
+        Schema::dropIfExists('fecalysis_records');
     }
 };

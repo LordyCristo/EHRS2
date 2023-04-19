@@ -5,20 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ClientType extends Model
+class Fees extends Model
 {
     use HasFactory;
 
-    protected $table = 'client_types';
+    protected $table = 'fees';
 
     protected $fillable = [
-        'label',
+        'id',
+        'client_type',
+        'amount',
     ];
-
-    function clients()
-    {
-        return $this->hasMany(Client::class);
-    }
-
-    
 }

@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('departments', function (Blueprint $table) {
+        Schema::create('colleges', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique('departments_name_unique');
-            $table->string('abbreviation')->unique('departments_abbreviation_unique');
-            $table->foreignId('college_id')->constrained('colleges')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('name')->unique('colleges_name_unique');
+            $table->string('abbr')->unique('colleges_abbr_unique');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('departments');
+        Schema::dropIfExists('colleges');
     }
 };

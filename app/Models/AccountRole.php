@@ -5,23 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DegreeProgram extends Model
+class AccountRole extends Model
 {
     use HasFactory;
 
-    protected $table = 'degree_programs';
+    protected $table = 'account_roles';
+
     protected $fillable = [
-        'name',
-        'abbr',
-        'major',
-        'group',
-        'department_id',
-        'is_active',
+        'label',
     ];
 
-    public function department()
+    public function users()
     {
-        return $this->belongsTo(Department::class);
+        return $this->hasMany(User::class);
     }
 
     public function clients()

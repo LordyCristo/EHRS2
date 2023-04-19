@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Features;
+use PharIo\Manifest\License;
 
 class UserFactory extends Factory
 {
@@ -33,6 +34,18 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'profile_photo_path' => null,
             'current_team_id' => null,
+            'first_name' => $this->faker->firstName(),
+            'middle_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'suffix' => $this->faker->suffix(),
+            'birthdate' => $this->faker->date(),
+            'age' => $this->faker->numberBetween(18, 50),
+            'role' => $this->faker->numberBetween(1, 7),
+            'specialization' => $this->faker->word(),
+            'curr_position' => $this->faker->word(),
+            'license_no' => $this->faker->numberBetween(3000,9999),
+            'landline' => $this->faker->phoneNumber(),
+            'mobile' => $this->faker->phoneNumber(),
         ];
     }
 
@@ -53,14 +66,14 @@ class UserFactory extends Factory
      */
     public function withPersonalTeam(callable $callback = null): static
     {
-        if (! Features::hasTeamFeatures()) {
+        if (!Features::hasTeamFeatures()) {
             return $this->state([]);
         }
 
         return $this->has(
             Team::factory()
                 ->state(fn (array $attributes, User $user) => [
-                    'name' => $user->first_name.'\'s Team',
+                    'name' => $user->name . '\'s Team',
                     'user_id' => $user->id,
                     'personal_team' => true,
                 ])

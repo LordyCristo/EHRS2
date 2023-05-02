@@ -1,6 +1,8 @@
 <script setup>
 import DataTable from 'datatables.net-vue3';
 import DataTablesCore from 'datatables.net';
+import 'datatables.net-select';
+import 'datatables.net-responsive';
 import 'datatables.net-dt';
 
 DataTable.use(DataTablesCore);
@@ -52,6 +54,11 @@ const options = {
 </script>
 
 <style>
+    @import 'datatables.net-select-bs5';
+    @import 'datatables.net-bs5';
+    @import 'datatables.net-responsive-dt';
+    @import 'datatables.net-select-dt';
+    @import 'datatables.net-dt';
     .dataTables_wrapper .dataTables_filter,
     .dataTables_wrapper .dataTables_length {
         @apply text-sm text-gray-600 sm:w-1/2 p-1;
@@ -62,7 +69,7 @@ const options = {
     }
 
     .dataTables_wrapper .dataTables_length {
-        @apply float-left;
+        @apply float-left bg-transparent;
     }
 
     .dataTables_wrapper .dataTables_filter input,

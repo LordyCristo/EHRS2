@@ -31,7 +31,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::prefix('patients')->group(function () {
         Route::get('/', function () {
-            return Inertia::render('Patient/PatientsDashboard');
+            return Inertia::render('Patient/PatientDashboard');
         })->name('patients');
 
         Route::get('/new', function () {
@@ -43,9 +43,19 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         })->name('editPatient');
     });
 
-    Route::get('/medicalRecords', function () {
-        return Inertia::render('MedicalRecords');
-    })->name('records');
+    Route::prefix('records')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Records/RecordDashboard');
+        })->name('records');
+
+        Route::get('/new', function () {
+            return Inertia::render('Records/NewRecord');
+        })->name('newRecord');
+
+        Route::get('/edit', function () {
+            return Inertia::render('Records/EditRecord');
+        })->name('editRecord');
+    });
 
     Route::get('/radiology', function () {
         return Inertia::render('Radiology');
@@ -70,4 +80,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/ward', function () {
         return Inertia::render('Ward');
     })->name('ward');
+
+
 });

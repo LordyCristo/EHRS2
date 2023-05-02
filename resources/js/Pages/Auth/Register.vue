@@ -34,6 +34,7 @@ import Select from '@/Components/Select.vue';
 // });
 
 const roles = ref(Array);
+
 onMounted(async () => {
     try {
         const response = await fetch(route('api.roles'), { method: 'GET' }); // replace with the actual API endpoint for retrieving roles
@@ -100,6 +101,9 @@ export default {
         submit() {
             console.log(this.form);
             this.form.post(route('register'), {
+                onError: () => {
+                    console.log(this.form);
+                },
                 onFinish: () => {
                     console.log(this.form.errors);
                     this.form.reset('password', 'password_confirmation');
@@ -141,7 +145,7 @@ export default {
                 <div>
                     <InputLabel for="first_name" value="First Name" />
                     <TextInput id="first_name" v-model="form.first_name" name="first_name" type="text"
-                        class="mt-1 block w-full" autofocus autocomplete="name" @click="" />
+                        class="mt-1 block w-full" autofocus autocomplete="name" />
                     <InputError class="mt-2" :message="form.errors.first_name" />
                 </div>
 

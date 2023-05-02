@@ -10,15 +10,15 @@ export const BloodType = Array(
     { id: 'AB-', name: 'AB-' },
 );
 export const Sex = Array(
-    { value: 'MALE', label: 'Male' },
-    { value: 'FEMALE', label: 'Female' },
+    { value: 'male', label: 'Male' },
+    { value: 'female', label: 'Female' },
 );
 export const CivilStatus = Array(
-    { id: 'SINGLE', name: 'Single' },
-    { id: 'MARRIED', name: 'Married' },
-    { id: 'WIDOWED', name: 'Widowed' },
-    { id: 'SEPARATED', name: 'Separated' },
-    { id: 'DIVORCED', name: 'Divorced' },
+    { id: 'single', name: 'Single' },
+    { id: 'married', name: 'Married' },
+    { id: 'widowed', name: 'Widowed' },
+    { id: 'separated', name: 'Separated' },
+    { id: 'divorced', name: 'Divorced' },
 );
 export const YearLevel = Array(
     { id: '1st', name: '1st' },

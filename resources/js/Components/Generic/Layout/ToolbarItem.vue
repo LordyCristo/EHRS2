@@ -1,6 +1,5 @@
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
-import NavLink from '../../NavLink.vue';
+import { Link } from '@inertiajs/vue3';
 
 defineProps({
     link: {

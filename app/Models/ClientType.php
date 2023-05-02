@@ -17,7 +17,7 @@ class ClientType extends Model
 
     function clients()
     {
-        return $this->hasMany(Client::class);
+        return $this->belongsTo(Client::class);
     }
 
     

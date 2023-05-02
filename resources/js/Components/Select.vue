@@ -14,6 +14,10 @@ const props = defineProps({
     name: {
         type: String,
         default: null
+    },
+    data: {
+        type: [Array, Function],
+        default: null
     }
 });
 
@@ -49,6 +53,7 @@ const alignmentClasses = computed(() => {
 
 <template>
     <select :name="name" class="text-gray-900 border-gray-300 focus:border-vsu-green focus:ring-vsu-green focus:shadow-lg rounded-md shadow-sm">
-        <slot name="options" />
+        <option value="" hidden select>Choose</option>
+        <option v-for="d in data" :value="d.id" :key="d.id">{{ d.name }}</option>
     </select>
 </template>

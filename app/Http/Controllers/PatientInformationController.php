@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ClientRequest;
 use Illuminate\Http\Request;
 use App\Models\Client;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PatientInformationController extends Controller
@@ -35,11 +34,11 @@ class PatientInformationController extends Controller
             });
         }
 
-        if(isset($request['order'][0]['column'])){
+        if (isset($request['order'][0]['column'])) {
             $order = $request['order'][0]['column'];
             $dir = $request['order'][0]['dir'];
             $query->orderBy($request['columns'][$order]['data'], $dir);
-        }else{
+        } else {
             $query->orderBy('id', 'desc');
         }
 
@@ -66,18 +65,21 @@ class PatientInformationController extends Controller
      */
     public function store(Request $request)
     {
-        Validator::make($request->all(), $this->rules(), $this->messages())->validate();
-        DB::beginTransaction();
-        try {
-            $temp = Client::create($request->all());
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollback();
+        $validator = Validator::make($request->all(), $this->rules(), $this->messages());
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            $errorMessages = [];
+            foreach ($errors->keys() as $key) {
+                $errorMessages[$key] = $errors->get($key)[0];
+            }
             return inertia('Patient/NewPatient', [
-                'errors' => $e->getMessage(),
+                'errors' => $errorMessages,
             ]);
         }
-        return inertia('Patient/PatientsDashboard', compact('temp'));
+        Client::create($request->all());
+        return inertia('Patient/PatientDashboard', [
+            'success' => 'Patient added successfully'
+        ]);
     }
 
     /**
@@ -88,7 +90,7 @@ class PatientInformationController extends Controller
         $temp = Client::find($id);
         if ($temp) {
             return $temp;
-        }else{
+        } else {
             return response()->json([
                 'error' => 'Patient not found'
             ], 404);
@@ -117,9 +119,9 @@ class PatientInformationController extends Controller
     public function destroy(string $id)
     {
         $destroyed_id = Client::destroy($id);
-        if($destroyed_id){
+        if ($destroyed_id) {
             return inertia('Patient/PatientsDashboard', compact('destroyed_id'));
-        }else{
+        } else {
             return inertia('Patient/PatientsDashboard', [
                 'errors' => 'Patient not found'
             ]);
@@ -130,24 +132,25 @@ class PatientInformationController extends Controller
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
-    function rules(){
+    function rules()
+    {
         return [
             'first_name' => 'required|string|max:255',
-            // 'middle_name' => 'nullable|string|max:255',
-            // 'last_name' => 'required|string|max:255',
-            // 'suffix' => 'nullable|string|max:255',
-            // 'birthdate' => 'required|date',
-            // 'age' => 'nullable|int',
-            // 'sex' => 'required|in:`male`,`female`',
-            // 'phone' => 'nullable|string|max:255',
-            // 'email_address' => 'nullable|email|max:255',
-            // 'home_address' => 'nullable|string|max:255',
-            // 'curr_address' => 'nullable|string|max:255',
-            // 'id_number' => 'nullable|string|max:255',
-            // 'civil_status' => 'required|in:`single`,`married`,`widowed`,`separated`,`divorced`',
-            // 'program_id' => 'nullable|exists:degree_programs,id',
-            // 'year_lvl' => 'nullable|int',
-            // 'client_type_id' => 'required|exists:client_types,id',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'suffix' => 'nullable|string|max:255',
+            'birthdate' => 'required|date',
+            'age' => 'nullable|int',
+            'sex' => 'required|in:`male`,`female`',
+            'civil_status' => 'required|in:`single`,`married`,`widowed`,`separated`,`divorced`',
+            'phone' => 'nullable|string|max:255|unique:clients,phone|starts_with:09|size:11',
+            'email_address' => 'nullable|email|max:255|unique:clients,email_address',
+            'home_address' => 'nullable|string|max:255',
+            'curr_address' => 'nullable|string|max:255',
+            'id_number' => 'nullable|string|max:255|unique:clients,id_number|regex:/^[0-9]{2}-[0-9]{1}-[0-9]{5}$/',
+            'program_id' => 'nullable|exists:degree_programs,id',
+            'year_lvl' => 'nullable|int',
+            'client_type_id' => 'required|exists:client_types,id',
         ];
     }
     /**
@@ -158,9 +161,43 @@ class PatientInformationController extends Controller
     public function messages(): array
     {
         return [
-            'first_name.required' => 'First name is required',
-            'first_name.string' => 'First name must be a string',
-            'first_name.max' => 'First name must not exceed 255 characters',
+            'first_name.required' => 'Required field',
+            'first_name.string' => 'Invalid input',
+            'first_name.max' => 'Too long',
+            'middle_name.string' => 'Invalid input',
+            'middle_name.max' => 'Too long',
+            'last_name.required' => 'Required field',
+            'last_name.string' => 'Invalid input',
+            'last_name.max' => 'Too long',
+            'suffix.string' => 'Invalid input',
+            'suffix.max' => 'Too long',
+            'birthdate.required' => 'Required field',
+            'birthdate.date' => 'Invalid date',
+            'age.int' => 'Invalid input',
+            'sex.required' => 'Required field',
+            'sex.in' => 'Invalid value',
+            'civil_status.required' => 'Required field',
+            'civil_status.in' => 'Invalid value',
+            'phone.string' => 'Invalid input',
+            'phone.max' => 'Too long',
+            'phone.unique' => 'Already exists',
+            'phone.starts_with' => 'Invalid format',
+            'phone.size' => 'Too long',
+            'email_address.email' => 'Invalid email address',
+            'email_address.max' => 'Too long',
+            'email_address.unique' => 'Already exists',
+            'home_address.string' => 'Invalid input',
+            'home_address.max' => 'Too long',
+            'curr_address.string' => 'Invalid input',
+            'curr_address.max' => 'Too long',
+            'id_number.string' => 'Invalid input',
+            'id_number.max' => 'Too long',
+            'id_number.unique' => 'Already exists',
+            'id_number.regex' => 'Invalid format',
+            'program_id.exists' => 'Invalid input',
+            'year_lvl.int' => 'Invalid input',
+            'client_type_id.required' => 'Required field',
+            'client_type_id.exists' => 'Invalid input',
         ];
     }
 }

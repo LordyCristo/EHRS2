@@ -1,5 +1,5 @@
 <script setup>
-import PatientDashboard from '@/Pages/PatientsInformation.vue';
+import Patient from '@/Pages/PatientsInformation.vue';
 import PatientForm from '@/Pages/Patient/PatientForm.vue';
 import { ref, onMounted, defineProps } from 'vue';
 import { useForm } from '@inertiajs/vue3';
@@ -20,7 +20,7 @@ onMounted(async () => {
 
 </script>
 <template>
-    <PatientDashboard title="Edit Patient">
+    <Patient title="Edit Patient">
         <PatientForm :form="form.value"></PatientForm>
-    </PatientDashboard>
+    </Patient>
 </template>

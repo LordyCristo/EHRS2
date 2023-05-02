@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
-use App\Models\UserAccount;
 use Illuminate\Support\Facades\DB;
 
 class CreateNewUser implements CreatesNewUsers

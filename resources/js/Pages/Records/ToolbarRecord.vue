@@ -1,37 +1,27 @@
-<script>
+<script setup>
 import Navbar from '@/Components/Generic/Layout/Navbar.vue';
 import ToolbarItem from '@/Components/Generic/Layout/ToolbarItem.vue';
 import DeleteIcon from '@/Components/Icons/DeleteIcon.vue';
 import AddIcon from '@/Components/Icons/AddIcon.vue';
-import HomeIcon from '@/Components/Icons/HomeIcon.vue';
 import EditIcon from '@/Components/Icons/EditIcon.vue';
+</script>
+
+<script>
 import { markRaw } from 'vue';
 
 export default {
-    components: {
-        Navbar,
-        ToolbarItem,
-        DeleteIcon,
-        AddIcon,
-        EditIcon,
-    },
     data(){
         return{
             items:[
                 {
-                    title: 'Patients',
-                    icon: markRaw(HomeIcon),
-                    link: 'patients',
-                },
-                {
                     title: 'ADD',
                     icon: markRaw(AddIcon),
-                    link: 'newPatient',
+                    link: 'newRecord',
                 },
                 {
                     title: 'EDIT',
                     icon: markRaw(EditIcon),
-                    link: 'editPatient',
+                    link: 'editRecord',
                 },
                 {
                     title: 'DELETE',
@@ -41,7 +31,6 @@ export default {
         }
     },
 }
-
 </script>
 <template>
     <Navbar>

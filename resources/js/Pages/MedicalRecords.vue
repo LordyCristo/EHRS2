@@ -1,22 +1,12 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Welcome from '@/Components/Welcome.vue';
+import Toolbar from '@/Pages/Records/ToolbarRecord.vue';
 </script>
-
 <template>
-    <AppLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Medical Records Page
-            </h2>
+    <AppLayout title="Records">
+        <template #toolbar>
+            <Toolbar></Toolbar>
         </template>
-
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-
-                </div>
-            </div>
-        </div>
+        <slot></slot>
     </AppLayout>
 </template>

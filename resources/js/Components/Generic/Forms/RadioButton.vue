@@ -21,7 +21,7 @@ defineProps({
         <div class="radioButton"
             :class="errorMsg?'border border-red-300':'border-gray-300'">
                 <label v-for="option in options" :key="option.value">
-                    <input type="radio" :id="id + '-' + option.value" :name="name" :value="option.value" :checked="modelValue === option.value"/>
+                    <input type="radio" :id="id + '-' + option.value" :name="name" :value="option.value" :checked="modelValue === option.value"  @change="$emit('update:modelValue', $event.target.value)"/>
                     {{ option.label }}
                 </label>
         </div>

@@ -1,6 +1,6 @@
 <script setup>
 import InputField from '@/Components/Generic/Forms/InputField.vue';
-import { onMounted } from 'vue';
+
 defineProps({
     modelValue: [String, Number],
     errorMsg: String,
@@ -22,7 +22,8 @@ defineProps({
             :name="name"
             :id="id"
             class="selectElement"
-            :class="errorMsg?'border-red-300':'border-gray-300'">
+            :class="errorMsg?'border-red-300':'border-gray-300'"
+            @change="$emit('update:modelValue', $event.target.value)">
                 <option value="" hidden select>Choose</option>
                 <option v-for="option in options" :value="option.id" :key="option.name" :selected="modelValue === option.id">{{option.name }}</option>
         </select>

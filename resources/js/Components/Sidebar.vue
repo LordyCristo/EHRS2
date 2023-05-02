@@ -24,6 +24,10 @@ export default {
             type: Array,
             required: true,
         },
+        currTab: {
+            type: String,
+            required: true,
+        },
     },
     data() {
         return {
@@ -68,7 +72,7 @@ export default {
                         </template>
                     </div>
                     <div class="flex flex-col" :class="isOpen ? 'justify-center items-center' : 'justify-between px-2'">
-                        <SidebarItem v-for="item in items" :hasSubLinks="item.hasSubLinks" :link="item.link" :form="item.form" :method="item.method">
+                        <SidebarItem v-for="item in items" :hasSubLinks="item.hasSubLinks" :link="item.link" :form="item.form" :method="item.method" :currTab="currTab">
                             <template #icon>
                                 <component :is="item.icon" />
                             </template>

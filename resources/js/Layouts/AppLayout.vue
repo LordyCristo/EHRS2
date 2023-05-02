@@ -23,6 +23,11 @@ defineProps({
         type: String,
         required: true,
     },
+    currTab: {
+        type: String,
+        required: false,
+        default: 'dashboard',
+    },
 });
 
 </script>
@@ -137,17 +142,13 @@ export default {
 </script>
 <template>
     <Head :title="title" />
-    <Sidebar :items="sidebarItems">
+    <Sidebar :items="sidebarItems" :currTab="currTab">
         <!-- The body of the sidebar -->
         <template #body>
             <!-- Page Toolbar Section -->
             <header class="flex flex-row shadow-md bg-white">
                 <slot name="toolbar" />
             </header>
-            <template v-if="$slots.breadcrumbs">
-                <slot name="breadcrumbs" />
-            </template>
-
             <!-- Page Content -->
             <slot />
         </template>

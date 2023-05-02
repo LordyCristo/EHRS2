@@ -5,7 +5,7 @@ defineProps({
 </script>
 <style>
 .inputError{
-    @apply text-xs text-red-600 max-w-[100px] w-fit text-right whitespace-nowrap overflow-hidden overflow-ellipsis;
+    @apply text-xs text-red-600 w-fit text-right whitespace-nowrap overflow-hidden overflow-ellipsis;
 }
 </style>
 <template>

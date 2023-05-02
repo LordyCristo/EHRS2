@@ -2,7 +2,7 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { onMounted, ref } from 'vue';
 import PieChart from '@/Components/Generic/Charts/PieChart.vue';
-
+import Pie from '@/Components/Generic/Charts/Pie.vue';
 let data = ref({
     labels: null,
     datasets: [{
@@ -20,9 +20,9 @@ onMounted(async () => {
         .then((response) => response.json())
         .then((d) => {
             data.value = d;
-            //data.value.labels = data.value.charts.groupBy_sex.map(obj => obj.sex);
-            //data.value.datasets[0].data = data.value.charts.groupBy_sex.map(obj => obj.count);
-            console.log(data.value);
+            // data.value.labels = data.value.charts.groupBy_sex.map(obj => obj.sex);
+            // data.value.datasets.data = data.value.charts.groupBy_sex.map(obj => obj.count);
+            // console.log(data.value);
         });
 })();
 </script>
@@ -53,6 +53,14 @@ onMounted(async () => {
                             </div>
                             <div class="mt-1 text-3xl font-semibold text-center text-gray-900">
                                 <PieChart></PieChart>
+                            </div>
+                        </div>
+                        <div class="w-full px-4 py-5 bg-white rounded-lg">
+                            <div class="text-sm font-medium text-center text-gray-500 truncate">
+                                Clients Count by Sex
+                            </div>
+                            <div class="mt-1 text-3xl font-semibold text-center text-gray-900">
+                                <Pie></Pie>
                             </div>
                         </div>
                     </div>

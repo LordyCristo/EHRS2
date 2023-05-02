@@ -71,4 +71,24 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    /**
+     * Get the user's full name.
+     *
+     * @return string
+     */
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->middle_name} {$this->last_name} {$this->suffix}";
+    }
+
+    /**
+     * User has role.
+     *
+     * @return ClientType::class
+     */
+    public function role()
+    {
+        return $this->hasOne(ClientType::class);
+    }
 }

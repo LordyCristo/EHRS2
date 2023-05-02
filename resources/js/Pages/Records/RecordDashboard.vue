@@ -1,5 +1,7 @@
+<script setup>
+import Records from '@/Pages/MedicalRecords.vue';
+</script>
 <script>
-import AppLayout from '@/Layouts/AppLayout.vue';
 import axios from 'axios';
 import DataTable from 'datatables.net-vue3';
 import DataTableLib from 'datatables.net-bs5';
@@ -21,7 +23,6 @@ DataTable.use(ButtonHtml5);
 export default {
     components: {
         DataTable,
-        AppLayout,
     },
     data() {
         return {
@@ -84,15 +85,8 @@ export default {
     },
 }
 </script>
-
 <template>
-    <AppLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Radiology Page
-            </h2>
-        </template>
-
+    <Records title="Medical Records">
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -107,5 +101,5 @@ export default {
                 </div>
             </div>
         </div>
-    </AppLayout>
+    </Records>
 </template>

@@ -23,13 +23,21 @@
         "@vue-hero-icons/outline": "^1.7.2",
         "chart.js": "^4.2.1",
         "datatables.net": "^1.13.4",
+        "datatables.net-bs5": "^1.13.4",
+        "datatables.net-buttons-bs5": "^2.3.6",
         "datatables.net-dt": "^1.13.4",
+        "datatables.net-responsive-bs5": "^2.4.1",
+        "datatables.net-select-bs5": "^1.6.2",
+        "datatables.net-select-dt": "^1.6.2",
         "datatables.net-staterestore-dt": "^1.2.2",
         "datatables.net-vue3": "^2.1.0",
         "jquery": "^3.6.4",
         "jszip": "^3.10.1",
+        "jzip": "^1.0.0",
+        "pdfmake": "^0.2.7",
         "v-tables-3": "^0.4.7",
         "vue-chartjs": "^5.2.0",
+        "vue-dataset": "^3.5.3",
         "vue-router": "^4.1.6"
     }
 }

@@ -4,17 +4,62 @@ namespace App\Http\Controllers;
 
 use App\Models\DegreeProgram;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $programs = DegreeProgram::select(['degree_programs.id', 'degree_programs.name', 'degree_programs.abbr', 'degree_programs.major', 'departments.name AS department_id'])
+            ->leftJoin('departments', 'departments.id', '=', 'degree_programs.department_id');
+
+        $searchBy = $request->input('search_by', 'name');
+        // Handle search
+        if ($request->has('search')) {
+            $searchTerm = $request->input('search');
+            $programs->where(function ($query) use ($searchTerm, $searchBy) {
+                if ($searchBy == '*') {
+                    $query->where('degree_programs.name', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('degree_programs.abbr', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('degree_programs.major', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('departments.name', 'LIKE', '%' . $searchTerm . '%');
+                } else {
+                    $field = 'degree_programs.' . $searchBy; // dynamically generate the search field
+                    $query->where($field, 'LIKE', '%' . $searchTerm . '%');
+                }
+            });
+        }
+        
+        // Handle sorting
+        $sortField = $request->input('sort', 'id');
+        $sortDirection = $request->input('sort_dir', 'asc');
+        $programs->orderBy($sortField, $sortDirection);
+
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+
+        $paginator = $programs->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json([
+            //get the total number of pages
+            'totalPages' => $paginator->lastPage(),
+            'hasMorePage' => $paginator->hasMorePages(),
+            'totalCount' => $paginator->total(),
+            'data' => $paginator->items(),
+            'perPage' => $paginator->perPage(),
+            'pageCount' => $paginator->perPage(),
+            'prevPage' => $paginator->lastPage(),
+            'currPage' => $paginator->currentPage(),
+            'nextPage' => $paginator->nextPageUrl(),
+        ]);
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -51,7 +96,6 @@ class DepartmentController extends Controller
      */
     public function show(string $id)
     {
-        //
     }
 
     /**
@@ -59,7 +103,7 @@ class DepartmentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return Inertia::render('Radiology/EditRadiology');
     }
 
     /**
@@ -75,7 +119,20 @@ class DepartmentController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $temp = DB::table('degree_programs')->where('id', $id)->delete();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if ($temp) {
+            return inertia('Radiology/RadiologyDashboard', [
+                'status' => 'success',
+                'message' => 'Records deleted successfully',
+                'data' => $temp,
+            ]);
+        }
+        return inertia('Radiology/RadiologyDashboard', [
+            'status' => 'failed',
+            'message' => 'Unable to delete record',
+        ]);
     }
 
     protected function rules()

@@ -42,14 +42,6 @@ class DegreeProgramSeeder extends Seeder
         ]);
 
         DegreeProgram::factory()->create([
-            'name' => 'Bachelor of Science in Development Communication',
-            'abbr' => 'BDC',
-            'group' => 'bachelor',
-            'department_id' => 4,
-            'is_active' => true,
-        ]);
-
-        DegreeProgram::factory()->create([
             'name' => 'Bachelor of Science in Agriculture',
             'abbr' => 'BSA-FST',
             'major' => 'Food Science and Technology',
@@ -100,6 +92,14 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Agricultural Economics ',
             'group' => 'bachelor',
             'department_id' => 9,
+            'is_active' => true,
+        ]);
+
+        DegreeProgram::factory()->create([
+            'name' => 'Bachelor of Science in Development Communication',
+            'abbr' => 'BSDC',
+            'group' => 'bachelor',
+            'department_id' => 4,
             'is_active' => true,
         ]);
 

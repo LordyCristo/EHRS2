@@ -10,8 +10,8 @@ export const BloodType = Array(
     { id: 'AB-', name: 'AB-' },
 );
 export const Sex = Array(
-    { value: 'male', label: 'Male' },
-    { value: 'female', label: 'Female' },
+    { id: 'male', name: 'Male' },
+    { id: 'female', name: 'Female' },
 );
 export const CivilStatus = Array(
     { id: 'single', name: 'Single' },

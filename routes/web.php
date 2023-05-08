@@ -58,7 +58,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     });
 
     Route::get('/radiology', function () {
-        return Inertia::render('Radiology');
+        return Inertia::render('Radiology/RadiologyDashboard');
     })->name('radiology');
 
     Route::get('/dental', function () {

@@ -49,8 +49,8 @@ export default {
 <template>
     <Sidebar :isOpen="isOpen">
         <template #items>
-            <div :class="isOpen ? 'w-14' : 'w-48 duration-300'"
-                class="flex flex-col min-h-full pt-5 px-1 bg-vsu-green shadow-md">
+            <div :class="isOpen ? 'w-14' : 'w-48'"
+                class="flex flex-col min-h-full duration-500 pt-5 px-1 bg-vsu-green shadow-md">
                 <div class="flex flex-col">
                     <div class="flex mb-2"
                         :class="isOpen ? 'flex-col justify-center items-center' : 'justify-between px-2'">

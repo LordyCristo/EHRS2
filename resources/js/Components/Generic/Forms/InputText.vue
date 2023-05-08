@@ -41,6 +41,6 @@ defineExpose({ focus: () => input.value.focus() });
             :class="errorMsg?'border-red-300':'border-gray-300'"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)"
-        >
+        />
     </InputField>
 </template>

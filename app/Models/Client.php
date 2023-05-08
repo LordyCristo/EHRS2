@@ -40,4 +40,9 @@ class Client extends Model
     {
         return $this->belongsTo(DegreeProgram::class);
     }
+
+    static function getTableName(){
+        // return the table name
+        return with(new static)->getTable();
+    }
 }

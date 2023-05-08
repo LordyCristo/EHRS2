@@ -5,7 +5,7 @@ defineProps({
 </script>
 <style>
 .inputLabel{
-    @apply text-sm whitespace-nowrap text-gray-600 font-semibold;
+    @apply text-sm whitespace-nowrap text-gray-600 font-normal;
 }
 </style>
 <template>

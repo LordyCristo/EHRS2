@@ -46,17 +46,24 @@ Route::get('/departments', function () {
 Route::post('/department', [DepartmentController::class, 'store'])->name('api.department.store');
 
 //Sample APIs' for the patient information
-Route::get('/programs', function () {
-    return DegreeProgram::select(['id', 'name', 'abbr', 'major', 'department_id'])->get();
-})->name('api.programs');
+// Route::get('/programs', function () {
+//     return DegreeProgram::select(['id', 'name', 'abbr', 'major', 'department_id'])->get();
+// })->name('api.programs');
+Route::get('/programs', [DepartmentController::class, 'index'])->name('api.programs');
+Route::post('/program', [DepartmentController::class, 'store'])->name('api.program.store');
+Route::get('/program/{id}', [DepartmentController::class, 'edit'])->name('api.program.edit');
+Route::put('/program/{id}', [DepartmentController::class, 'update'])->name('api.program.update');
+Route::delete('/program/{id}', [DepartmentController::class, 'destroy'])->name('api.program.destroy');
 
 //Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/patients', [PatientInformationController::class, 'index'])->name('api.patients');
     // To store the patient information
     Route::post('/patient', [PatientInformationController::class, 'store'])->name('api.patient.store');
-    // To retreive a patient information
-    Route::get('/patient/{id}', [PatientInformationController::class, 'show'])->name('api.patient.show');
+    // Get the patient edit form
+    Route::get('/patient/{id}', [PatientInformationController::class, 'edit'])->name('api.patient.edit');
+    // To update the patient information
+    Route::put('/patient/{id}', [PatientInformationController::class, 'update'])->name('api.patient.update');
     // API for the patient information Datatable
-    Route::get('/patients', [PatientInformationController::class, 'index'])->name('api.patients');
     Route::delete('patient/{id}', [PatientInformationController::class, 'destroy'])->name('api.patient.destroy');
     // API for the dashboard summary
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('api.dashboard');

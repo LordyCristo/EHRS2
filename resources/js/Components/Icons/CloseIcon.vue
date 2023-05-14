@@ -1,5 +1,5 @@
 <template>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250" fill="currentColor" stroke="currentColor">
-        <polygon points="145,125 250.7,230.7 231.4,250 125.7,144.3 20,250 0.7,230.7 106.4,125 0.7,19.3 20,0 125.7,105.7 231.4,0 250.7,19.3 " />
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+</svg>
 </template>

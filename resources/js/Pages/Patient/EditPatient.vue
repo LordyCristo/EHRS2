@@ -1,26 +1,31 @@
 <script setup>
-import Patient from '@/Pages/PatientsInformation.vue';
+import Patient from '@/Pages/Patients.vue';
 import PatientForm from '@/Pages/Patient/PatientForm.vue';
-import { ref, onMounted, defineProps } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import axios from 'axios';
-
-
-const form = useForm([]);
-
-onMounted(async () => {
-    try {
-        const response = await axios.get(route('api.patient.show', '1'));
-        const data = response.data;
-        form.value = useForm(data);
-    } catch (error) {
-        console.log(error);
-    }
-});
-
+</script>
+<script>
+export default {
+    props: {
+        data: Object,
+        degree_programs: Object,
+        client_types: Object,
+    },
+    data: () => ({
+        action: 'update',
+    }),
+}
 </script>
 <template>
     <Patient title="Edit Patient">
-        <PatientForm :form="form.value"></PatientForm>
+        <h1 class="text-center">Updating Client Details</h1>
+        <div class="flex justify-center items-center h-full">
+            <div class="max-w-5xl sm:p-5 p-1 bg-gray-100 rounded-md">
+                <PatientForm
+                    :action="action"
+                    :data="data"
+                    :degree_programs="degree_programs"
+                    :client_types="client_types"
+                />
+            </div>
+        </div>
     </Patient>
 </template>

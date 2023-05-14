@@ -1,6 +1,6 @@
 <script setup>
-import { Head, Link, router } from '@inertiajs/vue3';
-import Sidebar from '@/Components/Sidebar.vue';
+import { Head } from '@inertiajs/vue3';
+import Sidebar from '@/Components/Generic/Layout/Sidebar.vue';
 import PatientRecordsIcon from "@/Components/Icons/PatientRecordsIcon.vue";
 import HomeIcon from "@/Components/Icons/HomeIcon.vue";
 import MedicalRecordIcon from "@/Components/Icons/MedicalRecordIcon.vue";
@@ -23,11 +23,6 @@ defineProps({
         type: String,
         required: true,
     },
-    currTab: {
-        type: String,
-        required: false,
-        default: 'dashboard',
-    },
 });
 
 </script>
@@ -40,6 +35,7 @@ export default {
                 {
                     title: 'Dashboard',
                     link: 'dashboard',
+                    tabName: '/dashboard',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(HomeIcon),
@@ -49,6 +45,7 @@ export default {
                 {
                     title: 'Patients',
                     link: 'patients',
+                    tabName: '/patients',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(PatientRecordsIcon),
@@ -58,6 +55,7 @@ export default {
                 {
                     title: 'Records',
                     link: 'records',
+                    tabName: '/records',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(MedicalRecordIcon),
@@ -67,6 +65,7 @@ export default {
                 {
                     title: 'Radiology',
                     link: 'radiology',
+                    tabName: '/radiology',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(RadiologyIcon),
@@ -76,6 +75,7 @@ export default {
                 {
                     title: 'Dental',
                     link: 'dental',
+                    tabName: '/dental',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(DentalIcon),
@@ -84,6 +84,7 @@ export default {
                 {
                     title: 'Laboratories',
                     link: 'laboratory',
+                    tabName: '/laboratory',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(LaboratoryIcon),
@@ -93,6 +94,7 @@ export default {
                 {
                     title: 'Surgery',
                     link: 'surgery',
+                    tabName: '/surgery',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(SurgeryIcon),
@@ -102,6 +104,7 @@ export default {
                 {
                     title: 'Maternity',
                     link: 'maternity',
+                    tabName: '/maternity',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(MaternityIcon),
@@ -111,6 +114,7 @@ export default {
                 {
                     title: 'Ward',
                     link: 'ward',
+                    tabName: '/ward',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(WardIcon),
@@ -120,6 +124,7 @@ export default {
                 {
                     title: 'Settings',
                     link: 'profile.show',
+                    tabName: '/user/profile',
                     hasSubLinks: false,
                     isOpen: false,
                     icon: markRaw(SettingsIcon),
@@ -142,7 +147,8 @@ export default {
 </script>
 <template>
     <Head :title="title" />
-    <Sidebar :items="sidebarItems" :currTab="currTab">
+    
+    <Sidebar :items="sidebarItems">
         <!-- The body of the sidebar -->
         <template #body>
             <!-- Page Toolbar Section -->

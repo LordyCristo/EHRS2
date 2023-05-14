@@ -17,16 +17,7 @@ export default {
         form: Boolean,
         method: String,
         currTab: String,
-    },
-    data() {
-        return {
-            showSubLinks: false,
-        };
-    },
-    watch: {
-        isOpen: function (newValue, oldValue) {
-            this.showSubLinks = newValue;
-        }
+        isOpen: Boolean,
     },
     computed: {
         isHomePage() {
@@ -49,24 +40,27 @@ export default {
 </script>
 
 <template>
-    <div
-        class="mb-1 hover:bg-vsu-olive transition-colors duration-300 ease-in-out active:bg-vsu-yellow rounded-md hover:shadow-lg"
-        :class="currTab === currPage? 'bg-vsu-yellow': ''">
+    <div class="mb-1 hover:bg-vsu-olive duration-300 ease-in-out active:bg-vsu-yellow rounded-md hover:shadow-lg">
         <template v-if="!form">
-            <Link :href="route(link)" class="flex flex-row items-center gap-2 text-gray-100 p-2 rounded-md">
-            <span class="w-4 h-auto">
-                <slot name="icon"></slot>
-            </span>
-            <slot name="title"></slot>
+            <Link :href="route(link)" class="flex flex-row items-center gap-2 text-gray-100 p-2 rounded-md"
+            :class="{'bg-vsu-yellow': currPage === currTab}">
+                <span class="w-4 h-auto">
+                    <slot name="icon"></slot>
+                </span>
+                <span class="duration-300 ease-in-out text-sm" :class="{'opacity-0 absolute w-0': isOpen, 'opacity-100':!isOpen}">
+                    <slot name="title"></slot>
+                </span>
             </Link>
         </template>
         <template v-else>
             <form @submit.prevent="logout">
-                <button type="submit" class="flex flex-row items-center gap-2 w-full text-gray-100 p-2 rounded-md">
+                <button type="submit" class="flex flex-row items-center gap-2 text-gray-100 p-2 rounded-md">
                     <span class="w-4 h-auto">
                         <slot name="icon"></slot>
                     </span>
-                    <slot name="title"></slot>
+                    <span class="duration-300 ease-in-out text-sm" :class="{'opacity-0 absolute w-0': isOpen, 'opacity-100':!isOpen}">
+                        <slot name="title"></slot>
+                    </span>
                 </button>
             </form>
         </template>

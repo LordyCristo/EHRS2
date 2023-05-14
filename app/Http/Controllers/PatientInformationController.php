@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ClientRequest;
+use App\Models\ClientType;
+use App\Models\DegreeProgram;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
@@ -22,19 +24,17 @@ class PatientInformationController extends Controller
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');
             $query->where(function ($q) use ($search, $searchBy) {
-                if ($search == '*') {
+                if ($searchBy == '*') {
                     $q->where('first_name', 'like', '%' . $search . '%')
-                        ->orWhere('last_name', 'like', '%' . $search . '%')
-                        ->orWhere('middle_name', 'like', '%' . $search . '%')
-                        ->orWhere('suffix', 'like', '%' . $search . '%')
-                        ->orWhere('age', 'like', '%' . $search . '%')
-                        ->orWhere('sex', 'like', '%' . $search . '%')
-                        ->orWhere('civil_status', 'like', '%' . $search . '%')
-                        ->orWhere('client_type_id', 'like', '%' . $search . '%');
+                      ->orWhere('last_name', 'like', '%' . $search . '%')
+                      ->orWhere('middle_name', 'like', '%' . $search . '%')
+                      ->orWhere('suffix', 'like', '%' . $search . '%')
+                      ->orWhere('age', 'like', '%' . $search . '%')
+                      ->orWhere('sex', 'like', '%' . $search . '%')
+                      ->orWhere('civil_status', 'like', '%' . $search . '%');
                 } else {
-                    $field = 'patients.' . $searchBy;
-                    $q->where($field, 'like', '%' . $search . '%');
-                }
+                    $q->where('clients.' . $searchBy, 'like', '%' . $search . '%');
+                }                
             });
         }
 
@@ -62,12 +62,54 @@ class PatientInformationController extends Controller
         ]);
     }
 
+    // export to csv
+    public function getAll(){
+        return response()->json(Client::all());
+    }
+
+    public function import(Request $request){
+        $data = $request->all();
+        $numFailed = 0; // Initialize a counter for failed insertions
+        $erros = []; // Initialize an array to store errors
+        foreach ($data as $d){
+            try {
+                //validate each row of data
+                $validator = Validator::make($d, $this->rules(), $this->messages());
+                if($validator->fails()){
+                    $numFailed++;
+                    $errors = $validator->errors();
+                    $errorMessages = [];
+                    foreach ($errors->keys() as $key) {
+                        $errorMessages[$key] = $errors->get($key)[0];
+                    }
+                    $d['errors'] = $errorMessages;
+                    $erros[] = $d;
+                }
+                else
+                    Client::create($d);
+            } catch (\Exception $e) {
+                $numFailed++;
+                throw $e;
+            }
+        }
+        return response()->json([
+            'numSuccess' => count($data) - $numFailed,
+            'numFailed' => $numFailed,
+            'data' => $data,
+        ]);
+    }
+    
+
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        //
+        return inertia('Patient/NewPatient',[
+            'degree_programs' => DegreeProgram::select(['id', DB::raw("CONCAT(`name`, IFNULL(CONCAT(' major in ', `major`), '')) AS `name`")])->orderBy('id', 'asc')->get(),
+            'client_types' => ClientType::select(['id', 'name'])->orderBy('id', 'asc')->get(),
+            'last_client_id' => Client::select('id')->orderBy('id', 'desc')->first()->id ?? '0',
+        ]);
     }
 
     /**
@@ -83,12 +125,18 @@ class PatientInformationController extends Controller
                 $errorMessages[$key] = $errors->get($key)[0];
             }
             return inertia('Patient/NewPatient', [
+                'type' => 'failed',
+                'message' => 'Client not added',
                 'errors' => $errorMessages,
+                'degree_programs' => DegreeProgram::select(['id', DB::raw("CONCAT(`name`, IFNULL(CONCAT(' major in ', `major`), '')) AS `name`")])->orderBy('id', 'asc')->get(),
+                'client_types' => ClientType::select(['id', 'name'])->orderBy('id', 'asc')->get(),
+                'last_client_id' => Client::select('id')->orderBy('id', 'desc')->first()->id ?? '0',
             ]);
         }
         Client::create($request->all());
         return inertia('Patient/PatientDashboard', [
-            'success' => 'Patient added successfully'
+            'notifType' => 'success',
+            'notifMessage' => 'Patient added successfully'
         ]);
     }
 
@@ -112,7 +160,12 @@ class PatientInformationController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        return inertia('Patient/EditPatient', [
+            'data' => Client::find($id),
+            'degree_programs' => DegreeProgram::select(['id', DB::raw("CONCAT(`name`, IFNULL(CONCAT(' major in ', `major`), '')) AS `name`")])->orderBy('id', 'asc')->get(),
+            'client_types' => ClientType::select(['id', 'name'])->orderBy('id', 'asc')->get(),
+            'last_client_id' => Client::select('id')->orderBy('id', 'desc')->first()->id ?? '0',
+        ]);
     }
 
     /**
@@ -120,7 +173,32 @@ class PatientInformationController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), $this->rules(), $this->messages());
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            $errorMessages = [];
+            foreach ($errors->keys() as $key) {
+                $errorMessages[$key] = $errors->get($key)[0];
+            }
+            return inertia('Patient/EditPatient', [
+                'errors' => $errorMessages,
+                'data' => Client::find($id),
+                'degree_programs' => DegreeProgram::select(['id', DB::raw("CONCAT(`name`, IFNULL(CONCAT(' major in ', `major`), '')) AS `name`")])->orderBy('id', 'asc')->get(),
+                'client_types' => ClientType::select(['id', 'name'])->orderBy('id', 'asc')->get(),
+                'last_client_id' => Client::select('id')->orderBy('id', 'desc')->first()->id ?? '0',
+            ]);
+        }
+        $temp = Client::find($id);
+        if ($temp) {
+            $temp->update($request->all());
+            return inertia('Patient/PatientDashboard', [
+                'success' => 'Patient updated successfully'
+            ]);
+        } else {
+            return response()->json([
+                'error' => 'Patient not found'
+            ], 404);
+        }
     }
 
     /**
@@ -129,7 +207,8 @@ class PatientInformationController extends Controller
     public function destroy(string $id)
     {
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $temp = DB::table(Client::getTableName())->where('id', $id)->delete();
+        //$temp = DB::table(Client::getTableName())->where('id', $id)->delete();
+        $temp = Client::find($id)->delete();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         if ($temp) {
             return inertia('Patient/PatientsDashboard', [
@@ -159,7 +238,8 @@ class PatientInformationController extends Controller
             'age' => 'required|int',
             'sex' => 'required',
             'civil_status' => 'required',
-            'phone' => 'required|string|max:255|unique:clients,phone|starts_with:09|size:11',
+            'phone' => 'required|string|max:255|unique:clients,phone',
+            // 'phone => 'required|string|max:255|unique:clients,phone|starts_with:09|size:11'
             'email_address' => 'nullable|email|max:255|unique:clients,email_address',
             'home_address' => 'required|string|max:255',
             'curr_address' => 'required|string|max:255',

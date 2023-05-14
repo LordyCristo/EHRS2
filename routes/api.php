@@ -57,6 +57,12 @@ Route::delete('/program/{id}', [DepartmentController::class, 'destroy'])->name('
 
 //Route::middleware('auth:sanctum')->group(function () {
     Route::get('/patients', [PatientInformationController::class, 'index'])->name('api.patients');
+    // Get all the patient information
+    Route::get('/patients/all', [PatientInformationController::class, 'getAll'])->name('api.patient.all');
+    // Import the patient information
+    Route::post('/patients/import', [PatientInformationController::class, 'import'])->name('api.patient.import');
+    // Get the patient create form
+    Route::get('/patient/form', [PatientInformationController::class, 'create'])->name('api.patient.create');
     // To store the patient information
     Route::post('/patient', [PatientInformationController::class, 'store'])->name('api.patient.store');
     // Get the patient edit form

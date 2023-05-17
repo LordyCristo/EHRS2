@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PatientInformationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -29,18 +30,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::prefix('patients')->group(function () {
+    Route::prefix('patients')->group(callback: function () {
         Route::get('/', function () {
             return Inertia::render('Patient/PatientDashboard');
         })->name('patients');
 
-        Route::get('/new', function () {
-            return Inertia::render('Patient/NewPatient');
-        })->name('newPatient');
-
-        Route::get('/edit', function () {
-            return Inertia::render('Patient/EditPatient');
-        })->name('editPatient');
+        Route::get('/new', [PatientInformationController::class,'create'])->name('newPatient');
+        Route::get('/edit/{id}', [PatientInformationController::class,'edit'])->name('editPatient');
     });
 
     Route::prefix('records')->group(function () {

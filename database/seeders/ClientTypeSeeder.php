@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ClientType;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,7 +21,7 @@ class ClientTypeSeeder extends Seeder
         ];
 
         foreach ($types as $type) {
-            \App\Models\ClientType::create([
+            ClientType::create([
                 'name' => $type,
             ]);
         }

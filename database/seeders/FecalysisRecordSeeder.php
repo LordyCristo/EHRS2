@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\FecalysisRecord;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,6 @@ class FecalysisRecordSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\FecalysisRecord::factory(100)->create();
+        FecalysisRecord::factory(100)->create();
     }
 }

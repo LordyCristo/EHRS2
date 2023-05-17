@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ClientRequest;
 use App\Models\ClientType;
 use App\Models\DegreeProgram;
+use Exception;
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
@@ -34,7 +36,7 @@ class PatientInformationController extends Controller
                       ->orWhere('civil_status', 'like', '%' . $search . '%');
                 } else {
                     $q->where('clients.' . $searchBy, 'like', '%' . $search . '%');
-                }                
+                }
             });
         }
 
@@ -87,7 +89,7 @@ class PatientInformationController extends Controller
                 }
                 else
                     Client::create($d);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $numFailed++;
                 throw $e;
             }
@@ -98,7 +100,7 @@ class PatientInformationController extends Controller
             'data' => $data,
         ]);
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -225,7 +227,7 @@ class PatientInformationController extends Controller
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, Rule|array|string>
      */
     function rules()
     {

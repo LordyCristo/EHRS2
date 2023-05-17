@@ -1,6 +1,6 @@
 <script setup>
 import Patients from '@/Pages/Patients.vue';
-import DataTable from '@/Components/Generic/Layout/DataTable.vue';
+import DataTable from '@/Components/DataTable/DataTable.vue';
 import NotifBanner from '@/Components/Generic/Modals/NotifBanner.vue';
 </script>
 <script>
@@ -28,9 +28,9 @@ export default {
         },
         apiLink: {
             index: 'api.patients',
-            create: 'api.patient.create',
+            create: 'newPatient',
             store: 'api.patient.store',
-            edit: 'api.patient.edit',
+            edit: 'editPatient',
             update: 'api.patient.update',
             destroy: 'api.patient.destroy',
             getall: 'api.patient.all',

@@ -6,20 +6,21 @@ import DownloadIcon from '@/Components/Icons/DownloadIcon.vue';
 import RefreshIcon from '@/Components/Icons/RefreshIcon.vue';
 import SpinnerIcon from '@/Components/Icons/SpinnerIcon.vue';
 import AddIcon from '@/Components/Icons/AddIcon.vue';
-import { Link } from '@inertiajs/vue3';
-import { markRaw } from 'vue';
-import axios from 'axios';
 import CollapseIcon from "@/Components/Icons/CollapseIcon.vue";
 import ExpandIcon from "@/Components/Icons/ExpandIcon.vue";
 import CheckallIcon from "@/Components/Icons/CheckallIcon.vue";
 import SearchIcon from "@/Components/Icons/SearchIcon.vue";
 import UploadIcon from "@/Components/Icons/UploadIcon.vue";
 import ContextMenu from "@/Components/Generic/Layout/ContextMenu.vue";
+import DtLength from "@/Components/DataTable/DtComponents/DtLength.vue";
+import Select from "@/Components/Generic/Headlessui/Select.vue";
+import DtSearch from "@/Components/DataTable/DtComponents/DtSearch.vue";
+import DtSearchBy from "@/Components/DataTable/DtComponents/DtSearchBy.vue";
 </script>
 <script>
-
-
-import {markRaw} from "vue";
+import { Link } from '@inertiajs/vue3';
+import { markRaw } from 'vue';
+import axios from 'axios';
 
 export default {
     props: {
@@ -38,16 +39,16 @@ export default {
     },
     data: () => ({
         showMenu: false,
-        columns: [],
-        processing: false,
-        viewSize: true, // true means small view
+        columns: [],    // columns to be displayed
+        processing: false, // show spinner
+        viewSize: false, // default is large view
         pageStart: 0,
         totalCount: 0,
         pageNumber: 1,
         perPage: 10,
         pageSize: 10,
-        sortedColumn: 'id',
-        sortDir: 'desc',
+        sortedColumn: 'id', // default column to be sorted
+        sortDir: 'desc', // default sort direction
         totalPages: 0,
         totalRecords: 0,
         search: null,
@@ -55,6 +56,7 @@ export default {
         selected: [],
         currentPageSelected: [],
         data: [],
+        DtLengthOptions: [10, 25, 50, 100],
         contextMenu: [
             {
                 title: 'Delete',
@@ -162,10 +164,14 @@ export default {
                         this.currentPageSelected.push(record.id);
                     }
                 });
+            } else {
+                this.selected = [];
+                this.currentPageSelected = [];
             }
         },
         deselectAll() {
             this.selected = [];
+            this.currentPageSelected = [];
         },
         getData() {
             this.processing = true;
@@ -359,7 +365,7 @@ export default {
                 };
             };
             fileInput.click();
-        }
+        },
     },
 }
 </script>
@@ -373,15 +379,7 @@ export default {
             </h1>
         </div>
         <div class="dtHeader flex justify-between mb-2">
-            <div class="dtLength">
-                <label for="dtLength">Show</label>
-                <select name="dtLength" id="dtLength" v-model="pageSize" class="dtLengthSelect" @change="refreshData()">
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                </select>
-                <span class="dtLengthText">entries</span>
-            </div>
+            <DtLength :options="DtLengthOptions" v-model="pageSize" @change="refreshData" />
             <div class="dtToolbar flex items-center">
                 <Link :href="route(apiLink.create)" class="addbtn dtBtn-sm flex">
                     <AddIcon class="w-4 mr-1" />
@@ -413,35 +411,18 @@ export default {
                         Expand
                     </template>
                 </button>
-                <template v-if="selected.length < pageNumber * pageSize * pageNumber">
-                    <button @click="selectAll()" class="dtSelectAll dtBtn-sm">
+                <button v-if="selected.length < pageSize * pageNumber" @click="selectAll()" class="dtSelectAll dtBtn-sm">
                     <CheckallIcon class="w-4 mr-1" />
                     Select All
-                    </button>
-                </template>
-                <template v-else>
-                    <button @click="deselectAll()" class="dtClearSelected dtBtn-sm">
+                </button>
+                <button v-if=" selected.length > 1" @click="deselectAll()" class="dtClearSelected dtBtn-sm">
                     <CloseIcon class="w-4 mr-1" />
                     Deselect All
-                    </button>
-                </template>
+                </button>
             </div>
-            <div class="dtSearch flex h-8 shadow-sm rounded-sm">
-                <div class="flex items-center  rounded-sm border">
-                    <select class="dtSearchBy" name="searchBy" id="searchBy" v-model="searchBy" @change="refreshData()">
-                        <option value="*" selected>All</option>
-                        <template v-for="col in columns">
-                            <option v-if="col.searchable" :value="col.name" :key="col.id">{{ col.title }}</option>
-                        </template>
-                    </select>
-                    <input v-model="search" class="dtSearchBox" type="text" placeholder="Search" aria-label="Search box">
-                    <button v-if="search" @click="clearSearchBox()" class="dtSearchClear" type="button">
-                        <close-icon class="h-4 w-4" />
-                    </button>
-                    <button class="dtSearchBtn flex" @click="refreshData()">
-                        <SearchIcon class="h-4 w-4" />
-                    </button>
-                </div>
+            <div class="flex items-center rounded-sm shadow-sm border">
+                <DtSearchBy v-model="searchBy" :columns="columns" @change="refreshData()" />
+                <DtSearch :func="refreshData" v-model="search" :searchBy="searchBy" :columns="columns" />
             </div>
         </div>
         <table class="dtTable" ref="table">
@@ -477,7 +458,7 @@ export default {
                             <template v-if="col.data">
                                 {{ item[col.data] }}
                             </template>
-                            
+
                             <!-- for actions -->
                             <template v-else-if="col.icon">
                                 <div class="flex justify-evenly w-full">
@@ -516,8 +497,7 @@ export default {
                     </button>
                 </template>
             </div>
-
-            <div class="flex overflow-hidden" v-else>
+            <div class="flex overflow-hidden" v-else-if="totalPages > 1">
                 <button :class="{'bg-gray-300': 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(1)">
                     1
                 </button>

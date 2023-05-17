@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AccountRole;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -23,7 +24,7 @@ class AccountRoleSeeder extends Seeder
         ];
 
         foreach ($roles as $role) {
-            \App\Models\AccountRole::create([
+            AccountRole::create([
                 'name' => $role,
             ]);
         }

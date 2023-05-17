@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Services;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,7 +13,7 @@ class ServicesSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'ER Section',
             'description' => 'This is where minor emergencies are treated',
             'schedule' => 'M-F 8am-5pm',
@@ -21,7 +22,7 @@ class ServicesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'Records Section',
             'description' => 'This is where medical records are kept',
             'schedule' => 'M-F 8am-5pm',
@@ -30,7 +31,7 @@ class ServicesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'X-Ray Section',
             'description' => 'This is where X-Rays are taken',
             'schedule' => 'M-F 8am-5pm',
@@ -39,7 +40,7 @@ class ServicesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'Laboratory Section',
             'description' => 'This is where laboratory tests are done',
             'schedule' => 'M-F 8am-5pm',
@@ -48,7 +49,7 @@ class ServicesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'Pharmacy Section',
             'description' => 'This is where medicines are dispensed',
             'schedule' => 'M-F 8am-5pm',
@@ -57,7 +58,7 @@ class ServicesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'Outpatient Section',
             'description' => 'This is where outpatient consultations are done',
             'schedule' => 'M-F 8am-5pm',
@@ -66,7 +67,7 @@ class ServicesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'Inpatient Section',
             'description' => 'This is where inpatient consultations are done',
             'schedule' => 'M-F 8am-5pm',
@@ -75,7 +76,7 @@ class ServicesSeeder extends Seeder
             'is_active' => true,
         ]);
 
-        \App\Models\Services::factory()->create([
+        Services::factory()->create([
             'name' => 'Billing Section',
             'description' => 'This is where billing is done',
             'schedule' => 'M-F 8am-5pm',

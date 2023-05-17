@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Fecalysis;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Fecalysis>
+ * @extends Factory<Fecalysis>
  */
 class FecalysisFactory extends Factory
 {

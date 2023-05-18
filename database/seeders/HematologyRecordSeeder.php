@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\Fecalysis;
+use App\Models\HematologyRecord;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class FecalysisSeeder extends Seeder
+class HematologyRecordSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Fecalysis::factory(100)->create();
+        HematologyRecord::factory(100)->create();
     }
 }

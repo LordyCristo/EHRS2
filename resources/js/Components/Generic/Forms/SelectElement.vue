@@ -11,7 +11,7 @@ export default {
         label: String,
         options: [Array, Function],
         class: String,
-    }, 
+    },
 };
 </script>
 <style>
@@ -23,7 +23,7 @@ export default {
     <InputField :name="name" :errorMsg="errorMsg" :label="label">
         <select :name="name" :id="id" class="selectElement" :class="errorMsg ? 'border-red-300' : 'border-gray-300'"
             @change="$emit('update:modelValue', $event.target.value);">
-            <option value="" hidden select>Choose</option>
+            <option value="" hidden selected>Choose</option>
             <option v-for="option in options" :value="option.id" :key="option.name" :selected="modelValue === option.id">
                 {{ option.name }}</option>
         </select>

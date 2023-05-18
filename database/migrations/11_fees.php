@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('client_type')->constrained('client_types')->cascadeOnDelete()->cascadeOnUpdate();
             $table->decimal('amount', 10, 3);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

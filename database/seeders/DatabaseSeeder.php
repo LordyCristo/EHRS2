@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
             DegreeProgramSeeder::class,
             UserSeeder::class,
             ClientSeeder::class,
-            FecalysisSeeder::class,
-            FecalysisRecordSeeder::class,
+            HematologySeeder::class,
+            HematologyRecordSeeder::class,
         ]);
     }
 }

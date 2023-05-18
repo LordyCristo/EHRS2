@@ -1,8 +1,4 @@
 <script setup>
-import axios from 'axios';
-import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import { Sex, CivilStatus, YearLevel } from '@/Legends/legends';
 import InputText from '@/Components/Generic/Forms/InputText.vue';
 import Select from '@/Components/Generic/Forms/SelectElement.vue';
 import Datepicker from '@/Components/Generic/Forms/Datepicker.vue';
@@ -10,18 +6,20 @@ import RadioButton from '@/Components/Generic/Forms/RadioButton.vue';
 import SubmitButton from '@/Components/Generic/Buttons/SubmitButton.vue';
 import ClearButton from '@/Components/Generic/Buttons/ClearButton.vue';
 import CancelButton from '@/Components/Generic/Buttons/CancelButton.vue';
-import ComboBox from '@/Components/Generic/Headlessui/ComboBoxAutoComplete.vue';
-import SelectUI from '@/Components/Generic/Headlessui/Select.vue';
 </script>
 
 <script>
 import {useForm} from "@inertiajs/vue3";
-import {isNumber} from "chart.js/helpers";
+import { Sex, CivilStatus, YearLevel } from '@/Legends/legends';
 
 export default {
     props: {
         action: String,
-        data: Object,
+        data: {
+            type: Object,
+            required: false,
+            default: [],
+        },
         degree_programs: Object,
         client_types: Object,
         last_client_id: [Number, String],
@@ -53,33 +51,27 @@ export default {
     },
     methods: {
         submit() {
-            console.log(this.action);
-            if (this.action === 'update'){
+            if (this.action === 'update') {
                 this.form.put(route('api.patient.update', this.data.id), {
-                    onError: () => {
-                        window.history.pushState({}, null, route('editPatient', this.data.id));
-                        history.replaceState(null, '', route('editPatient', this.data.id));
-                    },
-                    onSuccess: () => {
-                        this.clearForm();
-                        window.history.pushState({}, null, route('patients'));
-                        history.replaceState(null, '', route('patients'));
-                    },
+                    onError: this.handleFormError,
+                    onSuccess: this.handleFormSuccess,
                 });
-            }
-            else if (this.action === 'store'){
+            } else if (this.action === 'store') {
                 this.form.post(route('api.patient.store'), {
-                    onError: () => {
-                        window.history.pushState({}, null, route('newPatient'));
-                        history.replaceState(null, '', route('newPatient'));
-                    },
-                    onSuccess: () => {
-                        this.clearForm();
-                        window.history.pushState({}, null, route('patients'));
-                        history.replaceState(null, '', route('patients'));
-                    },
+                    onError: this.handleFormError,
+                    onSuccess: this.handleFormSuccess,
                 });
             }
+        },
+        handleFormError(res) {
+            const routeName = this.action === 'update' ? 'editPatient' : 'newPatient';
+            window.history.pushState({}, null, route(routeName, this.data.id));
+            history.replaceState(null, '', route(routeName, this.data.id));
+        },
+        handleFormSuccess(res) {
+            this.clearForm();
+            window.history.pushState({}, null, route('patients'));
+            history.replaceState(null, '', route('patients'));
         },
         clearForm() {
             this.form.reset();
@@ -116,7 +108,7 @@ export default {
             }
         },
     },
-    async mounted() {
+    mounted() {
         this.form = useForm(this.data);
     }
 };
@@ -154,8 +146,8 @@ export default {
                 <Select v-model="form.year_lvl" label="Year Level" :options="year_levels" :errorMsg="form.errors.year_lvl" @input="onFocusClearError('year_lvl')" />
             </div>
             <div class="flex items-center justify-between mt-4">
-                <CancelButton @click="cancelForm">Cancel</CancelButton>
-                <ClearButton @click="clearForm">Clear</ClearButton>
+                <CancelButton v-if="action === 'update'" @click="cancelForm">Cancel</CancelButton>
+                <ClearButton v-else @click="clearForm">Clear</ClearButton>
                 <SubmitButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save</SubmitButton>
             </div>
         </div>

@@ -4,23 +4,20 @@ import EditIcon from '@/Components/Icons/EditIcon.vue';
 import CloseIcon from '@/Components/Icons/CloseIcon.vue';
 import DownloadIcon from '@/Components/Icons/DownloadIcon.vue';
 import RefreshIcon from '@/Components/Icons/RefreshIcon.vue';
-import SpinnerIcon from '@/Components/Icons/SpinnerIcon.vue';
 import AddIcon from '@/Components/Icons/AddIcon.vue';
 import CollapseIcon from "@/Components/Icons/CollapseIcon.vue";
 import ExpandIcon from "@/Components/Icons/ExpandIcon.vue";
 import CheckallIcon from "@/Components/Icons/CheckallIcon.vue";
-import SearchIcon from "@/Components/Icons/SearchIcon.vue";
 import UploadIcon from "@/Components/Icons/UploadIcon.vue";
-import ContextMenu from "@/Components/Generic/Layout/ContextMenu.vue";
 import DtLength from "@/Components/DataTable/DtComponents/DtLength.vue";
-import Select from "@/Components/Generic/Headlessui/Select.vue";
 import DtSearch from "@/Components/DataTable/DtComponents/DtSearch.vue";
 import DtSearchBy from "@/Components/DataTable/DtComponents/DtSearchBy.vue";
+import DtProcessing from "@/Components/DataTable/DtComponents/DtProcessing.vue";
 </script>
 <script>
-import { Link } from '@inertiajs/vue3';
 import { markRaw } from 'vue';
 import axios from 'axios';
+import { Link } from "@inertiajs/vue3";
 
 export default {
     props: {
@@ -46,7 +43,7 @@ export default {
         totalCount: 0,
         pageNumber: 1,
         perPage: 10,
-        pageSize: 10,
+        pageSize: 20,
         sortedColumn: 'id', // default column to be sorted
         sortDir: 'desc', // default sort direction
         totalPages: 0,
@@ -55,8 +52,9 @@ export default {
         searchBy: '*',
         selected: [],
         currentPageSelected: [],
+        completedCount: 0,
         data: [],
-        DtLengthOptions: [10, 25, 50, 100],
+        DtLengthOptions: [20, 50, 100, 200],
         contextMenu: [
             {
                 title: 'Delete',
@@ -86,9 +84,6 @@ export default {
         this.changeSizeView();
     },
     methods: {
-        gotoPatientForm() {
-            router.push({name: 'patient.create'});  // this is the same as route('patient.create')
-        },
         deleteRecord(id) {
             if (confirm(`Are you sure you want to delete this record?`)) {
                 this.processing = true;
@@ -107,24 +102,25 @@ export default {
         deleteSelected() {
             if (confirm(`Are you sure you want to delete these ${this.selected.length} records?`)) {
                 this.processing = true;
-                let completedCount = 0;
+                this.completedCount = 0;
                 const totalCount = this.selected.length;
                 this.selected.forEach(id => {
                     axios.delete(route(this.apiLink.destroy, id))
                         .then(response => {
-                            completedCount++;
-                            if (completedCount === totalCount) {
+                            this.completedCount++;
+                            if (this.completedCount === totalCount) {
                                 this.getData();
                             }
                         })
                         .catch(error => {
                             console.log(error);
-                            completedCount++;
-                            if (completedCount === totalCount) {
+                            this.completedCount++;
+                            if (this.completedCount === totalCount) {
                                 this.processing = false;
                             }
                         });
                 });
+                this.completedCount = 0;
                 this.selected = [];
             }
         },
@@ -213,10 +209,14 @@ export default {
             }
         },
         firstPage() {
+            if(this.pageNumber === 1)
+                return;
             this.pageNumber = 1;
             this.getData();
         },
         lastPage() {
+            if(this.pageNumber === this.totalPages)
+                return;
             this.pageNumber = this.totalPages;
             this.getData();
         },
@@ -261,18 +261,9 @@ export default {
                 this.columns.push(this.actionButton);
             }
         },
-        openContextMenu(event, id) {
-           // event.preventDefault();
-            this.contextMenu = {
-                id: id,
-                x: event.clientX,
-                y: event.clientY,
-            };
-        },
         exportToCsv() {
             this.processing = true;
-            axios
-                .get(route(this.apiLink.getall), {
+            axios.get(route(this.apiLink.getall), {
                     params: {
                         page: this.pageNumber,
                         per_page: this.pageSize,
@@ -346,7 +337,7 @@ export default {
                         const row = {};
                         for (let j = 0; j < headers.length; j++) {
                             // if the value is empty, set it to null
-                            if (values[j] == "\"\"" || values[j] === undefined || values[j] === null) {
+                            if (values[j] === "\"\"" || values[j] === undefined || values[j] === null) {
                                 values[j] = null;
                             }
                             row[headers[j]] = values[j];
@@ -370,192 +361,162 @@ export default {
 }
 </script>
 <template>
-    <div class="dtContainer responsive">
-        <div id="processing-cover" v-if="processing"
-            class="bg-gray-200 text-gray-900 opacity-50 absolute min-h-screen min-w-full flex justify-center items-center z-50">
-            <h1 class="text-2xl flex">
-                <SpinnerIcon class="animate-spin w-7 mr-3" />
-                Please Wait...
-            </h1>
-        </div>
-        <div class="dtHeader flex justify-between mb-2">
-            <DtLength :options="DtLengthOptions" v-model="pageSize" @change="refreshData" />
-            <div class="dtToolbar flex items-center">
-                <Link :href="route(apiLink.create)" class="addbtn dtBtn-sm flex">
-                    <AddIcon class="w-4 mr-1" />
-                    New
-                </Link>
-                <button @click="refreshData()" class="refreshBtn dtBtn-sm flex">
-                    <RefreshIcon class="w-4 mr-1" />
-                    Refresh
-                </button>
-                <button @click="exportToCsv()" class="excelExport dtBtn-sm flex">
-                    <DownloadIcon class="w-4 mr-1" />
-                    Excel
-                </button>
-                <button @click="importFromCsv()" class="excelImport dtBtn-sm flex">
-                    <UploadIcon class="w-4 mr-1" />
-                    Import
-                </button>
-                <button @click="deleteSelected()" v-if="selected.length > 1" class="deleteSelected dtBtn-sm flex">
-                    <DeleteIcon class="w-4 mr-1" />
-                    Delete Selected
-                </button>
-                <button class="viewBtn dtBtn-sm" @click="changeSizeView()">
-                    <template v-if="viewSize">
-                        <CollapseIcon class="w-3 mr-1" />
-                        Collapse
-                    </template>
-                    <template v-else>
-                        <ExpandIcon class="w-3 mr-1" />
-                        Expand
-                    </template>
-                </button>
-                <button v-if="selected.length < pageSize * pageNumber" @click="selectAll()" class="dtSelectAll dtBtn-sm">
-                    <CheckallIcon class="w-4 mr-1" />
-                    Select All
-                </button>
-                <button v-if=" selected.length > 1" @click="deselectAll()" class="dtClearSelected dtBtn-sm">
-                    <CloseIcon class="w-4 mr-1" />
-                    Deselect All
-                </button>
+    <div class="w-full flex justify-center">
+        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>
+        <div v-else class="max-w-fit">
+            <div class="dtHeader flex justify-between mb-2 gap-2">
+                <DtLength :options="DtLengthOptions" v-model="pageSize" @change="refreshData" />
+                <div class="dtToolbar flex items-center">
+                    <Link :href="route(apiLink.create)" class="addbtn dtBtn-sm">
+                        <AddIcon class="w-4 mr-1" />
+                        New
+                    </Link>
+                    <button class="refreshBtn dtBtn-sm" @click="refreshData()">
+                        <RefreshIcon class="w-4 mr-1" />
+                        Refresh
+                    </button>
+                    <button class="excelExport dtBtn-sm" @click="exportToCsv()">
+                        <DownloadIcon class="w-4 mr-1" />
+                        Excel
+                    </button>
+                    <button class="excelImport dtBtn-sm" @click="importFromCsv()">
+                        <UploadIcon class="w-4 mr-1" />
+                        Import
+                    </button>
+                    <button v-if="selected.length > 1" class="deleteSelected dtBtn-sm" @click="deleteSelected()">
+                        <DeleteIcon class="w-4 mr-1" />
+                        Delete Selected
+                    </button>
+                    <button class="viewBtn dtBtn-sm" @click="changeSizeView()">
+                        <template v-if="viewSize">
+                            <CollapseIcon class="w-3 mr-1" />
+                            Collapse
+                        </template>
+                        <template v-else>
+                            <ExpandIcon class="w-3 mr-1" />
+                            Expand
+                        </template>
+                    </button>
+                    <button v-if="selected.length < pageSize * pageNumber" class="dtSelectAll dtBtn-sm" @click="selectAll()">
+                        <CheckallIcon class="w-4 mr-1" />
+                        Select All
+                    </button>
+                    <button v-if=" selected.length > 1" class="dtClearSelected dtBtn-sm" @click="deselectAll()">
+                        <CloseIcon class="w-4 mr-1" />
+                        Deselect All
+                    </button>
+                </div>
+                <div class="flex items-center rounded-sm shadow-sm border">
+                    <DtSearchBy v-model="searchBy" :columns="columns" @change="refreshData()" />
+                    <DtSearch :func="refreshData" v-model="search" :searchBy="searchBy" :columns="columns" />
+                </div>
             </div>
-            <div class="flex items-center rounded-sm shadow-sm border">
-                <DtSearchBy v-model="searchBy" :columns="columns" @change="refreshData()" />
-                <DtSearch :func="refreshData" v-model="search" :searchBy="searchBy" :columns="columns" />
-            </div>
-        </div>
-        <table class="dtTable" ref="table">
-            <thead class="dtHead">
-                <tr class="dtHeaderRow">
-                    <template v-for="col in columns" :key="col.data">
-                        <th v-if="col.name === sortedColumn" class="dtHeader bg-vsu-olive"
-                            @click="sortColumn(col)">
-                            {{ col.title }}
-                            <template v-if="sortDir === 'asc'">
-                                <span class="asc"></span>
-                            </template>
-                            <template v-else>
-                                <span class="desc"></span>
-                            </template>
-                        </th>
-                        <th v-else class="dtHeader"
-                            @click="sortColumn(col)">
-                            {{ col.title }}
-                        </th>
-                    </template>
-                </tr>
-            </thead>
-            <tbody class="dtBody max-h-screen overflow-y-scroll">
-                <tr v-if="processing">
-                    <td :colspan="columns.length" class="text-center">Retrieving data...</td>
-                </tr>
-                <tr class="dtBodyRow hover:bg-gray-200" v-else-if="data.length" v-for="item in data"
-                    @click="selectRecord($event, item.id)" :class="{ 'selected-row': selected.includes(item.id) }">
-                    <template v-for="col in columns" :key="col.data">
-                        <td class="dtData whitespace-nowrap" :class="col.className">
+            <table class="w-full border-collapse text-sm" ref="table">
+                <thead class="dtHead">
+                    <tr class="dtHeaderRow">
+                        <template v-for="col in columns" :key="col.data">
+                            <th v-if="col.name === sortedColumn" class="dtHeader bg-vsu-olive whitespace-nowrap"
+                                @click="sortColumn(col)">
+                                {{ col.title }}
+                                <template v-if="sortDir === 'asc'">
+                                    <span class="asc"></span>
+                                </template>
+                                <template v-else>
+                                    <span class="desc"></span>
+                                </template>
+                            </th>
+                            <th v-else class="dtHeader whitespace-nowrap"
+                                @click="sortColumn(col)">
+                                {{ col.title }}
+                            </th>
+                        </template>
+                    </tr>
+                </thead>
+                <tbody class="dtBody max-h-screen overflow-y-scroll">
+                    <tr v-if="processing">
+                        <td :colspan="columns.length" class="text-center">Retrieving data...</td>
+                    </tr>
+                    <tr class="dtBodyRow hover:bg-gray-200 border-r" v-else-if="data.length" v-for="item in data"
+                        @click="selectRecord($event, item.id)" :class="{ 'bg-gray-300 text-gray-900 border': selected.includes(item.id) }">
+                        <template v-for="col in columns" :key="col.data">
                             <!-- for data -->
-                            <template v-if="col.data">
+                            <td v-if="col.data" class="dtData whitespace-nowrap border-gray-200 border" :class="col.className">
                                 {{ item[col.data] }}
-                            </template>
-
+                            </td>
                             <!-- for actions -->
-                            <template v-else-if="col.icon">
-                                <div class="flex justify-evenly w-full">
+                            <td v-else-if="col.icon" class="dtData whitespace-nowrap border-none" :class="col.className">
+                                <div class="flex justify-evenly container">
                                     <a @click="deleteRecord(item.id)"
-                                        v-if="selected.length <= 1 && selected.includes(item.id)"
-                                        class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-red-500 duration-1000 ease-in">
+                                       v-if="selected.length <= 1 && selected.includes(item.id)"
+                                       class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-red-500 duration-1000 ease-in">
                                         <component :is="col.icon[0]" />
                                     </a>
                                     <Link :href="route(apiLink.edit, item.id)"
-                                        v-if="selected.length <= 1 && selected.includes(item.id)"
-                                        class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-1000 ease-in">
+                                          v-if="selected.length <= 1 && selected.includes(item.id)"
+                                          class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-1000 ease-in">
                                         <component :is="col.icon[1]" />
                                     </Link>
                                 </div>
-                            </template>
-                        </td>
+                            </td>
+                        </template>
+                    </tr>
+                    <tr v-else>
+                        <td :colspan="columns.length" class="text-center">No data available</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="p-1 border border-t-0 min-w-full flex justify-between text-sm bottom-0">
+                <div class="flex items-center">
+                    <span>Showing {{ pageStart }} to {{ pageStart + data.length - 1 }} of {{ totalRecords }} entries</span>
+                </div>
+                <div class="flex items-center" v-if="selected.length > 1">
+                    <span>Selected {{ selected.length }} rows</span>
+                </div>
+                <div class="flex" v-if="totalPages > 1 && totalPages <= 10">
+                    <template v-for="i in totalPages" :key="i">
+                        <button :class="{'bg-gray-300': i === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(i)">
+                            {{ i }}
+                        </button>
                     </template>
-                </tr>
-                <tr v-else>
-                    <td :colspan="columns.length" class="text-center">No data available</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="dtFooter min-w-full flex justify-between text-sm px-1">
-            <div class="flex items-center">
-                <span>Showing {{ pageStart }} to {{ pageStart + data.length - 1 }} of {{
-                    totalRecords }} entries</span>
-            </div>
-            <div class="flex items-center" v-if="selected.length > 1">
-                <span>Selected {{ selected.length }} rows</span>
-            </div>
-            <div class="flex" v-if="totalPages > 1 && totalPages <= 10">
-                <template v-for="i in totalPages" :key="i">
-                    <button :class="{'bg-gray-300': i === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(i)">
-                        {{ i }}
+                </div>
+                <div class="flex overflow-hidden" v-else-if="totalPages > 1">
+                    <button :class="{'bg-gray-300': 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(1)">
+                        1
                     </button>
-                </template>
-            </div>
-            <div class="flex overflow-hidden" v-else-if="totalPages > 1">
-                <button :class="{'bg-gray-300': 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(1)">
-                    1
-                </button>
-                <template v-if="pageNumber > 3">
-                    <span class="px-2">&hellip;</span>
-                </template>
-                <template v-if="pageNumber > 2">
-                    <button :class="{'bg-gray-300': pageNumber - 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber - 1)">
-                        {{ pageNumber - 1 }}
+                    <template v-if="pageNumber > 3">
+                        <span class="px-2">&hellip;</span>
+                    </template>
+                    <template v-if="pageNumber > 2">
+                        <button :class="{'bg-gray-300': pageNumber - 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber - 1)">
+                            {{ pageNumber - 1 }}
+                        </button>
+                    </template>
+                    <button v-if="pageNumber !== 1 && pageNumber !== totalPages" :class="{'bg-gray-300': pageNumber === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber)">
+                        {{ pageNumber }}
                     </button>
-                </template>
-                <button v-if="pageNumber !== 1 && pageNumber !== totalPages" :class="{'bg-gray-300': pageNumber === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber)">
-                    {{ pageNumber }}
-                </button>
-                <template v-if="pageNumber < totalPages - 1">
-                    <button :class="{'bg-gray-300': pageNumber + 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber + 1)">
-                        {{ pageNumber + 1 }}
+                    <template v-if="pageNumber < totalPages - 1">
+                        <button :class="{'bg-gray-300': pageNumber + 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber + 1)">
+                            {{ pageNumber + 1 }}
+                        </button>
+                    </template>
+
+                    <template v-if="totalPages - pageNumber > 3">
+                        <span class="px-2">&hellip;</span>
+                    </template>
+                    <button :class="{'bg-gray-300': totalPages === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(totalPages)">
+                        {{ totalPages }}
                     </button>
-                </template>
-
-                <template v-if="totalPages - pageNumber > 3">
-                    <span class="px-2">&hellip;</span>
-                </template>
-                <button :class="{'bg-gray-300': totalPages === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(totalPages)">
-                    {{ totalPages }}
-                </button>
-            </div>
-
-<!--            <div class="flex" v-if="totalPages > 10">-->
-<!--                <template v-if="pageNumber <= 5">-->
-<!--                    <button :class="{'bg-gray-300': i === pageNumber }" class="dtBtn-sm border" v-for="i in 10" :key="i"-->
-<!--                        @click="changePageNumber(i)">-->
-<!--                        {{ i }}-->
-<!--                    </button>-->
-<!--                </template>-->
-<!--                <template v-else-if="pageNumber > 5 && pageNumber <= totalPages - 5">-->
-<!--                    <button :class="{'bg-gray-300': i === pageNumber }" class="dtBtn-sm border" v-for="i in 10" :key="i"-->
-<!--                        @click="changePageNumber(i + pageNumber - 5)">-->
-<!--                        {{ i + pageNumber - 5 }}-->
-<!--                    </button>-->
-<!--                </template>-->
-<!--                <template v-else>-->
-<!--                    <button :class="{'bg-gray-300': i === pageNumber }" class="dtBtn-sm border" v-for="i in 10" :key="i"-->
-<!--                        @click="changePageNumber(i + totalPages - 10)">-->
-<!--                        {{ i + totalPages - 10 }}-->
-<!--                    </button>-->
-<!--                </template>-->
-<!--            </div>-->
-
-            <div class="flex items-center">
-                <button @click="firstPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === 1 }"
-                    class="dtFirstPage dtBtn-sm">First</button>
-                <button @click="previousPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === 1 }"
-                    class="dtPreviousPage dtBtn-sm">Previous</button>
-                <button @click="nextPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === totalPages }"
-                    class="dtNextPage dtBtn-sm">Next</button>
-                <button @click="lastPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === totalPages }"
-                    class="dtLastPage dtBtn-sm">Last</button>
+                </div>
+                <div class="flex items-center">
+                    <button @click="firstPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === 1 }"
+                        class="dtFirstPage dtBtn-sm">First</button>
+                    <button @click="previousPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === 1 }"
+                        class="dtPreviousPage dtBtn-sm">Previous</button>
+                    <button @click="nextPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === totalPages }"
+                        class="dtNextPage dtBtn-sm">Next</button>
+                    <button @click="lastPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === totalPages }"
+                        class="dtLastPage dtBtn-sm">Last</button>
+                </div>
             </div>
         </div>
     </div>
@@ -573,22 +534,6 @@ export default {
     content: '▼';
 }
 
-.ascDesc::after {
-    content: '▲▼';
-}
-
-.dtTable {
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    font-size: small;
-}
-
-.dtContainer .dtFooter {
-    border-top: none;
-    @apply py-1;
-}
-
 .dtHead .dtHeaderRow {
     @apply bg-vsu-green;
     color: #ffffff;
@@ -600,50 +545,11 @@ export default {
     padding: 0.3rem 1rem;
 }
 
-.dt-center {
-    text-align: center;
-}
-
-.dt-border-sm,
-.dtHead .dtHeaderRow,
-.dtContainer .dtFooter,
-.dtTable  {
-    @apply border-gray-200 border;
-}
-
 .dtLastPage,
 .dtNextPage,
 .dtPreviousPage,
 .dtFirstPage{
     @apply hover:bg-gray-200 border-gray-200 bg-gray-300 border;
-}
-
-.dtSearch .dtLength {
-    @apply flex items-center shadow-sm;
-}
-
-.dtLength .dtLengthSelect{
-    @apply rounded-sm shadow-sm border-gray-200 appearance-none bg-transparent w-auto h-8 text-gray-700 py-1 px-2 pr-7 mx-1 leading-tight focus:outline-none;
-}
-
-.dtSearch .dtSearchBox{
-    @apply appearance-none border-gray-200 w-full h-8 text-gray-700 py-1 px-2 leading-tight focus:outline-none;
-}
-
-.dtSearch .dtSearchBy{
-    @apply rounded-s-sm appearance-none bg-transparent border-none w-auto h-8 text-gray-700 py-1 px-2 pr-7 leading-tight focus:outline-none;
-}
-
-.dtSearch .dtSearchBtn{
-    @apply h-8 flex items-center flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-transparent text-sm text-white py-1 px-2 rounded-e-sm;
-}
-
-.dtSearch .dtSearchClear{
-    @apply h-8 flex items-center flex-shrink-0 bg-gray-100 hover:bg-gray-200 border-transparent text-sm text-gray-900 py-1 px-2;
-}
-
-.selected-row{
-    @apply bg-gray-300 text-gray-900;
 }
 
 .dtBtn-sm{

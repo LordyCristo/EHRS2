@@ -33,7 +33,7 @@ class Client extends Model
 
     function fecalysisRecord()
     {
-        return $this->hasMany(FecalysisRecord::class);
+        return $this->hasMany(HematologyRecord::class);
     }
 
     function degreeProgram()

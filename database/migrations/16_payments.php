@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 3);
             $table->longText('remarks')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

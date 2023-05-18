@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Fecalysis extends Model
+class Hematology extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
-    protected $table = 'fecalysis';
+    protected $table = 'hematology';
     protected $fillable = [
         'hemoglobin',
         'hematocrit',

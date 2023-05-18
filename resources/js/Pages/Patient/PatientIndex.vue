@@ -181,15 +181,7 @@ export default {
 
 <template>
     <Patients title="Client Records">
-        <div class="py-3">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden">
-                    <div class="row">
-                        <data-table :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink" ></data-table>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink"/>
         <NotifBanner :type="notifType" :message="notifMessage" />
     </Patients>
 </template>

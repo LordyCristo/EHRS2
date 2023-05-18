@@ -34,7 +34,7 @@ class DepartmentController extends Controller
                 }
             });
         }
-        
+
         // Handle sorting
         $sortField = $request->input('sort', 'id');
         $sortDirection = $request->input('sort_dir', 'asc');
@@ -86,7 +86,7 @@ class DepartmentController extends Controller
             ]);
         }
         DegreeProgram::create($request->all());
-        return inertia('Records/RecordDashboard', [
+        return inertia('Records/RecordIndex', [
             'success' => 'Degree program successfully added',
         ]);
     }

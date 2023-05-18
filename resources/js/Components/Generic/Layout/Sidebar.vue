@@ -32,8 +32,7 @@ export default {
 </script>
 <template>
     <div class="min-h-screen flex flex-row">
-        <div :class="isOpen ? 'w-14' : 'w-48'"
-            class="flex flex-col min-h-full duration-700 pt-5 px-1 bg-vsu-green shadow-md">
+        <div :class="isOpen ? 'w-14' : 'w-48'" class="flex flex-col min-h-full duration-700 pt-5 px-1 bg-vsu-green shadow-md">
             <div class="flex flex-col">
                 <div class="flex mb-2" :class="isOpen ? 'flex-col justify-center items-center' : 'justify-between px-2'">
                     <h2 class="sr-only">ELECTRONIC HEALTH RECORDS SYSTEM</h2>
@@ -52,7 +51,7 @@ export default {
                     </template>
                 </div>
                 <div class="flex flex-col" :class="isOpen ? 'justify-center items-center' : 'justify-between px-2'">
-                    <SidebarItem v-for="item in items" :hasSubLinks="item.hasSubLinks" :link="item.link" :form="item.form"
+                    <SidebarItem v-for="item in items" :subLinks="item.subLinks" :link="item.link" :form="item.form"
                         :method="item.method" :isOpen="isOpen" :currTab="item.tabName">
                         <template #icon>
                             <component :is="item.icon" />

@@ -12,7 +12,7 @@ class ClientRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // return auth()->check();
+        //return auth()->check();
         // only user where role is is nurse, admin, or doctor can access this
         //return auth()->check() && in_array(auth()->user()->role, [1,2,3,4]);
         return true;
@@ -31,16 +31,17 @@ class ClientRequest extends FormRequest
             'last_name' => 'required|string|max:255',
             'suffix' => 'nullable|string|max:255',
             'birthdate' => 'required|date',
-            'age' => 'nullable|int',
-            'sex' => 'required|in:`male`,`female`',
-            'phone' => 'nullable|string|max:255|unique:clients,phone',
-            'email_address' => 'nullable|email|max:255',
-            'home_address' => 'nullable|string|max:255',
-            'curr_address' => 'nullable|string|max:255',
-            'id_number' => 'nullable|string|max:255',
-            'civil_status' => 'required|in:`single`,`married`,`widowed`,`separated`,`divorced`',
+            'age' => 'required|int',
+            'sex' => 'required',
+            'civil_status' => 'required',
+            'phone' => 'required|string|max:255|unique:clients,phone',
+            // 'phone => 'required|string|max:255|unique:clients,phone|starts_with:09|size:11'
+            'email_address' => 'nullable|email|max:255|unique:clients,email_address',
+            'home_address' => 'required|string|max:255',
+            'curr_address' => 'required|string|max:255',
+            'id_number' => 'nullable|string|max:255|unique:clients,id_number|regex:/^[0-9]{2}-[0-9]{1}-[0-9]{5}$/',
             'program_id' => 'nullable|exists:degree_programs,id',
-            'year_lvl' => 'nullable|int',
+            'year_lvl' => 'nullable',
             'client_type_id' => 'required|exists:client_types,id',
         ];
     }
@@ -53,18 +54,46 @@ class ClientRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'first_name.required' => 'First name is required',
-            'first_name.string' => 'First name must be a string',
-            'first_name.max' => 'First name must not exceed 255 characters',
-            'middle_name.string' => 'Middle name must be a string',
-            'middle_name.max' => 'Middle name must not exceed 255 characters',
-            'last_name.required' => 'Last name is required',
-            'last_name.string' => 'Last name must be a string',
-            'last_name.max' => 'Last name must not exceed 255 characters',
-            'suffix.string' => 'Suffix must be a string',
-            'suffix.max' => 'Suffix must not exceed 255 characters',
-            'birthdate.required' => 'Birthdate is required',
-            'birthdate.date' => 'Birthdate must be a date',
+            'first_name.required' => 'Required field',
+            'first_name.string' => 'Invalid input',
+            'first_name.max' => 'Too long',
+            'middle_name.string' => 'Invalid input',
+            'middle_name.max' => 'Too long',
+            'last_name.required' => 'Required field',
+            'last_name.string' => 'Invalid input',
+            'last_name.max' => 'Too long',
+            'suffix.string' => 'Invalid input',
+            'suffix.max' => 'Too long',
+            'birthdate.required' => 'Required field',
+            'birthdate.date' => 'Invalid date',
+            'age.int' => 'Invalid input',
+            'age.required' => 'Required field',
+            'sex.required' => 'Required field',
+            'sex.in' => 'Invalid value',
+            'civil_status.required' => 'Required field',
+            'civil_status.in' => 'Invalid value',
+            'phone.string' => 'Invalid input',
+            'phone.max' => 'Too long',
+            'phone.unique' => 'Already exists',
+            'phone.required' => 'Required field',
+            'phone.starts_with' => 'Invalid format',
+            'phone.size' => 'Too long',
+            'email_address.email' => 'Invalid email address',
+            'email_address.max' => 'Too long',
+            'email_address.unique' => 'Already exists',
+            'home_address.string' => 'Invalid input',
+            'home_address.max' => 'Too long',
+            'home_address.required' => 'Required field',
+            'curr_address.string' => 'Invalid input',
+            'curr_address.max' => 'Too long',
+            'curr_address.required' => 'Required field',
+            'id_number.string' => 'Invalid input',
+            'id_number.max' => 'Too long',
+            'id_number.unique' => 'Already exists',
+            'id_number.regex' => 'Invalid format',
+            'program_id.exists' => 'Invalid input',
+            'client_type_id.required' => 'Required field',
+            'client_type_id.exists' => 'Invalid input',
         ];
     }
 

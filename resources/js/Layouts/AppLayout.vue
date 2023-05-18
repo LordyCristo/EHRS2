@@ -1,6 +1,5 @@
-<script setup>
-import { Head } from '@inertiajs/vue3';
-import Sidebar from '@/Components/Generic/Layout/Sidebar.vue';
+<script>
+import MoreIcon from "@/Components/Icons/MoreIcon.vue";
 import PatientRecordsIcon from "@/Components/Icons/PatientRecordsIcon.vue";
 import HomeIcon from "@/Components/Icons/HomeIcon.vue";
 import MedicalRecordIcon from "@/Components/Icons/MedicalRecordIcon.vue";
@@ -12,22 +11,38 @@ import MaternityIcon from "@/Components/Icons/MaternityIcon.vue";
 import SurgeryIcon from "@/Components/Icons/SurgeryIcon.vue";
 import SettingsIcon from "@/Components/Icons/SettingsIcon.vue";
 import LogoutIcon from "@/Components/Icons/LogoutIcon.vue";
-import { markRaw } from 'vue';
+import Sidebar from "@/Components/Generic/Layout/Sidebar.vue";
+import { Head } from '@inertiajs/vue3';
+import {markRaw} from "vue";
 
-defineProps({
-    items: {
-        type: Array,
-        required: false,
-    },
-    title: {
-        type: String,
-        required: true,
-    },
-});
 
-</script>
-<script>
 export default {
+    components: {
+        Head,
+        Sidebar,
+        MoreIcon,
+        PatientRecordsIcon,
+        HomeIcon,
+        MedicalRecordIcon,
+        RadiologyIcon,
+        LaboratoryIcon,
+        DentalIcon,
+        WardIcon,
+        MaternityIcon,
+        SurgeryIcon,
+        SettingsIcon,
+        LogoutIcon,
+    },
+    props: {
+        items: {
+            type: Array,
+            required: false,
+        },
+        title: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
             showingNavigationDropdown: false,
@@ -36,7 +51,7 @@ export default {
                     title: 'Dashboard',
                     link: 'dashboard',
                     tabName: '/dashboard',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(HomeIcon),
                     form: false,
@@ -46,7 +61,7 @@ export default {
                     title: 'Patients',
                     link: 'patients',
                     tabName: '/patients',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(PatientRecordsIcon),
                     form: false,
@@ -56,7 +71,7 @@ export default {
                     title: 'Records',
                     link: 'records',
                     tabName: '/records',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(MedicalRecordIcon),
                     form: false,
@@ -66,7 +81,7 @@ export default {
                     title: 'Radiology',
                     link: 'radiology',
                     tabName: '/radiology',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(RadiologyIcon),
                     form: false,
@@ -76,7 +91,7 @@ export default {
                     title: 'Dental',
                     link: 'dental',
                     tabName: '/dental',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(DentalIcon),
                     form: false,
@@ -85,7 +100,7 @@ export default {
                     title: 'Laboratories',
                     link: 'laboratory',
                     tabName: '/laboratory',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(LaboratoryIcon),
                     form: false,
@@ -95,7 +110,7 @@ export default {
                     title: 'Surgery',
                     link: 'surgery',
                     tabName: '/surgery',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(SurgeryIcon),
                     form: false,
@@ -105,7 +120,7 @@ export default {
                     title: 'Maternity',
                     link: 'maternity',
                     tabName: '/maternity',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(MaternityIcon),
                     form: false,
@@ -115,17 +130,48 @@ export default {
                     title: 'Ward',
                     link: 'ward',
                     tabName: '/ward',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(WardIcon),
                     form: false,
                     method: null,
                 },
                 {
+                    title: 'More',
+                    link: 'morepages',
+                    tabName: '/more',
+                    subLinks: [{
+                        title: 'More',
+                        content: [
+                            {
+                                name: 'Colleges',
+                                link: 'more.colleges',
+                            },
+                            {
+                                name: 'Departments',
+                                link: 'more.colleges',
+                            },
+                            {
+                                name: 'Programs',
+                                link: 'more.colleges',
+                            },
+                            {
+                                name: 'Services',
+                                link: 'more.colleges',
+                            },
+                        ],
+                        isOpen: false
+                    }],
+                    isOpen: false,
+                    icon: markRaw(MoreIcon),
+                    form: true,
+                    method: null,
+                },
+                {
                     title: 'Settings',
                     link: 'profile.show',
                     tabName: '/user/profile',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(SettingsIcon),
                     form: false,
@@ -134,7 +180,7 @@ export default {
                 {
                     title: 'Logout',
                     link: 'logout',
-                    hasSubLinks: false,
+                    subLinks: [],
                     isOpen: false,
                     icon: markRaw(LogoutIcon),
                     form: true,
@@ -146,8 +192,8 @@ export default {
 };
 </script>
 <template>
-    <Head :title="title" />
-    
+    <Head :title="title" ><title>{{ title }}</title></Head>
+
     <Sidebar :items="sidebarItems">
         <!-- The body of the sidebar -->
         <template #body>
@@ -156,7 +202,9 @@ export default {
                 <slot name="toolbar" />
             </header>
             <!-- Page Content -->
-            <slot />
+            <main class="flex flex-row flex-grow overflow-hidden sm:p-5 p-1">
+                <slot />
+            </main>
         </template>
     </Sidebar>
 </template>

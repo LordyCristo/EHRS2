@@ -1,11 +1,11 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import Toolbar from '@/Pages/MorePages/ToolbarMorePage.vue';
 </script>
-
 <template>
-    <AppLayout title="Dental">
+    <AppLayout title="Records">
         <template #toolbar>
-            Dental Section
+            <Toolbar></Toolbar>
         </template>
         <slot></slot>
     </AppLayout>

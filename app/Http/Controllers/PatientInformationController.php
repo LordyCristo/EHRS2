@@ -51,16 +51,10 @@ class PatientInformationController extends Controller
         $paginator = $query->paginate($perPage, ['*'], 'page', $page);
 
         return response()->json([
-            //get the total number of pages
-            'totalPages' => $paginator->lastPage(),
-            'hasMorePage' => $paginator->hasMorePages(),
-            'totalCount' => $paginator->total(),
             'data' => $paginator->items(),
+            'totalCount' => $paginator->total(),
+            'totalPages' => $paginator->lastPage(),
             'perPage' => $paginator->perPage(),
-            'pageCount' => $paginator->perPage(),
-            'prevPage' => $paginator->lastPage(),
-            'currPage' => $paginator->currentPage(),
-            'nextPage' => $paginator->nextPageUrl(),
         ]);
     }
 
@@ -119,9 +113,9 @@ class PatientInformationController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), $this->rules(), $this->messages());
-        if ($validator->fails()) {
-            $errors = $validator->errors();
+         $validator = Validator::make($request->all(), $this->rules(), $this->messages());
+        $errors = $validator->errors();
+        if ($errors->any()) {
             $errorMessages = [];
             foreach ($errors->keys() as $key) {
                 $errorMessages[$key] = $errors->get($key)[0];

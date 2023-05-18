@@ -32,20 +32,21 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::prefix('patients')->group(callback: function () {
         Route::get('/', function () {
-            return Inertia::render('Patient/PatientDashboard');
+            return Inertia::render('Patient/PatientIndex');
         })->name('patients');
-
-        Route::get('/new', [PatientInformationController::class,'create'])->name('newPatient');
-        Route::get('/edit/{id}', [PatientInformationController::class,'edit'])->name('editPatient');
+        Route::get('/new', [PatientInformationController::class, 'create'])->name('newPatient');
+        Route::get('/edit/{id}', [PatientInformationController::class, 'edit'])->name('editPatient');
     });
 
     Route::prefix('records')->group(function () {
         Route::get('/', function () {
-            return Inertia::render('Records/RecordDashboard');
+            return Inertia::render('Records/RecordIndex');
         })->name('records');
 
         Route::get('/new', function () {
-            return Inertia::render('Records/NewRecord');
+            return Inertia::render('Records/NewRecord',[
+                'department_ids' => \App\Models\Department::select(['id', 'name'])->get(),
+            ]);
         })->name('newRecord');
 
         Route::get('/edit', function () {
@@ -77,5 +78,19 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         return Inertia::render('Ward');
     })->name('ward');
 
+    Route::prefix('more')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('MorePages');
+        })->name('morepages');
 
+        Route::prefix('/colleges')->group(function(){
+            Route::get('/', function () {
+                return Inertia::render('MorePages/Colleges/CollegeIndex');
+            })->name('more.colleges');
+
+            Route::get('/new', function () {
+                return Inertia::render('MorePages/Colleges/NewCollege');
+            })->name('more.newCollege');
+        });
+    });
 });

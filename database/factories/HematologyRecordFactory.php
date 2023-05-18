@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\FecalysisRecord;
+use App\Models\HematologyRecord;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<FecalysisRecord>
+ * @extends Factory<HematologyRecord>
  */
-class FecalysisRecordFactory extends Factory
+class HematologyRecordFactory extends Factory
 {
     /**
      * Define the model's default state.

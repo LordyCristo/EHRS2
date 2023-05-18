@@ -1,11 +1,21 @@
+<template>
+    <Navbar>
+        <ToolbarItem v-for="item in items" :link="item.link" :action="item.action">
+            <template #icon>
+                <component :is="item.icon" class="w-4 mr-1" />
+            </template>
+            {{ item.title }}
+        </ToolbarItem>
+    </Navbar>
+</template>
 <script setup>
 import Navbar from '@/Components/Generic/Layout/Navbar.vue';
 import ToolbarItem from '@/Components/Generic/Layout/ToolbarItem.vue';
-import AddIcon from '@/Components/Icons/AddIcon.vue';
-import HomeIcon from '@/Components/Icons/HomeIcon.vue';
 </script>
 <script>
 import { markRaw } from 'vue';
+import HomeIcon from '@/Components/Icons/HomeIcon.vue';
+import AddIcon from '@/Components/Icons/AddIcon.vue';
 export default {
     data() {
         return {
@@ -25,13 +35,3 @@ export default {
     },
 }
 </script>
-<template>
-    <Navbar>
-        <ToolbarItem v-for="item in items" :link="item.link" :action="item.action">
-            <template #icon>
-                <component :is="item.icon" class="w-4 mr-1" />
-            </template>
-            {{ item.title }}
-        </ToolbarItem>
-    </Navbar>
-</template>

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fecalysis', function (Blueprint $table) {
+        Schema::create('hematology', function (Blueprint $table) {
             $table->id();
             $table->double('hemoglobin')->nullable();
             $table->double('hematocrit')->nullable();
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->longText('remarks')->nullable()->default(null);
             $table->enum('status',['Pending','Processing','Done','Cancelled']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('fecalysis');
+        Schema::dropIfExists('hematology');
     }
 };

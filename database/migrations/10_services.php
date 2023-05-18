@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('room_no')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -4,7 +4,7 @@ import InputField from '@/Components/Generic/Forms/InputField.vue';
 <script>
 export default {
     props: {
-        modelValue: String,
+        modelValue: [String, Number],
         errorMsg: String,
         id: String,
         name: String,
@@ -14,7 +14,6 @@ export default {
     methods: {
         changeValue(value) {
             this.$emit('update:modelValue', value);
-            console.log(this.modelValue);
         },
     },
 };

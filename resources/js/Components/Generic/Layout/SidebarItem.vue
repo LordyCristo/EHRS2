@@ -32,6 +32,11 @@ export default {
         highlightCurrPage() {
             return window.location.pathname.includes(this.currTab);
         },
+        hightlightSubLinks() {
+            return this.subLinks.map((item) => {
+                return window.location.pathname.includes(item.linkName);
+            });
+        },
     },
     methods: {
         toggleAccordion(index) {

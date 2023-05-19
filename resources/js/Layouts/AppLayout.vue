@@ -146,14 +146,17 @@ export default {
                             {
                                 name: 'Colleges',
                                 link: 'more.colleges',
+                                linkName: 'more/colleges',
                             },
                             {
                                 name: 'Departments',
                                 link: 'more.colleges',
+                                linkName: 'more/departments',
                             },
                             {
                                 name: 'Programs',
                                 link: 'more.colleges',
+                                linkName: 'more/colleges',
                             },
                             {
                                 name: 'Services',

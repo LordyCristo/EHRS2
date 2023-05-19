@@ -13,6 +13,12 @@ import DtLength from "@/Components/DataTable/DtComponents/DtLength.vue";
 import DtSearch from "@/Components/DataTable/DtComponents/DtSearch.vue";
 import DtSearchBy from "@/Components/DataTable/DtComponents/DtSearchBy.vue";
 import DtProcessing from "@/Components/DataTable/DtComponents/DtProcessing.vue";
+import DtPaginateBtn from "@/Components/DataTable/DtComponents/DtPaginateBtn.vue";
+import DtPaginateDetail from "@/Components/DataTable/DtComponents/DtPaginateDetail.vue";
+import DtPageBtn from "@/Components/DataTable/DtComponents/DtPageBtn.vue";
+import DtActionBtn from "@/Components/DataTable/DtComponents/DtActionBtn.vue";
+import DtTHead from "@/Components/DataTable/DtComponents/DtTHead.vue";
+import DtTh from "@/Components/DataTable/DtComponents/DtTh.vue";
 </script>
 <script>
 import { markRaw } from 'vue';
@@ -363,31 +369,31 @@ export default {
 <template>
     <div class="w-full flex justify-center">
         <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>
-        <div v-else class="max-w-fit">
-            <div class="dtHeader flex justify-between mb-2 gap-2">
+        <div v-else class="max-w-fit" >
+            <div class="py-0.5 px-1 flex justify-between mb-2 gap-2">
                 <DtLength :options="DtLengthOptions" v-model="pageSize" @change="refreshData" />
-                <div class="dtToolbar flex items-center">
-                    <Link :href="route(apiLink.create)" class="addbtn dtBtn-sm">
+                <div class="flex items-center">
+                    <DtActionBtn :href="route(apiLink.create)" class="bg-yellow-500">
                         <AddIcon class="w-4 mr-1" />
                         New
-                    </Link>
-                    <button class="refreshBtn dtBtn-sm" @click="refreshData()">
+                    </DtActionBtn>
+                    <DtActionBtn :func="refreshData" class="bg-blue-500">
                         <RefreshIcon class="w-4 mr-1" />
                         Refresh
-                    </button>
-                    <button class="excelExport dtBtn-sm" @click="exportToCsv()">
+                    </DtActionBtn>
+                    <DtActionBtn :func="exportToCsv" class="bg-green-600">
                         <DownloadIcon class="w-4 mr-1" />
-                        Excel
-                    </button>
-                    <button class="excelImport dtBtn-sm" @click="importFromCsv()">
+                        Export
+                    </DtActionBtn>
+                    <DtActionBtn :func="importFromCsv" class="bg-teal-600">
                         <UploadIcon class="w-4 mr-1" />
                         Import
-                    </button>
-                    <button v-if="selected.length > 1" class="deleteSelected dtBtn-sm" @click="deleteSelected()">
+                    </DtActionBtn>
+                    <DtActionBtn v-if="selected.length > 1" :func="deleteSelected" class="bg-red-600">
                         <DeleteIcon class="w-4 mr-1" />
-                        Delete Selected
-                    </button>
-                    <button class="viewBtn dtBtn-sm" @click="changeSizeView()">
+                        Delete
+                    </DtActionBtn>
+                    <DtActionBtn :func="changeSizeView" class="bg-vsu-yellow-green">
                         <template v-if="viewSize">
                             <CollapseIcon class="w-3 mr-1" />
                             Collapse
@@ -396,15 +402,15 @@ export default {
                             <ExpandIcon class="w-3 mr-1" />
                             Expand
                         </template>
-                    </button>
-                    <button v-if="selected.length < pageSize * pageNumber" class="dtSelectAll dtBtn-sm" @click="selectAll()">
+                    </DtActionBtn>
+                    <DtActionBtn  v-if="selected.length < pageSize * pageNumber" :func="selectAll" class="bg-orange-500">
                         <CheckallIcon class="w-4 mr-1" />
                         Select All
-                    </button>
-                    <button v-if=" selected.length > 1" class="dtClearSelected dtBtn-sm" @click="deselectAll()">
+                    </DtActionBtn>
+                    <DtActionBtn v-if=" selected.length > 1" class="bg-vsu-olive" @click="deselectAll()">
                         <CloseIcon class="w-4 mr-1" />
                         Deselect All
-                    </button>
+                    </DtActionBtn>
                 </div>
                 <div class="flex items-center rounded-sm shadow-sm border">
                     <DtSearchBy v-model="searchBy" :columns="columns" @change="refreshData()" />
@@ -412,32 +418,19 @@ export default {
                 </div>
             </div>
             <table class="w-full border-collapse text-sm" ref="table">
-                <thead class="dtHead">
-                    <tr class="dtHeaderRow">
-                        <template v-for="col in columns" :key="col.data">
-                            <th v-if="col.name === sortedColumn" class="dtHeader bg-vsu-olive whitespace-nowrap"
-                                @click="sortColumn(col)">
-                                {{ col.title }}
-                                <template v-if="sortDir === 'asc'">
-                                    <span class="asc"></span>
-                                </template>
-                                <template v-else>
-                                    <span class="desc"></span>
-                                </template>
-                            </th>
-                            <th v-else class="dtHeader whitespace-nowrap"
-                                @click="sortColumn(col)">
-                                {{ col.title }}
-                            </th>
-                        </template>
-                    </tr>
-                </thead>
+                <DtTHead>
+                    <template v-for="col in columns" :key="col.data">
+                        <DtTh :title="col.title" @click="sortColumn(col)" :sortDir="sortDir" :isSortedColumn="col.name === sortedColumn" />
+                    </template>
+                </DtTHead>
                 <tbody class="dtBody max-h-screen overflow-y-scroll">
                     <tr v-if="processing">
                         <td :colspan="columns.length" class="text-center">Retrieving data...</td>
                     </tr>
-                    <tr class="dtBodyRow hover:bg-gray-200 border-r" v-else-if="data.length" v-for="item in data"
-                        @click="selectRecord($event, item.id)" :class="{ 'bg-gray-300 text-gray-900 border': selected.includes(item.id) }">
+                    <tr v-for="item in data" v-else-if="data.length"
+                        :class="{ 'bg-gray-300 text-gray-900 border': selected.includes(item.id) }"
+                        class="dtBodyRow hover:bg-gray-200 border-r"
+                        @click="selectRecord($event, item.id)">
                         <template v-for="col in columns" :key="col.data">
                             <!-- for data -->
                             <td v-if="col.data" class="dtData whitespace-nowrap border-gray-200 border" :class="col.className">
@@ -466,94 +459,25 @@ export default {
                 </tbody>
             </table>
             <div class="p-1 border border-t-0 min-w-full flex justify-between text-sm bottom-0">
+                <DtPaginateDetail>Showing {{ pageStart }} to {{ pageStart + data.length - 1 }} of {{ totalRecords }} entries</DtPaginateDetail>
+                <DtPageBtn :selected="selected" :totalPages="totalPages" :pageNumber="pageNumber" :changePageNumber="changePageNumber" />
                 <div class="flex items-center">
-                    <span>Showing {{ pageStart }} to {{ pageStart + data.length - 1 }} of {{ totalRecords }} entries</span>
-                </div>
-                <div class="flex items-center" v-if="selected.length > 1">
-                    <span>Selected {{ selected.length }} rows</span>
-                </div>
-                <div class="flex" v-if="totalPages > 1 && totalPages <= 10">
-                    <template v-for="i in totalPages" :key="i">
-                        <button :class="{'bg-gray-300': i === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(i)">
-                            {{ i }}
-                        </button>
-                    </template>
-                </div>
-                <div class="flex overflow-hidden" v-else-if="totalPages > 1">
-                    <button :class="{'bg-gray-300': 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(1)">
-                        1
-                    </button>
-                    <template v-if="pageNumber > 3">
-                        <span class="px-2">&hellip;</span>
-                    </template>
-                    <template v-if="pageNumber > 2">
-                        <button :class="{'bg-gray-300': pageNumber - 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber - 1)">
-                            {{ pageNumber - 1 }}
-                        </button>
-                    </template>
-                    <button v-if="pageNumber !== 1 && pageNumber !== totalPages" :class="{'bg-gray-300': pageNumber === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber)">
-                        {{ pageNumber }}
-                    </button>
-                    <template v-if="pageNumber < totalPages - 1">
-                        <button :class="{'bg-gray-300': pageNumber + 1 === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(pageNumber + 1)">
-                            {{ pageNumber + 1 }}
-                        </button>
-                    </template>
-
-                    <template v-if="totalPages - pageNumber > 3">
-                        <span class="px-2">&hellip;</span>
-                    </template>
-                    <button :class="{'bg-gray-300': totalPages === pageNumber }" class="dtBtn-sm border" @click="changePageNumber(totalPages)">
-                        {{ totalPages }}
-                    </button>
-                </div>
-                <div class="flex items-center">
-                    <button @click="firstPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === 1 }"
-                        class="dtFirstPage dtBtn-sm">First</button>
-                    <button @click="previousPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === 1 }"
-                        class="dtPreviousPage dtBtn-sm">Previous</button>
-                    <button @click="nextPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === totalPages }"
-                        class="dtNextPage dtBtn-sm">Next</button>
-                    <button @click="lastPage" :class="{ 'opacity-50 cursor-not-allowed': pageNumber === totalPages }"
-                        class="dtLastPage dtBtn-sm">Last</button>
+                    <DtPaginateBtn :func="firstPage" :disabled="pageNumber === 1">First</DtPaginateBtn>
+                    <DtPaginateBtn :func="previousPage" :disabled="pageNumber === 1">Previous</DtPaginateBtn>
+                    <DtPaginateBtn :func="nextPage" :disabled="pageNumber === totalPages">Next</DtPaginateBtn>
+                    <DtPaginateBtn :func="lastPage" :disabled="pageNumber === totalPages">Last</DtPaginateBtn>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <style>
-:root {
-    --dtHeadColor: #000000;
-}
-
 .asc::after {
     content: '▲';
 }
 
 .desc::after {
     content: '▼';
-}
-
-.dtHead .dtHeaderRow {
-    @apply bg-vsu-green;
-    color: #ffffff;
-    font-weight: bold;
-    text-align: center;
-}
-
-.dtHead .dtHeader {
-    padding: 0.3rem 1rem;
-}
-
-.dtLastPage,
-.dtNextPage,
-.dtPreviousPage,
-.dtFirstPage{
-    @apply hover:bg-gray-200 border-gray-200 bg-gray-300 border;
-}
-
-.dtBtn-sm{
-    @apply flex items-center text-sm flex-shrink-0 py-0.5 px-2 mx-0.5 shadow-sm rounded-sm;
 }
 
 .excelExport{
@@ -566,10 +490,6 @@ export default {
 
 .refreshBtn{
     @apply bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-white;
-}
-
-.addbtn{
-    @apply bg-yellow-500 hover:bg-yellow-700 border-yellow-500 hover:border-yellow-700 text-white;
 }
 
 .viewBtn{

@@ -56,7 +56,13 @@ Route::delete('/program/{id}', [DepartmentController::class, 'destroy'])->name('
 // Colleges Datatable API
 Route::get('/colleges', [CollegeController::class, 'index'])->name('api.colleges');
 // Get all the colleges to be exported as CSV file
-Route::get('/colleges/all', [CollegeController::class, 'getAll'])->name('api.colleges.all');
+Route::get('/colleges/all', [CollegeController::class, 'getAll'])->name('api.college.all');
+//Delete a college
+Route::delete('/college/{id}', [CollegeController::class, 'destroy'])->name('api.college.destroy');
+// Store a college
+Route::post('/college', [CollegeController::class, 'store'])->name('api.college.store');
+// Import the college information from a CSV file
+Route::post('/college/import', [CollegeController::class, 'import'])->name('api.college.import');
 
 
 

@@ -113,7 +113,7 @@ class PatientInformationController extends Controller
      */
     public function store(Request $request)
     {
-         $validator = Validator::make($request->all(), $this->rules(), $this->messages());
+        $validator = Validator::make($request->all(), $this->rules(), $this->messages());
         $errors = $validator->errors();
         if ($errors->any()) {
             $errorMessages = [];
@@ -132,7 +132,7 @@ class PatientInformationController extends Controller
         Client::create($request->all());
         return inertia('Patient/PatientDashboard', [
             'notifType' => 'success',
-            'notifMessage' => 'Patient added successfully'
+            'notifMessage' => 'New Patient added successfully'
         ]);
     }
 

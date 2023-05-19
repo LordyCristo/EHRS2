@@ -51,6 +51,7 @@ export default {
     },
     methods: {
         submit() {
+            console.log(this.form);
             if (this.action === 'update') {
                 this.form.put(route('api.patient.update', this.data.id), {
                     onError: this.handleFormError,

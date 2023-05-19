@@ -80,12 +80,12 @@ export default{
         apiLink: {
             index: 'api.colleges',
             create: 'more.newCollege',
-            store: 'api.patient.store',
+            store: 'api.college.store',
             edit: 'editPatient',
             update: 'api.patient.update',
-            destroy: 'api.patient.destroy',
-            getall: 'api.colleges.all',
-            import: 'api.patient.import',
+            destroy: 'api.college.destroy',
+            getall: 'api.college.all',
+            import: 'api.college.import',
         },
     })
 }

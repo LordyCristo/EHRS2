@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\College;
+use Exception;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 class CollegeController extends Controller
 {
     /**
@@ -66,7 +68,45 @@ class CollegeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), $this->rules(), $this->messages());
+        $errors = $validator->errors();
+        if ($errors->any()) {
+            $errorMessages = [];
+            foreach ($errors->keys() as $key) {
+                $errorMessages[$key] = $errors->get($key)[0];
+            }
+            return inertia('MorePages/Colleges/NewCollege', [
+                'type' => 'failed',
+                'message' => 'College not added',
+                'errors' => $errorMessages,
+            ]);
+        }
+        College::create($request->all());
+        return inertia('MorePages/Colleges/CollegeIndex', [
+            'notifType' => 'success',
+            'notifMessage' => 'New College added successfully'
+        ]);
+    }
+
+    function rules(){
+        return [
+            'name' => 'required|unique:colleges|max:255',
+            'abbr' => 'required|unique:colleges|max:255',
+            'is_active' => 'required|boolean',
+        ];
+    }
+
+    function messages(){
+        return [
+            'name.required' => 'Required field',
+            'name.unique' => 'Already exists',
+            'name.max' => 'Too long',
+            'abbr.required' => 'Required field',
+            'abbr.unique' => 'Already exists',
+            'abbr.max' => 'Too long',
+            'is_active.required' => 'Required field',
+            'is_active.boolean' => 'Invalid value',
+        ];
     }
 
     /**
@@ -98,7 +138,52 @@ class CollegeController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $temp = College::destroy($id);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if ($temp) {
+            return inertia('MorePages/Colleges/CollegeIndex', [
+                'status' => 'success',
+                'message' => 'Records deleted successfully',
+                'data' => $temp,
+            ]);
+        }
+        return inertia('MorePages/Colleges/CollegeIndex', [
+            'status' => 'failed',
+            'message' => 'Unable to delete record',
+        ]);
+    }
+
+    public function import(Request $request){
+        $data = $request->all();
+        $numFailed = 0; // Initialize a counter for failed insertions
+        $erros = []; // Initialize an array to store errors
+        foreach ($data as $d){
+            try {
+                //validate each row of data
+                $validator = Validator::make($d, $this->rules(), $this->messages());
+                if($validator->fails()){
+                    $numFailed++;
+                    $errors = $validator->errors();
+                    $errorMessages = [];
+                    foreach ($errors->keys() as $key) {
+                        $errorMessages[$key] = $errors->get($key)[0];
+                    }
+                    $d['errors'] = $errorMessages;
+                    $erros[] = $d;
+                }
+                else
+                    College::create($d);
+            } catch (Exception $e) {
+                $numFailed++;
+                throw $e;
+            }
+        }
+        return response()->json([
+            'numSuccess' => count($data) - $numFailed,
+            'numFailed' => $numFailed,
+            'data' => $data,
+        ]);
     }
 
     /**

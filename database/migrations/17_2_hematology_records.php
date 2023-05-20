@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hematology_records', function(Blueprint $table){
-            $table->foreignId('id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnUpdate();
-            $table->foreignId('client_id')->constrained('clients')->cascadeOnUpdate()->restrictOnDelete();
+            $table->foreignId('id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('client_id')->nullable()->constrained('clients')->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

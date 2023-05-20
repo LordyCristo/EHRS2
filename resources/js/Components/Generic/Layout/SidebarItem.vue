@@ -32,17 +32,15 @@ export default {
         highlightCurrPage() {
             return window.location.pathname.includes(this.currTab);
         },
-        hightlightSubLinks() {
-            return this.subLinks.map((item) => {
-                return window.location.pathname.includes(item.linkName);
-            });
-        },
     },
     methods: {
         toggleAccordion(index) {
             this.subLinks[index].isOpen = !this.subLinks[index].isOpen;
         },
-    },
+        hightlightSubLinks(linkName) {
+            return window.location.pathname.includes(linkName);
+        },
+    }
 };
 </script>
 
@@ -71,17 +69,18 @@ export default {
                             <slot name="title"></slot>
                         </span>
                     </Link>
-                    <div @click="toggleAccordion(index)" :title="item.isOpen?'Collapse':'Expand'" :class="{'transform rotate-180': item.isOpen}" class="transition-transform" >
+                    <button @click="toggleAccordion(index)" @focusout="item.isOpen = false" :title="item.isOpen?'Collapse':'Expand'" :class="{'transform rotate-180': item.isOpen}" class="transition-transform" >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
-                    </div>
+                    </button>
                 </div>
                 <transition leave-active-class="transition duration-100 ease-in"
                             leave-from-class="opacity-100"
                             leave-to-class="opacity-0">
-                    <div v-if="item.isOpen" class="flex flex-col bg-vsu-olive p-2 rounded-md mt-1" :class="{'absolute shadow-lg': isOpen}">
+                    <div v-if="item.isOpen" class="flex flex-col bg-vsu-olive p-2 rounded-md mt-1" :class="{'absolute shadow-lg flex-row': isOpen}">
                         <Link v-for="content in item.content" :href="route(content.link)"
+                              :class="{'bg-vsu-yellow': hightlightSubLinks(content.linkName)}"
                               class="text-white hover:bg-vsu-yellow py-0.5 px-2 rounded-sm whitespace-nowrap">
                             <span class="duration-300 ease-in-out text-sm" >
                                 {{ content.name }}

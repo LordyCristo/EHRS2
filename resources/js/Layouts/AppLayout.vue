@@ -138,29 +138,30 @@ export default {
                 },
                 {
                     title: 'More',
-                    link: 'morepages',
+                    link: 'more.pages',
                     tabName: '/more',
                     subLinks: [{
                         title: 'More',
                         content: [
                             {
                                 name: 'Colleges',
-                                link: 'more.colleges',
-                                linkName: 'more/colleges',
+                                link: 'more.college.index',
+                                linkName: 'college',
                             },
                             {
                                 name: 'Departments',
-                                link: 'more.colleges',
-                                linkName: 'more/departments',
+                                link: 'more.pages',
+                                linkName: 'department',
                             },
                             {
                                 name: 'Programs',
-                                link: 'more.colleges',
-                                linkName: 'more/colleges',
+                                link: 'more.pages',
+                                linkName: 'program',
                             },
                             {
                                 name: 'Services',
-                                link: 'more.colleges',
+                                link: 'more.pages',
+                                linkName: 'service',
                             },
                         ],
                         isOpen: false

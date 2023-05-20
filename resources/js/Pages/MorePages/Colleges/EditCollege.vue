@@ -6,12 +6,12 @@
                     <Link :href="route('more.college.index')" class="text-gray-600 hover:text-gray-900 duration-300">
                         <BackIcon class="w-6 h-auto hover:scale-[1.2] duration-300" />
                     </Link>
-                    <h1 class=" text-center w-fit text-xl font-semibold">Register New College</h1>
+                    <h1 class=" text-center w-fit text-xl font-semibold">Update College Details</h1>
                     <Link :href="route('more.college.index')" class="text-gray-600 hover:text-gray-900 duration-300">
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <CollegeForm :action="action" :errors="errors"/>
+                <CollegeForm :action="action" :data="data" :errors="errors"/>
             </div>
         </div>
     </MorePages>
@@ -25,9 +25,12 @@ import CollegeForm from "@/Pages/MorePages/Colleges/CollegeForm.vue";
 </script>
 <script>
 export default {
-    data: () => ({
-        action: 'store',
+    props: {
+        data: Object,
         errors: Object,
+    },
+    data: () => ({
+        action: 'update',
     }),
 }
 </script>

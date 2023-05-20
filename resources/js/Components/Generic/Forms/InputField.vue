@@ -5,8 +5,8 @@ import InputError from '@/Components/Generic/Forms/InputError.vue';
 defineProps({
     name: String,
     label: String,
-    errorMsg: String,
-}); 
+    errorMsg: [String, Array],
+});
 
 </script>
 <style>

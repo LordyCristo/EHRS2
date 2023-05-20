@@ -5,7 +5,7 @@ import InputField from '@/Components/Generic/Forms/InputField.vue';
 export default {
     props: {
         modelValue: [String, Number],
-        errorMsg: String,
+        errorMsg: [String, Array],
         id: String,
         name: String,
         label: String,

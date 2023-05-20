@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\CollegeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,18 +54,29 @@ Route::get('/program/{id}', [DepartmentController::class, 'edit'])->name('api.pr
 Route::put('/program/{id}', [DepartmentController::class, 'update'])->name('api.program.update');
 Route::delete('/program/{id}', [DepartmentController::class, 'destroy'])->name('api.program.destroy');
 
-// Colleges Datatable API
-Route::get('/colleges', [CollegeController::class, 'index'])->name('api.colleges');
-// Get all the colleges to be exported as CSV file
-Route::get('/colleges/all', [CollegeController::class, 'getAll'])->name('api.college.all');
-//Delete a college
-Route::delete('/college/{id}', [CollegeController::class, 'destroy'])->name('api.college.destroy');
-// Store a college
-Route::post('/college', [CollegeController::class, 'store'])->name('api.college.store');
-// Import the college information from a CSV file
-Route::post('/college/import', [CollegeController::class, 'import'])->name('api.college.import');
+//// Colleges Datatable API
+//Route::get('/colleges', [CollegeController::class, 'index'])->name('api.colleges');
+//// Get all the colleges to be exported as CSV file
+//Route::get('/colleges/all', [CollegeApi::class, 'getAll'])->name('api.college.all');
+////Delete a college
+//Route::delete('/college/{id}', [CollegeController::class, 'destroy'])->name('api.college.destroy');
+//// Store a college
 
+//// Import the college information from a CSV file
+//Route::post('/college/import', [CollegeController::class, 'import'])->name('api.college.import');
+//// Update a college
+//Route::put('/college/{id}', [CollegeController::class, 'update'])->name('api.college.update');
 
+// Colleges GET ALL route
+Route::get('/colleges', [CollegeApi::class, 'index'])->name('api.colleges');
+// Colleges STORE route
+Route::post('/colleges', [CollegeApi::class, 'store'])->name('api.college.store');
+// Colleges UPDATE route
+Route::put('/colleges/{college}', [CollegeApi::class, 'update'])->name('api.college.update');
+// Colleges DELETE route
+Route::delete('/colleges/{college}', [CollegeApi::class, 'destroy'])->name('api.college.destroy');
+// Colleges DATATABLE API route
+Route::get('/colleges/all', [CollegeApi::class, 'tableApi'])->name('api.college.table');
 
 // Get all the patient information for the datatable api
 Route::get('/patient', [PatientInformationController::class, 'index'])->name('api.patients');

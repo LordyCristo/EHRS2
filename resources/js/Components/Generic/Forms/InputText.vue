@@ -4,7 +4,7 @@ import InputField from '@/Components/Generic/Forms/InputField.vue';
 
 defineProps({
     modelValue: [String, Number],
-    errorMsg: String,
+    errorMsg: [String, Array],
     id: String,
     name: String,
     label: String,

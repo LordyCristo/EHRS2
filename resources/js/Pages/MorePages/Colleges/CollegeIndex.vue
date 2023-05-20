@@ -1,14 +1,20 @@
 <template>
     <MorePages title="Colleges">
         <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink" />
+        <NotifBanner :message="notifMessage" :type="notifType" />
     </MorePages>
 </template>
 <script setup>
 import MorePages from '@/Pages/MorePages.vue';
 import DataTable from "@/Components/DataTable/DataTable.vue";
+import NotifBanner from "@/Components/Generic/Modals/NotifBanner.vue";
 </script>
 <script>
 export default{
+    props: {
+        notifMessage: String,
+        notifType: String,
+    },
     data: () => ({
         columnsSmall:[
             {
@@ -79,9 +85,10 @@ export default{
         ],
         apiLink: {
             index: 'api.colleges',
-            create: 'more.newCollege',
+            table: 'api.college.table',
+            create: 'more.college.create',
             store: 'api.college.store',
-            edit: 'editPatient',
+            edit: 'more.college.edit',
             update: 'api.patient.update',
             destroy: 'api.college.destroy',
             getall: 'api.college.all',

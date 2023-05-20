@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\PatientInformationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -81,16 +82,18 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::prefix('more')->group(function () {
         Route::get('/', function () {
             return Inertia::render('MorePages');
-        })->name('morepages');
+        })->name('more.pages');
 
-        Route::prefix('/colleges')->group(function(){
+        Route::prefix('/college')->group(function(){
             Route::get('/', function () {
                 return Inertia::render('MorePages/Colleges/CollegeIndex');
-            })->name('more.colleges');
+            })->name('more.college.index');
 
             Route::get('/new', function () {
                 return Inertia::render('MorePages/Colleges/NewCollege');
-            })->name('more.newCollege');
+            })->name('more.college.create');
+
+            Route::get('/edit/{college}', [CollegeController::class, 'edit'])->name('more.college.edit');
         });
     });
 });

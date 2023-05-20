@@ -2,10 +2,13 @@
     <form @submit.prevent="submit">
         <InputText v-model="form.name" label="College Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
         <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
-        <RadioButton v-model="form.status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="form.errors['status'] = null" />
+        <RadioButton v-model="form.is_active" label="Status" :options="statuses" :errorMsg="form.errors.is_active" @input="form.errors['is_active'] = null" />
         <div class="flex items-center justify-between mt-4">
-            <CancelButton v-if="action === 'update'" @click="cancelForm">Cancel</CancelButton>
-            <ClearButton v-else @click="clearForm">Clear</ClearButton>
+                <template v-if="action === 'update'">
+                    <DeleteButton @click="deleteForm" >Delete</DeleteButton>
+                    <CancelButton  @click="cancelForm">Cancel</CancelButton>
+                </template>
+                <ClearButton v-else @click="clearForm">Clear</ClearButton>
             <SubmitButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save</SubmitButton>
         </div>
     </form>
@@ -16,11 +19,15 @@ import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
 import CancelButton from "@/Components/Generic/Buttons/CancelButton.vue";
 import ClearButton from "@/Components/Generic/Buttons/ClearButton.vue";
 import SubmitButton from "@/Components/Generic/Buttons/SubmitButton.vue";
+import DeleteButton from "@/Components/Generic/Buttons/DeleteButton.vue";
 </script>
 <script>
-import {useForm} from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
+import { router } from '@/router';
+import axios from "axios";
 export default {
     props: {
+        errors: [Object, Function],
         action: String,
         data: {
             type: Object,
@@ -33,7 +40,7 @@ export default {
             form: useForm({
                 name: null,
                 abbr: null,
-                status: null,
+                is_active: null,
             }),
             statuses: [
                 {id: 1, name: 'Active'},
@@ -43,11 +50,12 @@ export default {
     },
     methods: {
         submit() {
-            this.form.post(route('api.college.store'), {
-                onSuccess: () => {
-                    this.clearForm();
-                },
-            });
+            if (this.action === 'store') {
+                this.store();
+            } else if (this.action === 'update') {
+                this.update();
+                //router.push({ name: 'more.college' });
+            }
         },
         clearForm() {
             this.form.reset();
@@ -56,6 +64,54 @@ export default {
         cancelForm(){
             this.form = useForm(this.data);
         },
+        store() {
+            axios.post(route('api.college.store'), this.form)
+                .then(response => {
+                    console.log(response.status);
+                    if (response.status === 201) // response code for successful create request.
+                        console.log('Successfully added');
+                })
+                .catch(error => this.printError(error));
+        },
+        update() {
+            axios.put(route('api.college.update', {college: this.data.id}), this.form)
+                .then(response => {
+                    console.log(response);
+                    this.clearForm();
+                })
+                .catch(error => this.printError(error));
+        },
+        printError(error){
+            if (error.response.status === 422) { // error code for validation errors.
+                console.log('Validation errors:', error.response.data.errors);
+                this.form.errors = error.response.data.errors;
+            }
+            else if (error.response.status === 500) { // error code for server errors.
+                console.log('Server error:', error.response.data);
+            }
+            else if (error.response.status === 404) { // error code for not found data.
+                console.log('Not found:', error.response.data);
+            }
+            else {
+                console.log('Error:', error.response.data);
+                console.log(this.$page.props.user);
+            }
+        },
+        deleteForm(){
+            if (confirm(`Are you sure you want to delete this record?`)) {
+                axios.delete(route('api.college.destroy', { college: this.data.id }))
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            }
+        }
     },
+    mounted() {
+        if (this.action === 'update')
+            this.form = useForm(this.data);
+    }
 };
 </script>

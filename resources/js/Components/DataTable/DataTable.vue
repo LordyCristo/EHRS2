@@ -19,6 +19,7 @@ import DtPageBtn from "@/Components/DataTable/DtComponents/DtPageBtn.vue";
 import DtActionBtn from "@/Components/DataTable/DtComponents/DtActionBtn.vue";
 import DtTHead from "@/Components/DataTable/DtComponents/DtTHead.vue";
 import DtTh from "@/Components/DataTable/DtComponents/DtTh.vue";
+import DtBody from "@/Components/DataTable/DtComponents/DtBody.vue";
 </script>
 <script>
 import { markRaw } from 'vue';
@@ -93,8 +94,9 @@ export default {
         deleteRecord(id) {
             if (confirm(`Are you sure you want to delete this record?`)) {
                 this.processing = true;
-                axios.delete(route(this.apiLink.destroy, id))
+                axios.delete(route(this.apiLink.destroy, { college: id }))
                     .then(response => {
+                        console.log(response);
                         this.getData();
                     })
                     .catch(error => {
@@ -130,15 +132,6 @@ export default {
                 this.selected = [];
             }
         },
-        editRecordForm(id) {
-            axios.get(route(this.apiLink.edit, id))
-                .then(response => {
-                    this.$emit('editRecordForm', response.data);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
-        },
         selectRecord(event, id) {
             // Check if the ctrl key is held down
             const ctrlKey = event.metaKey || event.ctrlKey;
@@ -158,7 +151,6 @@ export default {
             }
         },
         selectAll() {
-            //this.selected = [];
             if (this.selected.length < this.totalRecords) {
                 this.data.forEach(record => {
                     if (!this.selected.includes(record.id)) {
@@ -177,7 +169,7 @@ export default {
         },
         getData() {
             this.processing = true;
-            axios.get(route(this.apiLink.index), {
+            axios.get(route(this.apiLink.table), {
                 params: {
                     page: this.pageNumber,
                     per_page: this.pageSize,
@@ -269,19 +261,11 @@ export default {
         },
         exportToCsv() {
             this.processing = true;
-            axios.get(route(this.apiLink.getall), {
-                    params: {
-                        page: this.pageNumber,
-                        per_page: this.pageSize,
-                        search: this.search,
-                        search_by: this.searchBy,
-                        sort: this.sortedColumn,
-                        sort_dir: this.sortDir,
-                    },
-                })
+            axios.get(route(this.apiLink.index),)
                 .then((response) => {
                     const filename = 'export.csv';
                     const rows = response.data;
+                    console.log(response);
                     // Convert the array of objects to a CSV string
                     const rowsArray = Array.from(rows);
                     // append infront the header row, get the column headers from the database
@@ -363,55 +347,63 @@ export default {
             };
             fileInput.click();
         },
+        isColumnSorted(col) {
+            return col.name === this.sortedColumn;
+        },
     },
+    computed: {
+        isAllSelected() {
+            return this.selected.length < this.totalRecords;
+        },
+    }
 }
 </script>
 <template>
     <div class="w-full flex justify-center">
-        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>
-        <div v-else class="max-w-fit" >
-            <div class="py-0.5 px-1 flex justify-between mb-2 gap-2">
+<!--        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>-->
+        <div class="min-w-full" >
+            <div class="flex items-center gap-2 py-1">
+                <DtActionBtn :href="route(apiLink.create)" class="bg-yellow-500">
+                    <AddIcon class="w-4 mr-1" />
+                    New
+                </DtActionBtn>
+                <DtActionBtn @click="refreshData" class="bg-blue-500">
+                    <RefreshIcon class="w-4 mr-1" />
+                    Refresh
+                </DtActionBtn>
+                <DtActionBtn v-if="totalRecords" @click="exportToCsv" class="bg-green-600">
+                    <DownloadIcon class="w-4 mr-1" />
+                    Export
+                </DtActionBtn>
+                <DtActionBtn @click="importFromCsv" class="bg-teal-600">
+                    <UploadIcon class="w-4 mr-1" />
+                    Import
+                </DtActionBtn>
+                <DtActionBtn v-if="selected.length > 1" @click="deleteSelected" class="bg-red-600">
+                    <DeleteIcon class="w-4 mr-1" />
+                    Delete
+                </DtActionBtn>
+                <DtActionBtn @click="changeSizeView" class="bg-vsu-yellow-green">
+                    <template v-if="viewSize">
+                        <CollapseIcon class="w-3 mr-1" />
+                        Collapse
+                    </template>
+                    <template v-else>
+                        <ExpandIcon class="w-3 mr-1" />
+                        Expand
+                    </template>
+                </DtActionBtn>
+                <DtActionBtn  v-if="isAllSelected" @click="selectAll" class="bg-orange-500">
+                    <CheckallIcon class="w-4 mr-1" />
+                    Select All
+                </DtActionBtn>
+                <DtActionBtn v-if="selected.length" class="bg-vsu-olive" @click="deselectAll">
+                    <CloseIcon class="w-4 mr-1" />
+                    Deselect All
+                </DtActionBtn>
+            </div>
+            <div class="py-1 flex justify-between mb-2 gap-2">
                 <DtLength :options="DtLengthOptions" v-model="pageSize" @change="refreshData" />
-                <div class="flex items-center">
-                    <DtActionBtn :href="route(apiLink.create)" class="bg-yellow-500">
-                        <AddIcon class="w-4 mr-1" />
-                        New
-                    </DtActionBtn>
-                    <DtActionBtn :func="refreshData" class="bg-blue-500">
-                        <RefreshIcon class="w-4 mr-1" />
-                        Refresh
-                    </DtActionBtn>
-                    <DtActionBtn :func="exportToCsv" class="bg-green-600">
-                        <DownloadIcon class="w-4 mr-1" />
-                        Export
-                    </DtActionBtn>
-                    <DtActionBtn :func="importFromCsv" class="bg-teal-600">
-                        <UploadIcon class="w-4 mr-1" />
-                        Import
-                    </DtActionBtn>
-                    <DtActionBtn v-if="selected.length > 1" :func="deleteSelected" class="bg-red-600">
-                        <DeleteIcon class="w-4 mr-1" />
-                        Delete
-                    </DtActionBtn>
-                    <DtActionBtn :func="changeSizeView" class="bg-vsu-yellow-green">
-                        <template v-if="viewSize">
-                            <CollapseIcon class="w-3 mr-1" />
-                            Collapse
-                        </template>
-                        <template v-else>
-                            <ExpandIcon class="w-3 mr-1" />
-                            Expand
-                        </template>
-                    </DtActionBtn>
-                    <DtActionBtn  v-if="selected.length < pageSize * pageNumber" :func="selectAll" class="bg-orange-500">
-                        <CheckallIcon class="w-4 mr-1" />
-                        Select All
-                    </DtActionBtn>
-                    <DtActionBtn v-if=" selected.length > 1" class="bg-vsu-olive" @click="deselectAll()">
-                        <CloseIcon class="w-4 mr-1" />
-                        Deselect All
-                    </DtActionBtn>
-                </div>
                 <div class="flex items-center rounded-sm shadow-sm border">
                     <DtSearchBy v-model="searchBy" :columns="columns" @change="refreshData()" />
                     <DtSearch :func="refreshData" v-model="search" :searchBy="searchBy" :columns="columns" />
@@ -419,15 +411,16 @@ export default {
             </div>
             <table class="w-full border-collapse text-sm" ref="table">
                 <DtTHead>
-                    <template v-for="col in columns" :key="col.data">
-                        <DtTh :title="col.title" @click="sortColumn(col)" :sortDir="sortDir" :isSortedColumn="col.name === sortedColumn" />
-                    </template>
+                    <DtTh v-for="col in columns" :key="col.data" :title="col.title" @click="sortColumn(col)" :sortDir="sortDir" :isSortedColumn="isColumnSorted(col)" />
                 </DtTHead>
-                <tbody class="dtBody max-h-screen overflow-y-scroll">
+                <DtBody>
                     <tr v-if="processing">
                         <td :colspan="columns.length" class="text-center">Retrieving data...</td>
                     </tr>
-                    <tr v-for="item in data" v-else-if="data.length"
+                    <tr v-else-if="!data.length">
+                        <td :colspan="columns.length" class="text-center">No data available</td>
+                    </tr>
+                    <tr v-for="item in data" v-else
                         :class="{ 'bg-gray-300 text-gray-900 border': selected.includes(item.id) }"
                         class="dtBodyRow hover:bg-gray-200 border-r"
                         @click="selectRecord($event, item.id)">
@@ -444,7 +437,7 @@ export default {
                                        class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-red-500 duration-1000 ease-in">
                                         <component :is="col.icon[0]" />
                                     </a>
-                                    <Link :href="route(apiLink.edit, item.id)"
+                                    <Link :href="route(apiLink.edit, {college: item })"
                                           v-if="selected.length <= 1 && selected.includes(item.id)"
                                           class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-1000 ease-in">
                                         <component :is="col.icon[1]" />
@@ -453,10 +446,7 @@ export default {
                             </td>
                         </template>
                     </tr>
-                    <tr v-else>
-                        <td :colspan="columns.length" class="text-center">No data available</td>
-                    </tr>
-                </tbody>
+                </DtBody>
             </table>
             <div class="p-1 border border-t-0 min-w-full flex justify-between text-sm bottom-0">
                 <DtPaginateDetail>Showing {{ pageStart }} to {{ pageStart + data.length - 1 }} of {{ totalRecords }} entries</DtPaginateDetail>
@@ -478,33 +468,5 @@ export default {
 
 .desc::after {
     content: '▼';
-}
-
-.excelExport{
-    @apply bg-green-500 hover:bg-green-700 border-green-500 hover:border-green-700 text-white;
-}
-
-.excelImport{
-    @apply bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-white;
-}
-
-.refreshBtn{
-    @apply bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-white;
-}
-
-.viewBtn{
-    @apply bg-vsu-yellow-green hover:bg-vsu-light-green border-vsu-yellow-green hover:border-vsu-yellow-green text-white;
-}
-
-.dtSelectAll{
-    @apply bg-orange-500 hover:bg-orange-700 border-orange-500 text-white;
-}
-
-.dtClearSelected{
-    @apply bg-vsu-blue-green hover:bg-vsu-teal border-vsu-blue-green text-white;
-}
-
-.deleteSelected{
-    @apply bg-red-500 hover:bg-red-700 border-red-500 hover:border-red-700 text-white;
 }
 </style>

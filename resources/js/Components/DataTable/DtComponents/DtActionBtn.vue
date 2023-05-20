@@ -1,8 +1,8 @@
 <template>
-    <Link v-if="href" :href="href" class="hover:bg-opacity-80 hover:shadow-md active:scale-95 active:bg-opacity-100 text-white flex items-center text-sm flex-shrink-0 py-0.5 px-2 mx-0.5 shadow-sm rounded-sm">
+    <Link v-if="href" :href="href" class="hover:bg-opacity-80 hover:shadow-md active:scale-95 active:bg-opacity-100 text-white flex items-center text-sm flex-shrink-0 py-0.5 px-2 shadow-sm rounded-sm">
         <slot />
     </Link>
-    <button v-else class="hover:bg-opacity-80 hover:shadow-md active:scale-95 active:bg-opacity-100 text-white flex items-center text-sm flex-shrink-0 py-0.5 px-2 mx-0.5 shadow-sm rounded-sm" @click="func">
+    <button v-else class="hover:bg-opacity-80 hover:shadow-md active:scale-95 active:bg-opacity-100 text-white flex items-center text-sm flex-shrink-0 py-0.5 px-2 shadow-sm rounded-sm">
         <slot />
     </button>
 </template>
@@ -12,10 +12,6 @@
         props: {
             href: {
                 type: String,
-                required: false,
-            },
-            func: {
-                type: Function,
                 required: false,
             },
         },

@@ -7,6 +7,7 @@ use App\Models\ClientType;
 use App\Models\DegreeProgram;
 use Exception;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use Illuminate\Support\Facades\DB;
@@ -63,7 +64,8 @@ class PatientInformationController extends Controller
         return response()->json(Client::all());
     }
 
-    public function import(Request $request){
+    public function import(Request $request): JsonResponse
+    {
         $data = $request->all();
         $numFailed = 0; // Initialize a counter for failed insertions
         $erros = []; // Initialize an array to store errors

@@ -122,7 +122,7 @@ class PatientInformationController extends Controller
             foreach ($errors->keys() as $key) {
                 $errorMessages[$key] = $errors->get($key)[0];
             }
-            return inertia('Patient/NewPatient', [
+            return inertia('Patient/PatientIndex', [
                 'type' => 'failed',
                 'message' => 'Client not added',
                 'errors' => $errorMessages,
@@ -178,7 +178,7 @@ class PatientInformationController extends Controller
             foreach ($errors->keys() as $key) {
                 $errorMessages[$key] = $errors->get($key)[0];
             }
-            return inertia('Patient/EditPatient', [
+            return inertia('Patient/PatientDashboard', [
                 'errors' => $errorMessages,
                 'data' => Client::find($id),
                 'degree_programs' => DegreeProgram::select(['id', DB::raw("CONCAT(`name`, IFNULL(CONCAT(' major in ', `major`), '')) AS `name`")])->orderBy('id', 'asc')->get(),

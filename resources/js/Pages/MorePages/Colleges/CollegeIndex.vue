@@ -84,14 +84,21 @@ export default{
             },
         ],
         apiLink: {
-            index: 'api.colleges',
-            table: 'api.college.table',
+            // create form
             create: 'more.college.create',
-            store: 'api.college.store',
+            // edit form
             edit: 'more.college.edit',
+            // return all data
+            index: 'api.college.index',
+            // return data compatible for datatable requests
+            table: 'api.college.table',
+            // store data from create form
+            store: 'api.college.store',
+            // update data from edit form
             update: 'api.patient.update',
+            // delete a specific data
             destroy: 'api.college.destroy',
-            getall: 'api.college.all',
+            // import data from excel
             import: 'api.college.import',
         },
     })

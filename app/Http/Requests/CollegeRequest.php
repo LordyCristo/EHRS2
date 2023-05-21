@@ -3,7 +3,11 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
+/**
+ * @property mixed route
+ */
 class CollegeRequest extends FormRequest
 {
     /**
@@ -21,13 +25,19 @@ class CollegeRequest extends FormRequest
      */
     public function rules(): array
     {
+        // assuming that the route request parameter name is college: http://127.0.0.1:8000/more/colleges/{college}
+        $collegeId = $this->route('college');
         return [
-            'name' => 'required|unique:colleges|max:255',
-            'abbr' => 'required|unique:colleges|max:255',
-            'is_active' => 'required|boolean',
+            'name' => ['required', 'max:255', Rule::unique('colleges','name')->ignore($collegeId)],
+            'abbr' => ['required', 'max:255', Rule::unique('colleges','abbr')->ignore($collegeId)],
+            'is_active' => ['required', 'boolean'],
         ];
     }
 
+    /**
+     * Get the error messages for the defined validation rules.
+     * @return string[]
+     */
     function messages(): array
     {
         return [
@@ -39,6 +49,19 @@ class CollegeRequest extends FormRequest
             'abbr.max' => 'Too long',
             'is_active.required' => 'Required field',
             'is_active.boolean' => 'Invalid value',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     * @return string[]
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => 'College name',
+            'abbr' => 'Abbreviation',
+            'is_active' => 'Status',
         ];
     }
 }

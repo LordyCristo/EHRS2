@@ -18,6 +18,7 @@
     </head>
     <body class="font-sans antialiased">
         @inertia
+        <router-view></router-view>
         @if (app()->environment('local'))
             {!! Debugbar::render() !!}
         @endif

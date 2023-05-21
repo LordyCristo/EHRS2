@@ -7,9 +7,13 @@ use App\Http\Requests\CollegeRequest;
 use App\Http\Resources\CollegeCollection;
 use App\Http\Resources\CollegeResource;
 use App\Models\College;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class CollegeApi extends Controller
@@ -25,7 +29,7 @@ class CollegeApi extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CollegeRequest $request)
+    public function store(CollegeRequest $request): JsonResponse
     {
         $newCollege = College::create($request->all());
         return (new CollegeResource($newCollege))->response()->setStatusCode(201);
@@ -34,7 +38,7 @@ class CollegeApi extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(College $college)
+    public function show(College $college): CollegeResource
     {
         return new CollegeResource($college);
     }
@@ -42,12 +46,12 @@ class CollegeApi extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, College $college)
+    public function update(CollegeRequest $request, College $college): Response
     {
         $update = $college->update($request->all());
         if ($update)
             return response(null, 202);
-        return  response(null, 400);
+        return response(null, 400);
     }
 
     /**
@@ -98,17 +102,49 @@ class CollegeApi extends Controller
         $paginator = $query->paginate($perPage, ['*'], 'page', $page);
 
         return response()->json([
-            //get the total number of pages
-            'totalPages' => $paginator->lastPage(),
-            'hasMorePage' => $paginator->hasMorePages(),
-            'totalCount' => $paginator->total(),
             'data' => $paginator->items(),
+            'totalCount' => $paginator->total(),
+            'totalPages' => $paginator->lastPage(),
             'perPage' => $paginator->perPage(),
-            'pageCount' => $paginator->perPage(),
-            'prevPage' => $paginator->lastPage(),
-            'currPage' => $paginator->currentPage(),
-            'nextPage' => $paginator->nextPageUrl(),
         ]);
     }
 
+    public function import(Request $request): JsonResponse
+    {
+        $data = $request->all();
+        $successCount = 0;
+        $failedCount = 0;
+        $response = [
+            'successCount' => 0,
+            'failedCount' => null,
+            'data' => [],
+        ];
+
+        $validator = new CollegeRequest();
+
+        foreach ($data as $row) {
+            $validation = Validator::make($row, $validator->rules());
+
+            if ($validation->fails()) {
+                $failedCount++;
+                $row['errors'] = $validation->errors();
+                $response['data'][] = $row;
+            } else {
+                try {
+                    College::create($row);
+                    $successCount++;
+                } catch (Exception $e) {
+                    $failedCount++;
+                    throw $e;
+                }
+            }
+        }
+
+        $response['successCount'] = $successCount;
+        $response['failedCount'] = $failedCount;
+        return response()->json($response);
+    }
 }
+
+
+

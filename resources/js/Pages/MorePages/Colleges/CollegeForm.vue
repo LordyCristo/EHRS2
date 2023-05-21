@@ -23,7 +23,6 @@ import DeleteButton from "@/Components/Generic/Buttons/DeleteButton.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
-import { router } from '@/router';
 import axios from "axios";
 export default {
     props: {
@@ -54,8 +53,13 @@ export default {
                 this.store();
             } else if (this.action === 'update') {
                 this.update();
-                //router.push({ name: 'more.college' });
+            } else {
+                this.goBackToIndex();
             }
+        },
+        goBackToIndex(){
+            this.$router.push({name:'more.college.index'});
+            this.$router.back() // go back to the college index datatable.
         },
         clearForm() {
             this.form.reset();
@@ -67,17 +71,16 @@ export default {
         store() {
             axios.post(route('api.college.store'), this.form)
                 .then(response => {
-                    console.log(response.status);
-                    if (response.status === 201) // response code for successful create request.
-                        console.log('Successfully added');
+                    console.log(response.data);
+                    this.goBackToIndex();
                 })
                 .catch(error => this.printError(error));
         },
         update() {
             axios.put(route('api.college.update', {college: this.data.id}), this.form)
-                .then(response => {
-                    console.log(response);
-                    this.clearForm();
+                .then( response => {
+                    console.log(response.data);
+                    this.goBackToIndex();
                 })
                 .catch(error => this.printError(error));
         },
@@ -100,8 +103,8 @@ export default {
         deleteForm(){
             if (confirm(`Are you sure you want to delete this record?`)) {
                 axios.delete(route('api.college.destroy', { college: this.data.id }))
-                    .then(response => {
-                        console.log(response);
+                    .then( () => {
+                        this.goBackToIndex();
                     })
                     .catch(error => {
                         console.log(error);

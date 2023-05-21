@@ -89,14 +89,18 @@ export default {
         //Initialize the data request
         this.autoGetData();
         this.changeSizeView();
+
+        // only append the action column if it is not in the columns array
+        if (!this.columns.includes(this.actionButton)) {
+            this.columns.push(this.actionButton);
+        }
     },
     methods: {
         deleteRecord(id) {
             if (confirm(`Are you sure you want to delete this record?`)) {
                 this.processing = true;
                 axios.delete(route(this.apiLink.destroy, { college: id }))
-                    .then(response => {
-                        console.log(response);
+                    .then( response => {
                         this.getData();
                     })
                     .catch(error => {
@@ -240,10 +244,10 @@ export default {
             }
             this.getData();
         },
-        clearSearchBox() {
-            this.search = null;
-            this.getData();
-        },
+        // clearSearchBox() {
+        //     this.search = null;
+        //     this.getData();
+        // },
         refreshData() {
             this.getData();
         },
@@ -254,18 +258,13 @@ export default {
             } else {
                 this.columns = this.columnsSmall;
             }
-            // only append the action column if it is not in the columns array
-            if (!this.columns.includes(this.actionButton)) {
-                this.columns.push(this.actionButton);
-            }
         },
         exportToCsv() {
             this.processing = true;
             axios.get(route(this.apiLink.index),)
                 .then((response) => {
                     const filename = 'export.csv';
-                    const rows = response.data;
-                    console.log(response);
+                    const rows = response.data.data;
                     // Convert the array of objects to a CSV string
                     const rowsArray = Array.from(rows);
                     // append infront the header row, get the column headers from the database
@@ -308,7 +307,6 @@ export default {
                 });
         },
         importFromCsv() {
-            this.processing = true;
             const fileInput = document.createElement('input');
             fileInput.type = 'file';
             fileInput.accept = '.csv';
@@ -317,6 +315,7 @@ export default {
                 const reader = new FileReader();
                 reader.readAsText(file);
                 reader.onload = () => {
+                    this.processing = true;
                     const csvData = reader.result;
                     const rowsArray = csvData.split('\n');
                     const headers = rowsArray[0].split(',');
@@ -342,6 +341,9 @@ export default {
                         })
                         .catch((error) => {
                             console.log(error);
+                        })
+                        .finally(() => {
+                            this.processing = false;
                         });
                 };
             };

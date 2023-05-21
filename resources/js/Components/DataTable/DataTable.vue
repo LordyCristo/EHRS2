@@ -20,6 +20,14 @@ import DtActionBtn from "@/Components/DataTable/DtComponents/DtActionBtn.vue";
 import DtTHead from "@/Components/DataTable/DtComponents/DtTHead.vue";
 import DtTh from "@/Components/DataTable/DtComponents/DtTh.vue";
 import DtBody from "@/Components/DataTable/DtComponents/DtBody.vue";
+import DtFooter from "@/Components/DataTable/DtComponents/DtFooter.vue";
+import DtTable from "@/Components/DataTable/DtComponents/DtTable.vue";
+import DtPaginateContainer from "@/Components/DataTable/DtComponents/DtPaginateContainer.vue";
+import DtTopContainer from "@/Components/DataTable/DtComponents/DtTopContainer.vue";
+import DtContainer from "@/Components/DataTable/DtComponents/DtContainer.vue";
+import DtActionContainer from "@/Components/DataTable/DtComponents/DtActionContainer.vue";
+import DtLengthContainer from "@/Components/DataTable/DtComponents/DtLengthContainer.vue";
+import SpinnerIcon from "@/Components/Icons/SpinnerIcon.vue";
 </script>
 <script>
 import { markRaw } from 'vue';
@@ -42,6 +50,7 @@ export default {
         },
     },
     data: () => ({
+        dtMessage: '',
         showMenu: false,
         columns: [],    // columns to be displayed
         processing: false, // show spinner
@@ -49,8 +58,7 @@ export default {
         pageStart: 0,
         totalCount: 0,
         pageNumber: 1,
-        perPage: 10,
-        pageSize: 20,
+        perPage: 20,
         sortedColumn: 'id', // default column to be sorted
         sortDir: 'desc', // default sort direction
         totalPages: 0,
@@ -173,10 +181,11 @@ export default {
         },
         getData() {
             this.processing = true;
+            this.setDtMesssage('Please wait while retrieving data...');
             axios.get(route(this.apiLink.table), {
                 params: {
                     page: this.pageNumber,
-                    per_page: this.pageSize,
+                    per_page: this.perPage,
                     search: this.search,
                     search_by: this.searchBy,
                     sort: this.sortedColumn,
@@ -187,8 +196,9 @@ export default {
                     this.data = response.data.data;
                     this.totalCount = response.data.totalCount;
                     this.totalPages = response.data.totalPages;
-                    this.totalRecords = response.data.totalCount;
-                    this.pageStart = (this.pageNumber - 1) * this.pageSize + 1;
+                    this.perPage = response.data.perPage;
+                    this.totalRecords = response.data.totalRecords;
+                    this.pageStart = this.pageNumber * this.perPage - this.perPage + 1;
                     this.processing = false;
                 })
                 .catch(error => {
@@ -349,6 +359,9 @@ export default {
             };
             fileInput.click();
         },
+        setDtMesssage(message) {
+            this.dtMessage = message;
+        },
         isColumnSorted(col) {
             return col.name === this.sortedColumn;
         },
@@ -361,10 +374,10 @@ export default {
 }
 </script>
 <template>
-    <div class="w-full flex justify-center">
+    <DtContainer>
 <!--        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>-->
-        <div class="min-w-full" >
-            <div class="flex items-center gap-2 py-1">
+        <DtTopContainer>
+            <DtActionContainer>
                 <DtActionBtn :href="route(apiLink.create)" class="bg-yellow-500">
                     <AddIcon class="w-4 mr-1" />
                     New
@@ -403,65 +416,68 @@ export default {
                     <CloseIcon class="w-4 mr-1" />
                     Deselect All
                 </DtActionBtn>
-            </div>
-            <div class="py-1 flex justify-between mb-2 gap-2">
-                <DtLength :options="DtLengthOptions" v-model="pageSize" @change="refreshData" />
+            </DtActionContainer>
+            <DtLengthContainer>
+                <DtLength :options="DtLengthOptions" v-model="perPage" @change="refreshData" />
                 <div class="flex items-center rounded-sm shadow-sm border">
                     <DtSearchBy v-model="searchBy" :columns="columns" @change="refreshData()" />
                     <DtSearch :func="refreshData" v-model="search" :searchBy="searchBy" :columns="columns" />
                 </div>
-            </div>
-            <table class="w-full border-collapse text-sm" ref="table">
-                <DtTHead>
-                    <DtTh v-for="col in columns" :key="col.data" :title="col.title" @click="sortColumn(col)" :sortDir="sortDir" :isSortedColumn="isColumnSorted(col)" />
-                </DtTHead>
-                <DtBody>
-                    <tr v-if="processing">
-                        <td :colspan="columns.length" class="text-center">Retrieving data...</td>
-                    </tr>
-                    <tr v-else-if="!data.length">
-                        <td :colspan="columns.length" class="text-center">No data available</td>
-                    </tr>
-                    <tr v-for="item in data" v-else
-                        :class="{ 'bg-gray-300 text-gray-900 border': selected.includes(item.id) }"
-                        class="dtBodyRow hover:bg-gray-200 border-r"
-                        @click="selectRecord($event, item.id)">
-                        <template v-for="col in columns" :key="col.data">
-                            <!-- for data -->
-                            <td v-if="col.data" class="dtData whitespace-nowrap border-gray-200 border" :class="col.className">
-                                {{ item[col.data] }}
-                            </td>
-                            <!-- for actions -->
-                            <td v-else-if="col.icon" class="dtData whitespace-nowrap border-none" :class="col.className">
-                                <div class="flex justify-evenly container">
-                                    <a @click="deleteRecord(item.id)"
-                                       v-if="selected.length <= 1 && selected.includes(item.id)"
-                                       class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-red-500 duration-1000 ease-in">
-                                        <component :is="col.icon[0]" />
-                                    </a>
-                                    <Link :href="route(apiLink.edit, {college: item })"
-                                          v-if="selected.length <= 1 && selected.includes(item.id)"
-                                          class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-1000 ease-in">
-                                        <component :is="col.icon[1]" />
-                                    </Link>
-                                </div>
-                            </td>
-                        </template>
-                    </tr>
-                </DtBody>
-            </table>
-            <div class="p-1 border border-t-0 min-w-full flex justify-between text-sm bottom-0">
-                <DtPaginateDetail>Showing {{ pageStart }} to {{ pageStart + data.length - 1 }} of {{ totalRecords }} entries</DtPaginateDetail>
-                <DtPageBtn :selected="selected" :totalPages="totalPages" :pageNumber="pageNumber" :changePageNumber="changePageNumber" />
-                <div class="flex items-center">
-                    <DtPaginateBtn :func="firstPage" :disabled="pageNumber === 1">First</DtPaginateBtn>
-                    <DtPaginateBtn :func="previousPage" :disabled="pageNumber === 1">Previous</DtPaginateBtn>
-                    <DtPaginateBtn :func="nextPage" :disabled="pageNumber === totalPages">Next</DtPaginateBtn>
-                    <DtPaginateBtn :func="lastPage" :disabled="pageNumber === totalPages">Last</DtPaginateBtn>
-                </div>
-            </div>
-        </div>
-    </div>
+            </DtLengthContainer>
+        </DtTopContainer>
+        <DtTable ref="table">
+            <DtTHead>
+                <DtTh v-for="col in columns" :key="col.data" :title="col.title" @click="sortColumn(col)" :sortDir="sortDir" :isSortedColumn="isColumnSorted(col)" />
+            </DtTHead>
+            <DtBody>
+                <td v-if="processing" :colspan="columns.length" class="text-center">
+                    <div class="flex justify-center">
+                        <SpinnerIcon class="w-5 mr-1 animate-spin"/>
+                        {{ dtMessage }}
+                    </div>
+                </td>
+                <tr v-else-if="!data.length">
+                    <td :colspan="columns.length" class="text-center">No data available</td>
+                </tr>
+                <tr v-for="item in data" v-else
+                    :class="{ 'bg-gray-300 text-gray-900 border-x-0': selected.includes(item.id) }"
+                    class="hover:bg-gray-200 border border-x-0"
+                    @click="selectRecord($event, item.id)">
+                    <template v-for="col in columns" :key="col.data">
+                        <!-- for data -->
+                        <td v-if="col.data" class="whitespace-nowrap border-gray-200 border" :class="col.className">
+                            {{ item[col.data] }}
+                        </td>
+                        <!-- for actions -->
+                        <td v-else-if="col.icon" class="whitespace-nowrap" :class="col.className">
+                            <div class="flex justify-evenly container">
+                                <a @click="deleteRecord(item.id)"
+                                   v-if="selected.length <= 1 && selected.includes(item.id)"
+                                   class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-red-500 duration-1000 ease-in">
+                                    <component :is="col.icon[0]" />
+                                </a>
+                                <Link :href="route(apiLink.edit, {college: item })"
+                                      v-if="selected.length <= 1 && selected.includes(item.id)"
+                                      class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-1000 ease-in">
+                                    <component :is="col.icon[1]" />
+                                </Link>
+                            </div>
+                        </td>
+                    </template>
+                </tr>
+            </DtBody>
+        </DtTable>
+        <DtFooter>
+            <DtPaginateDetail>Showing {{ pageStart }} to {{ pageStart + totalCount - 1 }} of {{ totalRecords }} entries</DtPaginateDetail>
+            <DtPageBtn :selected="selected" :totalPages="totalPages" :pageNumber="pageNumber" :changePageNumber="changePageNumber" />
+            <DtPaginateContainer>
+                <DtPaginateBtn :func="firstPage" :disabled="pageNumber === 1">First</DtPaginateBtn>
+                <DtPaginateBtn :func="previousPage" :disabled="pageNumber === 1">Previous</DtPaginateBtn>
+                <DtPaginateBtn :func="nextPage" :disabled="pageNumber === totalPages">Next</DtPaginateBtn>
+                <DtPaginateBtn :func="lastPage" :disabled="pageNumber === totalPages">Last</DtPaginateBtn>
+            </DtPaginateContainer>
+        </DtFooter>
+    </DtContainer>
 </template>
 <style>
 .asc::after {

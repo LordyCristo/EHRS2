@@ -71,7 +71,6 @@ export default {
         store() {
             axios.post(route('api.college.store'), this.form)
                 .then(response => {
-                    console.log(response.data);
                     this.goBackToIndex();
                 })
                 .catch(error => this.printError(error));
@@ -79,7 +78,6 @@ export default {
         update() {
             axios.put(route('api.college.update', {college: this.data.id}), this.form)
                 .then( response => {
-                    console.log(response.data);
                     this.goBackToIndex();
                 })
                 .catch(error => this.printError(error));

@@ -75,7 +75,7 @@ class CollegeApi extends Controller
     public function tableApi(Request $request): JsonResponse
     {
         $query = College::select(['id', 'name', 'abbr', 'is_active']);
-
+        $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');
@@ -106,6 +106,7 @@ class CollegeApi extends Controller
             'totalCount' => $paginator->total(),
             'totalPages' => $paginator->lastPage(),
             'perPage' => $paginator->perPage(),
+            'totalRecords' => $totalRecords,
         ]);
     }
 

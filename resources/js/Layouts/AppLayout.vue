@@ -150,7 +150,7 @@ export default {
                             },
                             {
                                 name: 'Departments',
-                                link: 'more.pages',
+                                link: 'more.department.index',
                                 linkName: 'department',
                             },
                             {

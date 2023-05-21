@@ -29,7 +29,7 @@ export default{
             {
                 data: 'name',
                 name: 'name',
-                title: 'College Name',
+                title: 'Name',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
@@ -39,6 +39,15 @@ export default{
                 data: 'abbr',
                 name: 'abbr',
                 title: 'Abbreviation',
+                searchable: true,
+                orderable: true,
+                collapsable: true,
+                className: 'dt-border-sm px-2',
+            },
+            {
+                data: 'college_id',
+                name: 'college_id',
+                title: 'College',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
@@ -74,6 +83,15 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
+                data: 'college_id',
+                name: 'college_id',
+                title: 'College',
+                searchable: true,
+                orderable: true,
+                collapsable: true,
+                className: 'dt-border-sm px-2',
+            },
+            {
                 data: 'is_active',
                 name: 'is_active',
                 title: 'Active',
@@ -85,21 +103,21 @@ export default{
         ],
         apiLink: {
             // create form
-            create: 'more.college.create',
+            create: 'more.department.create',
             // edit form
-            edit: 'more.college.edit',
+            edit: 'more.department.edit',
             // return all data
-            index: 'api.college.index',
+            index: 'api.department.index',
             // return data compatible for datatable requests
-            table: 'api.college.table',
+            table: 'api.department.table',
             // store data from create form
-            store: 'api.college.store',
+            store: 'api.department.store',
             // update data from edit form
-            update: 'api.patient.update',
+            update: 'api.department.update',
             // delete a specific data
-            destroy: 'api.college.destroy',
+            destroy: 'api.department.destroy',
             // import data from excel
-            import: 'api.college.import',
+            import: 'api.department.import',
         },
     })
 }

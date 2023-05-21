@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\CollegeApi;
-use App\Http\Controllers\CollegeController;
+use App\Http\Controllers\API\DepartmentApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\AccountRole;
@@ -54,31 +54,32 @@ Route::get('/program/{id}', [DepartmentController::class, 'edit'])->name('api.pr
 Route::put('/program/{id}', [DepartmentController::class, 'update'])->name('api.program.update');
 Route::delete('/program/{id}', [DepartmentController::class, 'destroy'])->name('api.program.destroy');
 
-//// Colleges Datatable API
-//Route::get('/colleges', [CollegeController::class, 'index'])->name('api.colleges');
-//// Get all the colleges to be exported as CSV file
-//Route::get('/colleges/all', [CollegeApi::class, 'getAll'])->name('api.college.all');
-////Delete a college
-//Route::delete('/college/{id}', [CollegeController::class, 'destroy'])->name('api.college.destroy');
-//// Store a college
-
-//// Import the college information from a CSV file
-//Route::post('/college/import', [CollegeController::class, 'import'])->name('api.college.import');
-//// Update a college
-//Route::put('/college/{id}', [CollegeController::class, 'update'])->name('api.college.update');
-
 // Colleges GET ALL route
 Route::get('/colleges', [CollegeApi::class, 'index'])->name('api.college.index');
 // Colleges STORE route
 Route::post('/colleges', [CollegeApi::class, 'store'])->name('api.college.store');
 // Colleges UPDATE route
-Route::put('/colleges/{college}', [CollegeApi::class, 'update'])->name('api.college.update');
+Route::put('/colleges/{id}', [CollegeApi::class, 'update'])->name('api.college.update');
 // Colleges DELETE route
-Route::delete('/colleges/{college}', [CollegeApi::class, 'destroy'])->name('api.college.destroy');
+Route::delete('/colleges/{id}', [CollegeApi::class, 'destroy'])->name('api.college.destroy');
 // Colleges DATATABLE API route
 Route::get('/colleges/all', [CollegeApi::class, 'tableApi'])->name('api.college.table');
 // Colleges import from a CSV file
 Route::post('/colleges/import', [CollegeApi::class, 'import'])->name('api.college.import');
+
+// Department GET ALL route
+Route::get('/departments', [DepartmentApi::class, 'index'])->name('api.department.index');
+// Department STORE route
+Route::post('/departments', [DepartmentApi::class, 'store'])->name('api.department.store');
+// Department UPDATE route
+Route::put('/departments/{id}', [DepartmentApi::class, 'update'])->name('api.department.update');
+// Department DELETE route
+Route::delete('/departments/{id}', [DepartmentApi::class, 'destroy'])->name('api.department.destroy');
+// Department DATATABLE API route
+Route::get('/departments/all', [DepartmentApi::class, 'tableApi'])->name('api.department.table');
+// Department import from a CSV file
+Route::post('/departments/import', [DepartmentApi::class, 'import'])->name('api.department.import');
+
 
 // Get all the patient information for the datatable api
 Route::get('/patient', [PatientInformationController::class, 'index'])->name('api.patients');

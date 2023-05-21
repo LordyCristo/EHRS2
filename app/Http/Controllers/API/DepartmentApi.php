@@ -3,53 +3,48 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CollegeRequest;
-use App\Http\Resources\CollegeCollection;
-use App\Http\Resources\CollegeResource;
-use App\Models\College;
-use Exception;
+use App\Http\Requests\DepartmentRequest;
+use App\Http\Resources\DepartmentCollection;
+use App\Http\Resources\DepartmentResource;
+use App\Models\Department;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
-use Inertia\Inertia;
 
-class CollegeApi extends Controller
+class DepartmentApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): CollegeCollection
+    public function index()
     {
-        return new CollegeCollection(College::all());
+        return new DepartmentCollection(Department::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CollegeRequest $request): JsonResponse
+    public function store(DepartmentRequest $request)
     {
-        $newCollege = College::create($request->all());
-        return (new CollegeResource($newCollege))->response()->setStatusCode(201);
+        $newDepartment = Department::create($request->all());
+        return (new DepartmentCollection($newDepartment))->response()->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(College $college): CollegeResource
+    public function show(Department $department)
     {
-        return new CollegeResource($college);
+        return new DepartmentResource($department);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CollegeRequest $request): Response
+    public function update(DepartmentRequest $request)
     {
-        $college = College::findOrFail($request->id);
-        $update = $college->update($request->all());
+        $department = Department::findOrFail($request->id);
+        $update = $department->update($request->all());
         if ($update)
             return response(null, 202);
         return response(null, 400);
@@ -60,22 +55,21 @@ class CollegeApi extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        $college = College::findOrFail($request->id);
-        $college->delete();
+        $department = Department::findOrFail($request->id);
+        $department->delete();
         // return the success code
         return response()->json([
             'success' => true,
-            'message' => 'College deleted successfully'
+            'message' => 'Department deleted successfully'
         ]);
     }
 
-
     /**
-     * Get all the colleges to be displayed in the datatable, that can handle the search, pagination, and sorting.
+     * Get all the departments to be displayed in the datatable, that can handle the search, pagination, and sorting.
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = College::select(['id', 'name', 'abbr', 'is_active']);
+        $query = Department::select(['id','name','abbr','college_id','is_active']);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -85,9 +79,10 @@ class CollegeApi extends Controller
                     $q->where('id', 'like', '%' . $search . '%')
                         ->orWhere('name', 'like', '%' . $search . '%')
                         ->orWhere('abbr', 'like', '%' . $search . '%')
+                        ->orWhere('college_id', 'like', '%' . $search . '%')
                         ->orWhere('is_active', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('colleges.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('departments.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -122,7 +117,7 @@ class CollegeApi extends Controller
             'data' => [],
         ];
 
-        $validator = new CollegeRequest();
+        $validator = new DepartmentRequest();
 
         foreach ($data as $row) {
             $validation = Validator::make($row, $validator->rules());
@@ -133,7 +128,7 @@ class CollegeApi extends Controller
                 $response['data'][] = $row;
             } else {
                 try {
-                    College::create($row);
+                    Department::create($row);
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;
@@ -147,6 +142,3 @@ class CollegeApi extends Controller
         return response()->json($response);
     }
 }
-
-
-

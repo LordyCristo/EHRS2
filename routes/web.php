@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\DepartmentApi;
 use App\Http\Controllers\CollegeController;
+use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PatientInformationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -85,15 +87,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         })->name('more.pages');
 
         Route::prefix('/college')->group(function(){
-            Route::get('/', function () {
-                return Inertia::render('MorePages/Colleges/CollegeIndex');
-            })->name('more.college.index');
+            Route::get('/', [CollegeController::class, 'index'])->name('more.college.index');
+            Route::get('/new', [CollegeController::class, 'create'])->name('more.college.create');
+            Route::get('/edit/{id}', [CollegeController::class, 'edit'])->name('more.college.edit');
+        });
 
-            Route::get('/new', function () {
-                return Inertia::render('MorePages/Colleges/NewCollege');
-            })->name('more.college.create');
-
-            Route::get('/edit/{college}', [CollegeController::class, 'edit'])->name('more.college.edit');
+        Route::prefix('/department')->group(function(){
+            Route::get('/', [DepartmentController::class, 'index'])->name('more.department.index');
+            Route::get('/new',[DepartmentController::class, 'create'])->name('more.department.create');
+            Route::get('/edit/{id}', [DepartmentController::class, 'edit'])->name('more.department.edit');
         });
     });
 });

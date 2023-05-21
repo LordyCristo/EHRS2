@@ -13,9 +13,7 @@ class CollegeController extends Controller
      */
     public function index()
     {
-        return Inertia::render('MorePages/Colleges/CollegeIndex', [
-            'data' => College::all(),
-        ]);
+        return Inertia::render('MorePages/Colleges/CollegeIndex');
     }
 
     /**
@@ -23,16 +21,16 @@ class CollegeController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('MorePages/Colleges/NewCollege');
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(College $college)
+    public function edit(Request $request)
     {
         return Inertia::render('MorePages/Colleges/EditCollege', [
-            'data' => $college,
+            'data' => College::findOrFail($request->id),
         ]);
     }
 

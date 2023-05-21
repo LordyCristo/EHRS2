@@ -97,17 +97,20 @@ export default {
         //Initialize the data request
         this.autoGetData();
         this.changeSizeView();
-
-        // only append the action column if it is not in the columns array
-        if (!this.columns.includes(this.actionButton)) {
-            this.columns.push(this.actionButton);
-        }
     },
     methods: {
-        deleteRecord(id) {
+        deleteRecord(id, multi = false) {
+            if (multi) {
+                this.deleteMultiRecord();
+            } else {
+                this.deleteSingleRecord(id);
+            }
+        },
+        deleteSingleRecord(id) {
             if (confirm(`Are you sure you want to delete this record?`)) {
                 this.processing = true;
-                axios.delete(route(this.apiLink.destroy, { college: id }))
+                this.dtMessage = 'Please wait while deleting records...';
+                axios.delete(route(this.apiLink.destroy, id))
                     .then( response => {
                         this.getData();
                     })
@@ -119,9 +122,10 @@ export default {
                     });
             }
         },
-        deleteSelected() {
+        deleteMultiRecord() {
             if (confirm(`Are you sure you want to delete these ${this.selected.length} records?`)) {
                 this.processing = true;
+                this.dtMessage = 'Please wait while deleting records...';
                 this.completedCount = 0;
                 const totalCount = this.selected.length;
                 this.selected.forEach(id => {
@@ -268,6 +272,10 @@ export default {
             } else {
                 this.columns = this.columnsSmall;
             }
+            // only append the action column if it is not in the columns array
+            if (!this.columns.includes(this.actionButton)) {
+                this.columns.push(this.actionButton);
+            }
         },
         exportToCsv() {
             this.processing = true;
@@ -394,7 +402,7 @@ export default {
                     <UploadIcon class="w-4 mr-1" />
                     Import
                 </DtActionBtn>
-                <DtActionBtn v-if="selected.length > 1" @click="deleteSelected" class="bg-red-600">
+                <DtActionBtn v-if="selected.length > 1" @click="deleteRecord(null, true)" class="bg-red-600">
                     <DeleteIcon class="w-4 mr-1" />
                     Delete
                 </DtActionBtn>
@@ -456,7 +464,7 @@ export default {
                                    class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-red-500 duration-1000 ease-in">
                                     <component :is="col.icon[0]" />
                                 </a>
-                                <Link :href="route(apiLink.edit, {college: item })"
+                                <Link :href="route(apiLink.edit, item.id)"
                                       v-if="selected.length <= 1 && selected.includes(item.id)"
                                       class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-1000 ease-in">
                                     <component :is="col.icon[1]" />
@@ -468,7 +476,7 @@ export default {
             </DtBody>
         </DtTable>
         <DtFooter>
-            <DtPaginateDetail>Showing {{ pageStart }} to {{ pageStart + totalCount - 1 }} of {{ totalRecords }} entries</DtPaginateDetail>
+            <DtPaginateDetail>Showing {{ pageStart }} to {{ pageStart + data.length - 1 }} of {{ totalRecords }} entries</DtPaginateDetail>
             <DtPageBtn :selected="selected" :totalPages="totalPages" :pageNumber="pageNumber" :changePageNumber="changePageNumber" />
             <DtPaginateContainer>
                 <DtPaginateBtn :func="firstPage" :disabled="pageNumber === 1">First</DtPaginateBtn>

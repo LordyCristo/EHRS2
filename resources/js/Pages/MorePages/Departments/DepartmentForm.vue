@@ -1,14 +1,15 @@
 <template>
     <form @submit.prevent="submit">
-        <InputText v-model="form.name" label="College Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
+        <InputText v-model="form.name" label="Department Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
         <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
+        <SelectElement v-model="form.college_id" label="College" :options="colleges" :errorMsg="form.errors.college_id" @input="form.errors['college_id'] = null" />
         <RadioButton v-model="form.is_active" label="Status" :options="statuses" :errorMsg="form.errors.is_active" @input="form.errors['is_active'] = null" />
         <div class="flex items-center justify-between mt-4">
-                <template v-if="action === 'update'">
-                    <DeleteButton @click="deleteForm" >Delete</DeleteButton>
-                    <CancelButton  @click="cancelForm">Cancel</CancelButton>
-                </template>
-                <ClearButton v-else @click="clearForm">Clear</ClearButton>
+            <template v-if="action === 'update'">
+                <DeleteButton @click="deleteForm" >Delete</DeleteButton>
+                <CancelButton  @click="cancelForm">Cancel</CancelButton>
+            </template>
+            <ClearButton v-else @click="clearForm">Clear</ClearButton>
             <SubmitButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save</SubmitButton>
         </div>
     </form>
@@ -20,6 +21,8 @@ import CancelButton from "@/Components/Generic/Buttons/CancelButton.vue";
 import ClearButton from "@/Components/Generic/Buttons/ClearButton.vue";
 import SubmitButton from "@/Components/Generic/Buttons/SubmitButton.vue";
 import DeleteButton from "@/Components/Generic/Buttons/DeleteButton.vue";
+import Select from "@/Components/Generic/Headlessui/Select.vue";
+import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -39,12 +42,14 @@ export default {
             form: useForm({
                 name: null,
                 abbr: null,
+                colegge_id: null,
                 is_active: null,
             }),
             statuses: [
                 {id: 1, name: 'Active'},
                 {id: 0, name: 'Inactive'},
             ],
+            colleges: [],
         };
     },
     methods: {
@@ -58,8 +63,8 @@ export default {
             }
         },
         goBackToIndex(){
-            this.$router.push({name:'more.college.index'});
-            this.$router.back() // go back to the college index datatable.
+            this.$router.push({name:'more.department.index'});
+            this.$router.back() // go back to the department index datatable.
         },
         clearForm() {
             this.form.reset();
@@ -69,14 +74,14 @@ export default {
             this.form = useForm(this.data);
         },
         store() {
-            axios.post(route('api.college.store'), this.form)
+            axios.post(route('api.department.store'), this.form)
                 .then(response => {
                     this.goBackToIndex();
                 })
                 .catch(error => this.printError(error));
         },
         update() {
-            axios.put(route('api.college.update', this.data.id), this.form)
+            axios.put(route('api.department.update', this.data.id), this.form)
                 .then( response => {
                     this.goBackToIndex();
                 })
@@ -100,7 +105,7 @@ export default {
         },
         deleteForm(){
             if (confirm(`Are you sure you want to delete this record?`)) {
-                axios.delete(route('api.college.destroy', this.data.id))
+                axios.delete(route('api.department.destroy', this.data.id))
                     .then( () => {
                         this.goBackToIndex();
                     })
@@ -108,11 +113,21 @@ export default {
                         console.log(error);
                     })
             }
-        }
+        },
+        getColleges(){
+            axios.get(route('api.department.index'))
+                .then(response => {
+                    this.colleges = response.data.data;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        },
     },
     mounted() {
         if (this.action === 'update')
             this.form = useForm(this.data);
+        this.getColleges();
     }
 };
 </script>

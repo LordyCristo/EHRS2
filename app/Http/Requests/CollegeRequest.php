@@ -26,7 +26,7 @@ class CollegeRequest extends FormRequest
     public function rules(): array
     {
         // assuming that the route request parameter name is college: http://127.0.0.1:8000/more/colleges/{college}
-        $collegeId = $this->route('college');
+        $collegeId = $this->route('id');
         return [
             'name' => ['required', 'max:255', Rule::unique('colleges','name')->ignore($collegeId)],
             'abbr' => ['required', 'max:255', Rule::unique('colleges','abbr')->ignore($collegeId)],

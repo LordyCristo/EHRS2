@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\API\DepartmentApi;
 use App\Http\Controllers\CollegeController;
+use App\Http\Controllers\DegreeProgramController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PatientInformationController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -83,7 +85,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::prefix('more')->group(function () {
         Route::get('/', function () {
-            return Inertia::render('MorePages');
+            return Inertia::render('MorePages/MorePageIndex',[
+                'collegesCount' => \App\Models\College::count(),
+                'departmentsCount' => \App\Models\Department::count(),
+                'programsCount' => \App\Models\DegreeProgram::count(),
+                'servicesCount' => \App\Models\Services::count(),
+            ]);
         })->name('more.pages');
 
         Route::prefix('/college')->group(function(){
@@ -96,6 +103,18 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/', [DepartmentController::class, 'index'])->name('more.department.index');
             Route::get('/new',[DepartmentController::class, 'create'])->name('more.department.create');
             Route::get('/edit/{id}', [DepartmentController::class, 'edit'])->name('more.department.edit');
+        });
+
+        Route::prefix('/program')->group(function(){
+            Route::get('/', [DegreeProgramController::class, 'index'])->name('more.program.index');
+            Route::get('/new', [DegreeProgramController::class, 'create'])->name('more.program.create');
+            Route::get('/edit/{id}', [DegreeProgramController::class, 'edit'])->name('more.program.edit');
+        });
+
+        Route::prefix('/service')->group(function (){
+            Route::get('/', [ServiceController::class, 'index'])->name('more.service.index');
+            Route::get('/new', [ServiceController::class, 'create'])->name('more.service.create');
+            Route::get('/edit/{id}', [ServiceController::class, 'edit'])->name('more.service.edit');
         });
     });
 });

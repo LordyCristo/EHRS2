@@ -29,7 +29,7 @@ export default{
             {
                 data: 'name',
                 name: 'name',
-                title: 'College Name',
+                title: 'Name',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
@@ -39,6 +39,33 @@ export default{
                 data: 'abbr',
                 name: 'abbr',
                 title: 'Abbreviation',
+                searchable: true,
+                orderable: true,
+                collapsable: true,
+                className: 'dt-border-sm px-2',
+            },
+            {
+                data: 'major',
+                name: 'major',
+                title: 'Major',
+                searchable: true,
+                orderable: true,
+                collapsable: true,
+                className: 'dt-border-sm px-2',
+            },
+            {
+                data: 'group',
+                name: 'group',
+                title: 'Level',
+                searchable: true,
+                orderable: true,
+                collapsable: true,
+                className: 'dt-border-sm px-2',
+            },
+            {
+                data: 'department_id',
+                name: 'department_id',
+                title: 'Department',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
@@ -74,6 +101,15 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
+                data: 'department_id',
+                name: 'department_id',
+                title: 'Department',
+                searchable: true,
+                orderable: true,
+                collapsable: true,
+                className: 'dt-border-sm px-2',
+            },
+            {
                 data: 'is_active',
                 name: 'is_active',
                 title: 'Active',
@@ -85,23 +121,22 @@ export default{
         ],
         apiLink: {
             // create form
-            create: 'more.college.create',
+            create: 'more.program.create',
             // edit form
-            edit: 'more.college.edit',
+            edit: 'more.program.edit',
             // return all data
-            index: 'api.college.index',
+            index: 'api.program.index',
             // return data compatible for datatable requests
-            table: 'api.college.table',
+            table: 'api.program.table',
             // store data from create form
-            store: 'api.college.store',
+            store: 'api.program.store',
             // update data from edit form
-            update: 'api.patient.update',
+            update: 'api.program.update',
             // delete a specific data
-            destroy: 'api.college.destroy',
+            destroy: 'api.program.destroy',
             // import data from excel
-            import: 'api.college.import',
+            import: 'api.program.import',
         },
     })
 }
-
 </script>

@@ -3,48 +3,49 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DegreeProgramRequest;
 use App\Http\Requests\DepartmentRequest;
-use App\Http\Resources\DepartmentCollection;
-use App\Http\Resources\DepartmentResource;
-use App\Models\Department;
+use App\Http\Resources\DegreeProgramCollection;
+use App\Http\Resources\DegreeProgramResource;
+use App\Models\DegreeProgram;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class DepartmentApi extends Controller
+class DegreeProgramApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new DepartmentCollection(Department::all());
+        return DegreeProgramCollection::collection(DegreeProgram::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DepartmentRequest $request)
+    public function store(DegreeProgramRequest $request)
     {
-        $newDepartment = Department::create($request->all());
-        return (new DepartmentCollection($newDepartment))->response()->setStatusCode(201);
+        $newDegreeProgram = DegreeProgram::create($request->all());
+        return (new DegreeProgramResource($newDegreeProgram))->response()->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show(Degreeprogram $degreeprogram)
     {
-        return new DepartmentResource($department);
+        return new DegreeProgramResource($degreeprogram);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(DepartmentRequest $request)
+    public function update(DegreeProgramRequest $request)
     {
-        $department = Department::findOrFail($request->id);
-        $update = $department->update($request->all());
+        $degreeprogram = DegreeProgram::findOrFail($request->id);
+        $update = $degreeprogram->update($request->all());
         if ($update)
             return response(null, 202);
         return response(null, 400);
@@ -53,10 +54,10 @@ class DepartmentApi extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request)
     {
-        $department = Department::findOrFail($request->id);
-        $department->delete();
+        $degreeProgram = DegreeProgram::findOrFail($request->id);
+        $degreeProgram->delete();
         // return the success code
         return response()->json([
             'success' => true,
@@ -65,11 +66,11 @@ class DepartmentApi extends Controller
     }
 
     /**
-     * Get all the departments to be displayed in the datatable, that can handle the search, pagination, and sorting.
+     * Get all the programs to be displayed in the datatable, that can handle the search, pagination, and sorting.
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Department::select(['id','name','abbr','college_id','is_active']);
+        $query = DegreeProgram::select(['id','name','abbr','major','group','department_id','is_active']);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -79,10 +80,12 @@ class DepartmentApi extends Controller
                     $q->where('id', 'like', '%' . $search . '%')
                         ->orWhere('name', 'like', '%' . $search . '%')
                         ->orWhere('abbr', 'like', '%' . $search . '%')
-                        ->orWhere('college_id', 'like', '%' . $search . '%')
+                        ->orWhere('major', 'like', '%' . $search . '%')
+                        ->orWhere('group', 'like', '%' . $search . '%')
+                        ->orWhere('department_id', 'like', '%' . $search . '%')
                         ->orWhere('is_active', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('departments.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('degree_programs.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -107,7 +110,7 @@ class DepartmentApi extends Controller
     }
 
     /**
-     * Import the departments from the csv file.
+     * Import the data from the csv file.
      */
     public function import(Request $request): JsonResponse
     {
@@ -120,7 +123,7 @@ class DepartmentApi extends Controller
             'data' => [],
         ];
 
-        $validator = new DepartmentRequest();
+        $validator = new DegreeProgramRequest();
 
         foreach ($data as $row) {
             $validation = Validator::make($row, $validator->rules());
@@ -131,7 +134,7 @@ class DepartmentApi extends Controller
                 $response['data'][] = $row;
             } else {
                 try {
-                    Department::create($row);
+                    DegreeProgram::create($row);
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;

@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\API\CollegeApi;
+use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;
+use App\Http\Controllers\API\ServiceApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\AccountRole;
@@ -79,6 +81,33 @@ Route::delete('/departments/{id}', [DepartmentApi::class, 'destroy'])->name('api
 Route::get('/departments/all', [DepartmentApi::class, 'tableApi'])->name('api.department.table');
 // Department import from a CSV file
 Route::post('/departments/import', [DepartmentApi::class, 'import'])->name('api.department.import');
+
+// Degree Program GET ALL route
+Route::get('/programs', [DegreeProgramApi::class, 'index'])->name('api.program.index');
+// Degree Program STORE route
+Route::post('/programs', [DegreeProgramApi::class, 'store'])->name('api.program.store');
+// Degree Program UPDATE route
+Route::put('/programs/{id}', [DegreeProgramApi::class, 'update'])->name('api.program.update');
+// Degree Program DELETE route
+Route::delete('/programs/{id}', [DegreeProgramApi::class, 'destroy'])->name('api.program.destroy');
+// Degree Program DATATABLE API route
+Route::get('/programs/all', [DegreeProgramApi::class, 'tableApi'])->name('api.program.table');
+// Degree Program import from a CSV file
+Route::post('/programs/import', [DegreeProgramApi::class, 'import'])->name('api.program.import');
+
+// Services GET ALL route
+Route::get('/services', [ServiceApi::class, 'index'])->name('api.service.index');
+// Services STORE route
+Route::post('/services', [ServiceApi::class, 'store'])->name('api.service.store');
+// Services UPDATE route
+Route::put('/services/{id}', [ServiceApi::class, 'update'])->name('api.service.update');
+// Services DELETE route
+Route::delete('/services/{id}', [ServiceApi::class, 'destroy'])->name('api.service.destroy');
+// Services DATATABLE API route
+Route::get('/services/all', [ServiceApi::class, 'tableApi'])->name('api.service.table');
+// Services import from a CSV file
+Route::post('/services/import', [ServiceApi::class, 'import'])->name('api.service.import');
+
 
 
 // Get all the patient information for the datatable api

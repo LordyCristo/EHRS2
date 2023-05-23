@@ -155,12 +155,12 @@ export default {
                             },
                             {
                                 name: 'Programs',
-                                link: 'more.pages',
+                                link: 'more.program.index',
                                 linkName: 'program',
                             },
                             {
                                 name: 'Services',
-                                link: 'more.pages',
+                                link: 'more.service.index',
                                 linkName: 'service',
                             },
                         ],

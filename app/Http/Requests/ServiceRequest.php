@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class DepartmentRequest extends FormRequest
+class ServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +21,13 @@ class DepartmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        // assuming that the route request parameter name is department: http://127.0.0.1:8000/more/departments/{department}
-        $departId = $this->route('id');
+        $id = $this->route('id');
         return [
-            'name' => ['required', 'string', 'max:255', Rule::unique('departments','name')->ignore($departId)],
-            'abbr' => ['required', 'string', 'max:255', Rule::unique('departments','abbr')->ignore($departId)],
-            'college_id' => ['required', 'integer', 'exists:colleges,id'],
+            'name' => ['required', 'string', 'max:255', 'unique:services,name,' . $id ],
+            'description' => ['required', 'string', 'min:10'],
+            'schedule' => ['required', 'string'],
+            'section_name' => ['nullable', 'string'],
+            'room_no' => ['nullable', 'string'],
             'is_active' => ['required', 'boolean'],
         ];
     }
@@ -39,13 +39,10 @@ class DepartmentRequest extends FormRequest
             'name.string' => 'Must be a string.',
             'name.max' => 'Too long',
             'name.unique' => 'Already exists',
-            'abbr.required' => 'Required field',
-            'abbr.string' => 'Must be a string.',
-            'abbr.max' => 'Too long',
-            'abbr.unique' => 'Already exists',
-            'college_id.required' => 'Required field',
-            'college_id.integer' => 'Must be an integer.',
-            'college_id.exists' => 'Invalid value',
+            'description.string' => 'Must be a string.',
+            'schedule.string' => 'Must be a string.',
+            'section_name.string' => 'Must be a string.',
+            'room_no.string' => 'Must be a string.',
             'is_active.required' => 'Required field',
             'is_active.boolean' => 'Invalid value',
         ];

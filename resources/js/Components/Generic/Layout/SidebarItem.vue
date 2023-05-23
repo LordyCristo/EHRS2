@@ -61,7 +61,7 @@ export default {
             <div v-for="(item, index) in subLinks" :key="index" class="rounded-md">
                 <div :class="{'bg-vsu-yellow': highlightCurrPage,'w-fit flex-col items-center':isOpen,'bg-vsu-olive': item.isOpen,'bg-transparent': !item.isOpen,'rounded-t-lg': index === 0,'rounded-b-lg': index === subLinks.length - 1}"
                      class="flex justify-between cursor-pointer px-2 py-2 text-gray-100 rounded-md">
-                    <Link :href="route(link)"  class="flex flex-row items-center gap-2">
+                    <Link :href="route(link)"  class="flex flex-row items-center gap-2 w-full">
                         <span class="w-4 h-auto">
                             <slot name="icon"></slot>
                         </span>
@@ -69,7 +69,7 @@ export default {
                             <slot name="title"></slot>
                         </span>
                     </Link>
-                    <button @click="toggleAccordion(index)" @focusout="item.isOpen = false" :title="item.isOpen?'Collapse':'Expand'" :class="{'transform rotate-180': item.isOpen}" class="transition-transform" >
+                    <button @click="toggleAccordion(index)" @focusout="item.isOpen = false" :title="item.isOpen?'Collapse':'Expand'" :class="{'transform rotate-180': item.isOpen}" class="transition-transform hover:scale-110 duration-300 active:scale-90" >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>

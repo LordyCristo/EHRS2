@@ -18,7 +18,7 @@ class DepartmentApi extends Controller
      */
     public function index()
     {
-        return new DepartmentCollection(Department::all());
+        return DepartmentCollection::collection(Department::all());
     }
 
     /**

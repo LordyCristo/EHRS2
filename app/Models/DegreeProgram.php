@@ -23,9 +23,4 @@ class DegreeProgram extends Model
     {
         return $this->belongsTo(Department::class);
     }
-
-    public function clients(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Client::class);
-    }
 }

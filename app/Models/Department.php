@@ -17,7 +17,7 @@ class Department extends Model
         'is_active',
     ];
 
-    public function college()
+    public function college(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(College::class);
     }

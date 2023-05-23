@@ -19,7 +19,7 @@ class DegreeProgramApi extends Controller
      */
     public function index()
     {
-        return DegreeProgramCollection::collection(DegreeProgram::all());
+        return new DegreeProgramCollection(DegreeProgram::all());
     }
 
     /**

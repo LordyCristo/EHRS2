@@ -18,7 +18,7 @@ class ServiceApi extends Controller
      */
     public function index()
     {
-        return ServiceCollection::collection(Services::all());
+        return new ServiceCollection(Services::all());
     }
 
     /**

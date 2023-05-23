@@ -2,9 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Validation\Rule;
 class ClientRequest extends FormRequest
 {
     /**
@@ -25,24 +24,24 @@ class ClientRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('id');
         return [
-            'first_name' => 'required|string|max:255',
-            'middle_name' => 'nullable|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'suffix' => 'nullable|string|max:255',
-            'birthdate' => 'required|date',
-            'age' => 'required|int',
-            'sex' => 'required',
-            'civil_status' => 'required',
-            'phone' => 'required|string|max:255|unique:clients,phone',
-            // 'phone => 'required|string|max:255|unique:clients,phone|starts_with:09|size:11'
-            'email_address' => 'nullable|email|max:255|unique:clients,email_address',
-            'home_address' => 'required|string|max:255',
-            'curr_address' => 'required|string|max:255',
-            'id_number' => 'nullable|string|max:255|unique:clients,id_number|regex:/^[0-9]{2}-[0-9]{1}-[0-9]{5}$/',
-            'program_id' => 'nullable|exists:degree_programs,id',
-            'year_lvl' => 'nullable',
-            'client_type_id' => 'required|exists:client_types,id',
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'suffix' => ['required', 'string', 'max:255'],
+            'birthdate' => ['required', 'date'],
+            'age' => ['required', 'int'],
+            'sex' => ['required'],
+            'civil_status' => ['required'],
+            'phone' => ['required', 'string', Rule::unique('clients', 'phone')->ignore($id), 'starts_with:09', 'size:11'],
+            'email_address' => ['required', 'string', 'email', 'max:255', Rule::unique('clients', 'email_address')->ignore($id)],
+            'home_address' => ['required', 'string', 'max:255'],
+            'curr_address' => ['required', 'string', 'max:255'],
+            'id_number' => ['required', 'string', 'max:255', 'regex:/^[0-9]{2}-[0-9]{1}-[0-9]{5}$/', Rule::unique('clients', 'id_number')->ignore($id)],
+            'program_id' => ['required', 'exists:degree_programs,id'],
+            'year_lvl' => ['nullable'],
+            'client_type_id' => ['required', 'exists:client_types,id'],
         ];
     }
 

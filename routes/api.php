@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ClientApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;
@@ -109,19 +110,19 @@ Route::get('/services/all', [ServiceApi::class, 'tableApi'])->name('api.service.
 Route::post('/services/import', [ServiceApi::class, 'import'])->name('api.service.import');
 
 
+// Client GET ALL route
+Route::get('/clients', [ClientApi::class, 'index'])->name('api.client.index');
+// Client STORE route
+Route::post('/clients', [ClientApi::class, 'store'])->name('api.client.store');
+// Client UPDATE route
+Route::put('/clients/{id}', [ClientApi::class, 'update'])->name('api.client.update');
+// Client DELETE route
+Route::delete('/clients/{id}', [ClientApi::class, 'destroy'])->name('api.client.destroy');
+// Client DATATABLE API route
+Route::get('/clients/all', [ClientApi::class, 'tableApi'])->name('api.client.table');
+// Client import from a CSV file
+Route::post('/clients/import', [ClientApi::class, 'import'])->name('api.client.import');
 
-// Get all the patient information for the datatable api
-Route::get('/patient', [PatientInformationController::class, 'index'])->name('api.patients');
-// Get all the patient information to be exported as CSV file
-Route::get('/patient/all', [PatientInformationController::class, 'getAll'])->name('api.patient.all');
-// Import the patient information from a CSV file
-Route::post('/patient/import', [PatientInformationController::class, 'import'])->name('api.patient.import');
-// To store the patient information
-Route::post('/patient', [PatientInformationController::class, 'store'])->name('api.patient.store');
-// To update the patient information
-Route::put('/patient/{id}', [PatientInformationController::class, 'update'])->name('api.patient.update');
-// To delete a patient information
-Route::delete('/patient/{id}', [PatientInformationController::class, 'destroy'])->name('api.patient.destroy');
 
 
 // Dashboard summary API

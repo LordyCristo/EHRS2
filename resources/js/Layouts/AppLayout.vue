@@ -1,6 +1,6 @@
 <script>
 import MoreIcon from "@/Components/Icons/MoreIcon.vue";
-import PatientRecordsIcon from "@/Components/Icons/PatientRecordsIcon.vue";
+import ClientRecordsIcon from "@/Components/Icons/PatientRecordsIcon.vue";
 import HomeIcon from "@/Components/Icons/HomeIcon.vue";
 import MedicalRecordIcon from "@/Components/Icons/MedicalRecordIcon.vue";
 import RadiologyIcon from "@/Components/Icons/RadiologyIcon.vue";
@@ -21,7 +21,7 @@ export default {
         Head,
         Sidebar,
         MoreIcon,
-        PatientRecordsIcon,
+        PatientRecordsIcon: ClientRecordsIcon,
         HomeIcon,
         MedicalRecordIcon,
         RadiologyIcon,
@@ -58,12 +58,12 @@ export default {
                     method: null,
                 },
                 {
-                    title: 'Patients',
-                    link: 'patients',
-                    tabName: '/patients',
+                    title: 'Clients',
+                    link: 'client.index',
+                    tabName: '/clients',
                     subLinks: [],
                     isOpen: false,
-                    icon: markRaw(PatientRecordsIcon),
+                    icon: markRaw(ClientRecordsIcon),
                     form: false,
                     method: null,
                 },

@@ -13,10 +13,11 @@ defineProps({
         <template v-if="typeof message === 'string'">
             {{ message }}
         </template>
-        <template v-else>
+        <span v-else>
             <span v-for="(msg, index) in message" :key="index">
-                {{ msg }}<br v-if="index < message.length - 1" />
+                {{ msg }}
+                <span v-if="index < message.length - 1">, </span>
             </span>
-        </template>
+        </span>
     </p>
 </template>

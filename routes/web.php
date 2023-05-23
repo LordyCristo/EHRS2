@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\DepartmentApi;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DegreeProgramController;
 use App\Http\Controllers\DepartmentController;
@@ -35,12 +36,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::prefix('patients')->group(callback: function () {
-        Route::get('/', function () {
-            return Inertia::render('Patient/PatientIndex');
-        })->name('patients');
-        Route::get('/new', [PatientInformationController::class, 'create'])->name('newPatient');
-        Route::get('/edit/{id}', [PatientInformationController::class, 'edit'])->name('editPatient');
+    Route::prefix('clients')->group(callback: function () {
+        Route::get('/', [ClientController::class, 'index'])->name('client.index');
+        Route::get('/new', [ClientController::class, 'create'])->name('client.create');
+        Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('client.edit');
     });
 
     Route::prefix('records')->group(function () {

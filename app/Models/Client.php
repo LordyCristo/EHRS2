@@ -30,6 +30,16 @@ class Client extends Model
         'client_type_id',
     ];
 
+    function program()
+    {
+        return $this->belongsTo(DegreeProgram::class);
+    }
+
+    function clientType()
+    {
+        return $this->belongsTo(ClientType::class);
+    }
+
 
     function fecalysisRecord()
     {

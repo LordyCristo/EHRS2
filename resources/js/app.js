@@ -21,8 +21,14 @@ import ServiceIndex from "@/Pages/MorePages/Services/ServiceIndex.vue";
 import NewService from "@/Pages/MorePages/Services/NewService.vue";
 import EditService from "@/Pages/MorePages/Services/EditService.vue";
 import MorePageIndex from "@/Pages/MorePages/MorePageIndex.vue";
+import ClientIndex from "@/Pages/Client/ClientIndex.vue";
+import NewClient from "@/Pages/Client/NewClient.vue";
+import EditClient from "@/Pages/Client/EditClient.vue";
 
 const routes = [
+    { path:'/clients', name: 'client.index', component: ClientIndex },
+    { path:'/clients/new', name: 'client.create', component: NewClient },
+    { path:'/clients/edit/', name: 'client.edit', component: EditClient },
     { path:'/more/', name: 'more.pages', component: MorePageIndex },
     { path:'/more/college', name: 'more.college.index', component: CollegeIndex },
     { path:'/more/college/new', name: 'more.college.create', component: NewCollege },

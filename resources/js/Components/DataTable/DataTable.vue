@@ -122,28 +122,28 @@ export default {
                     });
             }
         },
-        deleteMultiRecord() {
+        async deleteMultiRecord() {
             if (confirm(`Are you sure you want to delete these ${this.selected.length} records?`)) {
                 this.processing = true;
-                this.dtMessage = 'Please wait while deleting records...';
                 this.completedCount = 0;
                 const totalCount = this.selected.length;
                 this.selected.forEach(id => {
                     axios.delete(route(this.apiLink.destroy, id))
                         .then(response => {
-                            this.completedCount++;
-                            if (this.completedCount === totalCount) {
-                                this.getData();
-                            }
+                            this.dtMessage = `Please wait while deleting records...${this.completedCount}/${totalCount}`;
                         })
                         .catch(error => {
                             console.log(error);
-                            this.completedCount++;
+
                             if (this.completedCount === totalCount) {
                                 this.processing = false;
                             }
+                        })
+                        .finally(() => {
+                            this.completedCount++;
                         });
                 });
+                await this.getData();
                 this.completedCount = 0;
                 this.selected = [];
             }
@@ -166,7 +166,7 @@ export default {
                 }
             }
         },
-        selectAll() {
+        selectAllShown() {
             if (this.selected.length < this.totalRecords) {
                 this.data.forEach(record => {
                     if (!this.selected.includes(record.id)) {
@@ -179,14 +179,35 @@ export default {
                 this.currentPageSelected = [];
             }
         },
+        async selectAll(){
+            if (this.selected.length < this.totalRecords) {
+                await axios.get(route('api.client.index'))
+                    .then(response => {
+                        this.selected = response.data.data.map(record => record.id);
+                        //console.log(response.data.data);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                // this.data.forEach(record => {
+                //     if (!this.selected.includes(record.id)) {
+                //         this.selected.push(record.id);
+                //         this.currentPageSelected.push(record.id);
+                //     }
+                // });
+            } else {
+                this.selected = [];
+                //this.currentPageSelected = [];
+            }
+        },
         deselectAll() {
             this.selected = [];
             this.currentPageSelected = [];
         },
-        getData() {
+        async getData() {
             this.processing = true;
             this.setDtMesssage('Please wait while retrieving data...');
-            axios.get(route(this.apiLink.table), {
+            await axios.get(route(this.apiLink.table), {
                 params: {
                     page: this.pageNumber,
                     per_page: this.perPage,
@@ -258,10 +279,6 @@ export default {
             }
             this.getData();
         },
-        // clearSearchBox() {
-        //     this.search = null;
-        //     this.getData();
-        // },
         refreshData() {
             this.getData();
         },
@@ -332,8 +349,9 @@ export default {
                 const file = fileInput.files[0];
                 const reader = new FileReader();
                 reader.readAsText(file);
-                reader.onload = () => {
+                reader.onload = async () => {
                     this.processing = true;
+                    this.dtMessage = 'Please wait while importing data...';
                     const csvData = reader.result;
                     const rowsArray = csvData.split('\n');
                     const headers = rowsArray[0].split(',');
@@ -352,16 +370,13 @@ export default {
                         rows.push(row);
                     }
                     // Send the imported data to the server
-                    axios.post(route(this.apiLink.import), rows)
+                    await axios.post(route(this.apiLink.import), rows)
                         .then((response) => {
                             // Refresh the data table
                             this.getData();
                         })
                         .catch((error) => {
                             console.log(error);
-                        })
-                        .finally(() => {
-                            this.processing = false;
                         });
                 };
             };
@@ -416,7 +431,11 @@ export default {
                         Expand
                     </template>
                 </DtActionBtn>
-                <DtActionBtn  v-if="isAllSelected" @click="selectAll" class="bg-orange-500">
+                <DtActionBtn v-if="isAllSelected" @click="selectAllShown" class="bg-orange-500">
+                    <CheckallIcon class="w-4 mr-1" />
+                    Select All Shown
+                </DtActionBtn>
+                <DtActionBtn v-if="isAllSelected" @click="selectAll" class="bg-indigo-500">
                     <CheckallIcon class="w-4 mr-1" />
                     Select All
                 </DtActionBtn>

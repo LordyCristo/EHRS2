@@ -1,7 +1,7 @@
 <template>
     <MorePages>
         <div class="flex gap-3 h-fit justify-center w-full">
-            <CardWithAction v-for="card in cards" :mainbtnlink="card.link">
+            <CardWithAction v-for="card in cards" :mainbtnlink="card.link" :id="card.id">
                 <template #number>{{ card.count }}</template>
                 <template #title>{{ card.title }}</template>
                 <template #description>{{ card.description }}</template>
@@ -24,10 +24,10 @@ export default {
     },
     data: () => ({
         cards: [
-            {title: 'Colleges', description: 'Manage colleges', link: route('more.college.index'), count: 0},
-            {title: 'Departments', description: 'Manage departments', link: route('more.department.index'), count: 0},
-            {title: 'Programs', description: 'Manage degree programs', link: route('more.program.index'), count: 0},
-            {title: 'Services', description: 'Manage services', link: route('more.service.index'), count: 0},
+            {id: 'colleges', title: 'Colleges', description: 'Manage colleges', link: route('more.college.index'), count: 0},
+            {id: 'departments', title: 'Departments', description: 'Manage departments', link: route('more.department.index'), count: 0},
+            {id: 'programs', title: 'Programs', description: 'Manage degree programs', link: route('more.program.index'), count: 0},
+            {id: 'services', title: 'Services', description: 'Manage services', link: route('more.service.index'), count: 0},
         ]
     }),
     mounted() {

@@ -125,26 +125,17 @@ export default {
         async deleteMultiRecord() {
             if (confirm(`Are you sure you want to delete these ${this.selected.length} records?`)) {
                 this.processing = true;
-                this.completedCount = 0;
-                const totalCount = this.selected.length;
-                this.selected.forEach(id => {
-                    axios.delete(route(this.apiLink.destroy, id))
-                        .then(response => {
-                            this.dtMessage = `Please wait while deleting records...${this.completedCount}/${totalCount}`;
-                        })
-                        .catch(error => {
-                            console.log(error);
-
-                            if (this.completedCount === totalCount) {
-                                this.processing = false;
-                            }
-                        })
-                        .finally(() => {
-                            this.completedCount++;
-                        });
-                });
-                await this.getData();
-                this.completedCount = 0;
+                this.dtMessage = `Please wait while deleting records...`;
+                await axios.delete(route(this.apiLink.destroy, { id: this.selected }))
+                    .then(response => {
+                        this.getData();
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        this.processing = false;
+                    });
                 this.selected = [];
             }
         },
@@ -181,7 +172,7 @@ export default {
         },
         async selectAll(){
             if (this.selected.length < this.totalRecords) {
-                await axios.get(route('api.client.index'))
+                await axios.get(route(this.apiLink.index))
                     .then(response => {
                         this.selected = response.data.data.map(record => record.id);
                         //console.log(response.data.data);
@@ -189,12 +180,6 @@ export default {
                     .catch(error => {
                         console.log(error);
                     });
-                // this.data.forEach(record => {
-                //     if (!this.selected.includes(record.id)) {
-                //         this.selected.push(record.id);
-                //         this.currentPageSelected.push(record.id);
-                //     }
-                // });
             } else {
                 this.selected = [];
                 //this.currentPageSelected = [];

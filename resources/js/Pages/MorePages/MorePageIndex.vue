@@ -24,17 +24,17 @@ export default {
     },
     data: () => ({
         cards: [
-            {id: 'colleges', title: 'Colleges', description: 'Manage colleges', link: route('more.college.index'), count: 0},
-            {id: 'departments', title: 'Departments', description: 'Manage departments', link: route('more.department.index'), count: 0},
-            {id: 'programs', title: 'Programs', description: 'Manage degree programs', link: route('more.program.index'), count: 0},
-            {id: 'services', title: 'Services', description: 'Manage services', link: route('more.service.index'), count: 0},
+            {id: 'colleges', title: 'Colleges', description: 'List of colleges', link: route('more.college.index'), count: 0},
+            {id: 'departments', title: 'Departments', description: 'List of departments', link: route('more.department.index'), count: 0},
+            {id: 'programs', title: 'Programs', description: 'List of degree programs', link: route('more.program.index'), count: 0},
+            {id: 'services', title: 'Services', description: 'List of medical services', link: route('more.service.index'), count: 0},
         ]
     }),
     mounted() {
-        this.cards[0].count = this.collegesCount;
-        this.cards[1].count = this.departmentsCount;
-        this.cards[2].count = this.programsCount;
-        this.cards[3].count = this.servicesCount;
+        this.cards[0].count = this.collegesCount? this.collegesCount : 0;
+        this.cards[1].count = this.departmentsCount? this.departmentsCount : 0;
+        this.cards[2].count = this.programsCount? this.programsCount : 0;
+        this.cards[3].count = this.servicesCount? this.servicesCount : 0;
     }
 }
 

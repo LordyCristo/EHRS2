@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <HematologyForm :action="action" :errors="errors"/>
+                <HematologyForm :action="action" :errors="errors" :physicians="physicians"/>
             </div>
         </div>
     </MorePages>
@@ -29,5 +29,8 @@ export default {
         action: 'store',
         errors: Object,
     }),
+    props: {
+        physicians: Object,
+    },
 }
 </script>

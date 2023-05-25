@@ -8,6 +8,11 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\ServiceController;
+use App\Models\College;
+use App\Models\DegreeProgram;
+use App\Models\Department;
+use App\Models\HematologyRecord;
+use App\Models\Services;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -50,7 +55,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::get('/new', function () {
             return Inertia::render('Records/NewRecord',[
-                'department_ids' => \App\Models\Department::select(['id', 'name'])->get(),
+                'department_ids' => Department::select(['id', 'name'])->get(),
             ]);
         })->name('newRecord');
 
@@ -69,7 +74,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::prefix('/laboratory')->group(function () {
         Route::get('/', function () {
-            return Inertia::render('Laboratory/LaboratoryIndex');
+            return Inertia::render('Laboratory/LaboratoryIndex',[
+                'hematologyCount' => HematologyRecord::count(),
+            ]);
         })->name('laboratory.index');
 
         Route::prefix('/hematology')->group(function () {
@@ -94,10 +101,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::prefix('more')->group(function () {
         Route::get('/', function () {
             return Inertia::render('MorePages/MorePageIndex',[
-                'collegesCount' => \App\Models\College::count(),
-                'departmentsCount' => \App\Models\Department::count(),
-                'programsCount' => \App\Models\DegreeProgram::count(),
-                'servicesCount' => \App\Models\Services::count(),
+                'collegesCount' => College::count(),
+                'departmentsCount' => Department::count(),
+                'programsCount' => DegreeProgram::count(),
+                'servicesCount' => Services::count(),
             ]);
         })->name('more.pages');
 

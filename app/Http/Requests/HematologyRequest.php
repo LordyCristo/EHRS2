@@ -22,13 +22,14 @@ class HematologyRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('id');
         return [
             //hematology record
             'client_id' => ['required', 'exists:clients,id'],
             'age' => ['nullable','numeric'],
             'sex' => ['required','in:male,female'],
             'ward' => ['nullable', 'string'],
-            'or_no' => ['required', 'numeric'],
+            'or_no' => ['required', 'numeric', 'unique:hematology_records'],
             'rqst_physician' => ['required', 'exists:users,id'],
             'hospital_no' => ['nullable', 'string'],
             // hematology
@@ -59,6 +60,7 @@ class HematologyRequest extends FormRequest
             'ward.string' => 'Must be a string.',
             'or_no.required' => 'Required field',
             'or_no.numeric' => 'Must be a number.',
+            'or_no.unique' => 'OR number already exists',
             'rqst_physician.required' => 'Required field',
             'rqst_physician.exists' => 'Physician ID does not exist',
             'hospital_no.string' => 'Must be a string.',

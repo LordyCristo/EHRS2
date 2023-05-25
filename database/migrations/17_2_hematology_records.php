@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hematology_records', function(Blueprint $table){
-            $table->foreignId('id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('client_id')->nullable()->constrained('clients')->cascadeOnUpdate()->nullOnDelete();
-            $table->decimal('age')->nullable();
+            $table->foreignId('id')->unique('unq_record_id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('client_id')->constrained('clients')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->integer('age')->nullable();
             $table->enum('sex', ['male','female']);
             $table->string('ward')->nullable();
-            $table->string('or_no');
+            $table->string('or_no')->unique('unq_or_no');
             $table->foreignId('rqst_physician')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('hospital_no')->nullable();
             $table->timestamps();

@@ -7,22 +7,21 @@
             <RadioButton v-model="form.sex" label="Sex" :options="sexes" :errorMsg="form.errors.sex" @input="onFocusClearError('sex')" />
             <InputText v-model="form.or_no" label="OR No." :errorMsg="form.errors.or_no" @input="onFocusClearError('or_no')" />
             <InputText v-model="form.rqst_physician" label="Requesting Physician" :errorMsg="form.errors.rqst_physician" @input="onFocusClearError('rqst_physician')" />
+            <SelectElement v-model="form.rqst_physician" label="Requesting Physician" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="onFocusClearError('rqst_physician')" />
             <InputText v-model="form.hospital_no" label="Hospital No." :errorMsg="form.errors.hospital_no" @input="onFocusClearError('hospital_no')" />
             <InputText v-model="form.ward" label="Ward" :errorMsg="form.errors.ward" @input="onFocusClearError('ward')" />
         </div>
         <!--end of header form-->
-    </form>
-    <form @submit.prevent="submit">
         <!--hematology body form-->
         <div class="grid grid-cols-4 gap-1">
-            <InputText v-model.number="form.hemoglobin" label="Hemoglobin" type="number" :step="0.1" :errorMsg="form.errors.hemoglobin" @input="onFocusClearError('hemoglobin')" />
-            <InputText v-model.number="form.hematocrit" label="Hematocrit" type="number" :step="0.1" :errorMsg="form.errors.hematocrit" @input="onFocusClearError('hematocrit')" />
-            <InputText v-model.number="form.wbc" label="WBC" type="number" :step="0.1" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
-            <InputText v-model.number="form.rbc" label="RBC" type="number" :step="0.1" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
-            <InputText v-model.number="form.platelet_count" label="Platelet Count" type="number" :step="0.1" :errorMsg="form.errors.platelet_count" @input="onFocusClearError('platelet_count')" />
-            <InputText v-model.number="form.segmenters" label="Segmenters" type="number" :step="0.1" :errorMsg="form.errors.segmenters" @input="onFocusClearError('segmenters')" />
-            <InputText v-model.number="form.lymphocyte" label="Lymphocytes" type="number" :step="0.1" :errorMsg="form.errors.lymphocyte" @input="onFocusClearError('lymphocytes')" />
-            <InputText v-model.number="form.monocyte" label="Monocytes" type="number" :step="0.1" :errorMsg="form.errors.monocyte" @input="onFocusClearError('monocyte')" />
+            <InputText v-model.number="form.hemoglobin" label="Hemoglobin" type="number" :step="0.01" :errorMsg="form.errors.hemoglobin" @input="onFocusClearError('hemoglobin')" />
+            <InputText v-model.number="form.hematocrit" label="Hematocrit" type="number" :step="0.01" :errorMsg="form.errors.hematocrit" @input="onFocusClearError('hematocrit')" />
+            <InputText v-model.number="form.wbc" label="WBC" type="number" :step="0.01" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
+            <InputText v-model.number="form.rbc" label="RBC" type="number" :step="0.01" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
+            <InputText v-model.number="form.platelet_count" label="Platelet Count" type="number" :step="0.01" :errorMsg="form.errors.platelet_count" @input="onFocusClearError('platelet_count')" />
+            <InputText v-model.number="form.segmenters" label="Segmenters" type="number" :step="0.01" :errorMsg="form.errors.segmenters" @input="onFocusClearError('segmenters')" />
+            <InputText v-model.number="form.lymphocyte" label="Lymphocytes" type="number" :step="0.01" :errorMsg="form.errors.lymphocyte" @input="onFocusClearError('lymphocytes')" />
+            <InputText v-model.number="form.monocyte" label="Monocytes" type="number" :step="0.01" :errorMsg="form.errors.monocyte" @input="onFocusClearError('monocyte')" />
             <SelectElement v-model.number="form.blood_type" label="Blood Type" :options="bloodTypes" :errorMsg="form.errors.blood_type" @input="onFocusClearError('blood_type')" />
         </div>
         <!--end of hematology body form-->
@@ -60,36 +59,33 @@ export default {
     props: {
         errors: [Object, Function],
         action: String,
-        data: {
-            type: Object,
-            required: false,
-            default: [],
-        },
+        data: Object,
+        physicians: Object,
     },
     data() {
         return {
             form: useForm({
                 // hematology record
                 client_id: null,
-                age: null,
-                sex: null,
-                ward: null,
+                age: 23,
+                sex: 'male',
+                ward: 'sample ward',
                 or_no: null,
-                rqst_physician: null,
-                hospital_no: null,
+                rqst_physician: 1,
+                hospital_no: '90382',
                 //hematology
-                hemoglobin: null,
-                hematocrit: null,
-                wbc: null,
-                rbc: null,
-                platelet_count: null,
-                segmenters: null,
-                lymphocyte: null,
-                monocyte: null,
-                blood_type: null,
-                diagnosis: null,
-                remarks: null,
-                status: null,
+                hemoglobin: 1,
+                hematocrit: 1,
+                wbc: 1,
+                rbc: 1,
+                platelet_count: 1,
+                segmenters: 1,
+                lymphocyte: 1,
+                monocyte: 1,
+                blood_type: 'O+',
+                diagnosis: 'Healthy',
+                remarks: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.',
+                status: 'Processing',
             }),
             statuses: RecordStatus,
             bloodTypes: BloodType,

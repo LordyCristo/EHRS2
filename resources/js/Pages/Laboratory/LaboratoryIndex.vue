@@ -17,24 +17,15 @@ import CardWithAction from "@/Components/Generic/Modals/CardWithAction.vue";
 <script>
 export default {
     props: {
-        collegesCount: Number,
-        departmentsCount: Number,
-        programsCount: Number,
-        servicesCount: Number,
+        hematologyCount: Number,
     },
     data: () => ({
         cards: [
-            {id: 'colleges', title: 'Colleges', description: 'Manage colleges', link: route('more.college.index'), count: 0},
-            {id: 'departments', title: 'Departments', description: 'Manage departments', link: route('more.department.index'), count: 0},
-            {id: 'programs', title: 'Programs', description: 'Manage degree programs', link: route('more.program.index'), count: 0},
-            {id: 'services', title: 'Services', description: 'Manage services', link: route('more.service.index'), count: 0},
+            {id: 'hematology', title: 'Hematology', description: 'Hematology Filed Records', link: route('laboratory.hematology.index'), count: 0},
         ]
     }),
     mounted() {
-        this.cards[0].count = this.collegesCount;
-        this.cards[1].count = this.departmentsCount;
-        this.cards[2].count = this.programsCount;
-        this.cards[3].count = this.servicesCount;
+        this.cards[0].count = this.hematologyCount? this.hematologyCount : 0;
     }
 }
 

@@ -19,7 +19,7 @@ class HematologyApi extends Controller
      */
     public function index()
     {
-        return new HematologyCollection(Hematology::all());
+        return new HematologyCollection(HematologyRecord::all());
     }
 
     /**
@@ -49,7 +49,7 @@ class HematologyApi extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Hematology $hematology)
+    public function show(HematologyRecord $hematology)
     {
         return new HematologyResource($hematology);
     }
@@ -71,12 +71,14 @@ class HematologyApi extends Controller
      */
     public function destroy(Request $request)
     {
-        $hematology = Hematology::findOrFail($request->id);
-        $hematology->delete();
-        // return the success code
+        $id = explode(',', $request->id);
+        HematologyRecord::destroy($id);
+        Hematology::destroy($id);
+        // Return the success code
         return response()->json([
             'success' => true,
-            'message' => 'Department deleted successfully'
+            'message' => 'Records deleted successfully',
+            'data' => $id,
         ]);
     }
 
@@ -85,7 +87,7 @@ class HematologyApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Hematology::select('*');
+        $query = HematologyRecord::with('hematology', 'client')->where('id', '!=', null);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -93,20 +95,15 @@ class HematologyApi extends Controller
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
                     $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('hemoglobin', 'like', '%' . $search . '%')
-                        ->orWhere('hematocrit', 'like', '%' . $search . '%')
-                        ->orWhere('rbc', 'like', '%' . $search . '%')
-                        ->orWhere('wbc', 'like', '%' . $search . '%')
-                        ->orWhere('platelet_count', 'like', '%' . $search . '%')
-                        ->orWhere('segmenters', 'like', '%' . $search . '%')
-                        ->orWhere('lymphocyte', 'like', '%' . $search . '%')
-                        ->orWhere('monocyte', 'like', '%' . $search . '%')
-                        ->orWhere('blood_type', 'like', '%' . $search . '%')
-                        ->orWhere('diagnosis', 'like', '%' . $search . '%')
-                        ->orWhere('remarks', 'like', '%' . $search . '%')
-                        ->orWhere('status', 'like', '%' . $search . '%');
+                        ->orWhere('client_id', 'like', '%' . $search . '%')
+                        ->orWhere('age', 'like', '%' . $search . '%')
+                        ->orWhere('sex', 'like', '%' . $search . '%')
+                        ->orWhere('ward', 'like', '%' . $search . '%')
+                        ->orWhere('or_no', 'like', '%' . $search . '%')
+                        ->orWhere('rqst_physician', 'like', '%' . $search . '%')
+                        ->orWhere('hospital_no', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('hematology.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('hematology_records.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }

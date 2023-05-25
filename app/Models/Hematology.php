@@ -26,4 +26,9 @@ class Hematology extends Model
         'remarks',
         'status',
     ];
+
+    public function hematologyRecord()
+    {
+        return $this->hasOne(HematologyRecord::class, 'id', 'id');
+    }
 }

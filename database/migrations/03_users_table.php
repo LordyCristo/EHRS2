@@ -20,8 +20,8 @@ return new class extends Migration
             $table->date('birthdate');
             $table->integer('age');
             $table->enum('sex', ['male','female']);
-            $table->string('landline')->nullable()->unique('user_landline_unique');
-            $table->string('mobile')->nullable()->unique('user_mobile_unique');
+            $table->string('landline')->nullable();
+            $table->string('mobile')->nullable();
             $table->string('specialization')->nullable();
             $table->string('curr_position');
             $table->string('license_no')->unique('user_license_no_unique');

@@ -22,4 +22,14 @@ class HematologyRecord extends Model
         'rqst_physician',
         'hospital_no',
     ];
+
+    public function hematology()
+    {
+        return $this->belongsTo(Hematology::class, 'id', 'id');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'client_id', 'id');
+    }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import Patients from '@/Pages/Patients.vue';
+import Laboratory from '@/Pages/Laboratories.vue';
 import DataTable from '@/Components/DataTable/DataTable.vue';
 import NotifBanner from '@/Components/Generic/Modals/NotifBanner.vue';
 </script>
@@ -16,25 +16,23 @@ export default {
         },
     },
     data: () => ({
-        options:{
-            addBtn: true,
-            deleteBtn: true,
-            selectAllBtn: true,
-            refreshBtn: true,
-            printBtn: true,
-            excelBtn: true,
-            viewBtn: true,
-            searchBtn: true,
-        },
         apiLink: {
-            index: 'api.patients',
-            create: 'newPatient',
-            store: 'api.patient.store',
-            edit: 'editPatient',
-            update: 'api.patient.update',
-            destroy: 'api.patient.destroy',
-            getall: 'api.patient.all',
-            import: 'api.patient.import',
+            // create form
+            create: 'laboratory.hematology.create',
+            // edit form
+            edit: 'laboratory.hematology.edit',
+            // return all data
+            index: 'api.hematology.index',
+            // return data compatible for datatable requests
+            table: 'api.hematology.table',
+            // store data from create form
+            store: 'api.hematology.store',
+            // update data from edit form
+            update: 'api.hematology.update',
+            // delete a specific data
+            destroy: 'api.hematology.destroy',
+            // import data from excel
+            import: 'api.hematology.import',
         },
         columnsSmall:[
             {
@@ -103,72 +101,90 @@ export default {
                 className: 'dt-center dt-border-sm px-2'
             },
             {
-                data: 'first_name',
-                name: 'first_name',
-                title: 'First Name',
+                data: 'hemoglobin',
+                name: 'hemoglobin',
+                title: 'Hemoglobin',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'middle_name',
-                name: 'middle_name',
-                title: 'Middle',
+                data: 'hematocrit',
+                name: 'hematocrit',
+                title: 'Hematocrit',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'last_name',
-                name: 'last_name',
-                title: 'Surname',
+                data: 'wbc',
+                name: 'wbc',
+                title: 'WBC',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'suffix',
-                name: 'suffix',
-                title: 'Suffix',
+                data: 'rbc',
+                name: 'rbc',
+                title: 'RBC',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'age',
-                name: 'age',
-                title: 'Age',
+                data: 'platelet_count',
+                name: 'platelet_count',
+                title: 'Platelet Count',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'sex',
-                name: 'sex',
-                title: 'Sex',
+                data: 'segmenters',
+                name: 'segmenters',
+                title: 'Segmenters',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'civil_status',
-                name: 'civil_status',
-                title: 'Civil Status',
+                data: 'lymphocyte',
+                name: 'lymphocyte',
+                title: 'Lymphocyte',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'client_type_id',
-                name: 'client_type_id',
-                title: 'Type',
+                data: 'monocyte',
+                name: 'monocyte',
+                title: 'Monocyte',
+                searchable: false,
+                orderable: false,
+                collapsable: false,
+                className: 'dt-border-sm px-2',
+            },
+            {
+                data: 'blood_type',
+                name: 'blood_type',
+                title: 'Blood Type',
+                searchable: false,
+                orderable: false,
+                collapsable: false,
+                className: 'dt-border-sm px-2',
+            },
+            {
+                data: 'status',
+                name: 'status',
+                title: 'Status',
                 searchable: false,
                 orderable: false,
                 collapsable: false,
@@ -180,8 +196,8 @@ export default {
 </script>
 
 <template>
-    <Patients title="Client Records">
+    <Laboratory title="Laboratories">
         <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink"/>
         <NotifBanner :type="notifType" :message="notifMessage" />
-    </Patients>
+    </Laboratory>
 </template>

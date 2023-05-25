@@ -5,6 +5,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DegreeProgramController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Foundation\Application;
@@ -66,9 +67,17 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         return Inertia::render('Dental');
     })->name('dental');
 
-    Route::get('/laboratory', function () {
-        return Inertia::render('Laboratories');
-    })->name('laboratory');
+    Route::prefix('/laboratory')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Laboratory/LaboratoryIndex');
+        })->name('laboratory.index');
+
+        Route::prefix('/hematology')->group(function () {
+            Route::get('/', [HematologyController::class, 'index'])->name('laboratory.hematology.index');
+            Route::get('/new', [HematologyController::class, 'create'])->name('laboratory.hematology.create');
+            Route::get('/edit/{id}', [HematologyController::class, 'edit'])->name('laboratory.hematology.edit');
+        });
+    });
 
     Route::get('/surgery', function () {
         return Inertia::render('Surgery');

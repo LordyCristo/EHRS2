@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ClientApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;
+use App\Http\Controllers\API\HematologyApi;
 use App\Http\Controllers\API\ServiceApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,21 +35,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/roles', function () {
     return AccountRole::select(['id', 'name'])->get();
 })->name('api.roles');
-
-Route::get('/flags', function(){
-    return response()->json([
-        'degree_programs' => DegreeProgram::select(['id', DB::raw("CONCAT(`name`, IFNULL(CONCAT(' major in ', `major`), '')) AS `name`")])->orderBy('id', 'asc')->get(),
-        //'departments' => Department::select(['id', 'name'])->orderBy('id', 'asc')->get(),
-        'client_types' => ClientType::select(['id', 'name'])->orderBy('id', 'asc')->get(),
-        'last_client_id' => Client::select('id')->orderBy('id', 'desc')->first()->id ?? '0',
-    ]);
-})->name('api.flags');
-
-Route::get('/departments', function () {
-    return Department::select(['id', 'name'])->get();
-})->name('api.departments');
-
-
 
 //Sample APIs' for the patient information
 Route::get('/programs', [DepartmentController::class, 'index'])->name('api.programs');
@@ -122,6 +108,20 @@ Route::delete('/clients/{id}', [ClientApi::class, 'destroy'])->name('api.client.
 Route::get('/clients/all', [ClientApi::class, 'tableApi'])->name('api.client.table');
 // Client import from a CSV file
 Route::post('/clients/import', [ClientApi::class, 'import'])->name('api.client.import');
+
+// Hematology GET ALL route
+Route::get('/hematology', [HematologyApi::class, 'index'])->name('api.hematology.index');
+// Hematology STORE route
+Route::post('/hematology', [HematologyApi::class, 'store'])->name('api.hematology.store');
+// Hematology UPDATE route
+Route::put('/hematology/{id}', [HematologyApi::class, 'update'])->name('api.hematology.update');
+// Hematology DELETE route
+Route::delete('/hematology/{id}', [HematologyApi::class, 'destroy'])->name('api.hematology.destroy');
+// Hematology DATATABLE API route
+Route::get('/hematology/all', [HematologyApi::class, 'tableApi'])->name('api.hematology.table');
+// Hematology import from a CSV file
+Route::post('/hematology/import', [HematologyApi::class, 'import'])->name('api.hematology.import');
+
 
 
 

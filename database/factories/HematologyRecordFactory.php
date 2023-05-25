@@ -20,6 +20,12 @@ class HematologyRecordFactory extends Factory
         return [
             'id' => $this->faker->numberBetween(1, 100),
             'client_id' => $this->faker->numberBetween(1, 100),
+            'age' => $this->faker->numberBetween(18, 100),
+            'sex' => $this->faker->randomElement(['male','female']),
+            'ward' => $this->faker->word(),
+            'or_no' => $this->faker->word(),
+            'rqst_physician' => 1,
+            'hospital_no' => $this->faker->word(),
         ];
     }
 }

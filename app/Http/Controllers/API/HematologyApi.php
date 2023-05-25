@@ -3,48 +3,64 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DepartmentRequest;
-use App\Http\Resources\DepartmentCollection;
-use App\Http\Resources\DepartmentResource;
-use App\Models\Department;
+use App\Http\Requests\HematologyRequest;
+use App\Http\Resources\HematologyCollection;
+use App\Http\Resources\HematologyResource;
+use App\Models\Hematology;
+use App\Models\HematologyRecord;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class DepartmentApi extends Controller
+class HematologyApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new DepartmentCollection(Department::all());
+        return new HematologyCollection(Hematology::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DepartmentRequest $request)
+    public function store(HematologyRequest $request)
     {
-        $newDepartment = Department::create($request->all());
-        return (new DepartmentResource($newDepartment))->response()->setStatusCode(201);
+        $newHematology = Hematology::create($request->validated());
+        if ($newHematology){
+            $newRecord = HematologyRecord::create([
+                'id' => $newHematology->id,
+                'client_id' => $request->client_id,
+                'age' => $request->age,
+                'sex' => $request->sex,
+                'ward' => $request->ward,
+                'or_no' => $request->or_no,
+                'rqst_physician' => $request->rqst_physician,
+                'hospital_no' => $request->hospital_no,
+            ]);
+            if ($newRecord){
+                return (new HematologyResource($newHematology))->response()->setStatusCode(201);
+            }
+        }
+        return response()->setStatusCode(500);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Department $department)
+    public function show(Hematology $hematology)
     {
-        return new DepartmentResource($department);
+        return new HematologyResource($hematology);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(DepartmentRequest $request)
+    public function update(HematologyRequest $request)
     {
-        $department = Department::findOrFail($request->id);
-        $update = $department->update($request->all());
+        $hematology = Hematology::findOrFail($request->id);
+        $update = $hematology->update($request->validated());
         if ($update)
             return response(null, 202);
         return response(null, 400);
@@ -53,10 +69,10 @@ class DepartmentApi extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request)
     {
-        $department = Department::findOrFail($request->id);
-        $department->delete();
+        $hematology = Hematology::findOrFail($request->id);
+        $hematology->delete();
         // return the success code
         return response()->json([
             'success' => true,
@@ -69,7 +85,7 @@ class DepartmentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Department::select(['id','name','abbr','college_id','is_active']);
+        $query = Hematology::select('*');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -77,12 +93,20 @@ class DepartmentApi extends Controller
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
                     $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('name', 'like', '%' . $search . '%')
-                        ->orWhere('abbr', 'like', '%' . $search . '%')
-                        ->orWhere('college_id', 'like', '%' . $search . '%')
-                        ->orWhere('is_active', 'like', '%' . $search . '%');
+                        ->orWhere('hemoglobin', 'like', '%' . $search . '%')
+                        ->orWhere('hematocrit', 'like', '%' . $search . '%')
+                        ->orWhere('rbc', 'like', '%' . $search . '%')
+                        ->orWhere('wbc', 'like', '%' . $search . '%')
+                        ->orWhere('platelet_count', 'like', '%' . $search . '%')
+                        ->orWhere('segmenters', 'like', '%' . $search . '%')
+                        ->orWhere('lymphocyte', 'like', '%' . $search . '%')
+                        ->orWhere('monocyte', 'like', '%' . $search . '%')
+                        ->orWhere('blood_type', 'like', '%' . $search . '%')
+                        ->orWhere('diagnosis', 'like', '%' . $search . '%')
+                        ->orWhere('remarks', 'like', '%' . $search . '%')
+                        ->orWhere('status', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('departments.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('hematology.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -120,7 +144,7 @@ class DepartmentApi extends Controller
             'data' => [],
         ];
 
-        $validator = new DepartmentRequest();
+        $validator = new HematologyRequest();
 
         foreach ($data as $row) {
             $validation = Validator::make($row, $validator->rules());
@@ -131,7 +155,7 @@ class DepartmentApi extends Controller
                 $response['data'][] = $row;
             } else {
                 try {
-                    Department::create($row);
+                    Hematology::create($row);
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;

@@ -12,8 +12,14 @@ class HematologyRecord extends Model
     use SoftDeletes;
 
     protected $table = 'hematology_records';
-    protected $hidden = [
+    protected $fillable = [
         'id',
         'client_id',
+        'age',
+        'sex',
+        'ward',
+        'or_no',
+        'rqst_physician',
+        'hospital_no',
     ];
 }

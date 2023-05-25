@@ -8,6 +8,7 @@ defineProps({
     id: String,
     name: String,
     label: String,
+    step: Number,
     type: {
         type: String,
         default: 'text',
@@ -36,6 +37,7 @@ defineExpose({ focus: () => input.value.focus() });
             :id="id"
             :name="name"
             ref="input"
+            :step="step"
             :type="type"
             class="inputText"
             :class="errorMsg?'border-red-300':'border-gray-300'"

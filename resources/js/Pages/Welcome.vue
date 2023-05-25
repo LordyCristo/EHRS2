@@ -22,5 +22,4 @@ defineProps({
         </div>
     </div>
     <landing-footer></landing-footer>
-
 </template>

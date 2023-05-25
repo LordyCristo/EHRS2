@@ -14,6 +14,12 @@ return new class extends Migration
         Schema::create('hematology_records', function(Blueprint $table){
             $table->foreignId('id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('client_id')->nullable()->constrained('clients')->cascadeOnUpdate()->nullOnDelete();
+            $table->decimal('age')->nullable();
+            $table->enum('sex', ['male','female']);
+            $table->string('ward')->nullable();
+            $table->string('or_no');
+            $table->foreignId('rqst_physician')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('hospital_no')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

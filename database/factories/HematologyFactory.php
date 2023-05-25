@@ -29,7 +29,7 @@ class HematologyFactory extends Factory
             'blood_type' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'diagnosis' => $this->faker->text(100),
             'remarks' => $this->faker->text(100),
-            'status' => $this->faker->randomElement(['Pending','Processing','Done','Cancelled']),
+            'status' => $this->faker->randomElement(['Pending','Released','Processing','Released','Done','Released','Cancelled','Released']),
         ];
     }
 }

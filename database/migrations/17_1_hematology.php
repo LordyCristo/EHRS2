@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('blood_type')->nullable();
             $table->longText('diagnosis');
             $table->longText('remarks')->nullable()->default(null);
-            $table->enum('status',['Pending','Processing','Done','Cancelled']);
+            $table->enum('status',['Pending','Processing','Done','Cancelled','Released']);
             $table->timestamps();
             $table->softDeletes();
         });

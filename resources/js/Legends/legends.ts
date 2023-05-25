@@ -28,4 +28,12 @@ export const YearLevel = Array(
     { id: '5th', name: '5th' },
     { id: '6th', name: '6th' },
 );
+
+export const RecordStatus = Array(
+    {id: 'Pending', name: 'Pending'},
+    {id: 'Processing', name: 'Processing'},
+    {id: 'Done', name: 'Done'},
+    {id: 'Cancelled', name: 'Cancelled'},
+    {id: 'Released', name: 'Released'},
+);
 export {};

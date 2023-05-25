@@ -61,7 +61,7 @@ export default {
             <div v-for="(item, index) in subLinks" :key="index" class="rounded-md">
                 <div :class="{'bg-vsu-yellow': highlightCurrPage,'w-fit flex-col items-center':isOpen,'bg-vsu-olive': item.isOpen,'bg-transparent': !item.isOpen,'rounded-t-lg': index === 0,'rounded-b-lg': index === subLinks.length - 1}"
                      class="flex justify-between cursor-pointer px-2 py-2 text-gray-100 rounded-md">
-                    <Link :href="route(link)"  class="flex flex-row items-center gap-2 w-full">
+                    <Link :href="route(link)"  class="flex flex-row items-center jsut gap-2 w-full">
                         <span class="w-4 h-auto">
                             <slot name="icon"></slot>
                         </span>

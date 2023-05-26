@@ -7,6 +7,8 @@ use App\Models\Client;
 use App\Models\Department;
 use App\Models\DegreeProgram;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+
 class DashboardController extends Controller
 {
     /**
@@ -14,6 +16,13 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        return Inertia::render('Dashboard');
+    }
+
+    /**
+     * Get the data for the dashboard summary report.
+     */
+    public function dataSummary(){
         return response()->json([
             'cards' => [
                 'total_records' => ['Number of Records',Client::all()->count()],
@@ -22,9 +31,9 @@ class DashboardController extends Controller
             ],
             'charts' => [
                 'groupBy_sex' => DB::table('clients')
-                ->select('sex', DB::raw('COUNT(id) as count'))
-                ->groupBy('sex')
-                ->get(),
+                    ->select('sex', DB::raw('COUNT(id) as count'))
+                    ->groupBy('sex')
+                    ->get(),
             ]
         ]);
     }

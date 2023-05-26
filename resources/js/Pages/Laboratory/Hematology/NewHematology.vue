@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <HematologyForm :action="action" :errors="errors" :physicians="physicians"/>
+                <HematologyForm :action="action"/>
             </div>
         </div>
     </MorePages>
@@ -27,10 +27,6 @@ import HematologyForm from "@/Pages/Laboratory/Hematology/HematologyForm.vue";
 export default {
     data: () => ({
         action: 'store',
-        errors: Object,
     }),
-    props: {
-        physicians: Object,
-    },
 }
 </script>

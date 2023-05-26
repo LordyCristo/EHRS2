@@ -6,12 +6,12 @@
                     <Link :href="route('more.service.index')" class="text-gray-600 hover:text-gray-900 duration-300">
                         <BackIcon class="w-6 h-auto hover:scale-[1.2] duration-300" />
                     </Link>
-                    <h1 class=" text-center w-fit text-xl font-semibold">Register New Degree Program</h1>
+                    <h1 class=" text-center w-fit text-xl font-semibold">Register New Service</h1>
                     <Link :href="route('more.service.index')" class="text-gray-600 hover:text-gray-900 duration-300">
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <ProgramForm :action="action" :data="data" :errors="errors"/>
+                <ServiceForm :action="action" />
             </div>
         </div>
     </MorePages>
@@ -21,14 +21,10 @@ import MorePages from '@/Pages/MorePages.vue';
 import {Link} from "@inertiajs/vue3";
 import BackIcon from "@/Components/Icons/BackIcon.vue";
 import CloseIcon from "@/Components/Icons/CloseIcon.vue";
-import ProgramForm from "@/Pages/MorePages/Programs/ProgramForm.vue";
+import ServiceForm from "@/Pages/MorePages/Services/ServiceForm.vue";
 </script>
 <script>
 export default {
-    props: {
-        data: Object,
-        errors: Object,
-    },
     data: () => ({
         action: 'update',
     }),

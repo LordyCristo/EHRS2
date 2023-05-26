@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <ProgramForm :action="action" :errors="errors"/>
+                <ProgramForm :action="action"/>
             </div>
         </div>
     </MorePages>
@@ -27,7 +27,6 @@ import ProgramForm from "@/Pages/MorePages/Programs/ProgramForm.vue";
 export default {
     data: () => ({
         action: 'store',
-        errors: Object,
     }),
 }
 </script>

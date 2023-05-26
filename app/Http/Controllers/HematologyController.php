@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\HematologyRequest;
+use App\Http\Resources\HematologyCollection;
+use App\Http\Resources\HematologyRecordCollection;
+use App\Http\Resources\UserCollection;
 use App\Models\Hematology;
 use App\Models\HematologyRecord;
 use App\Models\User;
@@ -26,7 +29,7 @@ class HematologyController extends Controller
     public function create()
     {
         return Inertia::render('Laboratory/Hematology/NewHematology', [
-            'physicians' => User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get(),
+            'physicians' => new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get()),
         ]);
     }
 
@@ -36,9 +39,10 @@ class HematologyController extends Controller
      */
     public function edit(HematologyRequest $request)
     {
-        $hematology = Hematology::findOrFail($request->id);
-        $record = HematologyRecord::findOrFail($request->id);
-
-        return Inertia::render('Laboratory/Hematology/EditHematology');
+        return Inertia::render('Laboratory/Hematology/EditHematology',[
+            'hematology' => new HematologyCollection(Hematology::findOrFail($request->id)),
+            'record' => new HematologyRecordCollection(HematologyRecord::findOrFail($request->id)),
+            'physicians' => new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get()),
+        ]);
     }
 }

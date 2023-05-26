@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <CollegeForm :action="action" :data="data" :errors="errors"/>
+                <CollegeForm :action="action" />
             </div>
         </div>
     </MorePages>
@@ -25,10 +25,6 @@ import CollegeForm from "@/Pages/MorePages/Colleges/CollegeForm.vue";
 </script>
 <script>
 export default {
-    props: {
-        data: Object,
-        errors: Object,
-    },
     data: () => ({
         action: 'update',
     }),

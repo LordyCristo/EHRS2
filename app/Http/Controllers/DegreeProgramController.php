@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DegreeProgramResource;
+use App\Http\Resources\DepartmentCollection;
 use App\Models\Degreeprogram;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -21,7 +24,9 @@ class DegreeProgramController extends Controller
      */
     public function create()
     {
-        return Inertia::render('MorePages/Programs/NewProgram');
+        return Inertia::render('MorePages/Programs/NewProgram',[
+            'departments' => new DepartmentCollection(Department::all()),
+        ]);
     }
 
     /**
@@ -30,7 +35,8 @@ class DegreeProgramController extends Controller
     public function edit(Request $request)
     {
         return Inertia::render('MorePages/Programs/EditProgram', [
-            'data' => DegreeProgram::findOrFail($request->id),
+            'data' => new DegreeProgramResource(DegreeProgram::findOrFail($request->id)),
+            'departments' => new DepartmentCollection(Department::all()),
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ServiceResource;
 use App\Models\Services;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,7 +31,7 @@ class ServiceController extends Controller
     public function edit(Request $request)
     {
         return Inertia::render('MorePages/Services/EditService', [
-            'data' => Services::findOrFail($request->id),
+            'data' => new ServiceResource(Services::findOrFail($request->id)),
         ]);
     }
 

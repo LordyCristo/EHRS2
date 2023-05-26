@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <DepartmentForm :action="action" :errors="errors"/>
+                <DepartmentForm :action="action"/>
             </div>
         </div>
     </MorePages>
@@ -27,7 +27,6 @@ import DepartmentForm from "@/Pages/MorePages/Departments/DepartmentForm.vue";
 export default {
     data: () => ({
         action: 'store',
-        errors: Object,
     }),
 }
 </script>

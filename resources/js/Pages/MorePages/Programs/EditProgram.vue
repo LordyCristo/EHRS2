@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <ProgramForm :action="action" :data="data" :errors="errors"/>
+                <ProgramForm :action="action"/>
             </div>
         </div>
     </MorePages>
@@ -25,10 +25,6 @@ import ProgramForm from "@/Pages/MorePages/Programs/ProgramForm.vue";
 </script>
 <script>
 export default {
-    props: {
-        data: Object,
-        errors: Object,
-    },
     data: () => ({
         action: 'update',
     }),

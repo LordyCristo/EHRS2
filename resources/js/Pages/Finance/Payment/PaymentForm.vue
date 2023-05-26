@@ -84,7 +84,7 @@ export default {
                 .catch(error => this.printError(error));
         },
         update() {
-            axios.put(route('api.payment.update', this.$page.props.data.id), this.form)
+            axios.put(route('api.payment.update', this.data.id), this.form)
                 .then( response => {
                     this.goBackToIndex();
                 })
@@ -108,7 +108,7 @@ export default {
         },
         deleteForm(){
             if (confirm(`Are you sure you want to delete this record?`)) {
-                axios.delete(route('api.payemnt.destroy', this.$page.props.data.id))
+                axios.delete(route('api.payment.destroy', this.data.id))
                     .then( () => {
                         this.goBackToIndex();
                     })
@@ -119,13 +119,15 @@ export default {
         },
     },
     mounted() {
-        if (this.action === 'update')
-            this.form = useForm(this.$page.props.data);
-        else
-            this.form.collector_id = this.$page.props.auth.user.id;
-
         this.clients = this.$page.props.clients.data;
         this.services = this.$page.props.services.data;
+
+        if (this.action === 'update') {
+            this.data = this.$page.props.data.data;
+            this.form = useForm(this.data);
+        }
+        else
+            this.form.collector_id = this.$page.props.auth.user.id;
     }
 };
 </script>

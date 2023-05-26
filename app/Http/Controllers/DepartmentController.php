@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CollegeCollection;
+use App\Http\Resources\DepartmentResource;
+use App\Models\College;
 use App\Models\DegreeProgram;
 use App\Models\Department;
 use Illuminate\Http\Request;
@@ -24,7 +27,9 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        return Inertia::render('MorePages/Departments/NewDepartment');
+        return Inertia::render('MorePages/Departments/NewDepartment',[
+            'colleges' => new CollegeCollection(College::all()),
+        ]);
     }
 
     /**
@@ -33,7 +38,8 @@ class DepartmentController extends Controller
     public function edit(Request $request)
     {
         return Inertia::render('MorePages/Departments/EditDepartment', [
-            'data' => Department::findOrFail($request->id),
+            'data' => new DepartmentResource(Department::find($request->id)),
+            'colleges' => new CollegeCollection(College::all()),
         ]);
     }
 }

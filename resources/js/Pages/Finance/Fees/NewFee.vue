@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <FeeForm :action="action" :errors="errors" :client_types="client_types.data" :services="services.data"/>
+                <FeeForm :action="action"/>
             </div>
         </div>
     </Finance>
@@ -25,13 +25,8 @@ import FeeForm from "@/Pages/Finance/Fees/FeeForm.vue";
 </script>
 <script>
 export default {
-    props: {
-        client_types: Object,
-        services: Object,
-    },
     data: () => ({
         action: 'store',
-        errors: Object,
     }),
 }
 </script>

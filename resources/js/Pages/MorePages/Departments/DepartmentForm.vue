@@ -29,13 +29,7 @@ import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
 export default {
     props: {
-        errors: [Object, Function],
         action: String,
-        data: {
-            type: Object,
-            required: false,
-            default: [],
-        },
     },
     data() {
         return {
@@ -50,6 +44,7 @@ export default {
                 {id: 0, name: 'Inactive'},
             ],
             colleges: [],
+            data: null,
         };
     },
     methods: {
@@ -114,20 +109,15 @@ export default {
                     })
             }
         },
-        getColleges(){
-            axios.get(route('api.department.index'))
-                .then(response => {
-                    this.colleges = response.data.data;
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        },
     },
     mounted() {
-        if (this.action === 'update')
+        this.colleges = this.$page.props.colleges.data;
+        if (this.action === 'update'){
+            this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
-        this.getColleges();
+        }
+        else
+            this.form.is_active = 1;
     }
 };
 </script>

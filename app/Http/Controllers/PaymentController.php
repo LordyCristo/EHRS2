@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ClientCollection;
+use App\Http\Resources\PaymentResource;
 use App\Http\Resources\ServiceCollection;
 use App\Models\Client;
 use App\Models\Payment;
@@ -38,7 +39,7 @@ class PaymentController extends Controller
     public function edit(Request $request)
     {
         return Inertia::render('Finance/Payment/EditPayment', [
-            'data' => Payment::findOrFail($request->id),
+            'data' => new PaymentResource(Payment::findOrFail($request->id)),
             'clients' => new ClientCollection(Client::selectRaw("id, CONCAT(id, ' - ',first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name")->get()),
             'services' => new ServiceCollection(Services::select('id', 'name')->get()),
             'last_payment_id' => Payment::select('id')->orderBy('id', 'desc')->first()->id,

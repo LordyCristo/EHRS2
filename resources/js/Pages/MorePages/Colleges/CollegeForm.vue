@@ -26,13 +26,7 @@ import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
 export default {
     props: {
-        errors: [Object, Function],
         action: String,
-        data: {
-            type: Object,
-            required: false,
-            default: [],
-        },
     },
     data() {
         return {
@@ -45,6 +39,7 @@ export default {
                 {id: 1, name: 'Active'},
                 {id: 0, name: 'Inactive'},
             ],
+            data: null,
         };
     },
     methods: {
@@ -111,8 +106,12 @@ export default {
         }
     },
     mounted() {
-        if (this.action === 'update')
+        if (this.action === 'update') {
+            this.data = this.$page.props.data;
             this.form = useForm(this.data);
+        }
+        else
+            this.form.is_active = 1;
     }
 };
 </script>

@@ -28,15 +28,7 @@ import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
 export default {
     props: {
-        errors: [Object, Function],
         action: String,
-        client_types: Object,
-        services: Object,
-        data: {
-            type: Object,
-            required: false,
-            default: [],
-        },
     },
     data() {
         return {
@@ -45,6 +37,9 @@ export default {
                 client_type: null,
                 amount: null,
             }),
+            client_types: null,
+            services: null,
+            data: null,
         };
     },
     methods: {
@@ -111,8 +106,13 @@ export default {
         },
     },
     mounted() {
-        if (this.action === 'update')
+        this.client_types = this.$page.props.client_types.data;
+        this.services = this.$page.props.services.data;
+
+        if (this.action === 'update'){
+            this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
+        }
     }
 };
 </script>

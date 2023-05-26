@@ -57,10 +57,7 @@ import axios from "axios";
 import {Sex, BloodType, RecordStatus } from "@/Legends/legends";
 export default {
     props: {
-        errors: [Object, Function],
         action: String,
-        data: Object,
-        physicians: Object,
     },
     data() {
         return {
@@ -90,6 +87,8 @@ export default {
             statuses: RecordStatus,
             bloodTypes: BloodType,
             sexes: Sex,
+            data: null,
+            physicians: [],
         };
     },
     methods: {
@@ -173,8 +172,11 @@ export default {
         }
     },
     mounted() {
-        if (this.action === 'update')
+        this.physicians = this.$page.props.physicians.data;
+        if (this.action === 'update'){
+            this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
+        }
         else
             this.setDefaults();
     }

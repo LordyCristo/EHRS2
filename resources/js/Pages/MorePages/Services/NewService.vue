@@ -11,7 +11,7 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <ServiceForm :action="action" :errors="errors"/>
+                <ServiceForm :action="action" />
             </div>
         </div>
     </MorePages>
@@ -27,7 +27,6 @@ import ServiceForm from "@/Pages/MorePages/Services/ServiceForm.vue";
 export default {
     data: () => ({
         action: 'store',
-        errors: Object,
     }),
 }
 </script>

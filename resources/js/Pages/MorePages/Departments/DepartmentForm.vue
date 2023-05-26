@@ -1,4 +1,13 @@
 <template>
+    <div class="flex items-center justify-between mb-3 gap-2">
+        <Link :href="route('more.department.index')" class="text-gray-600 hover:text-gray-900 duration-300">
+            <BackIcon class="w-6 h-auto hover:scale-[1.2] duration-300" />
+        </Link>
+        <h1 class=" text-center w-fit text-xl font-semibold">Update Department Details</h1>
+        <Link :href="route('more.department.index')" class="text-gray-600 hover:text-gray-900 duration-300">
+            <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
+        </Link>
+    </div>
     <form @submit.prevent="submit">
         <InputText v-model="form.name" label="Department Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
         <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
@@ -23,6 +32,9 @@ import SubmitButton from "@/Components/Generic/Buttons/SubmitButton.vue";
 import DeleteButton from "@/Components/Generic/Buttons/DeleteButton.vue";
 import Select from "@/Components/Generic/Headlessui/Select.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
+import {Link} from "@inertiajs/vue3";
+import BackIcon from "@/Components/Icons/BackIcon.vue";
+import CloseIcon from "@/Components/Icons/CloseIcon.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";

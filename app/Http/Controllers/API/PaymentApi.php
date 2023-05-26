@@ -3,52 +3,51 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FeeRequest;
-use App\Http\Resources\FeeCollection;
-use App\Http\Resources\FeeResource;
-use App\Models\Fees;
+use App\Http\Requests\PaymentRequest;
+use App\Http\Resources\PaymentCollection;
+use App\Http\Resources\PaymentResource;
+use App\Models\Payment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class FeeApi extends Controller
+class PaymentApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new FeeCollection(Fees::join('client_types', 'client_types.id', '=', 'fees.client_type')
-            ->join('services', 'services.id', '=', 'fees.id')
-            ->select('fees.id', 'services.name as service_name', 'fees.client_type', 'client_types.name as client_type_name', 'fees.amount', 'fees.created_at', 'fees.updated_at', 'fees.deleted_at')
-            ->get());
+        return new PaymentCollection(Payment::select('payments.id', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'payments.client_id', 'payments.service_id', 'services.name as service_name', 'payments.collector_id', 'payments.amount', 'payments.remarks')
+            ->join('clients', 'clients.id', '=', 'payments.client_id')
+            ->join('services', 'services.id', '=', 'payments.service_id')->get());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(FeeRequest $request)
+    public function store(PaymentRequest $request)
     {
-        $newFee =  Fees::create($request->all());
-        return (new FeeResource($newFee))->response()->setStatusCode(201);
+        $newPayment = Payment::create($request->all());
+        return (new PaymentResource($newPayment))->response()->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Fees $fees)
+    public function show(Payment $payment)
     {
-        return new FeeResource($fees);
+        return new PaymentResource($payment);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(FeeRequest $request)
+    public function update(PaymentRequest $request)
     {
-        $fee = Fees::findOrFail($request->id);
-        $fee->update($request->all());
-        if ($fee)
+        $payment = Payment::findOrFail($request->id);
+        $update = $payment->update($request->all());
+        if ($update)
             return response(null, 202);
         return response(null, 400);
     }
@@ -59,11 +58,11 @@ class FeeApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        Fees::destroy($id);
+        Payment::destroy($id);
         // return the success code
         return response()->json([
             'success' => true,
-            'message' => 'Fee deleted successfully'
+            'message' => 'Department deleted successfully'
         ]);
     }
 
@@ -72,21 +71,23 @@ class FeeApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Fees::select('fees.id', 'client_types.name as client_type', 'services.name as service', 'fees.amount')
-            ->join('client_types', 'client_types.id', '=', 'fees.client_type')
-            ->join('services', 'services.id', '=', 'fees.id');
+        $query = Payment::select('payments.id', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'client_id', 'services.name as service_id', 'payments.collector_id', 'payments.amount', 'payments.remarks')
+            ->join('clients', 'clients.id', '=', 'payments.client_id')
+            ->join('services', 'services.id', '=', 'payments.service_id');
+
+        //$query = Payment::select('*');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('fees.id', 'like', '%' . $search . '%')
-                        ->orWhere('client_types.name', 'like', '%' . $search . '%')
-                        ->orWhere('services.name', 'like', '%' . $search . '%')
-                        ->orWhere('fees.amount', 'like', '%' . $search . '%');
+                    $q->where('id', 'like', '%' . $search . '%')
+                        ->orWhere('payor_name', 'like', '%' . $search . '%')
+                        ->orWhere('payor_email', 'like', '%' . $search . '%')
+                        ->orWhere('payor_mobile', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('fees.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('payments.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -124,7 +125,7 @@ class FeeApi extends Controller
             'data' => [],
         ];
 
-        $validator = new FeeRequest();
+        $validator = new PaymentRequest();
 
         foreach ($data as $row) {
             $validation = Validator::make($row, $validator->rules());
@@ -135,7 +136,7 @@ class FeeApi extends Controller
                 $response['data'][] = $row;
             } else {
                 try {
-                    Fees::create($row);
+                    Payment::create($row);
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;

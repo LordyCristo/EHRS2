@@ -78,7 +78,6 @@ class HematologyApi extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Records deleted successfully',
-            'data' => $id,
         ]);
     }
 

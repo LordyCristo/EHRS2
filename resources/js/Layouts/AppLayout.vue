@@ -138,6 +138,11 @@ export default {
                                 link: 'finance.fee.index',
                                 linkName: 'fees',
                             },
+                            {
+                                name: 'Payments',
+                                link: 'finance.payment.index',
+                                linkName: 'fees',
+                            },
                         ],
                         isOpen: false
                     }],

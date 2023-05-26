@@ -24,6 +24,9 @@ import Finance from "@/Pages/Finance.vue";
 import FeeIndex from "@/Pages/Finance/Fees/FeeIndex.vue";
 import NewFee from "@/Pages/Finance/Fees/NewFee.vue";
 import EditFee from "@/Pages/Finance/Fees/EditFee.vue";
+import PaymentIndex from "@/Pages/Finance/Payment/PaymentIndex.vue";
+import NewPayment from "@/Pages/Finance/Payment/NewPayment.vue";
+import EditPayment from "@/Pages/Finance/Payment/EditPayment.vue";
 
 const history = createWebHistory()
 const routes = [
@@ -32,6 +35,9 @@ const routes = [
     { path:'/finance/fee', name: 'finance.fee.index', component: FeeIndex },
     { path:'/finance/fee/new', name: 'finance.fee.create', component: NewFee },
     { path:'/finance/fee/edit', name: 'finance.fee.edit', component: EditFee },
+    { path:'/finance/payment', name: 'finance.payment.index', component: PaymentIndex },
+    { path:'/finance/payment/new', name: 'finance.payment.create', component: NewPayment },
+    { path:'/finance/payment/edit', name: 'finance.payment.edit', component: EditPayment },
     { path:'/clients', name: 'client.index', component: ClientIndex },
     { path:'/clients/new', name: 'client.create', component: NewClient },
     { path:'/clients/edit/', name: 'client.edit', component: EditClient },

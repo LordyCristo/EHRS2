@@ -6,6 +6,7 @@ use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;
 use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
+use App\Http\Controllers\API\PaymentApi;
 use App\Http\Controllers\API\ServiceApi;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CollegeController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ServiceController;
 use App\Models\College;
 use App\Models\DegreeProgram;
@@ -118,6 +120,26 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
                 Route::get('/all', [FeeApi::class, 'tableApi'])->name('api.fee.table');
                 // Fee import from a CSV file
                 Route::post('/import', [FeeApi::class, 'import'])->name('api.fee.import');
+            });
+        });
+
+        Route::prefix('payment')->group(function(){
+            Route::get('/', [PaymentController::class, 'index'])->name('finance.payment.index');
+            Route::get('/new', [PaymentController::class, 'create'])->name('finance.payment.create');
+            Route::get('/edit/{id}', [PaymentController::class, 'edit'])->name('finance.payment.edit');
+            Route::prefix('api')->group(function(){
+                // Payment GET ALL route
+                Route::get('/', [PaymentApi::class, 'index'])->name('api.payment.index');
+                // Payment STORE route
+                Route::post('/', [PaymentApi::class, 'store'])->name('api.payment.store');
+                // Payment UPDATE route
+                Route::put('/{id}', [PaymentApi::class, 'update'])->name('api.payment.update');
+                // Payment DELETE route
+                Route::delete('/{id}', [PaymentApi::class, 'destroy'])->name('api.payment.destroy');
+                // Payment DATATABLE API route
+                Route::get('/all', [PaymentApi::class, 'tableApi'])->name('api.payment.table');
+                // Payment import from a CSV file
+                Route::post('/import', [PaymentApi::class, 'import'])->name('api.payment.import');
             });
         });
     });

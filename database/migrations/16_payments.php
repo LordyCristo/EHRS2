@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('service_id')->constrained('fees')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('collector_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->decimal('amount', 10, 3);
+            $table->decimal('amount', 10, 2);
             $table->longText('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();

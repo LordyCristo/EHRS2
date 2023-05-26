@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             ClientSeeder::class,
             HematologySeeder::class,
             HematologyRecordSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

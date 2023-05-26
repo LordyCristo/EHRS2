@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ClientApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;
+use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
 use App\Http\Controllers\API\ServiceApi;
 use App\Http\Controllers\ClientController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DegreeProgramController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\ServiceController;
@@ -70,8 +72,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         });
     });
 
-
-
     Route::prefix('records')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Records/RecordIndex');
@@ -79,7 +79,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
         Route::get('/new', function () {
             return Inertia::render('Records/NewRecord',[
-                'department_ids' => Department::select(['id', 'name'])->get(),
+                'department_ids' => Department::select(['id', 'name'])->get()
             ]);
         })->name('newRecord');
 
@@ -95,6 +95,32 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
     Route::get('/dental', function () {
         return Inertia::render('Dental');
     })->name('dental');
+
+    Route::prefix('finance')->group(function (){
+        Route::get('/', function (){
+            return Inertia::render('Finance/FinanceIndex');
+        })->name('finance.index');
+
+        Route::prefix('fee')->group(function(){
+            Route::get('/', [FeeController::class, 'index'])->name('finance.fee.index');
+            Route::get('/new', [FeeController::class, 'create'])->name('finance.fee.create');
+            Route::get('/edit/{id}', [FeeController::class, 'edit'])->name('finance.fee.edit');
+            Route::prefix('api')->group(function (){
+                // Fee GET ALL route
+                Route::get('/', [FeeApi::class, 'index'])->name('api.fee.index');
+                // Fee STORE route
+                Route::post('/', [FeeApi::class, 'store'])->name('api.fee.store');
+                // Fee UPDATE route
+                Route::put('/{id}', [FeeApi::class, 'update'])->name('api.fee.update');
+                // Fee DELETE route
+                Route::delete('/{id}', [FeeApi::class, 'destroy'])->name('api.fee.destroy');
+                // Fee DATATABLE API route
+                Route::get('/all', [FeeApi::class, 'tableApi'])->name('api.fee.table');
+                // Fee import from a CSV file
+                Route::post('/import', [FeeApi::class, 'import'])->name('api.fee.import');
+            });
+        });
+    });
 
     Route::prefix('/laboratory')->group(function () {
         Route::get('/', function () {

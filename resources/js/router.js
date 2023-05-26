@@ -19,9 +19,19 @@ import ServiceIndex from "@/Pages/MorePages/Services/ServiceIndex.vue";
 import NewService from "@/Pages/MorePages/Services/NewService.vue";
 import EditService from "@/Pages/MorePages/Services/EditService.vue";
 import LaboratoryIndex from "@/Pages/Laboratory/LaboratoryIndex.vue";
+import Dashboard from "@/Pages/Dashboard.vue";
+import Finance from "@/Pages/Finance.vue";
+import FeeIndex from "@/Pages/Finance/Fees/FeeIndex.vue";
+import NewFee from "@/Pages/Finance/Fees/NewFee.vue";
+import EditFee from "@/Pages/Finance/Fees/EditFee.vue";
 
 const history = createWebHistory()
 const routes = [
+    { path:'/dashboard', name: 'dashboard.index', component: Dashboard },
+    { path:'/finance', name: 'finance.index', component: Finance },
+    { path:'/finance/fee', name: 'finance.fee.index', component: FeeIndex },
+    { path:'/finance/fee/new', name: 'finance.fee.create', component: NewFee },
+    { path:'/finance/fee/edit', name: 'finance.fee.edit', component: EditFee },
     { path:'/clients', name: 'client.index', component: ClientIndex },
     { path:'/clients/new', name: 'client.create', component: NewClient },
     { path:'/clients/edit/', name: 'client.edit', component: EditClient },

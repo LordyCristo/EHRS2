@@ -3,50 +3,52 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ServiceRequest;
-use App\Http\Resources\ServiceCollection;
-use App\Http\Resources\ServiceResource;
-use App\Models\Department;
-use App\Models\Services;
+use App\Http\Requests\FeeRequest;
+use App\Http\Resources\FeeCollection;
+use App\Http\Resources\FeeResource;
+use App\Models\Fees;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class ServiceApi extends Controller
+class FeeApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new ServiceCollection(Services::all());
+        return new FeeCollection(Fees::join('client_types', 'client_types.id', '=', 'fees.client_type')
+            ->join('services', 'services.id', '=', 'fees.id')
+            ->select('fees.id', 'services.name as service_name', 'fees.client_type', 'client_types.name as client_type_name', 'fees.amount', 'fees.created_at', 'fees.updated_at', 'fees.deleted_at')
+            ->get());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ServiceRequest $request)
+    public function store(FeeRequest $request)
     {
-        $newService = Services::create($request->all());
-        return (new ServiceResource($newService))->response()->setStatusCode(201);
+        $newFee =  Fees::create($request->all());
+        return (new FeeResource($newFee))->response()->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Services $services)
+    public function show(Fees $fees)
     {
-        return new ServiceResource($services);
+        return new FeeResource($fees);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ServiceRequest $request)
+    public function update(FeeRequest $request)
     {
-        $service = Services::findOrFail($request->id);
-        $update = $service->update($request->all());
-        if ($update)
+        $fee = Fees::findOrFail($request->id);
+        $fee->update($request->all());
+        if ($fee)
             return response(null, 202);
         return response(null, 400);
     }
@@ -54,38 +56,37 @@ class ServiceApi extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request)
     {
-        $service = Services::findOrFail($request->id);
-        $service->delete();
+        $fee = Fees::findOrFail($request->id);
+        $fee->delete();
         // return the success code
         return response()->json([
             'success' => true,
-            'message' => 'Department deleted successfully'
+            'message' => 'Fee deleted successfully'
         ]);
     }
 
     /**
-     * Get all the services to be displayed in the datatable, that can handle the search, pagination, and sorting.
+     * Get all the departments to be displayed in the datatable, that can handle the search, pagination, and sorting.
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Services::select(['id','name','description','schedule','section_name','room_no','is_active']);
+        $query = Fees::select('fees.id', 'client_types.name as client_type', 'services.name as service', 'fees.amount')
+            ->join('client_types', 'client_types.id', '=', 'fees.client_type')
+            ->join('services', 'services.id', '=', 'fees.id');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('name', 'like', '%' . $search . '%')
-                        ->orWhere('description', 'like', '%' . $search . '%')
-                        ->orWhere('schedule', 'like', '%' . $search . '%')
-                        ->orWhere('section_name', 'like', '%' . $search . '%')
-                        ->orWhere('room_no', 'like', '%' . $search . '%')
-                        ->orWhere('is_active', 'like', '%' . $search . '%');
+                    $q->where('fees.id', 'like', '%' . $search . '%')
+                        ->orWhere('client_types.name', 'like', '%' . $search . '%')
+                        ->orWhere('services.name', 'like', '%' . $search . '%')
+                        ->orWhere('fees.amount', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('services.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('fees.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -123,7 +124,7 @@ class ServiceApi extends Controller
             'data' => [],
         ];
 
-        $validator = new ServiceRequest();
+        $validator = new FeeRequest();
 
         foreach ($data as $row) {
             $validation = Validator::make($row, $validator->rules());
@@ -134,7 +135,7 @@ class ServiceApi extends Controller
                 $response['data'][] = $row;
             } else {
                 try {
-                    Services::create($row);
+                    Fees::create($row);
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;

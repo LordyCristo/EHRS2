@@ -127,6 +127,26 @@ export default {
                     method: null,
                 },
                 {
+                    title: 'Finance',
+                    link: 'finance.index',
+                    tabName: '/finance',
+                    subLinks: [{
+                        title: 'More',
+                        content: [
+                            {
+                                name: 'Fees',
+                                link: 'finance.fee.index',
+                                linkName: 'fees',
+                            },
+                        ],
+                        isOpen: false
+                    }],
+                    isOpen: false,
+                    icon: markRaw(LaboratoryIcon),
+                    form: true,
+                    method: null,
+                },
+                {
                     title: 'Surgery',
                     link: 'surgery',
                     tabName: '/surgery',

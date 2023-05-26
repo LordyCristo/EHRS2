@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('fees', function (Blueprint $table) {
             $table->foreignId('id')->constrained('services')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('client_type')->constrained('client_types')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->decimal('amount', 10, 3);
+            $table->decimal('amount', 10, 0);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ClientResource;
 use App\Http\Resources\DegreeProgramCollection;
 use App\Models\Client;
 use App\Models\ClientType;
@@ -35,7 +36,7 @@ class ClientController extends Controller
     {
         $temp = $this->getFlags();
         return Inertia::render('Client/EditClient', [
-            'data' => Client::findOrFail($request->id),
+            'data' => new ClientResource(Client::findOrFail($request->id)),
             'degree_programs' => $temp['degree_programs'],
             'client_types' => $temp['client_types'],
             'last_client_id' => $temp['last_client_id'],

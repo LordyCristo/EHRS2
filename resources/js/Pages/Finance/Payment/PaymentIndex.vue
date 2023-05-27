@@ -103,7 +103,7 @@ export default{
             {
                 data: 'collector_id',
                 name: 'collector_id',
-                title: 'Collector',
+                title: 'Collector ID',
                 searchable: true,
                 orderable: true,
                 collapsable: true,

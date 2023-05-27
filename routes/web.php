@@ -21,7 +21,9 @@ use App\Http\Controllers\ServiceController;
 use App\Models\College;
 use App\Models\DegreeProgram;
 use App\Models\Department;
+use App\Models\Fees;
 use App\Models\HematologyRecord;
+use App\Models\Payment;
 use App\Models\Services;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -100,7 +102,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
 
     Route::prefix('finance')->group(function (){
         Route::get('/', function (){
-            return Inertia::render('Finance/FinanceIndex');
+            return Inertia::render('Finance/FinanceIndex',[
+                'feesCount' => Fees::count(),
+                'paymentsCount' => Payment::count(),
+            ]);
         })->name('finance.index');
 
         Route::prefix('fee')->group(function(){

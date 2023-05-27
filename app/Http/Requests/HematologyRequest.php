@@ -29,7 +29,7 @@ class HematologyRequest extends FormRequest
             'age' => ['nullable','numeric'],
             'sex' => ['required','in:male,female'],
             'ward' => ['nullable', 'string'],
-            'or_no' => ['required', 'numeric', 'unique:hematology_records'],
+            'or_no' => ['required', 'numeric', Rule::unique('hematology_records')->ignore($id)],
             'rqst_physician' => ['required', 'exists:users,id'],
             'hospital_no' => ['nullable', 'string'],
             // hematology

@@ -2,6 +2,10 @@
     <FormTitleHeader :link="route(props.indexLink)">
         <slot name="formTitle" />
     </FormTitleHeader>
+    <div class="flex items-center justify-end">
+        <input type="checkbox" v-model="stayOnPage" @click="stayOnPageChange" class="rounded-full">
+        <label for="stayOnPage" class="ml-2 text-sm text-gray-500">Stay on page</label>
+    </div>
     <form @submit.prevent="submit">
         <slot name="formBody" />
         <div class="flex items-center justify-between mt-4">
@@ -16,7 +20,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import {defineProps, ref} from 'vue';
 import FormTitleHeader from '@/Components/Generic/Forms/FormTitleHeader.vue';
 import DeleteButton from '@/Components/Generic/Buttons/DeleteButton.vue';
 import CancelButton from '@/Components/Generic/Buttons/CancelButton.vue';
@@ -41,6 +45,10 @@ const props = defineProps({
     form: Object,
 });
 
+const stayOnPage = ref(false);
+const stayOnPageChange = () => {
+    stayOnPage.value = !stayOnPage.value;
+};
 const submit = () => {
     if (props.action === 'store') {
         storeForm();
@@ -60,8 +68,13 @@ const clearForm = () => {
 };
 
 const goBackToIndex = () => {
-    router.push({ name: props.indexLink });
-    router.back();
+    if (stayOnPage.value) {
+        //props.action.value = 'create';
+        clearForm();
+    }else {
+        router.push({name: props.indexLink});
+        router.back();
+    }
 };
 
 const storeForm = () => {
@@ -84,6 +97,7 @@ const updateForm = () => {
 
 const deleteForm = () => {
     if (confirm('Are you sure you want to delete this record?')) {
+        stayOnPage.value = false;
         axios
             .delete(props.deleteLink)
             .then(() => {
@@ -94,7 +108,10 @@ const deleteForm = () => {
 };
 
 const printError = (error) => {
-    if (error.response.status === 422) { // error code for validation errors.
+    if (typeof error.response === 'undefined'){
+        console.log(error);
+    }
+    else if (error.response.status === 422) { // error code for validation errors.
         console.log('Validation errors:', error.response.data.errors);
         props.form.errors = error.response.data.errors;
     }

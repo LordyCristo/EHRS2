@@ -29,6 +29,12 @@ export const YearLevel = Array(
     { id: '6th', name: '6th' },
 );
 
+export const AcademicGroup = Array(
+    { id: 'bachelor', name: 'Bachelor' },
+    { id: 'master', name: 'Master' },
+    { id: 'doctor', name: 'Doctorate' },
+);
+
 export const RecordStatus = Array(
     {id: 'Pending', name: 'Pending'},
     {id: 'Processing', name: 'Processing'},

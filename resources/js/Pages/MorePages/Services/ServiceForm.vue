@@ -50,7 +50,7 @@ export default {
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
-            this.formTitle = 'Update Service';
+            this.formTitle = 'Update Service Details';
         }
         else {
             this.form.is_active = 1;

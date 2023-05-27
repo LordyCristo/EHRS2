@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\HematologyRequest;
 use App\Http\Resources\HematologyCollection;
 use App\Http\Resources\HematologyRecordCollection;
+use App\Http\Resources\HematologyRecordResource;
+use App\Http\Resources\HematologyResource;
 use App\Http\Resources\UserCollection;
 use App\Models\Hematology;
 use App\Models\HematologyRecord;
@@ -37,11 +39,12 @@ class HematologyController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(HematologyRequest $request)
+    public function edit(Request $request)
     {
+//        $hematology = new HematologyResource(Hematology::findOrFail($request->id));
+//        $record = new HematologyRecordResource(HematologyRecord::findOrFail($request->id));
         return Inertia::render('Laboratory/Hematology/EditHematology',[
-            'hematology' => new HematologyCollection(Hematology::findOrFail($request->id)),
-            'record' => new HematologyRecordCollection(HematologyRecord::findOrFail($request->id)),
+            'data' => new HematologyResource(HematologyRecord::join('hematology', 'hematology.id', '=', 'hematology_records.id')->where('hematology.id', '=', $request->id)->get()),
             'physicians' => new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get()),
         ]);
     }

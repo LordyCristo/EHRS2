@@ -1,25 +1,23 @@
 <template>
-    <h1 class="flex justify-center text-sm bg-gray-200 py-1 my-1 rounded-sm"><span class="font-semibold">Official Receipt No.:</span> {{ this.$page.props.last_payment_id+1 }}</h1>
-    <form @submit.prevent="submit">
-        <InputText v-model="form.payor_name" label="Payor Name" :errorMsg="form.errors.payor_name" @input="form.errors['payor_name'] = null" />
-        <div class="grid grid-cols-2">
-            <InputText v-model="form.payor_email" label="Payor Email" :errorMsg="form.errors.payor_email" @input="form.errors['payor_email'] = null" />
-            <InputText v-model="form.payor_mobile" label="Payor Mobile No." :errorMsg="form.errors.payor_mobile" @input="form.errors['payor_mobile'] = null" />
-            <SelectElement v-model="form.client_id" label="Client" :options="clients" :errorMsg="form.errors.client_id" @input="form.errors['client_id'] = null" />
-            <SelectElement v-model="form.service_id" label="Service" :options="services" :errorMsg="form.errors.service_id" @input="form.errors['service_id'] = null" />
-            <InputText v-model="form.amount" label="Amount" type="number" :errorMsg="form.errors.amount" @input="form.errors['amount'] = null" />
-            <InputText v-model="form.collector_id" label="Collector ID" type="number" :errorMsg="form.errors.collector_id" @input="form.errors['collector_id'] = null" />
-        </div>
-        <InputText v-model="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="form.errors['remarks'] = null" />
-        <div class="flex items-center justify-between mt-4">
-            <template v-if="action === 'update'">
-                <DeleteButton @click="deleteForm" >Delete</DeleteButton>
-                <CancelButton  @click="cancelForm">Cancel</CancelButton>
-            </template>
-            <ClearButton v-else @click="clearForm">Clear</ClearButton>
-            <SubmitButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Save</SubmitButton>
-        </div>
-    </form>
+    <FormSection :data="data" :form="form" :action="action"
+                 index-link="finance.payment.index"
+                 :update-link="data? route('api.payment.update', data.id): null"
+                 :store-link="route('api.payment.store')"
+                 :delete-link="data? route('api.payment.destroy', data.id): null">
+        <template #formTitle>{{ formTitle }}</template>
+        <template #formBody>
+            <InputText v-model="form.payor_name" label="Payor Name" :errorMsg="form.errors.payor_name" @input="form.errors['payor_name'] = null" />
+            <div class="grid grid-cols-2">
+                <InputText v-model="form.payor_email" label="Payor Email" :errorMsg="form.errors.payor_email" @input="form.errors['payor_email'] = null" />
+                <InputText v-model="form.payor_mobile" label="Payor Mobile No." :errorMsg="form.errors.payor_mobile" @input="form.errors['payor_mobile'] = null" />
+                <SelectElement v-model="form.client_id" label="Client" :options="clients" :errorMsg="form.errors.client_id" @input="form.errors['client_id'] = null" />
+                <SelectElement v-model="form.service_id" label="Service" :options="services" :errorMsg="form.errors.service_id" @input="form.errors['service_id'] = null" />
+                <InputText v-model="form.amount" label="Amount" type="number" :errorMsg="form.errors.amount" @input="form.errors['amount'] = null" />
+                <InputText v-model="form.collector_id" label="Collector ID" type="number" :errorMsg="form.errors.collector_id" @input="form.errors['collector_id'] = null" />
+            </div>
+            <InputText v-model="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="form.errors['remarks'] = null" />
+        </template>
+    </FormSection>
 </template>
 <script setup>
 import InputText from "@/Components/Generic/Forms/InputText.vue";
@@ -30,6 +28,7 @@ import SubmitButton from "@/Components/Generic/Buttons/SubmitButton.vue";
 import DeleteButton from "@/Components/Generic/Buttons/DeleteButton.vue";
 import Select from "@/Components/Generic/Headlessui/Select.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
+import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -53,70 +52,8 @@ export default {
             clients: null,
             services: null,
             data: null,
+            formTitle: null,
         };
-    },
-    methods: {
-        submit() {
-            if (this.action === 'store') {
-                this.store();
-            } else if (this.action === 'update') {
-                this.update();
-            } else {
-                this.goBackToIndex();
-            }
-        },
-        goBackToIndex(){
-            this.$router.push({name:'finance.payment.index'});
-            this.$router.back() // go back to the payment index datatable.
-        },
-        clearForm() {
-            this.form.reset();
-            this.form.clearErrors();
-        },
-        cancelForm(){
-            this.form = useForm(this.data);
-        },
-        store() {
-            axios.post(route('api.payment.store'), this.form)
-                .then(response => {
-                    this.goBackToIndex();
-                })
-                .catch(error => this.printError(error));
-        },
-        update() {
-            axios.put(route('api.payment.update', this.data.id), this.form)
-                .then( response => {
-                    this.goBackToIndex();
-                })
-                .catch(error => this.printError(error));
-        },
-        printError(error){
-            if (error.response.status === 422) { // error code for validation errors.
-                console.log('Validation errors:', error.response.data.errors);
-                this.form.errors = error.response.data.errors;
-            }
-            else if (error.response.status === 500) { // error code for server errors.
-                console.log('Server error:', error.response.data);
-            }
-            else if (error.response.status === 404) { // error code for not found data.
-                console.log('Not found:', error.response.data);
-            }
-            else {
-                console.log('Error:', error.response.data);
-                console.log(this.$page.props.user);
-            }
-        },
-        deleteForm(){
-            if (confirm(`Are you sure you want to delete this record?`)) {
-                axios.delete(route('api.payment.destroy', this.data.id))
-                    .then( () => {
-                        this.goBackToIndex();
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-            }
-        },
     },
     mounted() {
         this.clients = this.$page.props.clients.data;
@@ -125,9 +62,12 @@ export default {
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
+            this.formTitle = 'Update Form Details';
         }
-        else
+        else {
             this.form.collector_id = this.$page.props.auth.user.id;
+            this.formTitle = 'New Transaction Record';
+        }
     }
 };
 </script>

@@ -52,7 +52,9 @@ const alignmentClasses = computed(() => {
 </script>
 
 <template>
-    <select :name="name" class="text-gray-900 border-gray-300 focus:border-vsu-green focus:ring-vsu-green focus:shadow-lg rounded-md shadow-sm">
+    <select :name="name" class="text-gray-900 border-gray-300 focus:border-vsu-green focus:ring-vsu-green focus:shadow-lg rounded-md shadow-sm"
+        @change="$emit('modelValue', $event.target.value)"
+    >
         <option value="" hidden select>Choose</option>
         <option v-for="d in data" :value="d.id" :key="d.id">{{ d.name }}</option>
     </select>

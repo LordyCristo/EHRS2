@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'specialization' => 'Admin',
             'curr_position' => 'Admin',
             'license_no' => 1234,
-            'landline' => '1234567890',
+            'telephone' => '1234567890',
             'mobile' => '1234567890',
         ]);
 
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
             'specialization' => 'Medical Technologist',
             'curr_position' => 'Doctor',
             'license_no' => '0056874',
-            'landline' => '1234567890',
+            'telephone' => '1234567890',
             'mobile' => '1234567890',
         ]);
 
@@ -61,7 +61,7 @@ class UserSeeder extends Seeder
             'specialization' => 'Pathologist',
             'curr_position' => 'Doctor',
             'license_no' => '0094389',
-            'landline' => '1234567890',
+            'telephone' => '1234567890',
             'mobile' => '1234567890',
         ]);
 
@@ -78,7 +78,7 @@ class UserSeeder extends Seeder
             'specialization' => 'Medical Technologist',
             'curr_position' => 'Doctor',
             'license_no' => '0019049',
-            'landline' => '1234567890',
+            'telephone' => '1234567890',
             'mobile' => '1234567890',
         ]);
     }

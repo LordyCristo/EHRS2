@@ -45,4 +45,18 @@ class PaymentController extends Controller
             'last_payment_id' => Payment::select('id')->orderBy('id', 'desc')->first()->id,
         ]);
     }
+
+    /**
+     * Show a resource.
+     */
+    public function show(Request $request)
+    {
+        return Inertia::render('Finance/Payment/ViewPayment', [
+//            'data' => new PaymentResource(Payment::join('clients', 'clients.id', '=', 'payments.client_id')
+//                ->selectRaw('payments.*, clients.id as client_id, CONCAT(clients.first_name, IF(clients.middle_name IS NOT NULL, CONCAT(" ", clients.middle_name), ""), " ", clients.last_name, IF(clients.suffix IS NOT NULL, CONCAT(" ", clients.suffix), "")) as client_name')
+//                ->with('services')
+//                ->findOrFail($request->id)),
+        'data' => new PaymentResource(Payment::with('service')->findOrFail($request->id)),
+        ]);
+    }
 }

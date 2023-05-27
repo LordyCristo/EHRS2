@@ -23,4 +23,14 @@ class Payment extends Model
         'amount',
         'remarks',
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
+    }
+
+    public function services()
+    {
+        return $this->belongsTo(Services::class);
+    }
 }

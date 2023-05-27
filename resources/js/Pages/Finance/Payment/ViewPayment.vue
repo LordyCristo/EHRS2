@@ -1,0 +1,191 @@
+<template>
+    <Finance title="Create Form">
+        <div class="flex justify-center h-full w-full">
+            <div class="max-w-fit sm:p-5 p-1 rounded-sm">
+                <div class="flex items-center justify-end mb-3 gap-2">
+                    <Link :href="route('finance.payment.index')" class="text-gray-600 hover:text-gray-900 duration-300">
+                        <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
+                    </Link>
+                </div>
+
+                <div id="official-receipt-printable" class="shadow-xl px-5 py-8 mx-auto">
+
+                    <div class="or-logo-header">
+                        <img src="../../../Components/Icons/vsu-name-logo.png" alt="Visayas State University Logo" class="vsu-logo">
+                        <h1 class="usher-title">
+                            OFFICE OF THE CHIEF OF UNIVERSITY SERVICES FOR HEALTH EMERGENCY AND RESCUE (USHER)
+                        </h1>
+                    </div>
+                    <div class="or-title-header">
+                        <h2>
+                            OFFICIAL RECEIPT
+                        </h2>
+                    </div>
+                    <div class="or-body" v-if="data">
+                        <div class="flex justify-between">
+                            <span class="w-full"><b>OR No. </b>{{ data.id }}</span>
+                            <span class="w-full"><b>Date Issued:</b> {{ new Date(data.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="w-full"><b>Payor Name: </b>{{ data.payor_name }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="w-full"><b>Payor Email: </b>{{ data.payor_email }}</span>
+                            <span class="w-full"><b>Payor Contact:</b>{{ data.payor_mobile }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="w-full"><b>Patient Name: </b>{{ data.client_name }}</span>
+                            <span class="w-full"><b>Patient ID: </b>{{ data.client_id }}</span>
+                        </div>
+                        <div class="grid grid-cols-2 mt-3">
+                            <div class="font-bold text-center">Service Name</div>
+                            <div class="font-bold text-center">Amount</div>
+                            <div>dfsfd</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-end mt-3">
+                    <button @click="printForm" class="py-1 px-4 bg-vsu-green text-white rounded-md duration-100 active:scale-90 hover:bg-vsu-olive">Print</button>
+                </div>
+                {{ data }}
+            </div>
+        </div>
+    </Finance>
+</template>
+<style>
+#official-receipt-printable{
+    max-width: 35rem;
+    min-width: 35rem;
+}
+.vsu-logo {
+    width: 15rem;
+    height: auto;
+}
+.usher-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+}
+.or-logo-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    line-height: 1;
+    word-spacing: 0.1rem;
+    gap: 0.5rem;
+}
+
+.or-title-header h2{
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 0 1rem 0;
+    padding: 0;
+}
+</style>
+<script setup>
+//import vsuLogo from "@/Components/Icons/VSULogoName";
+import Finance from "@/Pages/Finance.vue";
+import {Link} from "@inertiajs/vue3";
+import BackIcon from "@/Components/Icons/BackIcon.vue";
+import CloseIcon from "@/Components/Icons/CloseIcon.vue";
+import VSUBrandLogo from "@/Components/Icons/VSUBrandLogo.vue";
+import VSULogoName from "@/Components/Icons/VSULogoName.vue";
+
+const printForm = () => {
+    const printableContent = document.getElementById('official-receipt-printable');
+    if (printableContent) {
+        const printWindow = window.open('', '_blank');
+        printWindow.document.open();
+        printWindow.document.write(`<html>
+              <head>
+                    <title>Official Receipt</title>
+                    <style>
+                     @media print {
+                        /* Set custom print size */
+                        @page {
+                            /*size 300px by 600px*/
+                            size: 300px 600px;
+                            margin: 0;
+                            background-color: #5eead4;
+                        }
+
+                        /* Additional print styles if needed */
+                        /* ... */
+
+                        .vsu-logo {
+                            width: 15rem;
+                            height: auto;
+                        }
+                        .usher-title {
+                            font-size: 1rem;
+                            font-weight: bold;
+                            text-align: center;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        .or-logo-header{
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            justify-content: center;
+                            margin-bottom: 1rem;
+                            line-height: 1;
+                            word-spacing: 0.1rem;
+                        }
+                      }
+                    </style>
+              </head>
+              <body>
+                    ${printableContent.innerHTML}
+              </body>
+              </html>`);
+        printWindow.document.close();
+        printWindow.print();
+        printWindow.close();
+    }
+};
+</script>
+<script>
+export default {
+    data: () => ({
+        data: null,
+    }),
+    mounted() {
+        this.data = this.$page.props.data? this.$page.props.data.data : null;
+    },
+    methods: {
+        printComponent() {
+            // Create a new HTML canvas element
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            // Get the component's HTML element
+            const componentElement = this.$el;
+
+            // Set the canvas dimensions to match the component's size
+            canvas.width = componentElement.offsetWidth;
+            canvas.height = componentElement.offsetHeight;
+
+            // Draw the component's content onto the canvas
+            context.drawComponent(componentElement);
+
+            // Convert the canvas content to a base64-encoded image URL
+            const imageURL = canvas.toDataURL('image/png');
+
+            // Create a new window or tab with the printable image
+            const printWindow = window.open();
+            printWindow.document.write(`<img src="${imageURL}" />`);
+            printWindow.document.close();
+
+            // Trigger the print dialog for the new window/tab
+            printWindow.print();
+        }
+    }
+}
+</script>

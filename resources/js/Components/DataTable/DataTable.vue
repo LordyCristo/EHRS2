@@ -1,6 +1,7 @@
 <script setup>
 import DeleteIcon from '@/Components/Icons/DeleteIcon.vue';
 import EditIcon from '@/Components/Icons/EditIcon.vue';
+import ViewIcon from "@/Components/Icons/ViewIcon.vue";
 import CloseIcon from '@/Components/Icons/CloseIcon.vue';
 import DownloadIcon from '@/Components/Icons/DownloadIcon.vue';
 import RefreshIcon from '@/Components/Icons/RefreshIcon.vue';
@@ -84,7 +85,7 @@ export default {
         ],
         actionButton: {
             data: null,
-            icon: [markRaw(DeleteIcon), markRaw(EditIcon)],
+            icon: [ markRaw(ViewIcon), markRaw(DeleteIcon), markRaw(EditIcon)],
             name: 'actions',
             title: 'Actions',
             searchable: false,
@@ -283,7 +284,10 @@ export default {
             this.processing = true;
             axios.get(route(this.apiLink.index),)
                 .then((response) => {
-                    const filename = 'export.csv';
+                    const currentDate = new Date();
+                    const formattedDate = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                    const filename = `${this.apiLink.index}-${formattedDate}.csv`;
+
                     const rows = response.data.data;
                     // Convert the array of objects to a CSV string
                     const rowsArray = Array.from(rows);
@@ -462,17 +466,16 @@ export default {
                         </td>
                         <!-- for actions -->
                         <td v-else-if="col.icon" class="whitespace-nowrap" :class="col.className">
-                            <div class="flex justify-evenly container">
-                                <a @click="deleteRecord(item.id)"
-                                   v-if="selected.length <= 1 && selected.includes(item.id)"
-                                   class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-red-500 duration-1000 ease-in">
+                            <div class="flex justify-evenly container" v-if="selected.includes(item.id) && selected.length <= 1">
+                                <Link title="View" v-if="apiLink.show" :href="route(apiLink.show, item.id)" class="w-5 flex hover:text-green-900 hover:scale-110 translate-x-0 text-green-600 duration-100 ease-in">
                                     <component :is="col.icon[0]" />
-                                </a>
-                                <Link :href="route(apiLink.edit, item.id)"
-                                      v-if="selected.length <= 1 && selected.includes(item.id)"
-                                      class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-1000 ease-in">
-                                    <component :is="col.icon[1]" />
                                 </Link>
+                                <Link title="Update" v-if="apiLink.edit" :href="route(apiLink.edit, item.id)" class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-100 ease-in">
+                                    <component :is="col.icon[2]" />
+                                </Link>
+                                <a title="Delete" v-if="apiLink.destroy" @click="deleteRecord(item.id)" class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-gray-500 duration-100 ease-in">
+                                    <component :is="col.icon[1]" />
+                                </a>
                             </div>
                         </td>
                     </template>

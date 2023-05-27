@@ -21,13 +21,13 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         return [
+            'or_no' => $this->faker->randomNumber(5),
             'payor_name' => $this->faker->name(),
             'payor_email' => $this->faker->email(),
             'payor_mobile' => $this->faker->phoneNumber(),
             'client_id' => $this->faker->numberBetween(1, 100),
-            'service_id' => $this->faker->numberBetween(1, 8),
             'collector_id' => $this->faker->numberBetween(1, 4),
-            'amount' => $this->faker->randomFloat(2, 100, 10000),
+            'total_amount' => $this->faker->randomFloat(2, 100, 10000),
             'remarks' => $this->faker->sentence(),
         ];
     }

@@ -29,7 +29,7 @@ export default{
             {
                 data: 'client_id',
                 name: 'client_id',
-                title: 'Client',
+                title: 'Client ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
@@ -45,8 +45,8 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'amount',
-                name: 'amount',
+                data: 'total_amount',
+                name: 'total_amount',
                 title: 'Amount',
                 searchable: true,
                 orderable: true,
@@ -76,7 +76,7 @@ export default{
             {
                 data: 'client_id',
                 name: 'client_id',
-                title: 'Client',
+                title: 'Client ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
@@ -92,18 +92,9 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'amount',
-                name: 'amount',
+                data: 'total_amount',
+                name: 'total_amount',
                 title: 'Amount',
-                searchable: true,
-                orderable: true,
-                collapsable: true,
-                className: 'dt-border-sm px-2',
-            },
-            {
-                data: 'collector_id',
-                name: 'collector_id',
-                title: 'Collector ID',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
@@ -115,6 +106,8 @@ export default{
             create: 'finance.payment.create',
             // edit form
             edit: 'finance.payment.edit',
+            //view form
+            show: 'finance.payment.show',
             // return all data
             index: 'api.payment.index',
             // return data compatible for datatable requests

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('birthdate');
             $table->integer('age');
             $table->enum('sex', ['male','female']);
-            $table->string('landline')->nullable();
+            $table->string('telephone')->nullable();
             $table->string('mobile')->nullable();
             $table->string('specialization')->nullable();
             $table->string('curr_position');

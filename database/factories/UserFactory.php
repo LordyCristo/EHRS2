@@ -44,7 +44,7 @@ class UserFactory extends Factory
             'specialization' => $this->faker->word(),
             'curr_position' => $this->faker->word(),
             'license_no' => $this->faker->numberBetween(3000,9999),
-            'landline' => $this->faker->phoneNumber(),
+            'telephone' => $this->faker->phoneNumber(),
             'mobile' => $this->faker->phoneNumber(),
         ];
     }

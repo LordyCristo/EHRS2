@@ -132,6 +132,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/', [PaymentController::class, 'index'])->name('finance.payment.index');
             Route::get('/new', [PaymentController::class, 'create'])->name('finance.payment.create');
             Route::get('/edit/{id}', [PaymentController::class, 'edit'])->name('finance.payment.edit');
+            Route::get('/show/{id}', [PaymentController::class, 'show'])->name('finance.payment.show');
             Route::prefix('api')->group(function(){
                 // Payment GET ALL route
                 Route::get('/', [PaymentApi::class, 'index'])->name('api.payment.index');

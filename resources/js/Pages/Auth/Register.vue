@@ -32,19 +32,6 @@ import Select from '@/Components/Select.vue';
 //     password_confirmation: '11221122',
 //     terms: true,
 // });
-
-const roles = ref(Array);
-
-onMounted(async () => {
-    try {
-        const response = await fetch(route('api.roles'), { method: 'GET' }); // replace with the actual API endpoint for retrieving roles
-        const data = await response.json();
-        roles.value = data;
-    } catch (error) {
-        console.error(error);
-    }
-});
-
 </script>
 
 <script>
@@ -52,7 +39,7 @@ export default {
     data() {
         return {
             currentSlide: 1,
-            checkbox1: false,
+            checkbox1: true,
             checkbox2: false,
             checkbox3: false,
             checkbox4: false,
@@ -74,14 +61,15 @@ export default {
                 password: null,
                 password_confirmation: null,
                 terms: true,
-            })
+            }),
+            roles: null,
         };
     },
     methods: {
         nextSlide() {
             if (this.currentSlide < 4) {
                 this.currentSlide++;
-                for (let i = 1; i < this.currentSlide; i++) {
+                for (let i = 2; i <= this.currentSlide; i++) {
                     this['checkbox' + i] = true;
                 }
             }
@@ -96,16 +84,21 @@ export default {
         },
         updateSex(event) {
             this.form.sex = event.target.value;
-            console.log(this.form.sex);
+        },
+        computeAge() {
+            const birthdate = new Date(this.form.birthdate);
+            const today = new Date();
+            let age = today.getFullYear() - birthdate.getFullYear();
+            const month = today.getMonth() - birthdate.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < birthdate.getDate())) {
+                age--;
+            }
+            if(age)
+                this.form.age = age.toString();
         },
         submit() {
-            console.log(this.form);
             this.form.post(route('register'), {
-                onError: () => {
-                    console.log(this.form);
-                },
                 onFinish: () => {
-                    console.log(this.form.errors);
                     this.form.reset('password', 'password_confirmation');
                 },
             });
@@ -113,8 +106,17 @@ export default {
         clearForm(){
             this.form.reset();
             this.form.clearErrors();
-        }
+        },
+        roleChanged(event) {
+            this.form.role = event.target.value;
+            console.log(this.form.role);
+        },
     },
+    async mounted() {
+        await axios.get(route('api.roles')).then((response) => {
+            this.roles = response.data;
+        });
+    }
 };
 </script>
 
@@ -143,31 +145,43 @@ export default {
         <form @submit.prevent="submit">
             <div id="carousel-1" v-show="currentSlide === 1">
                 <div>
-                    <InputLabel for="first_name" value="First Name" />
+                    <div class="flex justify-between">
+                        <InputLabel for="first_name" value="First Name" />
+                        <InputError :message="form.errors.first_name" />
+                    </div>
                     <TextInput id="first_name" v-model="form.first_name" name="first_name" type="text"
                         class="mt-1 block w-full" autofocus autocomplete="name" />
-                    <InputError class="mt-2" :message="form.errors.first_name" />
+
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="middle_name" value="Middle Name" />
+                    <div class="flex justify-between">
+                        <InputLabel for="middle_name" value="Middle Name" />
+                        <InputError :message="form.errors.middle_name" />
+                    </div>
                     <TextInput id="middle_name" name="middle_name" v-model="form.middle_name" type="text"
                         class="mt-1 block w-full" autocomplete="name" />
-                    <InputError class="mt-2" :message="form.errors.middle_name" />
+
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="last_name" value="Last Name" />
+                    <div class="flex justify-between">
+                        <InputLabel for="last_name" value="Last Name" />
+                        <InputError :message="form.errors.last_name" />
+                    </div>
                     <TextInput id="last_name" name="last_name" v-model="form.last_name" type="text"
                         class="mt-1 block w-full" autocomplete="name" />
-                    <InputError class="mt-2" :message="form.errors.last_name" />
+
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="suffix" value="Suffix" />
+                    <div class="flex justify-between">
+                        <InputLabel for="suffix" value="Suffix" />
+                        <InputError :message="form.errors.suffix" />
+                    </div>
                     <TextInput id="suffix" name="suffix" v-model="form.suffix" type="text" class="mt-1 block w-full"
                         autocomplete="name" />
-                    <InputError class="mt-2" :message="form.errors.suffix" />
+
                 </div>
                 <div class="flex items-center justify-between mt-4">
                     <SecondaryButton type="button" @click.prevent="clearForm()"
@@ -188,45 +202,60 @@ export default {
             </div>
             <div id="carousel-2" v-show="currentSlide === 2">
                 <div>
-                    <InputLabel for="birthdate" value="Birthdate" />
-                    <TextInput id="birthdate" name="birthdate" v-model="form.birthdate" type="date"
+                    <div class="flex justify-between">
+                        <InputLabel for="birthdate" value="Birthdate" />
+                        <InputError :message="form.errors.birthdate" />
+                    </div>
+                    <TextInput id="birthdate" name="birthdate" v-model="form.birthdate" type="date" @change="computeAge"
                         class="mt-1 block w-full" autofocus autocomplete="birthday" />
-                    <InputError class="mt-2" :message="form.errors.birthdate" />
                 </div>
 
-                <div class="flex">
+                <div class="grid grid-cols-2 gap-3">
                     <div class="mt-4">
-                        <InputLabel for="age" value="Age" />
-                        <TextInput id="age" name="age" v-model="form.age" type="number" class="mt-1 block w-full"
-                            autocomplete="age" />
-                        <InputError class="mt-2" :message="form.errors.age" />
+                        <div class="flex justify-between">
+                            <InputLabel for="age" value="Age" />
+                            <InputError :message="form.errors.age" />
+                        </div>
+                        <TextInput id="age" name="age" v-model.number="form.age" type="number" class="mt-1 block w-full" autocomplete="age" />
                     </div>
 
-                    <div class="mt-4 ml-4">
-                        <InputLabel for="sex" value="Sex" />
-                        <div class="flex flex-row justify-center gap-5">
-                            <radio-button id="sex-male" name="sex" v-model="form.sex" value="MALE"
+                    <div class="mt-4">
+                        <div class="flex justify-between">
+                            <InputLabel for="sex" value="Sex" />
+                            <InputError :message="form.errors.sex" />
+                        </div>
+                        <div class="flex flex-row items-center justify-center gap-5">
+                            <radio-button id="sex-male" name="sex" v-model="form.sex" value="male"
                                 @change="updateSex">Male</radio-button>
-                            <radio-button id="sex-female" name="sex" v-model="form.sex" value="FEMALE"
+                            <radio-button id="sex-female" name="sex" v-model="form.sex" value="female"
                                 @change="updateSex">Female</radio-button>
                         </div>
-                        <InputError class="mt-2" :message="form.errors.sex" />
+
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <InputLabel for="mobile" value="Mobile Number" />
-                    <TextInput id="mobile" name="mobile" v-model="form.mobile" type="number" class="mt-1 block w-full"
-                        autocomplete="mobile" />
-                    <InputError class="mt-2" :message="form.errors.mobile" />
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="mt-4">
+                        <div class="flex justify-between">
+                            <InputLabel for="mobile" value="Mobile Number" />
+                            <InputError :message="form.errors.mobile" />
+                        </div>
+                        <TextInput id="mobile" name="mobile" v-model="form.mobile" type="tel" class="mt-1 block w-full"
+                                   autocomplete="mobile" />
+
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="flex justify-between">
+                            <InputLabel for="landline" value="Landline" />
+                            <InputError :message="form.errors.landline" />
+                        </div>
+                        <TextInput id="landline" name="landline" v-model="form.landline" type="tel" class="mt-1 block w-full"
+                                   autocomplete="landline" />
+
+                    </div>
                 </div>
 
-                <div class="mt-4">
-                    <InputLabel for="landline" value="Landline" />
-                    <TextInput id="landline" name="landline" v-model="form.landline" type="tel" class="mt-1 block w-full"
-                        autocomplete="landline" />
-                    <InputError class="mt-2" :message="form.errors.landline" />
-                </div>
                 <div class="flex items-center justify-between mt-4">
                     <SecondaryButton @click="prevSlide"
                         class="hover:text-white hover:bg-vsu-olive focus:bg-vsu-olive active:bg-vsu-olive active:text-white focus:ring-vsu-olive">
@@ -246,35 +275,38 @@ export default {
             </div>
             <div id="carousel-3" v-show="currentSlide === 3">
                 <div>
-                    <InputLabel for="role" value="Role" />
-                    <Select v-model="form.role" autofocus id="role" name="role" class="mt-1 block w-full">
-                        <template #options>
-                            <option value="" hidden select>Choose</option>
-                            <option v-for="role in roles" :value="role.id" :key="role.id">{{ role.name }}</option>
-                        </template>
-                    </Select>
-                    <InputError class="mt-2" :message="form.errors.role" />
+                    <div class="flex justify-between">
+                        <InputLabel for="role" value="Role" />
+                        <InputError :message="form.errors.role" />
+                    </div>
+                    <Select v-model="form.role" autofocus id="role" :data="roles" @change="roleChanged" name="role" class="mt-1 block w-full" />
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="specialization" value="Specialization" />
+                    <div class="flex justify-between">
+                        <InputLabel for="specialization" value="Specialization" />
+                        <InputError :message="form.errors.specialization" />
+                    </div>
                     <TextInput id="specialization" name="specialization" v-model="form.specialization" type="text"
                         class="mt-1 block w-full" autocomplete="specialization" />
-                    <InputError class="mt-2" :message="form.errors.specialization" />
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="license" value="License Number" />
+                    <div class="flex justify-between">
+                        <InputLabel for="license" value="License Number" />
+                        <InputError :message="form.errors.license" />
+                    </div>
                     <TextInput id="license" name="license" v-model="form.license" type="text" class="mt-1 block w-full"
                         autocomplete="license" />
-                    <InputError class="mt-2" :message="form.errors.license" />
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="position" value="Position" />
+                    <div class="flex justify-between">
+                        <InputLabel for="position" value="Position" />
+                        <InputError :message="form.errors.position" />
+                    </div>
                     <TextInput id="position" name="position" v-model="form.position" type="text" class="mt-1 block w-full"
                         autocomplete="position" />
-                    <InputError class="mt-2" :message="form.errors.position" />
                 </div>
                 <div class="flex items-center justify-between mt-4">
                     <SecondaryButton @click="prevSlide"
@@ -295,27 +327,30 @@ export default {
             </div>
             <div id="carousel-4" v-show="currentSlide === 4">
                 <div class="mt-4">
-                    <div>
+                    <div class="flex justify-between">
                         <InputLabel for="email" value="Email" />
-                        <InputError class="mt-2" :message="form.errors.email" />
+                        <InputError :message="form.errors.email" />
                     </div>
-                    <TextInput id="email" name="email" v-model="form.email" type="text" class="mt-1 block w-full"
-                        autocomplete="username" />
-
+                    <TextInput id="email" name="email" v-model="form.email" type="text" class="mt-1 block w-full" autocomplete="username" />
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="password" value="Password" />
+                    <div class="flex justify-between">
+                        <InputLabel for="password" value="Password" />
+                        <InputError :message="form.errors.password" />
+                    </div>
                     <TextInput id="password" name="password" v-model="form.password" type="password"
                         class="mt-1 block w-full" autocomplete="new-password" />
-                    <InputError class="mt-2" :message="form.errors.password" />
+
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="password_confirmation" value="Confirm Password" />
+                    <div class="flex justify-between">
+                        <InputLabel for="password_confirmation" value="Confirm Password" />
+                        <InputError :message="form.errors.password_confirmation" />
+                    </div>
                     <TextInput id="password_confirmation" v-model="form.password_confirmation" type="password"
                         class="mt-1 block w-full" autocomplete="new-password" />
-                    <InputError class="mt-2" :message="form.errors.password_confirmation" />
                 </div>
 
                 <div v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature" class="mt-4">

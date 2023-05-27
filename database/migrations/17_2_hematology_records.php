@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hematology_records', function(Blueprint $table){
-            $table->foreignId('id')->unique('unq_record_id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->id();
+            $table->foreignId('hematology_id')->unique('unq_record_id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('client_id')->constrained('clients')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('age')->nullable();
             $table->enum('sex', ['male','female']);

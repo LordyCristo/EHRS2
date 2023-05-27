@@ -3,10 +3,12 @@
         <slot name="formTitle" />
     </FormTitleHeader>
     <div class="flex items-center justify-end">
-        <input type="checkbox" v-model="stayOnPage" @click="stayOnPageChange" class="rounded-full">
-        <label for="stayOnPage" class="ml-2 text-sm text-gray-500">Stay on page</label>
+        <div>
+            <input type="checkbox" v-model="stayOnPage" @click="stayOnPageChange" class="rounded-full">
+            <label for="stayOnPage" class="ml-2 text-sm text-gray-500">Stay on page</label>
+        </div>
     </div>
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit" id="printableFormContent">
         <slot name="formBody" />
         <div class="flex items-center justify-between mt-4">
             <template v-if="action === 'update'">
@@ -28,7 +30,6 @@ import ClearButton from '@/Components/Generic/Buttons/ClearButton.vue';
 import SubmitButton from '@/Components/Generic/Buttons/SubmitButton.vue';
 import axios from 'axios';
 import { router } from '@/router';
-
 const props = defineProps({
     indexLink: {
         type: String,
@@ -49,6 +50,7 @@ const stayOnPage = ref(false);
 const stayOnPageChange = () => {
     stayOnPage.value = !stayOnPage.value;
 };
+
 const submit = () => {
     if (props.action === 'store') {
         storeForm();

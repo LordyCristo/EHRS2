@@ -19,7 +19,7 @@ class HematologyRecordFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => Hematology::factory(),
+            'hematology_id' => Hematology::factory(),
             'client_id' => $this->faker->numberBetween(1, 100),
             'age' => $this->faker->numberBetween(18, 100),
             'sex' => $this->faker->randomElement(['male','female']),

@@ -18,9 +18,8 @@ class PaymentApi extends Controller
      */
     public function index()
     {
-        return new PaymentCollection(Payment::select('payments.id', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'payments.client_id', 'payments.service_id', 'services.name as service_name', 'payments.collector_id', 'payments.amount', 'payments.remarks')
-            ->join('clients', 'clients.id', '=', 'payments.client_id')
-            ->join('services', 'services.id', '=', 'payments.service_id')->get());
+        return new PaymentCollection(Payment::select('payments.id', 'payments.or_no', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'payments.client_id', 'payments.collector_id', 'payments.total_amount', 'payments.remarks')
+            ->join('clients', 'clients.id', '=', 'payments.client_id')->get());
     }
 
     /**
@@ -71,11 +70,11 @@ class PaymentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Payment::select('payments.id', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'client_id', 'services.name as service_id', 'payments.collector_id', 'payments.amount', 'payments.remarks')
-            ->join('clients', 'clients.id', '=', 'payments.client_id')
-            ->join('services', 'services.id', '=', 'payments.service_id');
+        $query = Payment::join('clients', 'clients.id', '=', 'payments.client_id')
+            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
+            ->join('services', 'services.id', '=', 'payments_service.service_id')
+            ->select('payments.id', 'payments.or_no', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'payments.client_id', 'services.name as service_id', 'payments.collector_id', 'payments.total_amount', 'payments.remarks');
 
-        //$query = Payment::select('*');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

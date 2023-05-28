@@ -52,7 +52,6 @@ const stayOnPageChange = () => {
 };
 
 const submit = () => {
-    console.log(props.form.data());
     if (props.action === 'store') {
         storeForm();
     } else if (props.action === 'update') {
@@ -92,7 +91,8 @@ const storeForm = () => {
 const updateForm = () => {
     axios
         .put(props.updateLink, props.form)
-        .then(() => {
+        .then(res => {
+            console.log(res.data);
             goBackToIndex();
         })
         .catch(printError);

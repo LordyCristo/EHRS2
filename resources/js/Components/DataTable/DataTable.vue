@@ -95,20 +95,17 @@ export default {
             collapsable: false,
             className: 'dt-center flex justify-center',
         },
-        bannerType: null,
-        bannerMessage: null,
-        showBanner: false,
+        notifications: [],
     }),
     mounted() {
         //Initialize the data request
         this.autoGetData();
         this.changeSizeView();
+        console.log(this.$page.props);
     },
     methods: {
-        popNotif(show, message, type){
-            this.showBanner = show;
-            this.bannerMessage = message;
-            this.bannerType = type;
+        popNotif(notif){
+            this.notifications.push(notif);
         },
         deleteRecord(id, multi = false) {
             if (multi) {
@@ -123,7 +120,7 @@ export default {
                 this.dtMessage = 'Please wait while deleting records...';
                 axios.delete(route(this.apiLink.destroy, id))
                     .then( response => {
-                        this.popNotif(response.data.show, response.data.message, response.data.type);
+                        this.popNotif(response.data.notification);
                         this.getData();
                     })
                     .catch(error => {
@@ -140,9 +137,7 @@ export default {
                 this.dtMessage = `Please wait while deleting records...`;
                 await axios.delete(route(this.apiLink.destroy, { id: this.selected }))
                     .then(response => {
-                        console.log(`Multiple`);
-                        console.log(response.data);
-                        this.popNotif(response.data.show, response.data.message, response.data.type);
+                        this.popNotif(response.data.notification);
                         this.getData();
                     })
                     .catch(error => {
@@ -391,8 +386,8 @@ export default {
         isColumnSorted(col) {
             return col.name === this.sortedColumn;
         },
-        updateNotification(){
-            this.showBanner = false;
+        updateNotification(n){
+            this.notifications.splice(this.notifications.indexOf(n), 1);
         }
     },
     computed: {
@@ -404,26 +399,7 @@ export default {
 </script>
 <template>
     <DtContainer>
-        <div>
-            <NotifBanner :message="bannerMessage" :type="bannerType" :status="showBanner" @update-notification="(n) => updateNotification(n)" />
-        </div>
-<!--        <div v-if="showBanner" :class="showBanner?'right-3':'-right-full'"-->
-<!--             class="z-50 fixed bottom-3 flex items-center duration-1000 overflow-hidden bg-green-200 px-5 py-1 sm:px-3.5 sm:before:flex-1">-->
-<!--            <warning-icon v-if="bannerType === 'success'" class="w-6 mr-1 text-green-800"/>-->
-<!--            <warning-icon v-if="bannerType === 'warning'" class="w-6 mr-1 text-yellow-400"/>-->
-<!--            <div class="w-full">-->
-<!--                {{ bannerMessage }}-->
-<!--            </div>-->
-<!--            <button type="button" @click="showBanner = false" class="ml-1">-->
-<!--                <span class="sr-only">Dismiss</span>-->
-<!--                <close-icon class="w-6 h-auto text-gray-400 hover:text-gray-700"/>-->
-<!--            </button>-->
-<!--        </div>-->
-<!--        <NotifBanner-->
-<!--            :status="showBanner"-->
-<!--            :message="bannerMessage"-->
-<!--            :type="bannerType"-->
-<!--            />-->
+        <NotifBanner :notifications="notifications" @update-notifications="(n) => updateNotification(n)" />
 <!--        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>-->
         <DtTopContainer>
             <DtActionContainer>

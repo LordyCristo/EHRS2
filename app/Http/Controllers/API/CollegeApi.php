@@ -63,9 +63,11 @@ class CollegeApi extends Controller
         $id = explode(',', $request->id);
         $temp = College::destroy($request->id);
         return response()->json([
-            'show' => true,
-            'type' => $temp?'success':'failed',
-            'message' => $temp?'Successfully deleted '.$temp.' records':'Failed to delete record with id '.$request->id,
+            'notification' => [
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' records':'Failed to delete record with id '.$request->id,
+            ]
         ]);
     }
 

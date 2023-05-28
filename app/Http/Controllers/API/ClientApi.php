@@ -46,9 +46,14 @@ class ClientApi extends Controller
     {
         $client = Client::findOrFail($request->id);
         $update = $client->update($request->all());
-        if ($update)
-            return response(null, 202);
-        return response(null, 400);
+        return response()->json([
+            'notification' => [
+                'id' => $request->id,
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -60,9 +65,12 @@ class ClientApi extends Controller
         $temp = Client::destroy($id);
         // Return the success code
         return response()->json([
-            'show' => true,
-            'type' => $temp?'success':'failed',
-            'message' => $temp?'Successfully deleted '.$temp.' records':'Failed to delete record with id '.$request->id,
+            'notification' => [
+                'id' => $request->id,
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' record/s':'Failed to delete record with id '. $request->id,
+            ]
         ]);
     }
 

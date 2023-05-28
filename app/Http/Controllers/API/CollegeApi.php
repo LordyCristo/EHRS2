@@ -58,14 +58,14 @@ class CollegeApi extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): JsonResponse
+    public function destroy(Request $request)
     {
-        $college = College::findOrFail($request->id);
-        $college->delete();
-        // return the success code
+        $id = explode(',', $request->id);
+        $temp = College::destroy($request->id);
         return response()->json([
-            'success' => true,
-            'message' => 'College deleted successfully'
+            'show' => true,
+            'type' => $temp?'success':'failed',
+            'message' => $temp?'Successfully deleted '.$temp.' records':'Failed to delete record with id '.$request->id,
         ]);
     }
 

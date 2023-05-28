@@ -17,20 +17,12 @@ export default {
         currTab: String,
     },
     computed: {
-        isHomePage() {
-            return window.location.pathname === '/';
-        },
-        isLoginPage() {
-            return window.location.pathname === '/login';
-        },
-        isRegisterPage() {
-            return window.location.pathname === '/register';
-        },
-        isPatientsPage() {
-            return window.location.pathname === '/patients';
+        isCurrentPage() {
+            const paths = ['/', '/login', '/register', '/patients'];
+            return paths.includes(window.location.pathname);
         },
         highlightCurrPage() {
-            return window.location.pathname.includes(this.currTab);
+            return this.isCurrentPage || window.location.pathname.includes(this.currTab);
         },
     },
     methods: {
@@ -52,7 +44,7 @@ export default {
                 <span class="w-4 h-auto">
                     <slot name="icon"></slot>
                 </span>
-                <span class="duration-300 ease-in-out text-sm" :class="{'opacity-0 absolute w-0': isOpen, 'opacity-100':!isOpen}">
+                <span class="duration-300 ease-in-out text-sm" :class="isOpen?'opacity-0 absolute w-0':'opacity-100'">
                     <slot name="title"></slot>
                 </span>
             </Link>
@@ -61,11 +53,11 @@ export default {
             <div v-for="(item, index) in subLinks" :key="index" class="rounded-md">
                 <div :class="{'bg-vsu-yellow': highlightCurrPage,'w-fit flex-col items-center':isOpen,'bg-vsu-olive': item.isOpen,'bg-transparent': !item.isOpen,'rounded-t-lg': index === 0,'rounded-b-lg': index === subLinks.length - 1}"
                      class="flex justify-between cursor-pointer px-2 py-2 text-gray-100 rounded-md">
-                    <Link :href="route(link)"  class="flex flex-row items-center jsut gap-2 w-full">
+                    <Link :href="route(link)"  class="flex flex-row items-center gap-2 w-full" :class="{'justify-center': isOpen}">
                         <span class="w-4 h-auto">
                             <slot name="icon"></slot>
                         </span>
-                        <span class="duration-300 ease-in-out text-sm" :class="{'opacity-0 absolute w-0': isOpen, 'opacity-100':!isOpen}">
+                        <span class="duration-300 ease-in-out text-sm" :class="isOpen?'opacity-0 absolute w-0':'opacity-100'">
                             <slot name="title"></slot>
                         </span>
                     </Link>
@@ -75,10 +67,13 @@ export default {
                         </svg>
                     </button>
                 </div>
-                <transition leave-active-class="transition duration-100 ease-in"
+                <transition enter-active-class="transition duration-500 ease-in-out"
+                            enter-from-class="opacity-0"
+                            enter-to-class="opacity-100"
+                            leave-active-class="transition duration-500 ease-in-out"
                             leave-from-class="opacity-100"
                             leave-to-class="opacity-0">
-                    <div v-if="item.isOpen" class="flex flex-col bg-vsu-olive p-2 rounded-md mt-1" :class="{'absolute shadow-lg flex-row': isOpen}">
+                    <div v-if="item.isOpen" class="flex z-50 flex-col bg-vsu-olive p-2 rounded-md mt-1" :class="{'absolute shadow-lg flex-row': isOpen}">
                         <Link v-for="content in item.content" :href="route(content.link)"
                               :class="{'bg-vsu-yellow': hightlightSubLinks(content.linkName)}"
                               class="text-white hover:bg-vsu-yellow py-0.5 px-2 rounded-sm whitespace-nowrap">
@@ -96,7 +91,7 @@ export default {
                     <span class="w-4 h-auto">
                         <slot name="icon"></slot>
                     </span>
-                    <span class="duration-300 ease-in-out text-sm" :class="{'opacity-0 absolute w-0': isOpen, 'opacity-100':!isOpen}">
+                    <span class="duration-300 ease-in-out text-sm" :class="[isOpen?'opacity-0 absolute w-0':'opacity-100',!isOpen?'opacity-100':'opacity-0 absolute w-0']">
                         <slot name="title"></slot>
                     </span>
                 </button>

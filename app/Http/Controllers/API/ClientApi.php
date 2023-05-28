@@ -57,12 +57,12 @@ class ClientApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        Client::destroy($id);
+        $temp = Client::destroy($id);
         // Return the success code
         return response()->json([
-            'success' => true,
-            'message' => 'Records deleted successfully',
-            'data' => $id,
+            'show' => true,
+            'type' => $temp?'success':'failed',
+            'message' => $temp?'Successfully deleted '.$temp.' records':'Failed to delete record with id '.$request->id,
         ]);
     }
 

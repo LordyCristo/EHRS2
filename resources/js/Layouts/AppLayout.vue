@@ -14,6 +14,7 @@ import LogoutIcon from "@/Components/Icons/LogoutIcon.vue";
 import Sidebar from "@/Components/Generic/Layout/Sidebar.vue";
 import { Head } from '@inertiajs/vue3';
 import {markRaw} from "vue";
+import FinanceIcon from "@/Components/Icons/FinanceIcon.vue";
 
 
 export default {
@@ -136,18 +137,18 @@ export default {
                             {
                                 name: 'Fees',
                                 link: 'finance.fee.index',
-                                linkName: 'fees',
+                                linkName: 'fee',
                             },
                             {
                                 name: 'Payments',
                                 link: 'finance.payment.index',
-                                linkName: 'fees',
+                                linkName: 'payment',
                             },
                         ],
                         isOpen: false
                     }],
                     isOpen: false,
-                    icon: markRaw(LaboratoryIcon),
+                    icon: markRaw(FinanceIcon),
                     form: true,
                     method: null,
                 },

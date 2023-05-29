@@ -86,32 +86,29 @@ class ClientApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Client::select('clients.*')->with(['program', 'clientType']);
+        $query = Client::join('degree_programs','degree_programs.id','=','clients.program_id')->join('client_types','client_types.id','=','clients.client_type_id')->select('clients.*','degree_programs.abbr as program_name','client_types.name as client_type');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('first_name', 'like', '%' . $search . '%')
-                        ->orWhere('middle_name', 'like', '%' . $search . '%')
-                        ->orWhere('last_name', 'like', '%' . $search . '%')
-                        ->orWhere('suffix', 'like', '%' . $search . '%')
-                        ->orWhere('birthdate', 'like', '%' . $search . '%')
-                        ->orWhere('age', 'like', '%' . $search . '%')
-                        ->orWhere('sex', 'like', '%' . $search . '%')
-                        ->orWhere('civil_status', 'like', '%' . $search . '%')
-                        ->orWhere('phone', 'like', '%' . $search . '%')
-                        ->orWhere('email_address', 'like', '%' . $search . '%')
-                        ->orWhere('home_address', 'like', '%' . $search . '%')
-                        ->orWhere('curr_address', 'like', '%' . $search . '%')
-                        ->orWhere('id_number', 'like', '%' . $search . '%')
-                        ->orWhere('program_id', 'like', '%' . $search . '%')
-                        ->orWhere('year_lvl', 'like', '%' . $search . '%')
-                        ->orWhere('client_type_id', 'like', '%' . $search . '%');
-                } else {
-                    $q->where('clients.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('clients.id', 'like', '%' . $search . '%')
+                        ->orWhere('clients.first_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.middle_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.last_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.suffix', 'like', '%' . $search . '%')
+                        ->orWhere('clients.age', 'like', '%' . $search . '%')
+                        ->orWhere('clients.sex', 'like', '%' . $search . '%')
+                        ->orWhere('clients.civil_status', 'like', '%' . $search . '%')
+                        ->orWhere('client_types.name', 'like', '%' . $search . '%')
+                        ->orWhere('degree_programs.abbr', 'like', '%' . $search . '%');
+                } else if($searchBy == 'client_type'){
+                    $q->where('client_types.name', 'like', '%' . $search . '%');
+                } else if ($searchBy == 'program_name'){
+                    $q->where('degree_programs.abbr', 'like', '%' . $search . '%');
+                } else{
+                    $q->where('clients.'.$searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -142,7 +139,7 @@ class ClientApi extends Controller
         $failedCount = 0;
         $response = [
             'successCount' => 0,
-            'failedCount' => null,
+            'failedCount' => 0,
             'data' => [],
         ];
 
@@ -169,6 +166,14 @@ class ClientApi extends Controller
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'failed',
+                'message' => !$failedCount?'Successfully import without errors':'Failed to import '.$failedCount.' rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }

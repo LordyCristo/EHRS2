@@ -286,7 +286,7 @@ export default {
         },
         exportToCsv() {
             this.processing = true;
-            axios.get(route(this.apiLink.index),)
+            axios.get(route(this.apiLink.index))
                 .then((response) => {
                     const currentDate = new Date();
                     const formattedDate = currentDate.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
@@ -366,6 +366,7 @@ export default {
                     // Send the imported data to the server
                     await axios.post(route(this.apiLink.import), rows)
                         .then((response) => {
+                            pushNotification(response.data.notification);
                             // Refresh the data table
                             this.getData();
                         })
@@ -442,7 +443,7 @@ export default {
             <DtLengthContainer>
                 <DtLength :options="DtLengthOptions" v-model="perPage" @change="refreshData" />
                 <div class="flex items-center rounded-sm shadow-sm border">
-                    <DtSearchBy v-model="searchBy" :columns="columns" @change="refreshData()" />
+                    <DtSearchBy v-model="searchBy" :columns="columnsLarge" @change="refreshData()" />
                     <DtSearch :func="refreshData" v-model="search" :searchBy="searchBy" :columns="columns" />
                 </div>
             </DtLengthContainer>

@@ -90,7 +90,7 @@ class CollegeApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = College::select(['id', 'name', 'abbr', 'is_active']);
+        $query = College::select(['id', 'name', 'abbr']);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -99,8 +99,7 @@ class CollegeApi extends Controller
                 if ($searchBy == '*') {
                     $q->where('id', 'like', '%' . $search . '%')
                         ->orWhere('name', 'like', '%' . $search . '%')
-                        ->orWhere('abbr', 'like', '%' . $search . '%')
-                        ->orWhere('is_active', 'like', '%' . $search . '%');
+                        ->orWhere('abbr', 'like', '%' . $search . '%');
                 } else {
                     $q->where('colleges.' . $searchBy, 'like', '%' . $search . '%');
                 }

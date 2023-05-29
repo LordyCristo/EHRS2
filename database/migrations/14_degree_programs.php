@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('major')->nullable();
             $table->enum('group', ['bachelor','master','doctor'])->default('bachelor');
             $table->foreignId('department_id')->constrained('departments')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

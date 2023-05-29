@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DegreeProgram extends Model
 {
@@ -16,10 +17,9 @@ class DegreeProgram extends Model
         'major',
         'group',
         'department_id',
-        'is_active',
     ];
 
-    public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
     }

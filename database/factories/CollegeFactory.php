@@ -20,7 +20,6 @@ class CollegeFactory extends Factory
         return [
             'name' => $this->faker->unique()->company,
             'abbr' => $this->faker->unique()->word,
-            'is_active' => true,
         ];
     }
 }

@@ -9,13 +9,11 @@
             <InputText v-model="form.name" label="Department Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
             <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
             <SelectElement v-model="form.college_id" label="College" :options="colleges" :errorMsg="form.errors.college_id" @input="form.errors['college_id'] = null" />
-            <RadioButton v-model="form.is_active" label="Status" :options="statuses" :errorMsg="form.errors.is_active" @input="form.errors['is_active'] = null" />
         </template>
     </FormSection>
 </template>
 <script setup>
 import InputText from "@/Components/Generic/Forms/InputText.vue";
-import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 </script>
@@ -31,12 +29,7 @@ export default {
                 name: null,
                 abbr: null,
                 college_id: null,
-                is_active: null,
             }),
-            statuses: [
-                {id: 1, name: 'Active'},
-                {id: 0, name: 'Inactive'},
-            ],
             colleges: [],
             data: null,
             formTitle: null,
@@ -50,7 +43,6 @@ export default {
             this.formTitle = 'Update Department Details';
         }
         else {
-            this.form.is_active = 1;
             this.formTitle = 'Register New Department';
         }
     }

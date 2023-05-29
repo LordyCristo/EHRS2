@@ -19,7 +19,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'ER Section',
             'room_no' => 'Room-1',
-            'is_active' => true,
         ]);
 
         Services::factory()->create([
@@ -28,7 +27,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'Records Section',
             'room_no' => 'Room-2',
-            'is_active' => true,
         ]);
 
         Services::factory()->create([
@@ -37,7 +35,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'X-Ray Section',
             'room_no' => 'Room-3',
-            'is_active' => true,
         ]);
 
         Services::factory()->create([
@@ -46,7 +43,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'Laboratory Section',
             'room_no' => 'Room-4',
-            'is_active' => true,
         ]);
 
         Services::factory()->create([
@@ -55,7 +51,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'Pharmacy Section',
             'room_no' => 'Room-5',
-            'is_active' => true,
         ]);
 
         Services::factory()->create([
@@ -64,7 +59,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'Outpatient Section',
             'room_no' => 'Room-6',
-            'is_active' => true,
         ]);
 
         Services::factory()->create([
@@ -73,7 +67,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'Inpatient Section',
             'room_no' => 'Room-7',
-            'is_active' => true,
         ]);
 
         Services::factory()->create([
@@ -82,7 +75,6 @@ class ServicesSeeder extends Seeder
             'schedule' => 'M-F 8am-5pm',
             'section_name' => 'Billing Section',
             'room_no' => 'Room-8',
-            'is_active' => true,
         ]);
     }
 }

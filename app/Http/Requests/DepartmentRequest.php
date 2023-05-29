@@ -28,7 +28,6 @@ class DepartmentRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', Rule::unique('departments','name')->ignore($departId)],
             'abbr' => ['required', 'string', 'max:255', Rule::unique('departments','abbr')->ignore($departId)],
             'college_id' => ['required', 'integer', 'exists:colleges,id'],
-            'is_active' => ['required', 'boolean'],
         ];
     }
 
@@ -46,8 +45,6 @@ class DepartmentRequest extends FormRequest
             'college_id.required' => 'Required field',
             'college_id.integer' => 'Must be an integer.',
             'college_id.exists' => 'Invalid value',
-            'is_active.required' => 'Required field',
-            'is_active.boolean' => 'Invalid value',
         ];
     }
 }

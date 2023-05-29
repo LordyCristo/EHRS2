@@ -1,7 +1,6 @@
 <template>
     <MorePages title="Colleges">
         <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink" />
-        <NotifBanner :message="notifMessage" :type="notifType" />
     </MorePages>
 </template>
 <script setup>
@@ -11,10 +10,6 @@ import NotifBanner from "@/Components/Generic/Modals/NotifBanner.vue";
 </script>
 <script>
 export default{
-    props: {
-        notifMessage: String,
-        notifType: String,
-    },
     data: () => ({
         columnsSmall:[
             {
@@ -104,15 +99,6 @@ export default{
                 data: 'department_id',
                 name: 'department_id',
                 title: 'Department',
-                searchable: true,
-                orderable: true,
-                collapsable: true,
-                className: 'dt-border-sm px-2',
-            },
-            {
-                data: 'is_active',
-                name: 'is_active',
-                title: 'Active',
                 searchable: true,
                 orderable: true,
                 collapsable: true,

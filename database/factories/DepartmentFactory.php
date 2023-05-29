@@ -21,7 +21,6 @@ class DepartmentFactory extends Factory
             'name' => $this->faker->unique()->jobTitle,
             'abbr' => $this->faker->unique()->word,
             'college_id' => $this->faker->numberBetween($min = 1, $max = 7),
-            'is_active' => true,
         ];
     }
 

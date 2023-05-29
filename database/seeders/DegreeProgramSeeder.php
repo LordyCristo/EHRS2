@@ -20,7 +20,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Agricultural Education and Extension',
             'group' => 'bachelor',
             'department_id' => 1,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -29,7 +28,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Agronomy',
             'group' => 'bachelor',
             'department_id' => 2,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -38,7 +36,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Animal Science',
             'group' => 'bachelor',
             'department_id' => 3,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -47,7 +44,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Food Science and Technology',
             'group' => 'bachelor',
             'department_id' => 5,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -56,7 +52,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Horticulture',
             'group' => 'bachelor',
             'department_id' => 6,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -65,7 +60,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Pest Management',
             'group' => 'bachelor',
             'department_id' => 7,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -74,7 +68,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Plant Breeding and Genetics',
             'group' => 'bachelor',
             'department_id' => 8,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -83,7 +76,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Plant Pathology',
             'group' => 'bachelor',
             'department_id' => 9,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -92,7 +84,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Agricultural Economics ',
             'group' => 'bachelor',
             'department_id' => 9,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -100,7 +91,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSDC',
             'group' => 'bachelor',
             'department_id' => 4,
-            'is_active' => true,
         ]);
 
         // College of Education
@@ -110,7 +100,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Pre-School Education',
             'group' => 'bachelor',
             'department_id' => 10,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -119,7 +108,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'General Education',
             'group' => 'bachelor',
             'department_id' => 10,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -128,7 +116,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Biological Sciences',
             'group' => 'bachelor',
             'department_id' => 10,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -137,7 +124,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Social Studies',
             'group' => 'bachelor',
             'department_id' => 10,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -146,7 +132,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Mathematics',
             'group' => 'bachelor',
             'department_id' => 10,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -155,7 +140,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Physical Sciences',
             'group' => 'bachelor',
             'department_id' => 10,
-            'is_active' => true,
         ]);
 
 
@@ -165,7 +149,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Filipino',
             'group' => 'bachelor',
             'department_id' => 10,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -174,7 +157,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => null,
             'group' => 'bachelor',
             'department_id' => 11,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -183,7 +165,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => null,
             'group' => 'bachelor',
             'department_id' => 11,
-            'is_active' => true,
         ]);
 
 
@@ -194,7 +175,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => null,
             'group' => 'bachelor',
             'department_id' => 14,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -203,7 +183,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Structural Engineering',
             'group' => 'bachelor',
             'department_id' => 15,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -212,7 +191,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Construction Engineering',
             'group' => 'bachelor',
             'department_id' => 15,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -221,7 +199,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Environmental Engineering',
             'group' => 'bachelor',
             'department_id' => 15,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -230,7 +207,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Water Resources Engineering',
             'group' => 'bachelor',
             'department_id' => 15,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -238,7 +214,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSCS',
             'group' => 'bachelor',
             'department_id' => 16,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -246,7 +221,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSGE',
             'group' => 'bachelor',
             'department_id' => 17,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -254,7 +228,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSME',
             'group' => 'bachelor',
             'department_id' => 18,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -262,7 +235,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSMET',
             'group' => 'bachelor',
             'department_id' => 19,
-            'is_active' => true,
         ]);
 
         //College of
@@ -271,7 +243,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSBio',
             'group' => 'bachelor',
             'department_id' => 20,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -279,7 +250,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSBioTech',
             'group' => 'bachelor',
             'department_id' => 25,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -287,7 +257,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSChem',
             'group' => 'bachelor',
             'department_id' => 24,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -295,7 +264,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSAP',
             'group' => 'bachelor',
             'department_id' => 22,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -303,7 +271,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BAELS',
             'group' => 'bachelor',
             'department_id' => 21,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -311,7 +278,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSPhilo',
             'group' => 'bachelor',
             'department_id' => 21,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -319,7 +285,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSStat',
             'group' => 'bachelor',
             'department_id' => 23,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -327,7 +292,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSMath',
             'group' => 'bachelor',
             'department_id' => 22,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -336,7 +300,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Basic Veterinary Medicine',
             'group' => 'doctor',
             'department_id' => 26,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -345,7 +308,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Veterinary Clinical Sciences',
             'group' => 'doctor',
             'department_id' => 27,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -354,7 +316,6 @@ class DegreeProgramSeeder extends Seeder
             'major' => 'Veterinary Para-Clinical Sciences',
             'group' => 'doctor',
             'department_id' => 28,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -362,7 +323,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSEcon',
             'group' => 'bachelor',
             'department_id' => 32,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -370,7 +330,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSN',
             'group' => 'bachelor',
             'department_id' => 29,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -378,7 +337,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSTM',
             'group' => 'bachelor',
             'department_id' => 31,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -386,7 +344,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSHM',
             'group' => 'bachelor',
             'department_id' => 31,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -394,7 +351,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSA',
             'group' => 'bachelor',
             'department_id' => 30,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -402,7 +358,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSAgriB',
             'group' => 'bachelor',
             'department_id' => 30,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -410,7 +365,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSF',
             'group' => 'bachelor',
             'department_id' => 34,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -418,7 +372,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSES',
             'group' => 'bachelor',
             'department_id' => 20,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -426,7 +379,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'MSMB',
             'group' => 'bachelor',
             'department_id' => 20,
-            'is_active' => true,
         ]);
 
         DegreeProgram::factory()->create([
@@ -434,7 +386,6 @@ class DegreeProgramSeeder extends Seeder
             'abbr' => 'BSFT',
             'group' => 'bachelor',
             'department_id' => 25,
-            'is_active' => true,
         ]);
     }
 }

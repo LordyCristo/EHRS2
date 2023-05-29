@@ -85,7 +85,7 @@ class DepartmentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Department::join('colleges','departments.college_id','=','colleges.id')->select(['departments.id','departments.name','departments.abbr','colleges.abbr as college_id','departments.is_active']);
+        $query = Department::join('colleges','departments.college_id','=','colleges.id')->select(['departments.id','departments.name','departments.abbr','colleges.abbr as college_id']);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -95,7 +95,6 @@ class DepartmentApi extends Controller
                     $q->where('departments.id', 'like', '%' . $search . '%')
                         ->orWhere('departments.name', 'like', '%' . $search . '%')
                         ->orWhere('departments.abbr', 'like', '%' . $search . '%')
-                        ->orWhere('departments.is_active', 'like', '%' . $search . '%')
                         ->orWhere('colleges.abbr', 'like', '%' . $search . '%');
                 } else {
                     if($search == 'college_id')

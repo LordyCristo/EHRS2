@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name')->unique('departments_name_unique');
             $table->string('abbr')->unique('departments_abbr_unique');
             $table->foreignId('college_id')->constrained('colleges')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

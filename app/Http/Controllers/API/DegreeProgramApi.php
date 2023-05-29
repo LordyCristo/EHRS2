@@ -88,7 +88,7 @@ class DegreeProgramApi extends Controller
     public function tableApi(Request $request): JsonResponse
     {
         $query = DegreeProgram::join('departments','departments.id','=','degree_programs.department_id')->
-        select(['degree_programs.id','degree_programs.name','degree_programs.abbr','degree_programs.major','degree_programs.group','departments.abbr as department_id','degree_programs.is_active']);
+        select(['degree_programs.id','degree_programs.name','degree_programs.abbr','degree_programs.major','degree_programs.group','departments.abbr as department_id']);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -101,7 +101,6 @@ class DegreeProgramApi extends Controller
                         ->orWhere('degree_programs.major', 'like', '%' . $search . '%')
                         ->orWhere('degree_programs.group', 'like', '%' . $search . '%')
                         ->orWhere('degree_programs.department_id', 'like', '%' . $search . '%')
-                        ->orWhere('degree_programs.is_active', 'like', '%' . $search . '%')
                         ->orWhere('departments.abbr', 'like', '%' . $search . '%');
                 } else {
                     if($searchBy == 'department_id')

@@ -30,7 +30,6 @@ class DegreeProgramRequest extends FormRequest
             'major' => ['nullable', 'max:255', Rule::unique('degree_programs','major')->ignore($id)],
             'group' => ['required', 'max:255', 'in:bachelor,master,doctor'],
             'department_id' => ['required', 'exists:departments,id'],
-            'is_active' => ['required', 'boolean'],
         ];
     }
 
@@ -51,8 +50,6 @@ class DegreeProgramRequest extends FormRequest
             'group.in' => 'Invalid value',
             'department_id.required' => 'Required field',
             'department_id.exists' => 'Invalid value',
-            'is_active.required' => 'Required field',
-            'is_active.boolean' => 'Invalid value',
         ];
     }
 }

@@ -13,13 +13,11 @@
                 <InputText v-model="form.section_name" label="Section Name" :errorMsg="form.errors.section_name" @input="form.errors['section_name'] = null" />
                 <InputText v-model="form.room_no" label="Room No" :errorMsg="form.errors.room_no" @input="form.errors['room_no'] = null" />
             </div>
-            <RadioButton v-model="form.is_active" label="Status" :options="statuses" :errorMsg="form.errors.is_active" @input="form.errors['is_active'] = null" />
         </template>
     </FormSection>
 </template>
 <script setup>
 import InputText from "@/Components/Generic/Forms/InputText.vue";
-import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 </script>
 <script>
@@ -36,12 +34,7 @@ export default {
                 schedule: null,
                 section_name: null,
                 room_no: null,
-                is_active: null,
             }),
-            statuses: [
-                {id: 1, name: 'Active'},
-                {id: 0, name: 'Inactive'},
-            ],
             data: null,
             formTitle: null,
         };
@@ -53,7 +46,6 @@ export default {
             this.formTitle = 'Update Service Details';
         }
         else {
-            this.form.is_active = 1;
             this.formTitle = 'Register New Service';
         }
     }

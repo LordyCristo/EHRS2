@@ -23,7 +23,6 @@ class DegreeProgramFactory extends Factory
             'major' => null,
             'group' => $this->faker->randomElement(['bach', 'master', 'doctor']),
             'department_id' => $this->faker->numberBetween($min = 1, $max = 35),
-            'is_active' => true,
         ];
     }
 }

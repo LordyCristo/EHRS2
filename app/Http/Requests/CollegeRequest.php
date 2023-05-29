@@ -30,7 +30,6 @@ class CollegeRequest extends FormRequest
         return [
             'name' => ['required', 'max:255', Rule::unique('colleges','name')->ignore($collegeId)],
             'abbr' => ['required', 'max:255', Rule::unique('colleges','abbr')->ignore($collegeId)],
-            'is_active' => ['required', 'boolean'],
         ];
     }
 
@@ -47,8 +46,6 @@ class CollegeRequest extends FormRequest
             'abbr.required' => 'Required field',
             'abbr.unique' => 'Already exists',
             'abbr.max' => 'Too long',
-            'is_active.required' => 'Required field',
-            'is_active.boolean' => 'Invalid value',
         ];
     }
 
@@ -61,7 +58,6 @@ class CollegeRequest extends FormRequest
         return [
             'name' => 'College name',
             'abbr' => 'Abbreviation',
-            'is_active' => 'Status',
         ];
     }
 }

@@ -13,13 +13,11 @@
                 <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
                 <SelectElement v-model="form.group" label="Group" :options="groups" :errorMsg="form.errors.group" @input="form.errors['group'] = null" />
             </div>
-            <RadioButton v-model="form.is_active" label="Status" :options="statuses" :errorMsg="form.errors.is_active" @input="form.errors['is_active'] = null" />
         </template>
     </FormSection>
 </template>
 <script setup>
 import InputText from "@/Components/Generic/Forms/InputText.vue";
-import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 </script>
@@ -38,12 +36,7 @@ export default {
                 major: null,
                 group: null,
                 department_id: null,
-                is_active: null,
             }),
-            statuses: [
-                {id: 1, name: 'Active'},
-                {id: 0, name: 'Inactive'},
-            ],
             departments: [],
             data: null,
             formTitle: null,
@@ -58,7 +51,6 @@ export default {
             this.formTitle = 'Update Degree Program Details';
         }
         else {
-            this.form.is_active = 1;
             this.formTitle = 'Register New Degree Program';
         }
     }

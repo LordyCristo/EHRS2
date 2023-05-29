@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import {defineProps, ref} from 'vue';
+import {defineProps, onMounted, ref} from 'vue';
 import FormTitleHeader from '@/Components/Generic/Forms/FormTitleHeader.vue';
 import DeleteButton from '@/Components/Generic/Buttons/DeleteButton.vue';
 import CancelButton from '@/Components/Generic/Buttons/CancelButton.vue';
@@ -69,21 +69,21 @@ const clearForm = () => {
     props.form.reset();
 };
 
-const goBackToIndex = () => {
+const goBackToIndex = (response) => {
     if (stayOnPage.value) {
-        //props.action.value = 'create';
         clearForm();
-    }else {
+    } else {
         router.push({name: props.indexLink});
         router.back();
     }
 };
 
+
 const storeForm = () => {
     axios
         .post(props.storeLink, props.form)
-        .then(() => {
-            goBackToIndex();
+        .then(res => {
+            goBackToIndex(res);
         })
         .catch(printError);
 };
@@ -92,10 +92,10 @@ const updateForm = () => {
     axios
         .put(props.updateLink, props.form)
         .then(res => {
-            console.log(res.data);
-            goBackToIndex();
+            goBackToIndex(res);
         })
         .catch(printError);
+    //props.form.put(props.updateLink);
 };
 
 const deleteForm = () => {

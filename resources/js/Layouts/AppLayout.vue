@@ -46,6 +46,7 @@ export default {
     },
     data() {
         return {
+            notifications: [],
             showingNavigationDropdown: false,
             sidebarItems: [
                 {
@@ -244,7 +245,6 @@ export default {
 </script>
 <template>
     <Head :title="title" ><title>{{ title }}</title></Head>
-
     <Sidebar :items="sidebarItems">
         <!-- The body of the sidebar -->
         <template #body>

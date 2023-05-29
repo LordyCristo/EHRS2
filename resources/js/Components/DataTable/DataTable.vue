@@ -29,7 +29,7 @@ import DtContainer from "@/Components/DataTable/DtComponents/DtContainer.vue";
 import DtActionContainer from "@/Components/DataTable/DtComponents/DtActionContainer.vue";
 import DtLengthContainer from "@/Components/DataTable/DtComponents/DtLengthContainer.vue";
 import SpinnerIcon from "@/Components/Icons/SpinnerIcon.vue";
-import NotifBanner from "@/Components/Generic/Modals/NotifBanner.vue";
+import NotifBanner, { pushNotification } from "@/Components/Generic/Modals/NotifBanner.vue";
 import WarningIcon from "@/Components/Icons/WarningIcon.vue";
 </script>
 <script>
@@ -95,18 +95,13 @@ export default {
             collapsable: false,
             className: 'dt-center flex justify-center',
         },
-        notifications: [],
     }),
     mounted() {
         //Initialize the data request
         this.autoGetData();
         this.changeSizeView();
-        console.log(this.$page.props);
     },
     methods: {
-        popNotif(notif){
-            this.notifications.push(notif);
-        },
         deleteRecord(id, multi = false) {
             if (multi) {
                 this.deleteMultiRecord();
@@ -120,7 +115,7 @@ export default {
                 this.dtMessage = 'Please wait while deleting records...';
                 axios.delete(route(this.apiLink.destroy, id))
                     .then( response => {
-                        this.popNotif(response.data.notification);
+                        pushNotification(response.data.notification);
                         this.getData();
                     })
                     .catch(error => {
@@ -137,7 +132,7 @@ export default {
                 this.dtMessage = `Please wait while deleting records...`;
                 await axios.delete(route(this.apiLink.destroy, { id: this.selected }))
                     .then(response => {
-                        this.popNotif(response.data.notification);
+                        pushNotification(response.data.notification);
                         this.getData();
                     })
                     .catch(error => {
@@ -331,6 +326,7 @@ export default {
                             document.body.removeChild(link);
                         }
                     }
+                    pushNotification(response.data.notification);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -386,9 +382,6 @@ export default {
         isColumnSorted(col) {
             return col.name === this.sortedColumn;
         },
-        updateNotification(n){
-            this.notifications.splice(this.notifications.indexOf(n), 1);
-        }
     },
     computed: {
         isAllSelected() {
@@ -399,7 +392,7 @@ export default {
 </script>
 <template>
     <DtContainer>
-        <NotifBanner :notifications="notifications" @update-notifications="(n) => updateNotification(n)" />
+        <NotifBanner />
 <!--        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>-->
         <DtTopContainer>
             <DtActionContainer>

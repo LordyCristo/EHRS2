@@ -14,6 +14,7 @@ export default {
             type: String,
             required: false,
         },
+
     },
     data: () => ({
         apiLink: {

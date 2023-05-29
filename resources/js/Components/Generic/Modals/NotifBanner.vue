@@ -3,20 +3,23 @@ import WarningIcon from '@/Components/Icons/WarningIcon.vue';
 import CloseIcon from '@/Components/Icons/CloseIcon.vue';
 </script>
 <script>
-export default {
-    props: {
-        notifications: Array,
-    },
-    methods: {
-        popBanner(id){
-            this.$emit('updateNotifications', id);
-        }
-    }
+import {ref} from "vue";
+
+function updateNotification(n){
+    notifications.value.splice(notifications.value.indexOf(n), 1);
 }
+
+const notifications = ref([]);
+
+function pushNotification(notification){
+    notifications.value.push(notification);
+}
+
+export { notifications, pushNotification };
 </script>
 <template>
     <div class="flex flex-col fixed bottom-3 right-3 gap-1 z-50">
-        <template v-for="notif in notifications" :key="notif.id">
+        <template v-if="typeof notifications != 'undefined'" v-for="notif in notifications" :key="notif.id">
             <transition enter-active-class="duration-300" enter-from-class="translate-x-full" enter-to-class="translate-x-0"
                         leave-active-class="duration-300" leave-from-class="translate-x-0" leave-to-class="translate-x-full">
                 <div v-if="notif.show" class="z-50 flex items-center duration-1000 overflow-hidden bg-green-200 px-5 py-1 sm:px-3.5 sm:before:flex-1">
@@ -25,7 +28,7 @@ export default {
                     <div class="w-full">
                         {{ notif.message }}
                     </div>
-                    <button type="button" @click="notif.show = false; popBanner(id);" class="ml-1">
+                    <button type="button" @click="notif.show = false; updateNotification(notif.id);" class="ml-1">
                         <span class="sr-only">Dismiss</span>
                         <close-icon class="w-6 h-auto text-gray-400 hover:text-gray-700 hover:rotate-90 duration-300"/>
                     </button>

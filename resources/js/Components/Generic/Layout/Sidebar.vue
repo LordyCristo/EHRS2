@@ -4,6 +4,7 @@ import ApplicationMark from '@/Components/ApplicationMark.vue';
 import { Link } from '@inertiajs/vue3';
 import HamburgerIcon from "@/Components/Icons/HamburgerIcon.vue";
 import CloseIcon from "@/Components/Icons/CloseIcon.vue";
+import NotifBanner, { pushNotification } from "@/Components/Generic/Modals/NotifBanner.vue";
 </script>
 
 <script>
@@ -27,6 +28,9 @@ export default {
     },
     mounted() {
         this.isOpen = localStorage.getItem('isOpen') === 'true';
+
+        if (typeof this.$page.props.notification != 'undefined')
+            pushNotification(this.$page.props.notification);
     },
 }
 </script>
@@ -66,6 +70,7 @@ export default {
         <div class="flex flex-col flex-1">
             <!-- The body of the page which include the toolbar and the content -->
             <slot name="body"></slot>
+            <NotifBanner />
         </div>
     </div>
 </template>

@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class ClientApi extends Controller
 {
@@ -46,14 +47,20 @@ class ClientApi extends Controller
     {
         $client = Client::findOrFail($request->id);
         $update = $client->update($request->all());
-        return response()->json([
-            'notification' => [
-                'id' => $request->id,
-                'show' => true,
-                'type' => $update?'success':'failed',
-                'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
-            ]
-        ])->setStatusCode($update?202:400);
+//        return response()->json([
+//            'notification' => [
+//                'id' => uniqid(),
+//                'show' => true,
+//                'type' => $update?'success':'failed',
+//                'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
+//            ]
+//        ])->setStatusCode($update?202:400);
+        return Inertia::render('Client/ClientIndex',['notification' => [
+            'id' => uniqid(),
+            'show' => true,
+            'type' => $update?'success':'failed',
+            'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
+        ]]);
     }
 
     /**
@@ -66,7 +73,7 @@ class ClientApi extends Controller
         // Return the success code
         return response()->json([
             'notification' => [
-                'id' => $request->id,
+                'id' => uniqid(),
                 'show' => true,
                 'type' => $temp?'success':'failed',
                 'message' => $temp?'Successfully deleted '.$temp.' record/s':'Failed to delete record with id '. $request->id,

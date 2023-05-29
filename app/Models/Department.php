@@ -12,6 +12,7 @@ class Department extends Model
 
     protected $table = 'departments';
     protected $fillable = [
+        'id',
         'name',
         'abbr',
         'college_id',
@@ -20,5 +21,10 @@ class Department extends Model
     public function college(): BelongsTo
     {
         return $this->belongsTo(College::class);
+    }
+
+    public function degreePrograms()
+    {
+        return $this->hasMany(DegreeProgram::class);
     }
 }

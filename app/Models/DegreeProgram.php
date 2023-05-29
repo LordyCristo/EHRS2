@@ -19,7 +19,7 @@ class DegreeProgram extends Model
         'department_id',
     ];
 
-    public function department(): BelongsTo
+    public function department()
     {
         return $this->belongsTo(Department::class);
     }

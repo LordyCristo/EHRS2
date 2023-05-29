@@ -12,16 +12,11 @@ class AccountRole extends Model
     protected $table = 'account_roles';
 
     protected $fillable = [
-        'label',
+       'name',
     ];
 
     public function users()
     {
-        return $this->hasMany(User::class);
-    }
-
-    public function clients()
-    {
-        return $this->hasMany(Client::class);
+        return $this->belongsTo(User::class);
     }
 }

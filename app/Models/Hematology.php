@@ -13,6 +13,7 @@ class Hematology extends Model
 
     protected $table = 'hematology';
     protected $fillable = [
+        'id',
         'hemoglobin',
         'hematocrit',
         'wbc',

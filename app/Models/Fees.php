@@ -19,4 +19,19 @@ class Fees extends Model
         'client_type',
         'amount',
     ];
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+    public function clientType()
+    {
+        return $this->belongsTo(ClientType::class);
+    }
+
+    public function paymentServices()
+    {
+        return $this->hasMany(PaymentService::class);
+    }
 }

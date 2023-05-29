@@ -22,10 +22,10 @@ class DatabaseSeeder extends Seeder
             DegreeProgramSeeder::class,
             UserSeeder::class,
             ClientSeeder::class,
-            HematologySeeder::class,
-            HematologyRecordSeeder::class,
-            PaymentSeeder::class,
-            PaymentsServiceSeeder::class,
+            //HematologySeeder::class,
+            //HematologyRecordSeeder::class,
+            //PaymentSeeder::class,
+            //PaymentsServiceSeeder::class,
         ]);
     }
 }

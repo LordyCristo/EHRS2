@@ -12,8 +12,19 @@ class PaymentsService extends Model
     protected $table = 'payments_service';
 
     protected $fillable = [
+        'id',
         'payment_id',
         'service_id',
         'fee',
     ];
+
+    public function payments()
+    {
+        return $this->belongsTo(Payment::class);
+    }
+
+    public function services()
+    {
+        return $this->belongsTo(Service::class);
+    }
 }

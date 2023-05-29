@@ -13,6 +13,8 @@ class Client extends Model
 
     protected $table = 'clients';
     protected $fillable = [
+        'id',
+        'infirmary_id',
         'first_name',
         'middle_name',
         'last_name',
@@ -33,27 +35,17 @@ class Client extends Model
 
     function program()
     {
-        return $this->belongsTo(DegreeProgram::class);
+        return $this->hasOne(DegreeProgram::class);
     }
 
     function clientType()
     {
-        return $this->belongsTo(ClientType::class);
+        return $this->hasOne(ClientType::class);
     }
 
 
-    function fecalysisRecord()
+    function hematology()
     {
         return $this->hasMany(HematologyRecord::class);
-    }
-
-    function degreeProgram()
-    {
-        return $this->belongsTo(DegreeProgram::class);
-    }
-
-    static function getTableName(){
-        // return the table name
-        return with(new static)->getTable();
     }
 }

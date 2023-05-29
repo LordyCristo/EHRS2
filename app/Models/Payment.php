@@ -14,6 +14,8 @@ class Payment extends Model
     protected $table = 'payments';
 
     protected $fillable = [
+        'id',
+        'or_no',
         'payor_name',
         'payor_email',
         'payor_mobile',
@@ -29,7 +31,7 @@ class Payment extends Model
         return $this->belongsTo(Client::class);
     }
 
-    public function services()
+    public function paidServices()
     {
         return $this->belongsTo(PaymentsService::class);
     }

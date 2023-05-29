@@ -11,9 +11,6 @@ class ClientRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        //return auth()->check();
-        // only user where role is is nurse, admin, or doctor can access this
-        //return auth()->check() && in_array(auth()->user()->role, [1,2,3,4]);
         return true;
     }
 
@@ -26,6 +23,7 @@ class ClientRequest extends FormRequest
     {
         $id = $this->route('id');
         return [
+            'infirmary_id' => ['required', 'int', Rule::unique('clients','infirmary_id')->ignore($id)],
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -53,6 +51,9 @@ class ClientRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'infirmary.required' => 'Required field',
+            'infirmary.int' => 'Invalid format',
+            'infirmary.unique' => 'Already exists',
             'first_name.required' => 'Required field',
             'first_name.string' => 'Invalid input',
             'first_name.max' => 'Too long',
@@ -105,6 +106,7 @@ class ClientRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'infirmary_id' => 'Infirmary ID',
             'first_name' => 'First name',
             'middle_name' => 'Middle name',
             'last_name' => 'Last name',

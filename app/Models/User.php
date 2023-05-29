@@ -34,6 +34,7 @@ class User extends Authenticatable
         'suffix',
         'birthdate',
         'age',
+        'sex',
         'role',
         'specialization',
         'curr_position',

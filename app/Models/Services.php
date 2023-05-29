@@ -14,11 +14,16 @@ class Services extends Model
     protected $table = 'services';
 
     protected $fillable = [
+        'id',
         'name',
         'description',
         'schedule',
         'section_name',
         'room_no',
-        'is_active',
     ];
+
+    public function fees()
+    {
+        return $this->hasMany(Fees::class);
+    }
 }

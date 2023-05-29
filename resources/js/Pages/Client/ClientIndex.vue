@@ -45,6 +45,15 @@ export default {
                 className: 'dt-center dt-border-sm px-2'
             },
             {
+                data: 'infirmary_id',
+                name:'infirmary_id',
+                title: 'Infirmary ID',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-center dt-border-sm px-2'
+            },
+            {
                 data: 'first_name',
                 name: 'first_name',
                 title: 'First Name',
@@ -81,8 +90,8 @@ export default {
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'client_type_id',
-                name: 'client_type_id',
+                data: 'client_type',
+                name: 'client_type',
                 title: 'Type',
                 searchable: true,
                 orderable: true,
@@ -95,6 +104,15 @@ export default {
                 data: 'id',
                 name:'id',
                 title: 'ID No.',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-center dt-border-sm px-2'
+            },
+            {
+                data: 'infirmary_id',
+                name:'infirmary_id',
+                title: 'Infirmary ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,

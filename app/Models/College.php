@@ -15,7 +15,6 @@ class College extends Model
         'id',
         'name',
         'abbr',
-        'is_active',
     ];
 
     public function departments()

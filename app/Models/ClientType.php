@@ -12,7 +12,7 @@ class ClientType extends Model
     protected $table = 'client_types';
 
     protected $fillable = [
-        'label',
+        'name',
     ];
 
     function clients()
@@ -20,5 +20,5 @@ class ClientType extends Model
         return $this->belongsTo(Client::class);
     }
 
-    
+
 }

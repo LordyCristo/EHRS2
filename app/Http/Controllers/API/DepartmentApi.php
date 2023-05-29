@@ -27,7 +27,15 @@ class DepartmentApi extends Controller
     public function store(DepartmentRequest $request)
     {
         $newDepartment = Department::create($request->all());
-        return (new DepartmentResource($newDepartment))->response()->setStatusCode(201);
+        return response()->json([
+            'data' => (new DepartmentResource($newDepartment)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $newDepartment?'success':'failed',
+                'message' => $newDepartment?'Successfully created Department with id '.$newDepartment->id:'Failed to create Department record',
+            ]
+        ])->setStatusCode(201);
     }
 
     /**
@@ -45,9 +53,14 @@ class DepartmentApi extends Controller
     {
         $department = Department::findOrFail($request->id);
         $update = $department->update($request->all());
-        if ($update)
-            return response(null, 202);
-        return response(null, 400);
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Department record id '.$request->id:'Failed to update Department record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -55,12 +68,15 @@ class DepartmentApi extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        $department = Department::findOrFail($request->id);
-        $department->delete();
-        // return the success code
+        $id = explode(',', $request->id);
+        $temp = Department::destroy($id);
         return response()->json([
-            'success' => true,
-            'message' => 'Department deleted successfully'
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' Department record/s':'Failed to delete Department record with id '. $request->id,
+            ]
         ]);
     }
 
@@ -69,20 +85,23 @@ class DepartmentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Department::select(['id','name','abbr','college_id','is_active']);
+        $query = Department::join('colleges','departments.college_id','=','colleges.id')->select(['departments.id','departments.name','departments.abbr','colleges.abbr as college_id','departments.is_active']);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('name', 'like', '%' . $search . '%')
-                        ->orWhere('abbr', 'like', '%' . $search . '%')
-                        ->orWhere('college_id', 'like', '%' . $search . '%')
-                        ->orWhere('is_active', 'like', '%' . $search . '%');
+                    $q->where('departments.id', 'like', '%' . $search . '%')
+                        ->orWhere('departments.name', 'like', '%' . $search . '%')
+                        ->orWhere('departments.abbr', 'like', '%' . $search . '%')
+                        ->orWhere('departments.is_active', 'like', '%' . $search . '%')
+                        ->orWhere('colleges.abbr', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('departments.' . $searchBy, 'like', '%' . $search . '%');
+                    if($search == 'college_id')
+                        $q->where('colleges.abbr', 'like', '%' . $search . '%');
+                    else
+                        $q->where('departments.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -142,6 +161,14 @@ class DepartmentApi extends Controller
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Departments without errors':'Failed to import Clients '.$failedCount.' Departments rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }

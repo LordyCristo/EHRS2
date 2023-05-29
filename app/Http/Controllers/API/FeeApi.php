@@ -19,7 +19,7 @@ class FeeApi extends Controller
     public function index()
     {
         return new FeeCollection(Fees::join('client_types', 'client_types.id', '=', 'fees.client_type')
-            ->join('services', 'services.id', '=', 'fees.id')
+            ->join('services', 'services.id', '=', 'fees.service_id')
             ->select('fees.id', 'services.name as service_name', 'fees.client_type', 'client_types.name as client_type_name', 'fees.amount', 'fees.created_at', 'fees.updated_at', 'fees.deleted_at')
             ->get());
     }
@@ -30,15 +30,26 @@ class FeeApi extends Controller
     public function store(FeeRequest $request)
     {
         $newFee =  Fees::create($request->all());
-        return (new FeeResource($newFee))->response()->setStatusCode(201);
+        $isCreated = $newFee->exists();
+
+        return response()->json([
+            'data' => (new FeeResource($newFee)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $isCreated ? 'success' : 'failed',
+                'message' => $isCreated ? 'Successfully created Fee with id '.$newFee->id : 'Failed to create Fee record',
+            ]
+        ])->setStatusCode(201);
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(Fees $fees)
+    public function show(Request $request)
     {
-        return new FeeResource($fees);
+        return new FeeResource(Fees::findOrFail($request->id));
     }
 
     /**
@@ -47,10 +58,15 @@ class FeeApi extends Controller
     public function update(FeeRequest $request)
     {
         $fee = Fees::findOrFail($request->id);
-        $fee->update($request->all());
-        if ($fee)
-            return response(null, 202);
-        return response(null, 400);
+        $update = $fee->update($request->all());
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Fee record id '.$request->id:'Failed to update Fee record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -59,11 +75,14 @@ class FeeApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        Fees::destroy($id);
-        // return the success code
+        $temp = Fees::destroy($id);
         return response()->json([
-            'success' => true,
-            'message' => 'Fee deleted successfully'
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' Fee record/s':'Failed to delete Fee record with id '. $request->id,
+            ]
         ]);
     }
 
@@ -72,9 +91,9 @@ class FeeApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Fees::select('fees.id', 'client_types.name as client_type', 'services.name as service', 'fees.amount')
+        $query = Fees::select('fees.id','fees.service_id', 'client_types.name as client_type', 'services.name as service', 'fees.amount')
             ->join('client_types', 'client_types.id', '=', 'fees.client_type')
-            ->join('services', 'services.id', '=', 'fees.id');
+            ->join('services', 'services.id', '=', 'fees.service_id');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -146,6 +165,14 @@ class FeeApi extends Controller
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Fee without errors':'Failed to import Fee '.$failedCount.' rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }

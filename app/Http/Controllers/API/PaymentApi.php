@@ -28,15 +28,23 @@ class PaymentApi extends Controller
     public function store(PaymentRequest $request)
     {
         $newPayment = Payment::create($request->all());
-        return (new PaymentResource($newPayment))->response()->setStatusCode(201);
+        return response()->json([
+            'data' => (new PaymentResource($newPayment)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $newPayment?'success':'failed',
+                'message' => $newPayment?'Successfully created Client with id '.$newPayment->id:'Failed to create Client record',
+            ]
+        ])->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Payment $payment)
+    public function show(Request $request)
     {
-        return new PaymentResource($payment);
+        return new PaymentResource(Payment::findOrFail($request->id));
     }
 
     /**
@@ -46,9 +54,14 @@ class PaymentApi extends Controller
     {
         $payment = Payment::findOrFail($request->id);
         $update = $payment->update($request->all());
-        if ($update)
-            return response(null, 202);
-        return response(null, 400);
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Payment record id '.$request->id:'Failed to update Payment record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -57,11 +70,14 @@ class PaymentApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        Payment::destroy($id);
-        // return the success code
+        $temp = Payment::destroy($id);
         return response()->json([
-            'success' => true,
-            'message' => 'Department deleted successfully'
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' Payment record/s':'Failed to delete Payment record with id '. $request->id,
+            ]
         ]);
     }
 
@@ -146,6 +162,14 @@ class PaymentApi extends Controller
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Payments without errors':'Failed to import Payments '.$failedCount.' rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }

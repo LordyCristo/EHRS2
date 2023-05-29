@@ -32,27 +32,40 @@ class CollegeApi extends Controller
     public function store(CollegeRequest $request): JsonResponse
     {
         $newCollege = College::create($request->all());
-        return (new CollegeResource($newCollege))->response()->setStatusCode(201);
+        return response()->json([
+            'data' => (new CollegeResource($newCollege)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $newCollege?'success':'failed',
+                'message' => $newCollege?'Successfully created College with id '.$newCollege->id:'Failed to create College record',
+            ]
+        ])->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(College $college): CollegeResource
+    public function show(Request $request): CollegeResource
     {
-        return new CollegeResource($college);
+        return new CollegeResource(College::findOrFail($request->id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(CollegeRequest $request): Response
+    public function update(CollegeRequest $request)
     {
         $college = College::findOrFail($request->id);
         $update = $college->update($request->all());
-        if ($update)
-            return response(null, 202);
-        return response(null, 400);
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated College record id '.$request->id:'Failed to update College record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -61,12 +74,12 @@ class CollegeApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        $temp = College::destroy($request->id);
+        $temp = College::destroy($id);
         return response()->json([
             'notification' => [
                 'show' => true,
                 'type' => $temp?'success':'failed',
-                'message' => $temp?'Successfully deleted '.$temp.' records':'Failed to delete record with id '.$request->id,
+                'message' => $temp?'Successfully deleted '.$temp.' College records':'Failed to delete College record with id '.$request->id,
             ]
         ]);
     }
@@ -139,14 +152,21 @@ class CollegeApi extends Controller
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;
-                    throw $e;
                 }
             }
         }
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Colleges without errors':'Failed to import '.$failedCount.' Colleges rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }
 

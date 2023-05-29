@@ -40,18 +40,34 @@ class HematologyApi extends Controller
                 'hospital_no' => $request->hospital_no,
             ]);
             if ($newRecord){
-                return (new HematologyResource($newHematology))->response()->setStatusCode(201);
+                return response()->json([
+                    'data' => (new HematologyResource($newRecord)),
+                    'notification' => [
+                        'id' => uniqid(),
+                        'show' => true,
+                        'type' => $newRecord?'success':'failed',
+                        'message' => $newRecord?'Successfully created Hematology with id '.$newRecord->id:'Failed to create Hematology record',
+                    ]
+                ])->setStatusCode(201);
             }
         }
-        return response()->setStatusCode(500);
+        return response()->json([
+            'data' => (new HematologyResource($newHematology)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $newHematology?'success':'failed',
+                'message' => $newHematology?'Successfully created Hematology with id '.$newHematology->id:'Failed to create Hematology record',
+            ]
+        ])->setStatusCode(500);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(HematologyRecord $hematology)
+    public function show(Request $request)
     {
-        return new HematologyResource($hematology);
+        return new HematologyResource(Hematology::with('hematologyRecord')->findOrFail($request->id));
     }
 
     /**
@@ -60,10 +76,15 @@ class HematologyApi extends Controller
     public function update(HematologyRequest $request)
     {
         $hematology = Hematology::findOrFail($request->id);
-        $update = $hematology->update($request->validated());
-        if ($update)
-            return response(null, 202);
-        return response(null, 400);
+        $update = $hematology->update($request->all());
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Hematology record id '.$request->id:'Failed to update Hematology record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -72,12 +93,15 @@ class HematologyApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        HematologyRecord::destroy($id);
-        Hematology::destroy($id);
-        // Return the success code
+        $temp = HematologyRecord::destroy($id);
+        $temp = Hematology::destroy($id);
         return response()->json([
-            'success' => true,
-            'message' => 'Records deleted successfully',
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' Hematology record/s':'Failed to delete Hematology record with id '. $request->id,
+            ]
         ]);
     }
 
@@ -155,13 +179,20 @@ class HematologyApi extends Controller
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;
-                    throw $e;
                 }
             }
         }
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Hematology without errors':'Failed to import Hematology '.$failedCount.' rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }

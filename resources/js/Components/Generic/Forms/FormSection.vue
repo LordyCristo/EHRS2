@@ -28,6 +28,7 @@ import DeleteButton from '@/Components/Generic/Buttons/DeleteButton.vue';
 import CancelButton from '@/Components/Generic/Buttons/CancelButton.vue';
 import ClearButton from '@/Components/Generic/Buttons/ClearButton.vue';
 import SubmitButton from '@/Components/Generic/Buttons/SubmitButton.vue';
+import { pushNotification } from "@/Components/Generic/Modals/NotifBanner.vue";
 import axios from 'axios';
 import { router } from '@/router';
 const props = defineProps({
@@ -70,6 +71,8 @@ const clearForm = () => {
 };
 
 const goBackToIndex = (response) => {
+    console.log(response);
+    pushNotification(response.data.notification);
     if (stayOnPage.value) {
         clearForm();
     } else {
@@ -80,6 +83,7 @@ const goBackToIndex = (response) => {
 
 
 const storeForm = () => {
+    console.log(props.form);
     axios
         .post(props.storeLink, props.form)
         .then(res => {
@@ -103,29 +107,18 @@ const deleteForm = () => {
         stayOnPage.value = false;
         axios
             .delete(props.deleteLink)
-            .then(() => {
-                goBackToIndex();
+            .then(res => {
+                goBackToIndex(res);
             })
             .catch(console.error);
     }
 };
 
 const printError = (error) => {
-    if (typeof error.response === 'undefined'){
-        console.log(error);
-    }
-    else if (error.response.status === 422) { // error code for validation errors.
-        console.log('Validation errors:', error.response.data.errors);
+    console.log(error);
+    // error code for validation errors.
+    if (typeof error.response != 'undefined' && error.response.status === 422)
         props.form.errors = error.response.data.errors;
-    }
-    else if (error.response.status === 500) { // error code for server errors.
-        console.log('Server error:', error.response.data);
-    }
-    else if (error.response.status === 404) { // error code for not found data.
-        console.log('Not found:', error.response.data);
-    }
-    else {
-        console.log('Error:', error.response.data);
-    }
+
 };
 </script>

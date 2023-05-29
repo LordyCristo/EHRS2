@@ -8,6 +8,7 @@ use App\Http\Requests\DepartmentRequest;
 use App\Http\Resources\DegreeProgramCollection;
 use App\Http\Resources\DegreeProgramResource;
 use App\Models\DegreeProgram;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -28,15 +29,23 @@ class DegreeProgramApi extends Controller
     public function store(DegreeProgramRequest $request)
     {
         $newDegreeProgram = DegreeProgram::create($request->all());
-        return (new DegreeProgramResource($newDegreeProgram))->response()->setStatusCode(201);
+        return response()->json([
+            'data' => (new DegreeProgramResource($newDegreeProgram)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $newDegreeProgram?'success':'failed',
+                'message' => $newDegreeProgram?'Successfully created Program with id '.$newDegreeProgram->id:'Failed to create Program record',
+            ]
+        ])->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Degreeprogram $degreeprogram)
+    public function show(Request $request)
     {
-        return new DegreeProgramResource($degreeprogram);
+        return new DegreeProgramResource(DegreeProgram::findOrFail($request->id));
     }
 
     /**
@@ -46,9 +55,14 @@ class DegreeProgramApi extends Controller
     {
         $degreeprogram = DegreeProgram::findOrFail($request->id);
         $update = $degreeprogram->update($request->all());
-        if ($update)
-            return response(null, 202);
-        return response(null, 400);
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Program record id '.$request->id:'Failed to update Program record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -56,12 +70,15 @@ class DegreeProgramApi extends Controller
      */
     public function destroy(Request $request)
     {
-        $degreeProgram = DegreeProgram::findOrFail($request->id);
-        $degreeProgram->delete();
-        // return the success code
+        $id = explode(',', $request->id);
+        $temp = DegreeProgram::destroy($id);
         return response()->json([
-            'success' => true,
-            'message' => 'Department deleted successfully'
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' Program record/s':'Failed to delete Program record with id '. $request->id,
+            ]
         ]);
     }
 
@@ -70,22 +87,27 @@ class DegreeProgramApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = DegreeProgram::select(['id','name','abbr','major','group','department_id','is_active']);
+        $query = DegreeProgram::join('departments','departments.id','=','degree_programs.department_id')->
+        select(['degree_programs.id','degree_programs.name','degree_programs.abbr','degree_programs.major','degree_programs.group','departments.abbr as department_id','degree_programs.is_active']);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('name', 'like', '%' . $search . '%')
-                        ->orWhere('abbr', 'like', '%' . $search . '%')
-                        ->orWhere('major', 'like', '%' . $search . '%')
-                        ->orWhere('group', 'like', '%' . $search . '%')
-                        ->orWhere('department_id', 'like', '%' . $search . '%')
-                        ->orWhere('is_active', 'like', '%' . $search . '%');
+                    $q->where('degree_programs.id', 'like', '%' . $search . '%')
+                        ->orWhere('degree_programs.name', 'like', '%' . $search . '%')
+                        ->orWhere('degree_programs.abbr', 'like', '%' . $search . '%')
+                        ->orWhere('degree_programs.major', 'like', '%' . $search . '%')
+                        ->orWhere('degree_programs.group', 'like', '%' . $search . '%')
+                        ->orWhere('degree_programs.department_id', 'like', '%' . $search . '%')
+                        ->orWhere('degree_programs.is_active', 'like', '%' . $search . '%')
+                        ->orWhere('departments.abbr', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('degree_programs.' . $searchBy, 'like', '%' . $search . '%');
+                    if($searchBy == 'department_id')
+                        $q->where('departments.abbr', 'like', '%' . $search . '%');
+                    else
+                        $q->where('degree_programs.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -138,13 +160,20 @@ class DegreeProgramApi extends Controller
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;
-                    throw $e;
                 }
             }
         }
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Programs without errors':'Failed to import Programs '.$failedCount.' rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }

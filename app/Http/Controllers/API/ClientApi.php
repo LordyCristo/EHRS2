@@ -29,7 +29,15 @@ class ClientApi extends Controller
     public function store(ClientRequest $request)
     {
         $newClient = Client::create($request->all());
-        return (new ClientResource($newClient))->response()->setStatusCode(201);
+        return response()->json([
+            'data' => (new ClientResource($newClient)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $newClient?'success':'failed',
+                'message' => $newClient?'Successfully created Client with id '.$newClient->id:'Failed to create Client record',
+            ]
+        ])->setStatusCode(201);
     }
 
     /**
@@ -47,20 +55,20 @@ class ClientApi extends Controller
     {
         $client = Client::findOrFail($request->id);
         $update = $client->update($request->all());
-//        return response()->json([
-//            'notification' => [
-//                'id' => uniqid(),
-//                'show' => true,
-//                'type' => $update?'success':'failed',
-//                'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
-//            ]
-//        ])->setStatusCode($update?202:400);
-        return Inertia::render('Client/ClientIndex',['notification' => [
-            'id' => uniqid(),
-            'show' => true,
-            'type' => $update?'success':'failed',
-            'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
-        ]]);
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Client record id '.$request->id:'Failed to update Client record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
+//        return Inertia::render('Client/ClientIndex',['notification' => [
+//            'id' => uniqid(),
+//            'show' => true,
+//            'type' => $update?'success':'failed',
+//            'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
+//        ]]);
     }
 
     /**
@@ -70,13 +78,12 @@ class ClientApi extends Controller
     {
         $id = explode(',', $request->id);
         $temp = Client::destroy($id);
-        // Return the success code
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => $temp?'success':'failed',
-                'message' => $temp?'Successfully deleted '.$temp.' record/s':'Failed to delete record with id '. $request->id,
+                'message' => $temp?'Successfully deleted '.$temp.' Client record/s':'Failed to delete Client record with id '. $request->id,
             ]
         ]);
     }
@@ -158,8 +165,6 @@ class ClientApi extends Controller
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;
-                    // Handle the exception as desired
-                    // Log the error, display a message, etc.
                 }
             }
         }
@@ -171,8 +176,8 @@ class ClientApi extends Controller
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => !$failedCount?'success':'failed',
-                'message' => !$failedCount?'Successfully import without errors':'Failed to import '.$failedCount.' rows out of '.$failedCount+$successCount,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Clients without errors':'Failed to import Clients '.$failedCount.' rows out of '.$failedCount+$successCount,
             ]
         ]);
     }

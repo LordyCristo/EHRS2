@@ -22,7 +22,7 @@ class FeeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => ['required', 'integer', 'exists:services,id'],
+            'service_id' => ['required', 'integer', 'exists:services,id'],
             'client_type' => ['required', 'integer', 'exists:client_types,id'],
             'amount' => ['required', 'numeric'],
         ];
@@ -36,9 +36,9 @@ class FeeRequest extends FormRequest
     public function messages()
     {
         return [
-            'id.required' => 'Required field',
-            'id.integer' => 'Invalid value',
-            'id.exists' => 'ID does not exist',
+            'service_id.required' => 'Required field',
+            'service_id.integer' => 'Invalid value',
+            'service_id.exists' => 'ID does not exist',
             'client_type.required' => 'Required field',
             'client_type.integer' => 'Invalid value',
             'client_type.exists' => 'Client type does not exist',

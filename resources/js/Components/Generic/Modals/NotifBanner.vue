@@ -12,14 +12,15 @@ function updateNotification(n){
 const notifications = ref([]);
 
 function pushNotification(notification){
-    notifications.value.push(notification);
+    if(notification)
+        notifications.value.push(notification);
 }
 
 export { notifications, pushNotification };
 </script>
 <template>
     <div class="flex flex-col fixed bottom-3 right-3 gap-1 z-50">
-        <template v-if="typeof notifications != 'undefined'" v-for="notif in notifications" :key="notif.id">
+        <template v-if="notifications" v-for="notif in notifications" :key="notif.id">
             <transition enter-active-class="duration-300" enter-from-class="translate-x-full" enter-to-class="translate-x-0"
                         leave-active-class="duration-300" leave-from-class="translate-x-0" leave-to-class="translate-x-full">
                 <div v-if="notif.show" class="z-50 flex items-center duration-1000 overflow-hidden bg-green-200 px-5 py-1 sm:px-3.5 sm:before:flex-1">

@@ -28,15 +28,23 @@ class ServiceApi extends Controller
     public function store(ServiceRequest $request)
     {
         $newService = Services::create($request->all());
-        return (new ServiceResource($newService))->response()->setStatusCode(201);
+        return response()->json([
+            'data' => (new ServiceResource($newService)),
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $newService?'success':'failed',
+                'message' => $newService?'Successfully created Service with id '.$newService->id:'Failed to create Service record',
+            ]
+        ])->setStatusCode(201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Services $services)
+    public function show(Request $request)
     {
-        return new ServiceResource($services);
+        return new ServiceResource(Services::findOrFail($request->id));
     }
 
     /**
@@ -46,9 +54,14 @@ class ServiceApi extends Controller
     {
         $service = Services::findOrFail($request->id);
         $update = $service->update($request->all());
-        if ($update)
-            return response(null, 202);
-        return response(null, 400);
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Service record id '.$request->id:'Failed to update Service record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**
@@ -56,12 +69,15 @@ class ServiceApi extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {
-        $service = Services::findOrFail($request->id);
-        $service->delete();
-        // return the success code
+        $id = explode(',', $request->id);
+        $temp = Services::destroy($id);
         return response()->json([
-            'success' => true,
-            'message' => 'Department deleted successfully'
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $temp?'success':'failed',
+                'message' => $temp?'Successfully deleted '.$temp.' Service record/s':'Failed to delete Service record with id '. $request->id,
+            ]
         ]);
     }
 
@@ -145,6 +161,14 @@ class ServiceApi extends Controller
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
-        return response()->json($response);
+        return response()->json([
+            $response,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => !$failedCount?'success':'warning',
+                'message' => !$failedCount?'Successfully imported Services without errors':'Failed to import Services '.$failedCount.' rows out of '.$failedCount+$successCount,
+            ]
+        ]);
     }
 }

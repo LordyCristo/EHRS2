@@ -56,7 +56,7 @@ class PaymentController extends Controller
 //                ->selectRaw('payments.*, clients.id as client_id, CONCAT(clients.first_name, IF(clients.middle_name IS NOT NULL, CONCAT(" ", clients.middle_name), ""), " ", clients.last_name, IF(clients.suffix IS NOT NULL, CONCAT(" ", clients.suffix), "")) as client_name')
 //                ->with('services')
 //                ->findOrFail($request->id)),
-        'data' => new PaymentResource(Payment::with('service')->findOrFail($request->id)),
+        'data' => new PaymentResource(Payment::with('services')->findOrFail($request->id)),
         ]);
     }
 }

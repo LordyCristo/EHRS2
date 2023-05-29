@@ -29,7 +29,7 @@ import DtContainer from "@/Components/DataTable/DtComponents/DtContainer.vue";
 import DtActionContainer from "@/Components/DataTable/DtComponents/DtActionContainer.vue";
 import DtLengthContainer from "@/Components/DataTable/DtComponents/DtLengthContainer.vue";
 import SpinnerIcon from "@/Components/Icons/SpinnerIcon.vue";
-import NotifBanner, { pushNotification } from "@/Components/Generic/Modals/NotifBanner.vue";
+import { pushNotification } from "@/Components/Generic/Modals/NotifBanner.vue";
 import WarningIcon from "@/Components/Icons/WarningIcon.vue";
 </script>
 <script>
@@ -115,6 +115,7 @@ export default {
                 this.dtMessage = 'Please wait while deleting records...';
                 axios.delete(route(this.apiLink.destroy, id))
                     .then( response => {
+                        console.log(response.data)
                         pushNotification(response.data.notification);
                         this.getData();
                     })
@@ -326,7 +327,6 @@ export default {
                             document.body.removeChild(link);
                         }
                     }
-                    pushNotification(response.data.notification);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -393,7 +393,6 @@ export default {
 </script>
 <template>
     <DtContainer>
-        <NotifBanner />
 <!--        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>-->
         <DtTopContainer>
             <DtActionContainer>

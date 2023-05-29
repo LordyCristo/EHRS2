@@ -15,6 +15,7 @@ class Fees extends Model
 
     protected $fillable = [
         'id',
+        'service_id',
         'client_type',
         'amount',
     ];

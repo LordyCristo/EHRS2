@@ -49,7 +49,7 @@ export default{
             {
                 data: 'id',
                 name:'id',
-                title: 'Service ID',
+                title: 'ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,

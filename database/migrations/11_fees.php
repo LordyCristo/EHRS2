@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('fees', function (Blueprint $table) {
-            $table->foreignId('id')->constrained('services')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->id();
+            $table->foreignId('service_id')->constrained('services')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('client_type')->constrained('client_types')->cascadeOnDelete()->cascadeOnUpdate();
             $table->decimal('amount', 10, 0);
             $table->timestamps();

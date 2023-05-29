@@ -1,7 +1,6 @@
 <script setup>
 import Clients from '@/Pages/Clients.vue';
 import DataTable from '@/Components/DataTable/DataTable.vue';
-import NotifBanner from '@/Components/Generic/Modals/NotifBanner.vue';
 </script>
 <script>
 export default {
@@ -190,6 +189,5 @@ export default {
 <template>
     <Clients title="Client Records">
         <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink"/>
-        <NotifBanner :type="notifType" :message="notifMessage" />
     </Clients>
 </template>

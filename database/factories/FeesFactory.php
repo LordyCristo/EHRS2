@@ -18,7 +18,7 @@ class FeesFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => $this->faker->numberBetween(1, 8),
+            'service_id' => $this->faker->numberBetween(1, 8),
             'client_type' => $this->faker->numberBetween(1, 4),
             'amount' => $this->faker->numberBetween(1000, 4000),
         ];

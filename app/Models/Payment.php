@@ -20,9 +20,8 @@ class Payment extends Model
         'payor_email',
         'payor_mobile',
         'client_id',
-        'service_id',
         'collector_id',
-        'amount',
+        'total_amount',
         'remarks',
     ];
 
@@ -31,8 +30,13 @@ class Payment extends Model
         return $this->belongsTo(Client::class);
     }
 
+    public function services()
+    {
+        return $this->hasMany(Services::class);
+    }
+
     public function paidServices()
     {
-        return $this->belongsTo(PaymentsService::class);
+        return $this->hasMany(PaymentsService::class)->with('service')->select('id', 'payment_id', 'service_id', 'fee');
     }
 }

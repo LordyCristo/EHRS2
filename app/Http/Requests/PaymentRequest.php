@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PaymentRequest extends FormRequest
 {
@@ -21,14 +22,16 @@ class PaymentRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('id')?->id;
         return [
+            'or_no' => ['required', 'numeric', Rule::unique('payments','or_no')->ignore($id)], // 'nullable' means 'optional
             'payor_name' => ['required', 'string', 'max:255'],
             'payor_email' => ['nullable', 'string', 'email', 'max:255'],
             'payor_mobile' => ['nullable', 'string', 'max:255'],
             'client_id' => ['required', 'exists:clients,id'],
-            'service_id' => ['required', 'exists:fees,id'],
+            'rows' => ['required', 'array', 'min:1'],
             'collector_id' => ['required', 'exists:users,id'],
-            'amount' => ['required', 'numeric'],
+            'total_amount' => ['required', 'numeric'],
             'remarks' => ['nullable', 'string', 'max:255'],
         ];
     }
@@ -39,6 +42,9 @@ class PaymentRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'or_no.required' => 'Required field',
+            'or_no.numeric' => 'Invalid input',
+            'or_no.unique' => 'OR number already exists',
             'payor_name.required' => 'Required field',
             'payor_name.string' => 'Invalid input',
             'payor_name.max' => 'Too long',
@@ -49,12 +55,13 @@ class PaymentRequest extends FormRequest
             'payor_mobile.max' => 'Too long',
             'client_id.required' => 'Required field',
             'client_id.exists' => 'Client does not exist',
-            'service_id.required' => 'Required field',
-            'service_id.exists' => 'Service does not exist',
             'collector_id.required' => 'Required field',
             'collector_id.exists' => 'Collector does not exist',
-            'amount.required' => 'Required field',
-            'amount.numeric' => 'Invalid input',
+            'rows.required' => 'Required field',
+            'rows.array' => 'Invalid input',
+            'rows.min' => 'At least one row is required',
+            'total_amount.required' => 'Required field',
+            'total_amount.numeric' => 'Invalid input',
             'remarks.string' => 'Invalid input',
             'remarks.max' => 'Too long',
         ];

@@ -9,7 +9,8 @@
         <template #formBody>
             <div class="grid grid-cols-1">
                 <div class="grid grid-cols-4">
-                    <InputText v-model="form.id_number" label="ID #" :errorMsg="form.errors.id_number" autofocus @input="onFocusClearError('id_number'); formatIdNumber($event); " />
+                    <InputText v-model="form.infirmary_id" label="Infirmary No." :errorMsg="form.errors.infirmary_id" autofocus @input="onFocusClearError('infirmary_id');" />
+                    <InputText v-model="form.id_number" label="Student ID No." :errorMsg="form.errors.id_number" autofocus @input="onFocusClearError('id_number'); formatIdNumber($event); " />
                     <Select v-model="form.client_type_id" label="Client Type" :options="client_types" :errorMsg="form.errors.client_type_id" @input="onFocusClearError('client_type_id')" />
                 </div>
                 <div class="grid grid-cols-4">
@@ -66,6 +67,7 @@ export default {
             last_client_id: null,
             formTitle: null,
             form: useForm({
+                infirmary_id: null,
                 first_name: 'null',
                 middle_name: 'null',
                 last_name: 'null',

@@ -68,10 +68,10 @@ const cancelForm = () => {
 
 const clearForm = () => {
     props.form.reset();
+    props.form.errors = {};
 };
 
 const goBackToIndex = (response) => {
-    console.log(response);
     pushNotification(response.data.notification);
     if (stayOnPage.value) {
         clearForm();
@@ -83,7 +83,6 @@ const goBackToIndex = (response) => {
 
 
 const storeForm = () => {
-    console.log(props.form);
     axios
         .post(props.storeLink, props.form)
         .then(res => {

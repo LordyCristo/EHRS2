@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments_service', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('payment_id')->constrained('payments')->cascadeOnDelete();
             $table->foreignId('service_id')->constrained('fees')->cascadeOnDelete();
             $table->float('fee', 10, 2);
             $table->timestamps();
             // Add any additional columns related to the payment-service relationship
-            $table->primary(['payment_id', 'service_id']);
+            $table->unique(['payment_id', 'service_id']);
         });
 
     }

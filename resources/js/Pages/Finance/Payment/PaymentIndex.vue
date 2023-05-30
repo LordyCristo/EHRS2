@@ -1,7 +1,6 @@
 <template>
     <Finance title="Finance">
         <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink" />
-        <NotifBanner :message="notifMessage" :type="notifType" />
     </Finance>
 </template>
 <script setup>
@@ -11,10 +10,6 @@ import NotifBanner from "@/Components/Generic/Modals/NotifBanner.vue";
 </script>
 <script>
 export default{
-    props: {
-        notifMessage: String,
-        notifType: String,
-    },
     data: () => ({
         columnsSmall:[
             {
@@ -36,9 +31,9 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'service_id',
-                name: 'service_id',
-                title: 'Service',
+                data: 'services_count',
+                name: 'services_count',
+                title: 'Services Count',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
@@ -83,9 +78,9 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'service_id',
-                name: 'service_id',
-                title: 'Service',
+                data: 'services_count',
+                name: 'services_count',
+                title: 'Services Count',
                 searchable: true,
                 orderable: true,
                 collapsable: true,

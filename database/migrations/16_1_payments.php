@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('or_no')->unique();
+            $table->integer('or_no')->unique();
             $table->string('payor_name')->nullable();
             $table->string('payor_email')->nullable();
             $table->string('payor_mobile')->nullable();

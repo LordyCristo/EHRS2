@@ -22,7 +22,7 @@ class Fees extends Model
 
     public function service()
     {
-        return $this->belongsTo(Service::class);
+        return $this->belongsTo(Services::class);
     }
 
     public function clientType()
@@ -32,6 +32,6 @@ class Fees extends Model
 
     public function paymentServices()
     {
-        return $this->hasMany(PaymentService::class);
+        return $this->hasMany(PaymentsService::class);
     }
 }

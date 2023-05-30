@@ -24,6 +24,6 @@ class Services extends Model
 
     public function fees()
     {
-        return $this->hasMany(Fees::class);
+        return $this->belongsTo(Fees::class);
     }
 }

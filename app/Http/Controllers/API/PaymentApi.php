@@ -10,6 +10,7 @@ use App\Models\Payment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use function PHPUnit\Framework\isEmpty;
 
 class PaymentApi extends Controller
 {
@@ -27,16 +28,41 @@ class PaymentApi extends Controller
      */
     public function store(PaymentRequest $request)
     {
-        $newPayment = Payment::create($request->all());
+        if(!empty($request['rows'])){
+            $newPayment = Payment::create($request->all());
+            if ($newPayment) {
+                $rows = $request['rows'];
+                // Save rows in payments_services table
+                foreach ($rows as $row) {
+                    $newPayment->paidServices()->create([
+                        'service_id' => $row['service_id'],
+                        'payment_id' => $newPayment->id,
+                        'fee' => $row['fee'],
+                    ]);
+                }
+            }
+            return response()->json([
+                'data' => (new PaymentResource($newPayment)),
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'success',
+                    'message' => $newPayment?'Successfully created Payment with id '.$newPayment->id:'Failed to create Payment record',
+                    'data' => $newPayment,
+                ]
+            ])->setStatusCode(201);
+        }
         return response()->json([
-            'data' => (new PaymentResource($newPayment)),
+            'data' => null,
+            'errors' => ['rows' => 'No rows to save.'],
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => $newPayment?'success':'failed',
-                'message' => $newPayment?'Successfully created Client with id '.$newPayment->id:'Failed to create Client record',
+                'type' => 'failed',
+                'message' => 'Failed to create transaction record',
+                'data' => $request->all(),
             ]
-        ])->setStatusCode(201);
+        ])->setStatusCode(422);
     }
 
     /**
@@ -88,8 +114,8 @@ class PaymentApi extends Controller
     {
         $query = Payment::join('clients', 'clients.id', '=', 'payments.client_id')
             ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-            ->join('services', 'services.id', '=', 'payments_service.service_id')
-            ->select('payments.id', 'payments.or_no', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'payments.client_id', 'services.name as service_id', 'payments.collector_id', 'payments.total_amount', 'payments.remarks');
+            ->selectRaw('payments.or_no, payments.id, payments.payor_name, payments.payor_email, payments.payor_mobile, payments.client_id, COUNT(payments_service.service_id) as services_count, payments.collector_id, payments.total_amount, payments.remarks')
+            ->groupBy('payments.or_no');
 
         $totalRecords = $query->count();
         if ($request->has('search')) {

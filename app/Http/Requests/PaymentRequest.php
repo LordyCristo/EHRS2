@@ -22,7 +22,7 @@ class PaymentRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('id')?->id;
+        $id = $this->route('id');
         return [
             'or_no' => ['required', 'numeric', Rule::unique('payments','or_no')->ignore($id)], // 'nullable' means 'optional
             'payor_name' => ['required', 'string', 'max:255'],

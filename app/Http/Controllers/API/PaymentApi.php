@@ -19,8 +19,37 @@ class PaymentApi extends Controller
      */
     public function index()
     {
-        return new PaymentCollection(Payment::select('payments.id', 'payments.or_no', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'payments.client_id', 'payments.collector_id', 'payments.total_amount', 'payments.remarks')
-            ->join('clients', 'clients.id', '=', 'payments.client_id')->get());
+//        return new PaymentCollection(Payment::select('payments.id', 'payments.or_no', 'payments.payor_name', 'payments.payor_email', 'payments.payor_mobile', 'payments.client_id', 'payments.collector_id', 'payments.total_amount', 'payments.remarks')
+//            ->join('clients', 'clients.id', '=', 'payments.client_id')->get());
+        $payments = Payment::with('paidServices')->get();
+        $exportData = [];
+
+        foreach ($payments as $payment) {
+            $services = [];
+            $fees = [];
+
+            foreach ($payment->paidServices as $paidService) {
+                $services[] = $paidService->fee->service;
+                $fees[] = $paidService->fee;
+            }
+
+            $exportData[] = [
+                'id' => $payment->id,
+                'collector_id' => $payment->collector_id,
+                'or_no' => $payment->or_no,
+                'payor_name' => $payment->payor_name,
+                'payor_email' => $payment->payor_email,
+                'payor_mobile' => $payment->payor_mobile,
+                'client_id' => $payment->client->name,
+                'services' => implode(', ', $services),
+                'fees' => implode(', ', $fees),
+                'total_amount' => $payment->total_amount,
+                'remarks' => $payment->remarks,
+                'created_at' => $payment->created_at,
+                'updated_at' => $payment->updated_at,
+            ];
+        }
+        return new PaymentResource($exportData);
     }
 
     /**
@@ -79,15 +108,46 @@ class PaymentApi extends Controller
     public function update(PaymentRequest $request)
     {
         $payment = Payment::findOrFail($request->id);
-        $update = $payment->update($request->all());
+
+        if ($payment->update($request->all())) {
+            if (!empty($request['rows'])) {
+                // Delete existing payment services
+                $payment->paidServices()->delete();
+
+                // Save new payment services
+                $rows = $request['rows'];
+                foreach ($rows as $row) {
+                    $payment->paidServices()->create([
+                        'service_id' => $row['service_id'],
+                        'payment_id' => $payment->id,
+                        'fee' => $row['fee'],
+                    ]);
+                }
+            }
+
+            return response()->json([
+                'data' => (new PaymentResource($payment)),
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'success',
+                    'message' => 'Successfully updated Payment with id ' . $payment->id,
+                    'data' => $payment,
+                ]
+            ])->setStatusCode(200);
+        }
+
         return response()->json([
+            'data' => null,
+            'errors' => ['payment' => 'Failed to update Payment record'],
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => $update?'success':'failed',
-                'message' => $update?'Successfully updated Payment record id '.$request->id:'Failed to update Payment record with id '. $request->id,
+                'type' => 'failed',
+                'message' => 'Failed to update Payment record',
+                'data' => $payment,
             ]
-        ])->setStatusCode($update?202:400);
+        ])->setStatusCode(422);
     }
 
     /**

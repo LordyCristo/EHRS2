@@ -109,13 +109,20 @@ export default {
             this.form.rows.push({ service_id: null, fee: null });
         },
         deleteRow(index) {
-            this.form.rows.splice(index, 1);
+            const fee = this.form.rows[index].fee; // Get the fee of the row to be deleted
+            this.form.rows.splice(index, 1); // Remove the row from the form
+
+            if (fee) {
+                this.calculateTotalAmount(-fee); // Subtract the fee from the total amount
+            }
         },
         calculateTotalAmount(fee) {
             this.form.total_amount = 0;
             this.form.rows.forEach((row) => {
                 this.form.total_amount += parseInt(row.fee);
             });
+
+            //this.form.total_amount += parseInt(fee); // Add the fee to the total amount
         },
     },
     mounted() {

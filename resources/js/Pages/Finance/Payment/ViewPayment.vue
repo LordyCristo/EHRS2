@@ -7,20 +7,20 @@
                         <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
                     </Link>
                 </div>
-                <div id="official-receipt-printable" class="shadow-xl px-5 py-8 mx-auto">
-                    <div class="or-logo-header">
-                        <img src="../../../Components/Icons/vsu-name-logo.png" alt="Visayas State University Logo" class="vsu-logo">
-                        <h1 class="usher-title">
+                <div id="official-receipt-printable" class="shadow-xl px-5 py-8 mx-auto max-w-xl">
+                    <div class="inline-flex text-center justify-center mb-1 gap-1">
+                        <img src="../../../Components/Icons/vsu-name-logo.png" alt="Visayas State University Logo" class="w-[15rem] h-auto">
+                        <h1 class="text-right m-0 p-0 font-bold text-sm font-montserrat">
                             OFFICE OF THE CHIEF OF UNIVERSITY SERVICES FOR HEALTH EMERGENCY AND RESCUE (USHER)
                         </h1>
                     </div>
                     <template v-if="data">
-                        <div class="or-title-header">
-                            <h2>
+                        <div>
+                            <h2 class="font-montserrat font-bold text-center text-lg mb-4 p-0">
                                 OFFICIAL RECEIPT
                             </h2>
                         </div>
-                        <div class="or-body" v-if="data">
+                        <div v-if="data">
                             <div class="flex justify-between">
                                 <span class="w-full"><b>OR No. </b>{{ data.id }}</span>
                                 <span class="w-full"><b>Date Issued:</b> {{ new Date(data.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
@@ -30,8 +30,8 @@
                                 <span class="w-full"><b>Payor Email: </b>{{ data.payor_email }}</span>
                             </div>
                             <div class="flex justify-between">
-                                <span class="w-full"><b>Patient ID: </b>{{ data.client_id }}</span>
-                                <span class="w-full"><b>Payor Contact:</b>{{ data.payor_mobile }}</span>
+                                <span class="w-full"><b>Infirmary No.: </b>{{ data.client.infirmary_id }}</span>
+                                <span class="w-full"><b>Payor Contact: </b>{{ data.payor_mobile }}</span>
                             </div>
                             <div class="grid grid-cols-2 mt-3 border-y-2">
                                 <div class="font-bold text-center">Service Name</div>
@@ -65,41 +65,6 @@
         </div>
     </Finance>
 </template>
-<style>
-#official-receipt-printable{
-    max-width: 35rem;
-    min-width: 35rem;
-}
-.vsu-logo {
-    width: 15rem;
-    height: auto;
-}
-.usher-title {
-    font-size: 0.9rem;
-    font-weight: bold;
-    text-align: right;
-    margin: 0;
-    padding: 0;
-}
-.or-logo-header{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    line-height: 1;
-    word-spacing: 0.1rem;
-    gap: 0.5rem;
-}
-
-.or-title-header h2{
-    font-size: 1.3rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 0 0 1rem 0;
-    padding: 0;
-}
-</style>
 <script setup>
 import Finance from "@/Pages/Finance.vue";
 import {Link} from "@inertiajs/vue3";
@@ -110,56 +75,39 @@ import VSULogoName from "@/Components/Icons/VSULogoName.vue";
 const printForm = () => {
     const printableContent = document.getElementById('official-receipt-printable');
     if (printableContent) {
+        console.log(printableContent);
         const printWindow = window.open('', '_blank');
-        printWindow.document.open();
-        printWindow.document.write(`<html>
-              <head>
-                    <title>Official Receipt</title>
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Print Form</title>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
                     <style>
-                     @media print {
-                        /* Set custom print size */
-                        @page {
-                            /*size 300px by 600px*/
-                            size: 300px 600px;
-                            margin: 0;
-                            background-color: #5eead4;
+                        @media print {
+                            @page {
+                                size: A4;
+                                margin: 0;
+                            }
+                            body {
+                                margin: 1.6cm;
+                            }
                         }
-
-                        /* Additional print styles if needed */
-                        /* ... */
-
-                        .vsu-logo {
-                            width: 15rem;
-                            height: auto;
-                        }
-                        .usher-title {
-                            font-size: 1rem;
-                            font-weight: bold;
-                            text-align: center;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        .or-logo-header{
-                            display: flex;
-                            flex-direction: row;
-                            align-items: center;
-                            justify-content: center;
-                            margin-bottom: 1rem;
-                            line-height: 1;
-                            word-spacing: 0.1rem;
-                        }
-                      }
                     </style>
-              </head>
-              <body>
+                </head>
+                <body>
                     ${printableContent.innerHTML}
-              </body>
-              </html>`);
+                </body>
+            </html>
+        `);
         printWindow.document.close();
-        printWindow.print();
-        printWindow.close();
+        printWindow.onload = function () {
+            printWindow.print();
+            printWindow.close();
+        };
     }
 };
+
 </script>
 <script>
 export default {

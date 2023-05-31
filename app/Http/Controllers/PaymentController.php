@@ -60,7 +60,7 @@ class PaymentController extends Controller
     public function show(Request $request)
     {
         return Inertia::render('Finance/Payment/ViewPayment', [
-            'data' => new PaymentResource(Payment::with('paidServices')->findOrFail($request->id)),
+            'data' => new PaymentResource(Payment::with('paidServices')->with('client')->findOrFail($request->id)),
         ]);
     }
 }

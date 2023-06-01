@@ -11,18 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hematology', function (Blueprint $table) {
+        Schema::create('fecalysis', function (Blueprint $table) {
             $table->id();
-            $table->double('hemoglobin')->nullable();
-            $table->double('hematocrit')->nullable();
+            $table->string('color')->nullable();
+            $table->string('consistency')->nullable();
+            $table->string('ova')->nullable();
             $table->double('wbc')->nullable();
             $table->double('rbc')->nullable();
-            $table->double('platelet_count')->nullable();
-            $table->double('segmenters')->nullable();
-            $table->double('lymphocyte')->nullable();
-            $table->double('monocyte')->nullable();
-            $table->string('blood_type')->nullable();
-            $table->longText('diagnosis');
+            $table->double('fat_globules')->nullable();
+            $table->string('others')->nullable();
+            $table->longText('remarks');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hematology');
+        Schema::dropIfExists('fecalysis');
     }
 };

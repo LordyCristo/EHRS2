@@ -7,23 +7,23 @@ export default {
     data: () => ({
         apiLink: {
             // create form
-            create: 'laboratory.hematology.create',
+            create: 'laboratory.fecalysis.create',
             // edit form
-            edit: 'laboratory.hematology.edit',
+            edit: 'laboratory.fecalysis.edit',
             //view form
-            show: 'laboratory.hematology.show',
+            show: 'laboratory.fecalysis.show',
             // return all data
-            index: 'api.hematology.index',
+            index: 'api.fecalysis.index',
             // return data compatible for datatable requests
-            table: 'api.hematology.table',
+            table: 'api.fecalysis.table',
             // store data from create form
-            store: 'api.hematology.store',
+            store: 'api.fecalysis.store',
             // update data from edit form
-            update: 'api.hematology.update',
+            update: 'api.fecalysis.update',
             // delete a specific data
-            destroy: 'api.hematology.destroy',
+            destroy: 'api.fecalysis.destroy',
             // import data from excel
-            import: 'api.hematology.import',
+            import: 'api.fecalysis.import',
         },
         columnsSmall:[
             {
@@ -133,7 +133,7 @@ export default {
 </script>
 
 <template>
-    <Laboratory title="Hematology">
+    <Laboratory title="Fecalysis">
         <div class="flex flex-col w-full">
             <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink"/>
         </div>

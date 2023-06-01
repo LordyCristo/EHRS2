@@ -6,15 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class HematologyRecord extends Model
+class FecalysisRecord extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'hematology_records';
+    protected $table = 'fecalysis_records';
+
     protected $fillable = [
         'id',
-        'hematology_id',
+        'fecalysis_id',
         'infirmary_id',
         'age',
         'sex',
@@ -24,13 +25,12 @@ class HematologyRecord extends Model
         'medical_technologist',
         'pathologist',
         'hospital_no',
-        'remarks',
         'status',
     ];
 
-    public function hematology()
+    public function fecalysis()
     {
-        return $this->belongsTo(Hematology::class, 'hematology_id', 'id');
+        return $this->belongsTo(Fecalysis::class, 'fecalysis_id', 'id');
     }
 
     public function client()
@@ -52,4 +52,6 @@ class HematologyRecord extends Model
     {
         return $this->belongsTo(User::class, 'rqst_physician', 'id');
     }
+
+
 }

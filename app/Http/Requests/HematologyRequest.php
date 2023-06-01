@@ -25,13 +25,17 @@ class HematologyRequest extends FormRequest
         $id = $this->route('id');
         return [
             //hematology record
-            'client_id' => ['required', 'exists:clients,id'],
+            'infirmary_id' => ['required', 'exists:clients,infirmary_id'],
             'age' => ['nullable','numeric'],
             'sex' => ['required','in:male,female'],
-            'ward' => ['nullable', 'string'],
-            'or_no' => ['required', 'numeric', Rule::unique('hematology_records')->ignore($id)],
+            'ward' => ['nullable'],
+            'or_no' => ['nullable', 'numeric', 'exists:payments,or_no', Rule::unique('hematology_records')->ignore($id)],
             'rqst_physician' => ['required', 'exists:users,id'],
-            'hospital_no' => ['nullable', 'string'],
+            'medical_technologist' => ['required', 'exists:users,id'],
+            'pathologist' => ['required', 'exists:users,id'],
+            'hospital_no' => ['nullable'],
+            'remarks' => ['nullable', 'string'],
+            'status' => ['required', 'in:Pending,Processing,Done,Cancelled,Released'],
             // hematology
             'hemoglobin' => ['required', 'numeric'],
             'hematocrit' => ['required', 'numeric'],
@@ -43,8 +47,6 @@ class HematologyRequest extends FormRequest
             'monocyte' => ['required', 'numeric'],
             'blood_type' => ['required', 'string'],
             'diagnosis' => ['required', 'string'],
-            'remarks' => ['nullable', 'string'],
-            'status' => ['required', 'in:Pending,Processing,Done,Cancelled,Released'],
         ];
     }
 
@@ -52,18 +54,24 @@ class HematologyRequest extends FormRequest
     {
         return [
             // hematology record
-            'client_id.required' => 'Required field',
-            'client_id.exists' => 'Patient ID does not exist',
+            'infirmary_id.required' => 'Required field',
+            'infirmary_id.exists' => 'Patient ID does not exist',
             'age.numeric' => 'Invalid format',
             'sex.required' => 'Required field',
             'sex.in' => 'Invalid value',
-            'ward.string' => 'Must be a string.',
-            'or_no.required' => 'Required field',
             'or_no.numeric' => 'Must be a number.',
             'or_no.unique' => 'OR number already exists',
+            'or_no.exists' => 'OR number does not exist',
             'rqst_physician.required' => 'Required field',
             'rqst_physician.exists' => 'Physician ID does not exist',
-            'hospital_no.string' => 'Must be a string.',
+            'medical_technologist.required' => 'Required field',
+            'medical_technologist.exists' => 'Medical Technologist ID does not exist',
+            'pathologist.required' => 'Required field',
+            'pathologist.exists' => 'Pathologist ID does not exist',
+            'remarks.string' => 'Must be a string.',
+            'status.required' => 'Required field',
+            'status.string' => 'Must be a string.',
+            'status.in' => 'Invalid value',
             // hematology
             'hemoglobin.required' => 'Required field',
             'hemoglobin.numeric' => 'Must be a number.',
@@ -84,10 +92,6 @@ class HematologyRequest extends FormRequest
             'blood_type.required' => 'Required field',
             'blood_type.string' => 'Must be a string.',
             'diagnosis.string' => 'Must be a string.',
-            'remarks.string' => 'Must be a string.',
-            'status.required' => 'Required field',
-            'status.string' => 'Must be a string.',
-            'status.in' => 'Invalid value',
             'diagnosis.required' => 'Required field',
         ];
     }

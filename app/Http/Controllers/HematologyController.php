@@ -35,6 +35,15 @@ class HematologyController extends Controller
         ]);
     }
 
+    /**
+     * Show the view for printing a resource.
+     */
+    public function show(Request $request){
+        return Inertia::render('Laboratory/Hematology/ViewHematology',[
+            'data' => new HematologyResource(HematologyRecord::with('hematology')->with('rqstPhysician')->with('medicalTechnologist')->with('pathologist')->findOrFail($request->id)),
+        ]);
+    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -44,7 +53,7 @@ class HematologyController extends Controller
 //        $hematology = new HematologyResource(Hematology::findOrFail($request->id));
 //        $record = new HematologyRecordResource(HematologyRecord::findOrFail($request->id));
         return Inertia::render('Laboratory/Hematology/EditHematology',[
-            'data' => new HematologyResource(HematologyRecord::join('hematology', 'hematology.id', '=', 'hematology_records.id')->where('hematology.id', '=', $request->id)->get()),
+            'data' => new HematologyResource(HematologyRecord::join('hematology', 'hematology.id', '=', 'hematology_records.id')->findOrFail($request->id)),
             'physicians' => new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get()),
         ]);
     }

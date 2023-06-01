@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('or_no')->unique();
+            $table->id();
+            $table->bigInteger('or_no')->unique('unq_or_no')->unsigned();
             $table->string('payor_name')->nullable();
             $table->string('payor_email')->nullable();
             $table->string('payor_mobile')->nullable();

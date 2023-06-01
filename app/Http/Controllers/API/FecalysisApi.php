@@ -3,35 +3,35 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\HematologyRequest;
-use App\Http\Resources\HematologyCollection;
-use App\Http\Resources\HematologyResource;
-use App\Models\Hematology;
-use App\Models\HematologyRecord;
+use App\Http\Requests\FecalysisRequest;
+use App\Http\Resources\fecalysisCollection;
+use App\Http\Resources\fecalysisResource;
+use App\Models\Fecalysis;
+use App\Models\FecalysisRecord;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class HematologyApi extends Controller
+class FecalysisApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new HematologyCollection(HematologyRecord::all());
+        return new FecalysisCollection(FecalysisRecord::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HematologyRequest $request)
+    public function store(FecalysisRequest $request)
     {
-        $newHematology = Hematology::create($request->validated());
-        if ($newHematology){
-            $newRecord = HematologyRecord::create([
-                'hematology_id' => $newHematology->id,
+        $newFecalysis = Fecalysis::create($request->validated());
+        if ($newFecalysis){
+            $newRecord = FecalysisRecord::create([
+                'fecalysis_id' => $newFecalysis->id,
                 'infirmary_id' => $request->infirmary_id,
                 'age' => $request->age,
                 'sex' => $request->sex,
@@ -41,30 +41,29 @@ class HematologyApi extends Controller
                 'medical_technologist' => $request->medical_technologist,
                 'pathologist' => $request->pathologist,
                 'hospital_no' => $request->hospital_no,
-                'remarks' =>  $request->remarks,
                 'status' =>  $request->status,
             ]);
             if ($newRecord){
                 return response()->json([
-                    'data' => (new HematologyResource($newRecord)),
+                    'data' => (new FecalysisResource($newRecord)),
                     'notification' => [
                         'id' => uniqid(),
                         'show' => true,
-                        'type' => 'success',
-                        'message' => 'Successfully created Hematology with id '.$newRecord->id,
+                        'type' =>'success',
+                        'message' => 'Successfully created Fecalysis with id '.$newRecord->id,
                     ]
                 ])->setStatusCode(201);
             }
         }
         return response()->json([
-            'data' => (new HematologyResource($newHematology)),
+            'data' => (new FecalysisResource($newFecalysis)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => 'failed',
-                'message' => 'Failed to create Hematology record',
+                'type' =>'failed',
+                'message' => 'Failed to create Fecalysis record',
             ]
-        ])->setStatusCode(500);
+        ])->setStatusCode(201);
     }
 
     /**
@@ -72,37 +71,37 @@ class HematologyApi extends Controller
      */
     public function show(Request $request)
     {
-        return new HematologyResource(Hematology::with('hematologyRecord')->findOrFail($request->id));
+        return new FecalysisResource(Fecalysis::with('fecalysisRecord')->findOrFail($request->id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(HematologyRequest $request)
+    public function update(FecalysisRequest $request)
     {
-        $hematologyRecord = HematologyRecord::findOrFail($request->id);
-        $update = $hematologyRecord->update($request->validated());
+        $fecalysisRecord = FecalysisRecord::findOrFail($request->id);
+        $update = $fecalysisRecord->update($request->validated());
         if ($update){
-            $hematologyRecord->hematology->update($request->validated());
+            $fecalysisRecord->fecalysis->update($request->validated());
             return response()->json([
-                'data' => (new HematologyResource($hematologyRecord)),
+                'data' => (new FecalysisResource($fecalysisRecord)),
                 'notification' => [
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => 'Successfully updated Hematology with id '.$hematologyRecord->id,
+                    'message' => 'Successfully updated Fecalysis with id '.$fecalysisRecord->id,
                 ]
-            ])->setStatusCode(200);
+            ])->setStatusCode(201);
         }
         return response()->json([
-            'data' => (new HematologyResource($hematologyRecord)),
+            'data' => (new FecalysisResource($fecalysisRecord)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => 'failed',
-                'message' => 'Failed to update Hematology record',
+                'message' => 'Failed to update Fecalysis record',
             ]
-        ])->setStatusCode(500);
+        ])->setStatusCode(201);
     }
 
     /**
@@ -111,14 +110,14 @@ class HematologyApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        HematologyRecord::destroy($id);
-        $temp = Hematology::destroy($id);
+        FecalysisRecord::destroy($id);
+        $temp = Fecalysis::destroy($id);
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => $temp?'success':'failed',
-                'message' => $temp?'Successfully deleted '.$temp.' Hematology record/s':'Failed to delete Hematology record with id '. $request->id,
+                'message' => $temp?'Successfully deleted '.$temp.' Fecalysis record/s':'Failed to delete Fecalysis record with id '. $request->id,
             ]
         ]);
     }
@@ -128,7 +127,7 @@ class HematologyApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = HematologyRecord::with('hematology')->where('id', '!=', null);
+        $query = FecalysisRecord::with('fecalysis')->where('id', '!=', null);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -144,7 +143,7 @@ class HematologyApi extends Controller
                         ->orWhere('rqst_physician', 'like', '%' . $search . '%')
                         ->orWhere('hospital_no', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('hematology_records.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('fecalysis_records.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -182,7 +181,7 @@ class HematologyApi extends Controller
             'data' => [],
         ];
 
-        $validator = new HematologyRequest();
+        $validator = new FecalysisRequest();
 
         foreach ($data as $row) {
             $validation = Validator::make($row, $validator->rules());
@@ -193,13 +192,13 @@ class HematologyApi extends Controller
                 $response['data'][] = $row;
             } else {
                 try {
-                    $hematology = Hematology::create($row);
-                    if($hematology){
-                        $hematology->hematologyRecord()->create($row);
-                        if ($hematology){
+                    $fecalysis = Fecalysis::create($row);
+                    if($fecalysis){
+                        $fecalysis->fecalysisRecord()->create($row);
+                        if ($fecalysis){
                             $successCount++;
                         }else{
-                            $hematology->delete();
+                            $fecalysis->delete();
                             $failedCount++;
                         }
                     }
@@ -217,7 +216,7 @@ class HematologyApi extends Controller
                 'id' => uniqid(),
                 'show' => true,
                 'type' => !$failedCount?'success':'warning',
-                'message' => !$failedCount?'Successfully imported Hematology without errors':'Failed to import Hematology '.$failedCount.' rows out of '.$failedCount+$successCount,
+                'message' => !$failedCount?'Successfully imported Fecalysis without errors':'Failed to import Fecalysis '.$failedCount.' rows out of '.$failedCount+$successCount,
             ]
         ]);
     }

@@ -28,8 +28,6 @@ class HematologyFactory extends Factory
             'monocyte' => $this->faker->randomFloat(2, 0, 5),
             'blood_type' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'diagnosis' => $this->faker->text(100),
-            'remarks' => $this->faker->text(100),
-            'status' => $this->faker->randomElement(['Pending','Released','Processing','Released','Done','Released','Cancelled','Released']),
         ];
     }
 }

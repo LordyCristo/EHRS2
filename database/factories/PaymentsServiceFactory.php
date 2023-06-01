@@ -18,10 +18,12 @@ class PaymentsServiceFactory extends Factory
      */
     public function definition(): array
     {
+        $paymentIds = Payment::pluck('id')->toArray();
+        $serviceIds = Fees::pluck('id')->toArray();
         return [
-            'payment_id' => $this->faker->numberBetween(1, 100),
-            'service_id' => $this->faker->numberBetween(1, 20),
-            'fee' => $this->faker->randomFloat(2, 100, 10000),
+            'payment_id' => $this->faker->randomElement($paymentIds),
+            'service_id' => $this->faker->randomElement($serviceIds),
+            'fee' => $this->faker->randomFloat(2, 100, 1000),
         ];
     }
 }

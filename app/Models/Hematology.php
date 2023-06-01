@@ -24,12 +24,10 @@ class Hematology extends Model
         'monocyte',
         'blood_type',
         'diagnosis',
-        'remarks',
-        'status',
     ];
 
     public function hematologyRecord()
     {
-        return $this->hasOne(HematologyRecord::class, 'id', 'id');
+        return $this->hasOne(HematologyRecord::class, 'hematology_id', 'id');
     }
 }

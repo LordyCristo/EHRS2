@@ -110,11 +110,11 @@ export default {
                             //     link: 'more.college.index',
                             //     linkName: 'college',
                             // },
-                            // {
-                            //     name: 'Fecalysis',
-                            //     link: 'more.department.index',
-                            //     linkName: 'department',
-                            // },
+                            {
+                                name: 'Fecalysis',
+                                link: 'laboratory.fecalysis.index',
+                                linkName: 'fecalysis',
+                            },
                             {
                                 name: 'Hematology',
                                 link: 'laboratory.hematology.index',

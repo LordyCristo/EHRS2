@@ -1,9 +1,9 @@
 <template>
     <FormSection :data="data" :form="form" :action="action"
-                 index-link="laboratory.hematology.index"
-                 :update-link="data? route('api.hematology.update', data.id): null"
-                 :store-link="route('api.hematology.store')"
-                 :delete-link="data? route('api.hematology.destroy', data.id): null">
+                 index-link="laboratory.fecalysis.index"
+                 :update-link="data? route('api.fecalysis.update', data.id): null"
+                 :store-link="route('api.fecalysis.store')"
+                 :delete-link="data? route('api.fecalysis.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
@@ -17,28 +17,26 @@
                 <InputText v-model="form.ward" label="Ward" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
             </div>
             <!--end of header form-->
-            <!--hematology body form-->
+            <!--fecalysis body form-->
             <div class="grid grid-cols-4 gap-1">
-                <InputText v-model.number="form.hemoglobin" label="Hemoglobin" type="number" :step="0.01" :errorMsg="form.errors.hemoglobin" @input="onFocusClearError('hemoglobin')" />
-                <InputText v-model.number="form.hematocrit" label="Hematocrit" type="number" :step="0.01" :errorMsg="form.errors.hematocrit" @input="onFocusClearError('hematocrit')" />
+                <InputText v-model="form.color" label="Color" :errorMsg="form.errors.color" @input="onFocusClearError('color')" />
+                <InputText v-model="form.consistency" label="Consistency" :errorMsg="form.errors.consistency" @input="onFocusClearError('consistency')" />
                 <InputText v-model.number="form.wbc" label="WBC" type="number" :step="0.01" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
                 <InputText v-model.number="form.rbc" label="RBC" type="number" :step="0.01" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
-                <InputText v-model.number="form.platelet_count" label="Platelet Count" type="number" :step="0.01" :errorMsg="form.errors.platelet_count" @input="onFocusClearError('platelet_count')" />
-                <InputText v-model.number="form.segmenters" label="Segmenters" type="number" :step="0.01" :errorMsg="form.errors.segmenters" @input="onFocusClearError('segmenters')" />
-                <InputText v-model.number="form.lymphocyte" label="Lymphocytes" type="number" :step="0.01" :errorMsg="form.errors.lymphocyte" @input="onFocusClearError('lymphocytes')" />
-                <InputText v-model.number="form.monocyte" label="Monocytes" type="number" :step="0.01" :errorMsg="form.errors.monocyte" @input="onFocusClearError('monocyte')" />
-                <SelectElement v-model.number="form.blood_type" label="Blood Type" :options="bloodTypes" :errorMsg="form.errors.blood_type" @input="onFocusClearError('blood_type')" />
+                <InputText v-model.number="form.ova" label="Ova" type="number" :step="0.01" :errorMsg="form.errors.ova" @input="onFocusClearError('ova')" />
+                <InputText v-model.number="form.fat_globules" label="Fat Globules" type="number" :step="0.01" :errorMsg="form.errors.fat_globules" @input="onFocusClearError('fat_globules')" />
+                <InputText v-model="form.others" label="Others" type="others" :errorMsg="form.errors.others" @input="onFocusClearError('others')" />
+                <InputText v-model="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
             </div>
-            <!--end of hematology body form-->
-            <!--hematology footer form-->
+            <!--end of fecalysis body form-->
+            <!--fecalysis footer form-->
             <div class="grid grid-cols-2">
                 <SelectElement v-model="form.medical_technologist" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
                 <SelectElement v-model="form.pathologist" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
-            <InputText v-model.number="form.diagnosis" label="Diagnosis" :errorMsg="form.errors.diagnosis" @input="onFocusClearError('diagnosis')" />
             <InputText v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
             <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
-            <!--end of hematology footer form-->
+            <!--end of fecalysis footer form-->
         </template>
     </FormSection>
 </template>
@@ -63,28 +61,25 @@ export default {
     data() {
         return {
             form: useForm({
-                // hematology record
+                // fecalysis record
                 infirmary_id: null,
-                age: 22,
-                sex: 'male',
-                ward: 'OP',
+                age: null,
+                sex: null,
+                ward: null,
                 or_no: null,
-                rqst_physician: 1,
-                medical_technologist: 2,
-                pathologist: 3,
-                hospital_no: 901816,
-                //hematology
-                hemoglobin: 0.5,
-                hematocrit: 0.3,
-                wbc: 0.3,
-                rbc: 0.1,
-                platelet_count: 0.2,
-                segmenters: 0.5,
-                lymphocyte: 0.8,
-                monocyte: 1.0,
-                blood_type: 'O+',
-                diagnosis: 'Normal',
-                remarks: '',
+                rqst_physician: null,
+                medical_technologist: null,
+                pathologist: null,
+                hospital_no: null,
+                //fecalysis
+                color: null,
+                consistency: null,
+                ova: null,
+                wbc: null,
+                rbc: null,
+                fat_globules: null,
+                others: null,
+                remarks: null,
                 status: null,
             }),
             statuses: RecordStatus,
@@ -103,12 +98,12 @@ export default {
     mounted() {
         this.physicians = this.$page.props.physicians.data;
         if (this.action === 'update'){
-            this.data = this.$page.props.data.data[0];
+            this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
-            this.formTitle = 'Update Hematology Record';
+            this.formTitle = 'Update Fecalysis Record';
         }
         else {
-            this.formTitle = 'Create Hematology Record';
+            this.formTitle = 'Create Fecalysis Record';
             this.form.infirmary_id = this.$page.props.last_client_id;
         }
 

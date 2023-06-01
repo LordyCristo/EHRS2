@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ClientApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;
+use App\Http\Controllers\API\FecalysisApi;
 use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
 use App\Http\Controllers\API\PaymentApi;
@@ -13,6 +14,7 @@ use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DegreeProgramController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\FecalysisController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
@@ -161,6 +163,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
             Route::get('/', [HematologyController::class, 'index'])->name('laboratory.hematology.index');
             Route::get('/new', [HematologyController::class, 'create'])->name('laboratory.hematology.create');
             Route::get('/edit/{id}', [HematologyController::class, 'edit'])->name('laboratory.hematology.edit');
+            Route::get('/show/{id}', [HematologyController::class, 'show'])->name('laboratory.hematology.show');
             Route::prefix('api')->group(function (){
                 // Hematology GET ALL route
                 Route::get('/', [HematologyApi::class, 'index'])->name('api.hematology.index');
@@ -174,6 +177,27 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
                 Route::get('/all', [HematologyApi::class, 'tableApi'])->name('api.hematology.table');
                 // Hematology import from a CSV file
                 Route::post('/import', [HematologyApi::class, 'import'])->name('api.hematology.import');
+            });
+        });
+
+        Route::prefix('/fecalysis')->group(function () {
+            Route::get('/', [FecalysisController::class, 'index'])->name('laboratory.fecalysis.index');
+            Route::get('/new', [FecalysisController::class, 'create'])->name('laboratory.fecalysis.create');
+            Route::get('/edit/{id}', [FecalysisController::class, 'edit'])->name('laboratory.fecalysis.edit');
+            Route::get('/show/{id}', [FecalysisController::class, 'show'])->name('laboratory.fecalysis.show');
+            Route::prefix('api')->group(function (){
+                // Fecalysis GET ALL route
+                Route::get('/', [FecalysisApi::class, 'index'])->name('api.fecalysis.index');
+                // Fecalysis STORE route
+                Route::post('/', [FecalysisApi::class, 'store'])->name('api.fecalysis.store');
+                // Fecalysis UPDATE route
+                Route::put('/{id}', [FecalysisApi::class, 'update'])->name('api.fecalysis.update');
+                // Fecalysis DELETE route
+                Route::delete('/{id}', [FecalysisApi::class, 'destroy'])->name('api.fecalysis.destroy');
+                // Fecalysis DATATABLE API route
+                Route::get('/all', [FecalysisApi::class, 'tableApi'])->name('api.fecalysis.table');
+                // Fecalysis import from a CSV file
+                Route::post('/import', [FecalysisApi::class, 'import'])->name('api.fecalysis.import');
             });
         });
     });

@@ -78,6 +78,31 @@ const routes = [
         component: () => import('@/Pages/Laboratory/Hematology/EditHematology.vue')
     },
     {
+        path:'/laboratory/hematology/show',
+        name: 'laboratory.hematology.show',
+        component: () => import('@/Pages/Laboratory/Hematology/ViewHematology.vue')
+    },
+    {
+        path:'/laboratory/fecalysis',
+        name: 'laboratory.fecalysis.index',
+        component: () => import('@/Pages/Laboratory/Fecalysis/FecalysisIndex.vue')
+    },
+    {
+        path:'/laboratory/fecalysis/new',
+        name: 'laboratory.fecalysis.create',
+        component: () => import('@/Pages/Laboratory/Fecalysis/NewFecalysis.vue')
+    },
+    {
+        path:'/laboratory/fecalysis/edit',
+        name: 'laboratory.fecalysis.edit',
+        component: () => import('@/Pages/Laboratory/Fecalysis/EditFecalysis.vue')
+    },
+    {
+        path:'/laboratory/fecalysis/show',
+        name: 'laboratory.fecalysis.show',
+        component: () => import('@/Pages/Laboratory/Fecalysis/ViewFecalysis.vue')
+    },
+    {
         path:'/more/',
         name: 'more.pages',
         component: () => import('@/Pages/MorePages/MorePageIndex.vue')

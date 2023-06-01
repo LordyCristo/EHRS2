@@ -69,7 +69,7 @@ export default {
                 sex: 'male',
                 ward: 'OP',
                 or_no: null,
-                rqst_physician: 1,
+                rqst_physician: 2,
                 medical_technologist: 2,
                 pathologist: 3,
                 hospital_no: 901816,
@@ -103,7 +103,7 @@ export default {
     mounted() {
         this.physicians = this.$page.props.physicians.data;
         if (this.action === 'update'){
-            this.data = this.$page.props.data.data[0];
+            this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
             this.formTitle = 'Update Hematology Record';
         }

@@ -1,195 +1,128 @@
 <template>
     <Laboratory title="View Hematology">
         <ViewForm :link="route('laboratory.hematology.index')">
-            <div class="printTable flex flex-col min-w-xl">
-                <div class="inline-flex text-center justify-between mb-1 gap-1">
-                    <img src="../../../Components/Icons/vsu-name-logo.png" alt="Visayas State University Logo" class="vsu-logo w-[15rem] h-auto">
-                    <h1 class="header-text text-right m-0 p-0 font-bold text-sm font-montserrat max-w-xs">
-                        OFFICE OF THE CHIEF OF UNIVERSITY SERVICES FOR HEALTH EMERGENCY AND RESCUE (USHER)
-                    </h1>
+            <ViewHeader>Hematology Report</ViewHeader>
+            <div class="grid grid-rows-2" v-if="data">
+                <div class="flex flex-row justify-between gap-2">
+                    <view-field label="Patient" :value="data.infirmary_id" />
+                    <view-field label="Age" :value="data.age" />
+                    <view-field label="Sex" :value="data.sex" />
+                    <view-field label="Hospital No." :value="data.hospital_no" />
+                    <view-field label="Ward" :value="data.ward" />
+                    <view-field label="OR No." :value="data.or_no?data.or_no:'Unpaid'" />
                 </div>
-                <div class="text-center font-bold text-xl uppercase my-3">
-                    <h2 class="form-title">Hematology Report</h2>
+                <div class="flex flex-row justify-between gap-2">
+                    <view-field label="Requesting Physician" :value="`Dr. ${data.rqst_physician.first_name} ${data.rqst_physician.middle_name?data.rqst_physician.middle_name[0]+'.':''} ${data.rqst_physician.last_name} ${data.rqst_physician.suffix?data.rqst_physician.suffix:''}`" />
+                    <view-field label="Date" :value="new Date(data.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })" />
                 </div>
-                <div class="grid grid-rows-2" v-if="data">
-                    <div class="flex flex-row justify-between px-2 gap-2">
-                        <span class="flex items-center gap-1"><b>Patient:</b> {{ data.infirmary_id }}</span>
-                        <span class="flex items-center gap-1"><b>Age:</b> {{ data.age }}</span>
-                        <span class="flex items-center gap-1"><b>Sex:</b> {{ data.sex }}</span>
-                        <span class="flex items-center gap-1"><b>Hospital No.:</b> {{ data.age }}</span>
-                        <span class="flex items-center gap-1"><b>Ward:</b> {{ data.ward }}</span>
-                        <span class="flex items-center gap-1"><b>OR No.:</b> {{ data.or_no?data.or_no:'Unpaid' }}</span>
-                    </div>
-                    <div class="flex flex-row justify-between px-2 gap-2">
-                        <span class="flex items-center gap-1"><b>Requesting Physician:</b> Dr. {{ data.rqst_physician.first_name }} {{ data.rqst_physician.middle_name[0] }}. {{ data.rqst_physician.last_name }} {{ data.rqst_physician.suffix }}</span>
-                        <span class="flex items-center gap-1"><b>Date:</b> {{ new Date(data.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
-                    </div>
-                    <div class="mt-3">
-                        <table class="w-full">
-                            <thead>
-                            <tr class="bg-vsu-green text-white">
-                                <th>Examination</th>
-                                <th>Results</th>
-                                <th>Normal Values</th>
-                                <th>Examination</th>
-                                <th>Results</th>
-                                <th>Normal Values</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td class="font-bold">
-                                    Hemoglobin
-                                </td>
-                                <td>
-                                    {{ data.hematology.hemoglobin }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between"><span>NB</span><span>17.0-22.0 g/dl</span></li>
-                                        <li class="flex justify-between"><span>Child</span><span>12.0-15.0 g/dl</span></li>
-                                        <li class="flex justify-between"><span>F</span><span>11.0-16.0 g/dl</span></li>
-                                        <li class="flex justify-between"><span>M</span><span>14.0-18.0 g/dl</span></li>
-                                    </ul>
-                                </td>
-                                <td class="font-bold">
-                                    Segmenters
-                                </td>
-                                <td>
-                                    {{ data.hematology.segmenters }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between text-center">0.50 - 0.70</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">
-                                    Hematocrit
-                                </td>
-                                <td>
-                                    {{ data.hematology.hematocrit }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between"><span>NB</span><span>0.35 - 0.49</span></li>
-                                        <li class="flex justify-between"><span>Child</span><span>0.35 - 0.49</span></li>
-                                        <li class="flex justify-between"><span>F</span><span>0.36 - 0.48</span></li>
-                                        <li class="flex justify-between"><span>M</span><span>0.40 - 0.54</span></li>
-                                    </ul>
-                                </td>
-                                <td class="font-bold">
-                                    Lymphocyte
-                                </td>
-                                <td>
-                                    {{ data.hematology.lymphocyte }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between">0.20 - 0.40</li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">
-                                    White Blood Cells
-                                </td>
-                                <td>
-                                    {{ data.hematology.wbc }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between"><span>NB</span><span>15.0 - 22.0 x 10<sup>9</sup>/L</span></li>
-                                        <li class="flex justify-between"><span>Child</span><span>5.0 - 12.0 x 10<sup>9</sup>/L</span></li>
-                                        <li class="flex justify-between"><span>F</span><span>4.0 - 10.0 x 10<sup>9</sup>/L</span></li>
-                                        <li class="flex justify-between"><span>M</span><span>4.0 - 10.0 x 10<sup>9</sup>/L</span></li>
-                                    </ul>
-                                </td>
-                                <td class="font-bold">
-                                    Monoctye
-                                </td>
-                                <td>
-                                    {{ data.hematology.monocyte }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between"><span>0.01 - 0.15</span></li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">
-                                    Red Blood Cells
-                                </td>
-                                <td>
-                                    {{ data.hematology.rbc }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between"><span>NB</span><span>6.0 - 7.0 x 10<sup>12</sup>/L</span></li>
-                                        <li class="flex justify-between"><span>Child</span><span>4.0 - 5.2 x 10<sup>12</sup>/L</span></li>
-                                        <li class="flex justify-between"><span>F</span><span>3.5.0 - 5.5 x 10<sup>12</sup>/L</span></li>
-                                        <li class="flex justify-between"><span>M</span><span>4.5 - 6.0 x 10<sup>12</sup>/L</span></li>
-                                    </ul>
-                                </td>
-                                <td class="font-bold">
-                                    Blood Type
-                                </td>
-                                <td>
-                                    {{ data.hematology.blood_type }}
-                                </td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td class="font-bold">
-                                    Platelet Count
-                                </td>
-                                <td>
-                                    {{ data.hematology.platelet_count }}
-                                </td>
-                                <td>
-                                    <ul class="font-bold">
-                                        <li class="flex justify-between"><span></span><span>150 - 450 x 10<sup>9</sup>/L</span></li>
-                                    </ul>
-                                </td>
-                                <td class="font-bold">
-                                    Others
-                                </td>
-                                <td>
-
-                                </td>
-                                <td></td>
-                            </tr>
-                            </tbody>
-                        </table>
-                        <div class="grid grid-cols-2 mt-14">
-                            <div class="flex flex-col text-center">
-                                <span class="underline font-bold uppercase">{{ data.medical_technologist.first_name }} {{ data.medical_technologist.middle_name[0] }}. {{ data.medical_technologist.last_name }} {{ data.medical_technologist.suffix }}</span>
-                                <span>License No. {{ data.medical_technologist.license_no }}</span>
-                                <span>{{ 'Medical Technologist' }}</span>
-                            </div>
-                            <div class="flex flex-col text-center">
-                                <span class="underline font-bold uppercase">{{ data.pathologist.first_name }} {{ data.pathologist.middle_name[0] }}. {{ data.pathologist.last_name }} {{ data.pathologist.suffix }}</span>
-                                <span>License No. {{ data.pathologist.license_no }}</span>
-                                <span>{{ 'Pathologist' }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table class="table-auto my-2">
+                    <view-dt-head>
+                        <th>Examination</th>
+                        <th>Results</th>
+                        <th>Normal Values</th>
+                        <th>Examination</th>
+                        <th>Results</th>
+                        <th>Normal Values</th>
+                    </view-dt-head>
+                    <tbody>
+                    <tr>
+                        <view-dt-label>Hemoglobin</view-dt-label>
+                        <view-dt-result>{{ data.hematology.hemoglobin }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item><span>NB</span><span>17.0-22.0 g/dl</span></view-dt-note-item>
+                            <view-dt-note-item><span>Child</span><span>12.0-15.0 g/dl</span></view-dt-note-item>
+                            <view-dt-note-item><span>F</span><span>11.0-16.0 g/dl</span></view-dt-note-item>
+                            <view-dt-note-item><span>M</span><span>14.0-18.0 g/dl</span></view-dt-note-item>
+                        </view-dt-note>
+                        <view-dt-label>Segmenters</view-dt-label>
+                        <view-dt-result>{{ data.hematology.segmenters }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item>0.50 - 0.70</view-dt-note-item>
+                        </view-dt-note>
+                    </tr>
+                    <tr>
+                        <view-dt-label>Hematocrit</view-dt-label>
+                        <view-dt-result>{{ data.hematology.hematocrit }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item><span>NB</span><span>0.35 - 0.49</span></view-dt-note-item>
+                            <view-dt-note-item><span>Child</span><span>0.35 - 0.49</span></view-dt-note-item>
+                            <view-dt-note-item><span>F</span><span>0.36 - 0.48</span></view-dt-note-item>
+                            <view-dt-note-item><span>M</span><span>0.40 - 0.54</span></view-dt-note-item>
+                        </view-dt-note>
+                        <view-dt-label>Lymphocyte</view-dt-label>
+                        <view-dt-result>{{ data.hematology.lymphocyte }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item>0.20 - 0.40</view-dt-note-item>
+                        </view-dt-note>
+                    </tr>
+                    <tr>
+                        <view-dt-label>White Blood Cells</view-dt-label>
+                        <view-dt-result>{{ data.hematology.wbc }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item><span>NB</span><span>15.0 - 22.0 x 10<sup>9</sup>/L</span></view-dt-note-item>
+                            <view-dt-note-item><span>Child</span><span>5.0 - 12.0 x 10<sup>9</sup>/L</span></view-dt-note-item>
+                            <view-dt-note-item><span>F</span><span>4.0 - 10.0 x 10<sup>9</sup>/L</span></view-dt-note-item>
+                            <view-dt-note-item><span>M</span><span>4.0 - 10.0 x 10<sup>9</sup>/L</span></view-dt-note-item>
+                        </view-dt-note>
+                        <view-dt-label>Monoctye</view-dt-label>
+                        <view-dt-result>{{ data.hematology.monocyte }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item>0.01 - 0.15</view-dt-note-item>
+                        </view-dt-note>
+                    </tr>
+                    <tr>
+                        <view-dt-label>Red Blood Cells</view-dt-label>
+                        <view-dt-result>{{ data.hematology.rbc }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item><span>NB</span><span>6.0 - 7.0 x 10<sup>12</sup>/L</span></view-dt-note-item>
+                            <view-dt-note-item><span>Child</span><span>4.0 - 5.2 x 10<sup>12</sup>/L</span></view-dt-note-item>
+                            <view-dt-note-item><span>F</span><span>3.5.0 - 5.5 x 10<sup>12</sup>/L</span></view-dt-note-item>
+                            <view-dt-note-item><span>M</span><span>4.5 - 6.0 x 10<sup>12</sup>/L</span></view-dt-note-item>
+                        </view-dt-note>
+                        <view-dt-label>Blood Type</view-dt-label>
+                        <view-dt-result>{{ data.hematology.blood_type }}</view-dt-result>
+                        <view-dt-note></view-dt-note>
+                    </tr>
+                    <tr>
+                        <view-dt-label>Platelet Count</view-dt-label>
+                        <view-dt-result>{{ data.hematology.platelet_count }}</view-dt-result>
+                        <view-dt-note>
+                            <view-dt-note-item><span></span><span>150 - 450 x 10<sup>9</sup>/L</span></view-dt-note-item>
+                        </view-dt-note>
+                        <view-dt-label>Others</view-dt-label>
+                        <view-dt-note></view-dt-note>
+                        <view-dt-note></view-dt-note>
+                    </tr>
+                    </tbody>
+                </table>
+                <view-footer>
+                    <view-footer-item>
+                        <template #name>{{ data.medical_technologist.first_name }} {{ data.medical_technologist.middle_name[0] }}. {{ data.medical_technologist.last_name }} {{ data.medical_technologist.suffix }}</template>
+                        <template #license>{{ data.medical_technologist.license_no }}</template>
+                        <template #specialization>Medical Technologist</template>
+                    </view-footer-item>
+                    <view-footer-item>
+                        <template #name>{{ data.pathologist.first_name }} {{ data.pathologist.middle_name[0] }}. {{ data.pathologist.last_name }} {{ data.pathologist.suffix }}</template>
+                        <template #license>{{ data.pathologist.license_no }}</template>
+                        <template #specialization>Pathologist</template>
+                    </view-footer-item>
+                </view-footer>
             </div>
         </ViewForm>
     </Laboratory>
 </template>
-<style>
-td {
-    padding: 0.5rem;
-    @apply border;
-}
-</style>
 <script setup>
 import Laboratory from '@/Pages/Laboratories.vue';
 import ViewForm from "@/Components/Generic/Forms/ViewForm.vue";
+import ViewHeader from "@/Components/Generic/Forms/ViewHeader.vue";
+import ViewField from "@/Components/Generic/Forms/ViewField.vue";
+import ViewDtLabel from "@/Components/Generic/Forms/ViewDtLabel.vue";
+import ViewDtResult from "@/Components/Generic/Forms/ViewDtResult.vue";
+import ViewDtNote from "@/Components/Generic/Forms/ViewDtNote.vue";
+import ViewDtNoteItem from "@/Components/Generic/Forms/ViewDtNoteItem.vue";
+import ViewFooter from "@/Components/Generic/Forms/ViewFooter.vue";
+import ViewFooterItem from "@/Components/Generic/Forms/ViewFooterItem.vue";
+import ViewDtHead from "@/Components/Generic/Forms/ViewDtHead.vue";
 </script>
 <script>
 export default {

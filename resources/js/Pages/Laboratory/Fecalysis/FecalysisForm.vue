@@ -23,10 +23,8 @@
                 <InputText v-model="form.consistency" label="Consistency" :errorMsg="form.errors.consistency" @input="onFocusClearError('consistency')" />
                 <InputText v-model.number="form.wbc" label="WBC" type="number" :step="0.01" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
                 <InputText v-model.number="form.rbc" label="RBC" type="number" :step="0.01" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
-                <InputText v-model.number="form.ova" label="Ova" type="number" :step="0.01" :errorMsg="form.errors.ova" @input="onFocusClearError('ova')" />
+                <InputText v-model="form.ova" label="Ova" :errorMsg="form.errors.ova" @input="onFocusClearError('ova')" />
                 <InputText v-model.number="form.fat_globules" label="Fat Globules" type="number" :step="0.01" :errorMsg="form.errors.fat_globules" @input="onFocusClearError('fat_globules')" />
-                <InputText v-model="form.others" label="Others" type="others" :errorMsg="form.errors.others" @input="onFocusClearError('others')" />
-                <InputText v-model="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
             </div>
             <!--end of fecalysis body form-->
             <!--fecalysis footer form-->
@@ -34,6 +32,7 @@
                 <SelectElement v-model="form.medical_technologist" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
                 <SelectElement v-model="form.pathologist" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
+            <InputText v-model="form.others" label="Others" type="others" :errorMsg="form.errors.others" @input="onFocusClearError('others')" />
             <InputText v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
             <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             <!--end of fecalysis footer form-->
@@ -67,9 +66,9 @@ export default {
                 sex: null,
                 ward: null,
                 or_no: null,
-                rqst_physician: null,
-                medical_technologist: null,
-                pathologist: null,
+                rqst_physician: 2,
+                medical_technologist: 4,
+                pathologist: 3,
                 hospital_no: null,
                 //fecalysis
                 color: null,

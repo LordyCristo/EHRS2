@@ -20,7 +20,7 @@ return new class extends Migration
             $table->double('rbc')->nullable();
             $table->double('fat_globules')->nullable();
             $table->string('others')->nullable();
-            $table->longText('remarks');
+            $table->longText('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

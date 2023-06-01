@@ -115,7 +115,6 @@ export default {
                 this.dtMessage = 'Please wait while deleting records...';
                 axios.delete(route(this.apiLink.destroy, id))
                     .then( response => {
-                        console.log(response.data)
                         pushNotification(response.data.notification);
                         this.getData();
                     })

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->double('lymphocyte')->nullable();
             $table->double('monocyte')->nullable();
             $table->string('blood_type')->nullable();
-            $table->longText('diagnosis');
+            $table->longText('diagnosis')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

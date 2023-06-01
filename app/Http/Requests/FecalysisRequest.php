@@ -34,7 +34,6 @@ class FecalysisRequest extends FormRequest
             'medical_technologist' => ['required', 'exists:users,id'],
             'pathologist' => ['required', 'exists:users,id'],
             'hospital_no' => ['nullable'],
-            'remarks' => ['nullable', 'string'],
             'status' => ['required', 'in:Pending,Processing,Done,Cancelled,Released'],
             //fecalysis
             'color' => ['required', 'string'],
@@ -43,8 +42,8 @@ class FecalysisRequest extends FormRequest
             'wbc' => ['required', 'numeric'],
             'rbc' => ['required', 'numeric'],
             'fat_globules' => ['required', 'numeric'],
-            'others' => ['required', 'string'],
-            'remarks' => ['required', 'string'],
+            'others' => ['nullable', 'string'],
+            'remarks' => ['nullable', 'string'],
         ];
     }
 

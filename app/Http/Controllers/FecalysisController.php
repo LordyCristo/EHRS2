@@ -26,7 +26,7 @@ class FecalysisController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Laboratory/Fecalysis/FecalysisIndex',[
+        return Inertia::render('Laboratory/Fecalysis/NewFecalysis',[
             'physicians' => new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get()),
         ]);
     }

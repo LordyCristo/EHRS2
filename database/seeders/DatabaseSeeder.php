@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             PaymentSeeder::class,
             HematologySeeder::class,
             FecalysisSeeder::class,
+            UrinalysisSeeder::class,
             PaymentsServiceSeeder::class,
 //            HematologyRecordSeeder::class,
 //            FecalysisRecordSeeder::class,

@@ -18,14 +18,20 @@ import CardWithAction from "@/Components/Generic/Modals/CardWithAction.vue";
 export default {
     props: {
         hematologyCount: Number,
+        fecalysisCount: Number,
+        urinalysisCount: Number,
     },
     data: () => ({
         cards: [
-            {id: 'hematology', title: 'Hematology', description: 'Hematology Filed Records', link: route('laboratory.hematology.index'), count: 0},
+            {id: 'hematology', title: 'Hematology', description: 'Manage Hematology Filed Records', link: route('laboratory.hematology.index'), count: 0},
+            {id: 'fecalysis', title: 'Fecalysis', description: 'Manage Fecalysis Filed Records', link: route('laboratory.fecalysis.index'), count: 0},
+            {id: 'urinalysis', title: 'Urinalysis', description: 'Manage Urinalysis Filed Records', link: route('laboratory.urinalysis.index'), count: 0},
         ]
     }),
     mounted() {
         this.cards[0].count = this.hematologyCount? this.hematologyCount : 0;
+        this.cards[1].count = this.fecalysisCount? this.fecalysisCount : 0;
+        this.cards[2].count = this.urinalysisCount? this.urinalysisCount : 0;
     }
 }
 

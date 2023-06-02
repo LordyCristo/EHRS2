@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hematology_records', function(Blueprint $table){
+        Schema::create('hematology_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hematology_id')->unique('unq_record_id')->constrained('hematology')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('infirmary_id')->constrained('clients', 'infirmary_id')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('medical_technologist')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('pathologist')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('hematology_id')->unique()->constrained('hematology')->onDelete('cascade');
+            $table->foreignId('infirmary_id')->constrained('clients', 'infirmary_id')->onDelete('cascade');
+            $table->foreignId('medical_technologist')->constrained('users')->onDelete('cascade');
+            $table->foreignId('pathologist')->constrained('users')->onDelete('cascade');
             $table->integer('age')->nullable();
-            $table->enum('sex', ['male','female']);
+            $table->enum('sex', ['male', 'female']);
             $table->string('ward')->nullable();
-            $table->foreignId('or_no')->constrained('payments','or_no')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('rqst_physician')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('or_no')->nullable()->constrained('payments', 'or_no')->onDelete('cascade');
+            $table->foreignId('rqst_physician')->constrained('users')->onDelete('cascade');
             $table->string('hospital_no')->nullable();
-            $table->longText('remarks')->nullable()->default(null);
-            $table->enum('status',['Pending','Processing','Done','Cancelled','Released']);
+            $table->longText('remarks')->nullable();
+            $table->enum('status', ['Pending', 'Processing', 'Done', 'Cancelled', 'Released']);
             $table->timestamps();
             $table->softDeletes();
         });

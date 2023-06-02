@@ -3,35 +3,35 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\HematologyRequest;
-use App\Http\Resources\HematologyCollection;
-use App\Http\Resources\HematologyResource;
-use App\Models\Hematology;
-use App\Models\HematologyRecord;
+use App\Http\Requests\UrinalysisRequest;
+use App\Http\Resources\UrinalysisCollection;
+use App\Http\Resources\UrinalysisResource;
+use App\Models\Urinalysis;
+use App\Models\UrinalysisRecord;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class HematologyApi extends Controller
+class UrinalysisApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new HematologyCollection(HematologyRecord::all());
+        return new UrinalysisCollection(UrinalysisRecord::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(HematologyRequest $request)
+    public function store(UrinalysisRequest $request)
     {
-        $newHematology = Hematology::create($request->validated());
-        if ($newHematology){
-            $newRecord = HematologyRecord::create([
-                'hematology_id' => $newHematology->id,
+        $newUrinalysis = Urinalysis::create($request->validated());
+        if ($newUrinalysis){
+            $newRecord = UrinalysisRecord::create([
+                'urinalysis_id' => $newUrinalysis->id,
                 'infirmary_id' => $request->infirmary_id,
                 'age' => $request->age,
                 'sex' => $request->sex,
@@ -46,23 +46,23 @@ class HematologyApi extends Controller
             ]);
             if ($newRecord){
                 return response()->json([
-                    'data' => (new HematologyResource($newRecord)),
+                    'data' => (new UrinalysisResource($newRecord)),
                     'notification' => [
                         'id' => uniqid(),
                         'show' => true,
                         'type' => 'success',
-                        'message' => 'Successfully created Hematology with id '.$newRecord->id,
+                        'message' => 'Successfully created Urinalysis with id '.$newRecord->id,
                     ]
                 ])->setStatusCode(201);
             }
         }
         return response()->json([
-            'data' => (new HematologyResource($newHematology)),
+            'data' => (new UrinalysisResource($newUrinalysis)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => 'failed',
-                'message' => 'Failed to create Hematology record',
+                'message' => 'Failed to create Urinalysis record',
             ]
         ])->setStatusCode(500);
     }
@@ -72,35 +72,35 @@ class HematologyApi extends Controller
      */
     public function show(Request $request)
     {
-        return new HematologyResource(Hematology::with('hematologyRecord')->findOrFail($request->id));
+        return new UrinalysisResource(Urinalysis::with('urinalysisRecord')->findOrFail($request->id));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(HematologyRequest $request)
+    public function update(UrinalysisRequest $request)
     {
-        $hematologyRecord = HematologyRecord::findOrFail($request->id);
-        $update = $hematologyRecord->update($request->validated());
+        $urinalysisRecord = UrinalysisRecord::findOrFail($request->id);
+        $update = $urinalysisRecord->update($request->validated());
         if ($update){
-            $hematologyRecord->hematology->update($request->validated());
+            $urinalysisRecord->urinalysis->update($request->validated());
             return response()->json([
-                'data' => (new HematologyResource($hematologyRecord)),
+                'data' => (new UrinalysisResource($urinalysisRecord)),
                 'notification' => [
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => 'Successfully updated Hematology with id '.$hematologyRecord->id,
+                    'message' => 'Successfully updated Urinalysis with id '.$urinalysisRecord->id,
                 ]
             ])->setStatusCode(200);
         }
         return response()->json([
-            'data' => (new HematologyResource($hematologyRecord)),
+            'data' => (new UrinalysisResource($urinalysisRecord)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => 'failed',
-                'message' => 'Failed to update Hematology record',
+                'message' => 'Failed to update Urinalysis record',
             ]
         ])->setStatusCode(500);
     }
@@ -111,14 +111,14 @@ class HematologyApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        HematologyRecord::destroy($id);
-        $temp = Hematology::destroy($id);
+        UrinalysisRecord::destroy($id);
+        $temp = Urinalysis::destroy($id);
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => $temp?'success':'failed',
-                'message' => $temp?'Successfully deleted '.$temp.' Hematology record/s':'Failed to delete Hematology record with id '. $request->id,
+                'message' => $temp?'Successfully deleted '.$temp.' Urinalysis record/s':'Failed to delete Urinalysis record with id '. $request->id,
             ]
         ]);
     }
@@ -128,7 +128,7 @@ class HematologyApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = HematologyRecord::with('hematology')->where('id', '!=', null);
+        $query = UrinalysisRecord::with('urinalysis')->where('id', '!=', null);
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -144,7 +144,7 @@ class HematologyApi extends Controller
                         ->orWhere('rqst_physician', 'like', '%' . $search . '%')
                         ->orWhere('hospital_no', 'like', '%' . $search . '%');
                 } else {
-                    $q->where('hematology_records.' . $searchBy, 'like', '%' . $search . '%');
+                    $q->where('urinalysis_records.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
@@ -174,53 +174,50 @@ class HematologyApi extends Controller
     public function import(Request $request): JsonResponse
     {
         $data = $request->all();
-        $successCount = 0;
-        $failedCount = 0;
         $response = [
             'successCount' => 0,
-            'failedCount' => null,
+            'failedCount' => 0,
             'data' => [],
         ];
 
-        $validator = new HematologyRequest();
+        $validator = new UrinalysisRequest();
 
         foreach ($data as $row) {
             $validation = Validator::make($row, $validator->rules());
 
             if ($validation->fails()) {
-                $failedCount++;
                 $row['errors'] = $validation->errors();
                 $response['data'][] = $row;
+                $response['failedCount']++;
             } else {
                 try {
-                    $hematology = Hematology::create($row);
-                    if ($hematology) {
-                        $hematology->hematologyRecord()->create($row);
-                        $successCount++;
+                    $urinalysis = Urinalysis::create($row);
+                    $urinalysisRecord = $urinalysis->urinalysisRecord()->create($row);
+
+                    if ($urinalysis && $urinalysisRecord) {
+                        $response['successCount']++;
                     } else {
-                        $failedCount++;
+                        $response['failedCount']++;
+                        if ($urinalysis) {
+                            $urinalysis->delete();
+                        }
                     }
                 } catch (Exception $e) {
-                    $failedCount++;
+                    $response['failedCount']++;
                 }
             }
         }
 
-        $response['successCount'] = $successCount;
-        $response['failedCount'] = $failedCount;
+        $notificationType = $response['failedCount'] > 0 ? 'warning' : 'success';
+        $notificationMessage = $response['failedCount'] > 0 ? "Failed to import Urinalysis {$response['failedCount']} rows out of " . ($response['failedCount'] + $response['successCount']) : 'Successfully imported Urinalysis without errors';
 
-        $notificationType = $failedCount ? 'warning' : 'success';
-        $notificationMessage = $failedCount ? "Failed to import Hematology $failedCount rows out of " . ($failedCount + $successCount) : 'Successfully imported Hematology without errors';
+        $notification = [
+            'id' => uniqid(),
+            'show' => true,
+            'type' => $notificationType,
+            'message' => $notificationMessage,
+        ];
 
-        return response()->json([
-            $response,
-            'notification' => [
-                'id' => uniqid(),
-                'show' => true,
-                'type' => $notificationType,
-                'message' => $notificationMessage,
-            ]
-        ]);
+        return response()->json([$response, 'notification' => $notification]);
     }
-
 }

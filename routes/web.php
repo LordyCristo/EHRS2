@@ -9,6 +9,7 @@ use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
 use App\Http\Controllers\API\PaymentApi;
 use App\Http\Controllers\API\ServiceApi;
+use App\Http\Controllers\API\UrinalysisApi;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DashboardController;
@@ -20,13 +21,16 @@ use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\UrinalysisController;
 use App\Models\College;
 use App\Models\DegreeProgram;
 use App\Models\Department;
+use App\Models\FecalysisRecord;
 use App\Models\Fees;
 use App\Models\HematologyRecord;
 use App\Models\Payment;
 use App\Models\Services;
+use App\Models\UrinalysisRecord;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -156,6 +160,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         Route::get('/', function () {
             return Inertia::render('Laboratory/LaboratoryIndex',[
                 'hematologyCount' => HematologyRecord::count(),
+                'fecalysisCount' => FecalysisRecord::count(),
+                'urinalysisCount' => UrinalysisRecord::count(),
             ]);
         })->name('laboratory.index');
 
@@ -198,6 +204,27 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
                 Route::get('/all', [FecalysisApi::class, 'tableApi'])->name('api.fecalysis.table');
                 // Fecalysis import from a CSV file
                 Route::post('/import', [FecalysisApi::class, 'import'])->name('api.fecalysis.import');
+            });
+        });
+
+        Route::prefix('/urinalysis')->group(function () {
+            Route::get('/', [UrinalysisController::class, 'index'])->name('laboratory.urinalysis.index');
+            Route::get('/new', [UrinalysisController::class, 'create'])->name('laboratory.urinalysis.create');
+            Route::get('/edit/{id}', [UrinalysisController::class, 'edit'])->name('laboratory.urinalysis.edit');
+            Route::get('/show/{id}', [UrinalysisController::class, 'show'])->name('laboratory.urinalysis.show');
+            Route::prefix('api')->group(function (){
+                // Urinalysis GET ALL route
+                Route::get('/', [UrinalysisApi::class, 'index'])->name('api.urinalysis.index');
+                // Urinalysis STORE route
+                Route::post('/', [UrinalysisApi::class, 'store'])->name('api.urinalysis.store');
+                // Urinalysis UPDATE route
+                Route::put('/{id}', [UrinalysisApi::class, 'update'])->name('api.urinalysis.update');
+                // Urinalysis DELETE route
+                Route::delete('/{id}', [UrinalysisApi::class, 'destroy'])->name('api.urinalysis.destroy');
+                // Urinalysis DATATABLE API route
+                Route::get('/all', [UrinalysisApi::class, 'tableApi'])->name('api.urinalysis.table');
+                // Urinalysis import from a CSV file
+                Route::post('/import', [UrinalysisApi::class, 'import'])->name('api.urinalysis.import');
             });
         });
     });

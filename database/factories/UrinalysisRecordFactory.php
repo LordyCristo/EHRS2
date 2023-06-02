@@ -3,15 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Client;
-use App\Models\Hematology;
-use App\Models\HematologyRecord;
 use App\Models\Payment;
+use App\Models\Urinalysis;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<HematologyRecord>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UrinalysisRecord>
  */
-class HematologyRecordFactory extends Factory
+class UrinalysisRecordFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -20,13 +19,13 @@ class HematologyRecordFactory extends Factory
      */
     public function definition(): array
     {
-        $hematologyIds = Hematology::pluck('id')->toArray();
+        $urinalysisIds = Urinalysis::pluck('id')->toArray();
         $clientIds = Client::pluck('infirmary_id')->toArray();
         $or_nos = Payment::pluck('or_no')->toArray();
         return [
-            'hematology_id' => $this->faker->randomElement($hematologyIds),
+            'urinalysis_id' => $this->faker->randomElement($urinalysisIds),
             'infirmary_id' => $this->faker->randomElement($clientIds),
-            'age' => $this->faker->numberBetween(18, 100),
+            'age' => $this->faker->numberBetween(18,100),
             'sex' => $this->faker->randomElement(['male','female']),
             'ward' => $this->faker->randomElement(['OP','IN','ER','Ward']),
             'or_no' => $this->faker->randomElement($or_nos),

@@ -105,11 +105,11 @@ export default {
                     subLinks: [{
                         title: 'More',
                         content: [
-                            // {
-                            //     name: 'Urinalysis',
-                            //     link: 'more.college.index',
-                            //     linkName: 'college',
-                            // },
+                            {
+                                name: 'Urinalysis',
+                                link: 'laboratory.urinalysis.index',
+                                linkName: 'urinalysis',
+                            },
                             {
                                 name: 'Fecalysis',
                                 link: 'laboratory.fecalysis.index',

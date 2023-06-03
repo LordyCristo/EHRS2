@@ -13,7 +13,6 @@ class Fecalysis extends Model
 
     protected $table = 'fecalysis';
     protected $fillable = [
-        'id',
         'color',
         'consistency',
         'ova',

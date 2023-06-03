@@ -19,7 +19,7 @@ class Payment extends Model
         'payor_name',
         'payor_email',
         'payor_mobile',
-        'client_id',
+        'infirmary_id',
         'collector_id',
         'total_amount',
         'remarks',
@@ -27,7 +27,7 @@ class Payment extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class);
+        return $this->belongsTo(Client::class, 'infirmary_id', 'infirmary_id');
     }
 
     public function services()

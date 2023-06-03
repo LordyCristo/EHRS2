@@ -28,21 +28,10 @@ class FecalysisApi extends Controller
      */
     public function store(FecalysisRequest $request)
     {
-        $newFecalysis = Fecalysis::create($request->validated());
-        if ($newFecalysis){
-            $newRecord = FecalysisRecord::create([
-                'fecalysis_id' => $newFecalysis->id,
-                'infirmary_id' => $request->infirmary_id,
-                'age' => $request->age,
-                'sex' => $request->sex,
-                'ward' => $request->ward,
-                'or_no' => $request->or_no,
-                'rqst_physician' => $request->rqst_physician,
-                'medical_technologist' => $request->medical_technologist,
-                'pathologist' => $request->pathologist,
-                'hospital_no' => $request->hospital_no,
-                'status' =>  $request->status,
-            ]);
+        $newResult = Fecalysis::create($request->validated());
+        if ($newResult){
+            $request->merge(['fecalysis_id' => $newResult->id]);
+            $newRecord = FecalysisRecord::create($request->all());
             if ($newRecord){
                 return response()->json([
                     'data' => (new FecalysisResource($newRecord)),
@@ -50,13 +39,13 @@ class FecalysisApi extends Controller
                         'id' => uniqid(),
                         'show' => true,
                         'type' =>'success',
-                        'message' => 'Successfully created Fecalysis with id '.$newRecord->id,
+                        'message' => 'Successfully created Fecalysis result with id '.$newRecord->id,
                     ]
                 ])->setStatusCode(201);
             }
         }
         return response()->json([
-            'data' => (new FecalysisResource($newFecalysis)),
+            'data' => (new FecalysisResource($newResult)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
@@ -79,22 +68,22 @@ class FecalysisApi extends Controller
      */
     public function update(FecalysisRequest $request)
     {
-        $fecalysisRecord = FecalysisRecord::findOrFail($request->id);
-        $update = $fecalysisRecord->update($request->validated());
+        $record = FecalysisRecord::findOrFail($request->id);
+        $update = $record->update($request->validated());
         if ($update){
-            $fecalysisRecord->fecalysis->update($request->validated());
+            $record->fecalysis->update($request->validated());
             return response()->json([
-                'data' => (new FecalysisResource($fecalysisRecord)),
+                'data' => (new FecalysisResource($record)),
                 'notification' => [
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => 'Successfully updated Fecalysis with id '.$fecalysisRecord->id,
+                    'message' => 'Successfully updated Fecalysis result with id '.$record->id,
                 ]
             ])->setStatusCode(201);
         }
         return response()->json([
-            'data' => (new FecalysisResource($fecalysisRecord)),
+            'data' => (new FecalysisResource($record)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
@@ -109,47 +98,53 @@ class FecalysisApi extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = explode(',', $request->id);
-        FecalysisRecord::destroy($id);
-        $temp = Fecalysis::destroy($id);
+        $ids = explode(',', $request->id);
+
+        $deletedRecordsCount = FecalysisRecord::destroy($ids);
+        $deletedFecalysisCount = Fecalysis::whereIn('id', $ids)->delete();
+
+        $success = ($deletedRecordsCount > 0 && $deletedFecalysisCount > 0);
+
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => $temp?'success':'failed',
-                'message' => $temp?'Successfully deleted '.$temp.' Fecalysis record/s':'Failed to delete Fecalysis record with id '. $request->id,
+                'type' => $success ? 'success' : 'failed',
+                'message' => $success ? "Successfully deleted {$deletedRecordsCount} Fecalysis record(s)." : "Failed to delete Fecalysis record(s) with ID {$request->id}.",
             ]
         ]);
     }
+
 
     /**
      * Get all the departments to be displayed in the datatable, that can handle the search, pagination, and sorting.
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = FecalysisRecord::with('fecalysis')->where('id', '!=', null);
+        $query = FecalysisRecord::join('clients', 'fecalysis_records.infirmary_id', '=', 'clients.infirmary_id')
+            ->selectRaw('fecalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
-            $searchBy = $request->input('search_by', 'id');
+            $searchBy = $request->input('search_by', 'infirmary_id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('infirmary_id', 'like', '%' . $search . '%')
-                        ->orWhere('age', 'like', '%' . $search . '%')
-                        ->orWhere('sex', 'like', '%' . $search . '%')
-                        ->orWhere('ward', 'like', '%' . $search . '%')
-                        ->orWhere('or_no', 'like', '%' . $search . '%')
-                        ->orWhere('rqst_physician', 'like', '%' . $search . '%')
-                        ->orWhere('hospital_no', 'like', '%' . $search . '%');
-                } else {
+                    $q->where('fecalysis_records.infirmary_id', 'like', '%' . $search . '%')
+                        ->orWhere('name', 'like', '%' . $search . '%')
+                        ->orWhere('status', 'like', '%' . $search . '%');
+                } elseif ($searchBy == 'name'){
+                    $q->where('clients.last_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.first_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.middle_name', 'like', '%' . $search . '%');
+                }
+                else {
                     $q->where('fecalysis_records.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }
 
         // Handle sorting
-        $sortField = $request->input('sort', 'id');
+        $sortField = $request->input('sort', 'fecalysis_records.id');
         $sortDirection = $request->input('sort_dir', 'asc');
         $query->orderBy($sortField, $sortDirection);
 
@@ -195,12 +190,7 @@ class FecalysisApi extends Controller
                     $fecalysis = Fecalysis::create($row);
                     if($fecalysis){
                         $fecalysis->fecalysisRecord()->create($row);
-                        if ($fecalysis){
-                            $successCount++;
-                        }else{
-                            $fecalysis->delete();
-                            $failedCount++;
-                        }
+                        $successCount++;
                     }
                 } catch (Exception $e) {
                     $failedCount++;
@@ -210,6 +200,7 @@ class FecalysisApi extends Controller
 
         $response['successCount'] = $successCount;
         $response['failedCount'] = $failedCount;
+
         return response()->json([
             $response,
             'notification' => [

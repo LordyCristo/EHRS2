@@ -8,7 +8,7 @@
         <template #formBody>
             <InputText v-model="form.name" label="Degree Program Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
             <InputText v-model="form.major" label="Major" :errorMsg="form.errors.major" @input="form.errors['major'] = null" />
-            <SelectElement v-model="form.department_id" label="College" :options="departments" :errorMsg="form.errors.department_id" @input="form.errors['department_id'] = null" />
+            <InputTextAuto v-model="form.department_id" label="Department" :options="departments" :errorMsg="form.errors.department_id" @input="form.errors['department_id'] = null" />
             <div class="grid grid-cols-2">
                 <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
                 <SelectElement v-model="form.group" label="Group" :options="groups" :errorMsg="form.errors.group" @input="form.errors['group'] = null" />
@@ -20,6 +20,7 @@
 import InputText from "@/Components/Generic/Forms/InputText.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
+import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";

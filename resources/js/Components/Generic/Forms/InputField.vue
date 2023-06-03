@@ -6,6 +6,7 @@ defineProps({
     name: String,
     label: String,
     errorMsg: [String, Array],
+    required: Boolean,
 });
 
 </script>
@@ -17,7 +18,7 @@ defineProps({
 <template>
     <div class="p-1">
         <div class="inputField">
-            <InputLabel :for="name" :value="label" />
+            <InputLabel :for="name" :value="label" :required="required" />
             <InputError :message="errorMsg" />
         </div>
         <slot />

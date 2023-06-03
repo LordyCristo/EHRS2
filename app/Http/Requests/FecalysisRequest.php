@@ -26,19 +26,16 @@ class FecalysisRequest extends FormRequest
         return [
             //fecalysis record
             'infirmary_id' => ['required', 'exists:clients,infirmary_id'],
-            'age' => ['nullable','numeric'],
-            'sex' => ['required','in:male,female'],
-            'ward' => ['nullable'],
-            'or_no' => ['nullable', 'numeric', 'exists:payments,or_no', Rule::unique('fecalysis_records')->ignore($id)],
             'rqst_physician' => ['required', 'exists:users,id'],
             'medical_technologist' => ['required', 'exists:users,id'],
             'pathologist' => ['required', 'exists:users,id'],
-            'hospital_no' => ['nullable'],
-            'status' => ['required', 'in:Pending,Processing,Done,Cancelled,Released'],
+            'or_no' => ['nullable', 'numeric', 'exists:payments,or_no', Rule::unique('fecalysis_records','or_no')->ignore($id)],
+            'ward' => ['required'],
+            'status' => ['required', 'in:pending,released'],
             //fecalysis
             'color' => ['required', 'string'],
             'consistency' => ['required', 'string'],
-            'ova' => ['required', 'string'],
+            'ova' => ['nullable', 'string'],
             'wbc' => ['required', 'numeric'],
             'rbc' => ['required', 'numeric'],
             'fat_globules' => ['required', 'numeric'],
@@ -53,12 +50,10 @@ class FecalysisRequest extends FormRequest
             //fecalysis record
             'infirmary_id.required' => 'Required field',
             'infirmary_id.exists' => 'Patient ID does not exist',
-            'age.numeric' => 'Invalid Format',
-            'sex.required' => 'Required field',
-            'sex.in' => 'Invalid value',
             'or_no.numeric' => 'Invalid format',
             'or_no.exists' => 'OR number does not exist',
             'or_no.unique' => 'OR number already exists',
+            'ward.required' => 'Required field',
             'rqst_physician.required' => 'Required field',
             'rqst_physician.exists' => 'Physician does not exist',
             'medical_technologist.required' => 'Required field',
@@ -77,8 +72,6 @@ class FecalysisRequest extends FormRequest
             'rbc.numeric' => 'Invalid format',
             'fat_globules.required' => 'Required field',
             'fat_globules.numeric' => 'Invalid format',
-            'others.required' => 'Required field',
-            'remarks.required' => 'Required field',
         ];
     }
 }

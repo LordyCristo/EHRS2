@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('payments_service', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payment_id')->constrained('payments')->cascadeOnDelete();
-            $table->foreignId('service_id')->constrained('fees')->cascadeOnDelete();
+            $table->foreignId('payment_id')->constrained('payments', 'or_no')->cascadeOnDelete();
+            $table->foreignId('service_id')->constrained('fees','service_id')->cascadeOnDelete();
             $table->float('fee', 10, 2);
             $table->timestamps();
             // Add any additional columns related to the payment-service relationship

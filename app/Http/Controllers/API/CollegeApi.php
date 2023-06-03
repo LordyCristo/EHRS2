@@ -57,6 +57,17 @@ class CollegeApi extends Controller
     public function update(CollegeRequest $request)
     {
         $college = College::findOrFail($request->id);
+        // check if the values are different
+        if($college->name == $request->name && $college->abbr == $request->abbr){
+            return response()->json([
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'warning',
+                    'message' => 'No changes made to College record with id '.$request->id,
+                ]
+            ])->setStatusCode(202);
+        }
         $update = $college->update($request->all());
         return response()->json([
             'notification' => [

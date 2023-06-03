@@ -40,7 +40,7 @@ class PaymentApi extends Controller
                 'payor_name' => $payment->payor_name,
                 'payor_email' => $payment->payor_email,
                 'payor_mobile' => $payment->payor_mobile,
-                'client_id' => $payment->client->name,
+                'infirmary_id' => $payment->client->name,
                 'services' => implode(', ', $services),
                 'fees' => implode(', ', $fees),
                 'total_amount' => $payment->total_amount,
@@ -172,9 +172,9 @@ class PaymentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Payment::join('clients', 'clients.id', '=', 'payments.client_id')
+        $query = Payment::join('clients', 'clients.infirmary_id', '=', 'payments.infirmary_id')
             ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-            ->selectRaw('payments.or_no, payments.id, payments.payor_name, payments.payor_email, payments.payor_mobile, payments.client_id, COUNT(payments_service.service_id) as services_count, payments.collector_id, payments.total_amount, payments.remarks')
+            ->selectRaw('payments.or_no, payments.id, payments.payor_name, payments.infirmary_id, COUNT(payments_service.service_id) as services_count, payments.total_amount, payments.remarks')
             ->groupBy('payments.or_no');
 
         $totalRecords = $query->count();

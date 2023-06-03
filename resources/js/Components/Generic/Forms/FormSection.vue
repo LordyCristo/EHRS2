@@ -74,7 +74,8 @@ const clearForm = () => {
 const goBackToIndex = (response) => {
     pushNotification(response.data.notification);
     if (stayOnPage.value) {
-        clearForm();
+        // reload the page to get the updated data using the same url but without loading the page.
+        location.reload();
     } else {
         router.push({name: props.indexLink});
         router.back();
@@ -114,7 +115,13 @@ const deleteForm = () => {
 };
 
 const printError = (error) => {
-    console.log(error);
+    const notif = {
+        'id': error.code,
+        'show': true,
+        'type': 'warning',
+        'message': error.message,
+    }
+    pushNotification(notif);
     // error code for validation errors.
     if (typeof error.response != 'undefined' && error.response.status === 422)
         props.form.errors = error.response.data.errors;

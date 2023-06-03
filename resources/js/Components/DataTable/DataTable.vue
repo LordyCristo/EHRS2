@@ -407,7 +407,7 @@ export default {
                     <DownloadIcon class="w-4 mr-1" />
                     Export
                 </DtActionBtn>
-                <DtActionBtn @click="importFromCsv" class="bg-teal-600">
+                <DtActionBtn v-if="false" @click="importFromCsv" class="bg-teal-600">
                     <UploadIcon class="w-4 mr-1" />
                     Import
                 </DtActionBtn>
@@ -415,7 +415,7 @@ export default {
                     <DeleteIcon class="w-4 mr-1" />
                     Delete
                 </DtActionBtn>
-                <DtActionBtn @click="changeSizeView" class="bg-vsu-yellow-green">
+                <DtActionBtn v-if="false" @click="changeSizeView" class="bg-vsu-yellow-green">
                     <template v-if="viewSize">
                         <CollapseIcon class="w-3 mr-1" />
                         Collapse

@@ -5,7 +5,7 @@
         </Link>
         <h1 class=" text-center w-fit text-xl font-semibold"><slot /></h1>
         <Link :href="link" class="text-gray-600 hover:text-gray-900 duration-300">
-            <CloseIcon class="w-6 h-auto hover:rotate-90 duration-300" />
+            <CloseIcon class="w-7 h-auto hover:rotate-90 duration-300" />
         </Link>
     </div>
 </template>

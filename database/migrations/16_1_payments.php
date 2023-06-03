@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('payor_name')->nullable();
             $table->string('payor_email')->nullable();
             $table->string('payor_mobile')->nullable();
-            $table->foreignId('client_id')->constrained('clients')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('infirmary_id')->constrained('clients','infirmary_id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('collector_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->decimal('total_amount', 10, 2);
             $table->longText('remarks')->nullable();

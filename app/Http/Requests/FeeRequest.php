@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueServiceClientType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class FeeRequest extends FormRequest
 {
@@ -21,9 +23,10 @@ class FeeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('id');
         return [
-            'service_id' => ['required', 'integer', 'exists:services,id'],
-            'client_type' => ['required', 'integer', 'exists:client_types,id'],
+            'service_id' => ['required', 'exists:services,id', new UniqueServiceClientType($id)],
+            'client_type' => ['required', 'exists:client_types,id', new UniqueServiceClientType($id)],
             'amount' => ['required', 'numeric'],
         ];
     }

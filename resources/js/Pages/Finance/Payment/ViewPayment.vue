@@ -1,7 +1,7 @@
 <template>
     <Finance title="Create Form">
         <ViewForm :link="route('finance.payment.index')" >
-            <div class="printTable flex flex-col">
+            <div class="printTable flex flex-col py-10">
                 <div class="inline-flex text-center justify-between mb-1 gap-1">
                     <img src="../../../Components/Icons/vsu-name-logo.png" alt="Visayas State University Logo" class="vsu-logo w-[15rem] h-auto">
                     <h1 class="header-text text-right m-0 p-0 font-bold text-sm font-montserrat max-w-xs">
@@ -65,33 +65,5 @@ export default {
     mounted() {
         this.data = this.$page.props.data.data;
     },
-    methods: {
-        printComponent() {
-            // Create a new HTML canvas element
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-
-            // Get the component's HTML element
-            const componentElement = this.$el;
-
-            // Set the canvas dimensions to match the component's size
-            canvas.width = componentElement.offsetWidth;
-            canvas.height = componentElement.offsetHeight;
-
-            // Draw the component's content onto the canvas
-            context.drawComponent(componentElement);
-
-            // Convert the canvas content to a base64-encoded image URL
-            const imageURL = canvas.toDataURL('image/png');
-
-            // Create a new window or tab with the printable image
-            const printWindow = window.open();
-            printWindow.document.write(`<img src="${imageURL}" />`);
-            printWindow.document.close();
-
-            // Trigger the print dialog for the new window/tab
-            printWindow.print();
-        }
-    }
 }
 </script>

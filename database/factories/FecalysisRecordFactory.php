@@ -23,17 +23,14 @@ class FecalysisRecordFactory extends Factory
         $clientIds = Client::pluck('infirmary_id')->toArray();
         $or_nos = Payment::pluck('or_no')->toArray();
         return [
-            'fecalysis_id' => $this->faker->randomElement($fecalysisIds),
             'infirmary_id' => $this->faker->randomElement($clientIds),
-            'age' => $this->faker->numberBetween(18, 90),
-            'sex' => $this->faker->randomElement(['male','female']),
-            'ward' => $this->faker->randomElement(['OP','IN','ER','Ward']),
-            'or_no' => $this->faker->randomElement($or_nos),
-            'hospital_no' => 920283,
-            'rqst_physician' => $this->faker->numberBetween(2, 4),
+            'fecalysis_id' => $this->faker->randomElement($fecalysisIds),
             'medical_technologist' => $this->faker->numberBetween(2, 4),
             'pathologist' => $this->faker->numberBetween(2, 4),
-            'status' => $this->faker->randomElement(['Pending','Released','Processing','Released','Done','Released','Cancelled','Released']),
+            'rqst_physician' => $this->faker->numberBetween(2, 4),
+            'or_no' => $this->faker->randomElement($or_nos),
+            'ward' => $this->faker->randomElement(['OPD','MALE WARD','ER','FEMALE WARD','PEDIA WARD','ISO-1','ISO-2']),
+            'status' => $this->faker->randomElement(['pending','released']),
         ];
     }
 }

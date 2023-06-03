@@ -6,9 +6,9 @@
                  :delete-link="data? route('api.fee.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
-            <SelectElement v-model="form.service_id" label="Service" :options="services" :errorMsg="form.errors.service_id" @input="form.errors['service_id'] = null" />
-            <SelectElement v-model="form.client_type" label="Client Type" :options="client_types" :errorMsg="form.errors.client_type" @input="form.errors['client_type'] = null" />
-            <InputText v-model="form.amount" label="Amount" type="number" :errorMsg="form.errors.amount" @input="form.errors['amount'] = null" />
+            <SelectElement v-model="form.service_id" label="Service" required :options="services" :errorMsg="form.errors.service_id" @input="form.errors['service_id'] = null" />
+            <SelectElement v-model="form.client_type" label="Client Type" required :options="client_types" :errorMsg="form.errors.client_type" @input="form.errors['client_type'] = null" />
+            <InputText v-model="form.amount" label="Amount" type="number" required :errorMsg="form.errors.amount" @input="form.errors['amount'] = null" />
         </template>
     </FormSection>
 </template>

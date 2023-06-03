@@ -1,5 +1,5 @@
 <template>
-    <Finance title="Finance">
+    <Finance title="Fees">
         <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink" />
         <NotifBanner :message="notifMessage" :type="notifType" />
     </Finance>
@@ -51,9 +51,18 @@ export default{
                 name:'id',
                 title: 'ID',
                 searchable: true,
-                orderable: true,
+                orderable: false,
                 collapsable: false,
                 className: 'dt-center dt-border-sm px-2'
+            },
+            {
+                data: 'service_id',
+                name: 'service_id',
+                title: 'Service ID',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-border-sm px-2',
             },
             {
                 data: 'service',

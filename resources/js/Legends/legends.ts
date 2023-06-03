@@ -36,10 +36,17 @@ export const AcademicGroup = Array(
 );
 
 export const RecordStatus = Array(
-    {id: 'Pending', name: 'Pending'},
-    {id: 'Processing', name: 'Processing'},
-    {id: 'Done', name: 'Done'},
-    {id: 'Cancelled', name: 'Cancelled'},
-    {id: 'Released', name: 'Released'},
+    {id: 'pending', name: 'Pending'},
+    {id: 'released', name: 'Released'},
+);
+
+export const WardType = Array(
+    {id: 'er', name: 'ER'},
+    {id: 'opd', name: 'OPD'},
+    {id: 'male-ward', name: 'Male Ward'},
+    {id: 'female-ward', name: 'Female Ward'},
+    {id: 'pedia-ward', name: 'Pedia Ward'},
+    {id: 'iso-1', name: 'ISO 1'},
+    {id: 'iso-2', name: 'ISO 2'},
 );
 export {};

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('fecalysis', function (Blueprint $table) {
             $table->id();
-            $table->string('color')->nullable();
-            $table->string('consistency')->nullable();
+            $table->string('color');
+            $table->string('consistency');
             $table->string('ova')->nullable();
-            $table->double('wbc')->nullable();
-            $table->double('rbc')->nullable();
-            $table->double('fat_globules')->nullable();
+            $table->double('wbc');
+            $table->double('rbc');
+            $table->double('fat_globules');
             $table->string('others')->nullable();
             $table->longText('remarks')->nullable();
             $table->timestamps();

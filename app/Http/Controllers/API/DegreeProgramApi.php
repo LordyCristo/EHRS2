@@ -54,6 +54,17 @@ class DegreeProgramApi extends Controller
     public function update(DegreeProgramRequest $request)
     {
         $degreeprogram = DegreeProgram::findOrFail($request->id);
+        // check if the values are different
+        if ($degreeprogram->name == $request->name && $degreeprogram->major == $request->major && $degreeprogram->abbr == $request->abbr && $degreeprogram->department_id == $request->department_id) {
+            return response()->json([
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'warning',
+                    'message' => 'No changes were made to Program record with id '.$request->id,
+                ]
+            ])->setStatusCode(200);
+        }
         $update = $degreeprogram->update($request->all());
         return response()->json([
             'notification' => [

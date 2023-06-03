@@ -35,17 +35,16 @@ defineExpose({ focus: () => input.value.focus() });
 </style>
 <template>
     <InputField :name="name" :errorMsg="errorMsg" :label="label" :required="required">
-        <input
-            :id="id"
-            :name="name"
-            ref="input"
-            :step="step"
-            :type="type"
-            :autofocus="autofocus"
-            class="inputText"
-            :class="errorMsg?'border-red-300':'border-gray-300'"
-            :value="modelValue"
-            @input="$emit('update:modelValue', $event.target.value)"
-        />
+    <textarea
+        :id="id"
+        :name="name"
+        ref="input"
+        :autofocus="autofocus"
+        class="inputText"
+        :class="errorMsg ? 'border-red-300' : 'border-gray-300'"
+        :value="modelValue"
+        @input="$emit('update:modelValue', $event.target.value)"
+    ></textarea>
     </InputField>
+
 </template>

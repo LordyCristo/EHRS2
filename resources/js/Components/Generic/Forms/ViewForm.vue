@@ -1,11 +1,11 @@
 <template>
-    <div class="flex flex-col justify-center h-full w-full">
+    <div class="flex flex-col justify-center h-full w-fit mx-auto">
         <div class="flex items-center justify-end mb-3 gap-2">
             <Link :href="props.link" class="text-gray-600 hover:text-gray-900 duration-300" title="Close">
                 <CloseIcon class="w-7 h-auto hover:rotate-90 duration-300" />
             </Link>
         </div>
-        <div id="official-receipt-printable" class="printTable shadow-2xl px-5 py-8 mx-auto w-full">
+        <div id="official-receipt-printable" class="printTable shadow-2xl px-10 py-15 mx-auto max-w-fit">
             <slot />
         </div>
         <div class="fixed bottom-5 right-5">

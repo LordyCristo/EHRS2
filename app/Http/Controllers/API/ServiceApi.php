@@ -53,6 +53,17 @@ class ServiceApi extends Controller
     public function update(ServiceRequest $request)
     {
         $service = Services::findOrFail($request->id);
+        // check if the values are different
+        if ($service->name == $request->name && $service->description == $request->description && $service->schedule == $request->schedule && $service->section_name == $request->section_name && $service->room_no == $request->room_no) {
+            return response()->json([
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'warning',
+                    'message' => 'No changes were made to Service record with id '.$request->id,
+                ]
+            ])->setStatusCode(200);
+        }
         $update = $service->update($request->all());
         return response()->json([
             'notification' => [

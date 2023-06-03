@@ -9,32 +9,32 @@
         <template #formBody>
             <div class="grid grid-cols-1">
                 <div class="grid grid-cols-4">
-                    <InputText v-model="form.infirmary_id" label="Infirmary No." :errorMsg="form.errors.infirmary_id" autofocus @input="onFocusClearError('infirmary_id');" />
+                    <InputText v-model="form.infirmary_id" label="Infirmary No." required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
                     <InputText v-model="form.id_number" label="Student ID No." :errorMsg="form.errors.id_number" autofocus @input="onFocusClearError('id_number'); formatIdNumber($event); " />
-                    <Select v-model="form.client_type_id" label="Client Type" :options="client_types" :errorMsg="form.errors.client_type_id" @input="onFocusClearError('client_type_id')" />
+                    <Select v-model="form.client_type_id" label="Client Type" required :options="client_types" :errorMsg="form.errors.client_type_id" @input="onFocusClearError('client_type_id')" />
                 </div>
                 <div class="grid grid-cols-4">
-                    <InputText v-model.trim="form.first_name" label="First Name" :errorMsg="form.errors.first_name" @input="onFocusClearError('first_name')" />
+                    <InputText v-model.trim="form.first_name" label="First Name" required :errorMsg="form.errors.first_name" @input="onFocusClearError('first_name')" />
                     <InputText v-model.trim="form.middle_name" label="Middle Name" :errorMsg="form.errors.middle_name" @input="onFocusClearError('middle_name')" />
-                    <InputText v-model.trim="form.last_name" label="Last Name" :errorMsg="form.errors.last_name" @input="onFocusClearError('last_name')" />
+                    <InputText v-model.trim="form.last_name" label="Last Name" required :errorMsg="form.errors.last_name" @input="onFocusClearError('last_name')" />
                     <InputText v-model.trim="form.suffix" label="Suffix" :errorMsg="form.errors.suffix" @input="onFocusClearError('suffix')" />
                 </div>
                 <div class="grid grid-cols-4">
-                    <Datepicker v-model="form.birthdate" label="Birthdate" :errorMsg="form.errors.birthdate" @change="computeAge()" @input="onFocusClearError('birthdate')" />
-                    <InputText v-model.number="form.age" label="Age" type="number" :errorMsg="form.errors.age" @input="onFocusClearError('age')" />
-                    <RadioButton v-model="form.sex" label="Sex" :options="sexes" :errorMsg="form.errors.sex" @input="onFocusClearError('sex')" />
-                    <Select v-model="form.civil_status" label="Civil Status" :options="civil_statuses" :errorMsg="form.errors.civil_status" @input="onFocusClearError('civil_status')" />
+                    <Datepicker v-model="form.birthdate" label="Birthdate" required :errorMsg="form.errors.birthdate" @change="computeAge()" @input="onFocusClearError('birthdate')" />
+                    <InputText v-model.number="form.age" label="Age" required type="number" :errorMsg="form.errors.age" @input="onFocusClearError('age')" />
+                    <RadioButton v-model="form.sex" label="Sex" :options="sexes" required :errorMsg="form.errors.sex" @input="onFocusClearError('sex')" />
+                    <Select v-model="form.civil_status" label="Civil Status" required :options="civil_statuses" :errorMsg="form.errors.civil_status" @input="onFocusClearError('civil_status')" />
                 </div>
                 <div class="grid grid-cols-2">
-                    <InputText v-model.trim="form.email_address" label="Email" type="text" :errorMsg="form.errors.email_address" @input="onFocusClearError('email_address')" />
-                    <InputText v-model.trim="form.phone" label="Phone" type="tel" :errorMsg="form.errors.phone" @input="onFocusClearError('phone')" />
+                    <InputText v-model.trim="form.email_address" label="Email" required type="text" :errorMsg="form.errors.email_address" @input="onFocusClearError('email_address')" />
+                    <InputText v-model.trim="form.phone" label="Phone" type="tel" required :errorMsg="form.errors.phone" @input="onFocusClearError('phone')" />
                 </div>
                 <div class="grid grid-cols-2">
-                    <InputText v-model.trim="form.home_address" label="Home Address" type="text" :errorMsg="form.errors.home_address" @input="onFocusClearError('home_address')" />
-                    <InputText v-model.trim="form.curr_address" label="Current Address" type="text" :errorMsg="form.errors.curr_address" @input="onFocusClearError('curr_address')" />
+                    <InputText v-model.trim="form.home_address" label="Home Address" required type="text" :errorMsg="form.errors.home_address" @input="onFocusClearError('home_address')" />
+                    <InputText v-model.trim="form.curr_address" label="Current Address" required type="text" :errorMsg="form.errors.curr_address" @input="onFocusClearError('curr_address')" />
                 </div>
                 <div class="grid grid-cols-2">
-                    <Select v-model="form.program_id" label="Degree Program" :options="degree_programs" :errorMsg="form.errors.program_id" @input="onFocusClearError('program_id')" />
+                    <InputTextAuto v-model="form.program_id" label="Degree Program" :options="degree_programs" :errorMsg="form.errors.program_id" @input="onFocusClearError('program_id')" />
                     <Select v-model="form.year_lvl" label="Year Level" :options="year_levels" :errorMsg="form.errors.year_lvl" @input="onFocusClearError('year_lvl')" />
                 </div>
             </div>
@@ -47,6 +47,7 @@ import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
 import Select from '@/Components/Generic/Forms/SelectElement.vue';
 import Datepicker from "@/Components/Generic/Forms/Datepicker.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
+import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -68,22 +69,22 @@ export default {
             formTitle: null,
             form: useForm({
                 infirmary_id: null,
-                first_name: 'null',
-                middle_name: 'null',
-                last_name: 'null',
-                suffix: 'null',
-                birthdate: '200-11-22',
-                age: 23,
-                sex: 'male',
-                civil_status: 'single',
-                phone: '09127092422',
-                email_address: 'sample@gmail.com',
-                home_address: 'home, home city',
-                curr_address: 'vsu, vsu city',
-                id_number: '19-1-00255',
-                program_id: 1,
-                year_lvl: '4th',
-                client_type_id: 1,
+                first_name: null,
+                middle_name: null,
+                last_name: null,
+                suffix: null,
+                birthdate: null,
+                age: null,
+                sex: null,
+                civil_status: null,
+                phone: null,
+                email_address: null,
+                home_address: null,
+                curr_address: null,
+                id_number: null,
+                program_id: null,
+                year_lvl: null,
+                client_type_id: null,
             }),
         };
     },
@@ -124,8 +125,9 @@ export default {
             this.data = this.$page.props.data.data;
         }else{
             this.formTitle = 'Register New Client';
+            this.form.infirmary_id = this.$page.props.last_client_id.infirmary_id? this.$page.props.last_client_id.infirmary_id + 1: 1;
         }
-        this.last_client_id = this.$page.props.last_client_id;
+
         this.degree_programs = this.$page.props.degree_programs;
         this.client_types = this.$page.props.client_types;
     }

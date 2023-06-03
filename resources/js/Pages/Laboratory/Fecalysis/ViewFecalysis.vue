@@ -1,25 +1,26 @@
 <template>
-    <Laboratory title="View Hematology">
+    <Laboratory title="View Fecalysis">
         <ViewForm :link="route('laboratory.fecalysis.index')">
-            <div class="printTable flex flex-col">
+            <div class="printTable flex flex-col container py-6 w-fit">
                 <ViewHeader>Fecalysis Report</ViewHeader>
-                <div class="grid grid-rows-2" v-if="data">
-                    <div class="flex flex-row justify-between gap-2">
-                        <view-field label="Patient" :value="data.infirmary_id" />
-                        <view-field label="Age" :value="data.age" />
-                        <view-field label="Sex" :value="data.sex" />
-                        <view-field label="Hospital No." :value="data.hospital_no" />
-                        <view-field label="Ward" :value="data.ward" />
+                <div class="max-w-3xl" v-if="data">
+                    <div class="flex flex-row justify-between gap-2 whitespace-nowrap" >
+                        <view-field label="Patient" :value="formattedFullName(data.client)" />
+                        <view-field label="Age" :value="data.client.age" />
+                        <view-field label="Sex" :value="data.client.sex.toUpperCase()" />
+
+                        <view-field label="Ward" :value="data.ward.toUpperCase()" />
                         <view-field label="OR No." :value="data.or_no?data.or_no:'Unpaid'" />
                     </div>
-                    <div class="flex flex-row justify-between gap-2">
+                    <div class="flex flex-row justify-between gap-2 whitespace-nowrap">
                         <view-field label="Requesting Physician" :value="`Dr. ${data.rqst_physician.first_name} ${data.rqst_physician.middle_name?data.rqst_physician.middle_name[0]+'.':''} ${data.rqst_physician.last_name} ${data.rqst_physician.suffix?data.rqst_physician.suffix:''}`" />
+                        <view-field label="Hospital No." :value="data.infirmary_id" />
                         <view-field label="Date" :value="new Date(data.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })" />
                     </div>
-                    <table class="table-auto my-2">
+                    <table class="table table-fixed my-2 w-full">
                         <view-dt-head>
-                            <th colspan="2">Macroscopic</th>
-                            <th colspan="2"  >Microscopic</th>
+                            <th colspan="2" style="width: 50%;">Macroscopic</th>
+                            <th colspan="2" style="width: 50%;">Microscopic</th>
                         </view-dt-head>
                         <tbody>
                             <tr>
@@ -48,10 +49,12 @@
                                 <view-dt-result>{{ data.fecalysis.fat_globules }}</view-dt-result>
                             </tr>
                             <tr>
-                                <view-dt-label colspan="4">Others:</view-dt-label>
+                                <view-dt-label style="border-right: 0">Others:</view-dt-label>
+                                <view-dt-result colspan="3" style="border-left: 0; text-align: left">{{ data.fecalysis.others }}</view-dt-result>
                             </tr>
                             <tr>
-                                <view-dt-label colspan="4">Remarks:</view-dt-label>
+                                <view-dt-label style="border-right: 0">Remarks:</view-dt-label>
+                                <view-dt-result colspan="3" style="border-left: 0; text-align: left">{{ data.fecalysis.remarks }}</view-dt-result>
                             </tr>
                         </tbody>
                     </table>
@@ -87,10 +90,14 @@ import ViewFooterItem from "@/Components/Generic/Forms/ViewFooterItem.vue";
 export default {
     data: () => ({
         data: null,
-
     }),
     mounted() {
         this.data = this.$page.props.data.data;
+    },
+    methods: {
+        formattedFullName(data) {
+            return `${data.first_name} ${data.middle_name?data.middle_name[0]+'.':''} ${data.last_name} ${data.suffix?data.suffix:''}`;
+        },
     },
 }
 </script>

@@ -13,7 +13,7 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Roboto','Montserrat'],
+                sans: ['Roboto', ...defaultTheme.fontFamily.sans],
                 montserrat: ['Montserrat'],
             },
             colors: {

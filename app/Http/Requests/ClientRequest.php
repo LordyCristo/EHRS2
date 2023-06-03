@@ -34,10 +34,10 @@ class ClientRequest extends FormRequest
             'civil_status' => ['required'],
             'phone' => ['required', 'string', Rule::unique('clients', 'phone')->ignore($id), 'starts_with:09', 'size:11'],
             'email_address' => ['required', 'string', 'email', 'max:255', Rule::unique('clients', 'email_address')->ignore($id)],
-            'home_address' => ['nullable', 'string', 'max:255'],
-            'curr_address' => ['nullable', 'string', 'max:255'],
-            'id_number' => ['required', 'string', 'max:255', 'regex:/^[0-9]{2}-[0-9]{1}-[0-9]{5}$/', Rule::unique('clients', 'id_number')->ignore($id)],
-            'program_id' => ['required', 'exists:degree_programs,id'],
+            'home_address' => ['required', 'string', 'max:255'],
+            'curr_address' => ['required', 'string', 'max:255'],
+            'id_number' => ['nullable', 'string', 'max:255', 'regex:/^[0-9]{2}-[0-9]{1}-[0-9]{5}$/', Rule::unique('clients', 'id_number')->ignore($id)],
+            'program_id' => ['nullable', 'exists:degree_programs,id'],
             'year_lvl' => ['nullable'],
             'client_type_id' => ['required', 'exists:client_types,id'],
         ];
@@ -51,9 +51,9 @@ class ClientRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'infirmary.required' => 'Required field',
-            'infirmary.int' => 'Invalid format',
-            'infirmary.unique' => 'Already exists',
+            'infirmary_id.required' => 'Required field',
+            'infirmary_id.int' => 'Invalid format',
+            'infirmary_id.unique' => 'Already exists',
             'first_name.required' => 'Required field',
             'first_name.string' => 'Invalid input',
             'first_name.max' => 'Too long',
@@ -84,8 +84,10 @@ class ClientRequest extends FormRequest
             'email_address.required' => 'Required field',
             'home_address.string' => 'Invalid input',
             'home_address.max' => 'Too long',
+            'home_address.required' => 'Required field',
             'curr_address.string' => 'Invalid input',
             'curr_address.max' => 'Too long',
+            'curr_address.required' => 'Required field',
             'id_number.string' => 'Invalid input',
             'id_number.max' => 'Too long',
             'id_number.unique' => 'Already exists',

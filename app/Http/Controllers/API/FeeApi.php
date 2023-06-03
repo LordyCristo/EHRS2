@@ -37,7 +37,7 @@ class FeeApi extends Controller
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => $isCreated ? 'success' : 'failed',
+                'type' => $isCreated ? 'success' : 'warning',
                 'message' => $isCreated ? 'Successfully created Fee with id '.$newFee->id : 'Failed to create Fee record',
             ]
         ])->setStatusCode(201);
@@ -58,6 +58,17 @@ class FeeApi extends Controller
     public function update(FeeRequest $request)
     {
         $fee = Fees::findOrFail($request->id);
+        // check if the values are different
+        if ($fee->service_id == $request->service_id && $fee->client_type == $request->client_type && $fee->amount == $request->amount) {
+            return response()->json([
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'warning',
+                    'message' => 'No changes were made to Fee record with id '.$request->id,
+                ]
+            ])->setStatusCode(200);
+        }
         $update = $fee->update($request->all());
         return response()->json([
             'notification' => [

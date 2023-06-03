@@ -1,5 +1,5 @@
 <template>
-    <Finance title="Finance">
+    <Finance title="Cashier">
         <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink" />
     </Finance>
 </template>
@@ -22,9 +22,9 @@ export default{
                 className: 'dt-center dt-border-sm px-2'
             },
             {
-                data: 'client_id',
-                name: 'client_id',
-                title: 'Client ID',
+                data: 'infirmary_id',
+                name: 'infirmary_id',
+                title: 'Infirmary ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
@@ -69,9 +69,9 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'client_id',
-                name: 'client_id',
-                title: 'Client ID',
+                data: 'infirmary_id',
+                name: 'infirmary_id',
+                title: 'Infirmary ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,

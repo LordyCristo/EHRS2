@@ -27,7 +27,7 @@ class PaymentFactory extends Factory
             'payor_name' => $this->faker->name(),
             'payor_email' => $this->faker->email(),
             'payor_mobile' => $this->faker->phoneNumber(),
-            'client_id' => $this->faker->randomElement($clientIds),
+            'infirmary_id' => $this->faker->randomElement($clientIds),
             'collector_id' => $this->faker->numberBetween(1, 4),
             'total_amount' => $this->faker->numberBetween(100, 1000),
             'remarks' => $this->faker->sentence(),

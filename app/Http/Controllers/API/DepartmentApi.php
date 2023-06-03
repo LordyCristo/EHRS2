@@ -52,6 +52,17 @@ class DepartmentApi extends Controller
     public function update(DepartmentRequest $request)
     {
         $department = Department::findOrFail($request->id);
+        // check if the values are different
+        if ($department->name == $request->name && $department->abbr == $request->abbr && $department->college_id == $request->college_id) {
+            return response()->json([
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'warning',
+                    'message' => 'No changes were made to Department record with id '.$request->id,
+                ]
+            ])->setStatusCode(202);
+        }
         $update = $department->update($request->all());
         return response()->json([
             'notification' => [

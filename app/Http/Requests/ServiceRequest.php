@@ -28,7 +28,6 @@ class ServiceRequest extends FormRequest
             'schedule' => ['required', 'string'],
             'section_name' => ['nullable', 'string'],
             'room_no' => ['nullable', 'string'],
-            'is_active' => ['required', 'boolean'],
         ];
     }
 
@@ -43,8 +42,6 @@ class ServiceRequest extends FormRequest
             'schedule.string' => 'Must be a string.',
             'section_name.string' => 'Must be a string.',
             'room_no.string' => 'Must be a string.',
-            'is_active.required' => 'Required field',
-            'is_active.boolean' => 'Invalid value',
         ];
     }
 }

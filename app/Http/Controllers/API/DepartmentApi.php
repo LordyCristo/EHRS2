@@ -59,7 +59,7 @@ class DepartmentApi extends Controller
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'warning',
-                    'message' => 'No changes were made to Department record with id '.$request->id,
+                    'message' => 'No changes were made',
                 ]
             ])->setStatusCode(202);
         }

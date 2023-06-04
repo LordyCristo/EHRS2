@@ -23,14 +23,10 @@ class PaymentsService extends Model
         return $this->belongsTo(Payment::class);
     }
 
-    public function fee()
-    {
-        return $this->belongsTo(Fees::class);
-    }
 
-    public function service()
+    public function fees()
     {
-        return $this->belongsTo(Fees::class)->with('service');
+        return $this->belongsTo(Fees::class, 'service_id','service_id')->with('service');
     }
 
 }

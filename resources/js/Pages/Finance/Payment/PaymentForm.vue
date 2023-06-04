@@ -88,13 +88,6 @@ export default {
             formTitle: null,
         };
     },
-    created() {
-        if (this.action === 'store')
-            this.addRow(); // Add an initial row when the component is created
-
-        this.clients = this.$page.props.clients.data;
-        this.services = this.$page.props.services.data;
-    },
     watch: {
         rows: {
             handler(newRows) {
@@ -141,6 +134,11 @@ export default {
         },
     },
     mounted() {
+        if (this.action === 'store')
+            this.addRow(); // Add an initial row when the component is created
+
+        this.clients = this.$page.props.clients.data;
+        this.services = this.$page.props.services.data;
 
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
@@ -35,8 +36,8 @@ class Payment extends Model
         return $this->hasMany(Services::class);
     }
 
-    public function paidServices()
+    public function paidServices(): HasMany
     {
-        return $this->hasMany(PaymentsService::class)->with('service')->select('id', 'payment_id', 'service_id', 'fee');
+        return $this->hasMany(PaymentsService::class)->with('fees');
     }
 }

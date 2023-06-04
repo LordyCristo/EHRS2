@@ -32,9 +32,10 @@ class PaymentController extends Controller
         return Inertia::render('Finance/Payment/NewPayment', [
             'clients' => new ClientCollection(Client::selectRaw("infirmary_id as id, CONCAT(infirmary_id, ' - ',first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name")->get()),
             //'services' => new ServiceCollection(Services::select('id', 'name')->get()),
-            'last_payment_id' => (int) Payment::select('or_no')->orderBy('or_no', 'desc')->value('or_no'),
+            'last_payment_id' => (int) Payment::select('or_no')->orderBy('or_no', 'desc')->withTrashed()->first()?->or_no,
             'services' => new FeeCollection(Fees::join('services','services.id','=','fees.service_id')
-                ->selectRaw("fees.id as id, services.name as name, fees.amount as fee")->orderBy('fees.id','asc')->get()),
+                ->join('client_types','client_types.id','=','fees.client_type')
+                ->selectRaw("fees.service_id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name, fees.amount as fee")->orderBy('fees.id','asc')->get()),
         ]);
     }
 
@@ -49,7 +50,8 @@ class PaymentController extends Controller
             'data' => new PaymentResource(Payment::with('paidServices')->findOrFail($request->id)),
             'clients' => new ClientCollection(Client::selectRaw("infirmary_id as id, CONCAT(infirmary_id, ' - ',first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name")->get()),
             'services' => new FeeCollection(Fees::join('services','services.id','=','fees.service_id')
-                ->selectRaw("fees.id as id, services.name as name, fees.amount as fee")->orderBy('fees.id','asc')->get()),
+                ->join('client_types','client_types.id','=','fees.client_type')
+                ->selectRaw("fees.service_id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name, fees.amount as fee")->orderBy('fees.id','asc')->get()),
             'last_payment_id' => new PaymentResource($lastPaymentOrNo),
         ]);
     }

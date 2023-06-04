@@ -60,7 +60,7 @@ class ServiceApi extends Controller
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'warning',
-                    'message' => 'No changes were made to Service record with id '.$request->id,
+                    'message' => 'No changes were made',
                 ]
             ])->setStatusCode(200);
         }

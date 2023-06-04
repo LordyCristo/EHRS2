@@ -64,7 +64,7 @@ class CollegeApi extends Controller
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'warning',
-                    'message' => 'No changes made to College record with id '.$request->id,
+                    'message' => 'No changes were made',
                 ]
             ])->setStatusCode(202);
         }

@@ -65,7 +65,7 @@ class PaymentApi extends Controller
                 foreach ($rows as $row) {
                     $newPayment->paidServices()->create([
                         'service_id' => $row['service_id'],
-                        'payment_id' => $newPayment->id,
+                        'payment_id' => $newPayment->or_no,
                         'fee' => $row['fee'],
                     ]);
                 }

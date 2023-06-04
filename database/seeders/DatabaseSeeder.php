@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             DegreeProgramSeeder::class,
             UserSeeder::class,
-            //ClientSeeder::class,
+            ClientSeeder::class,
             FeesSeeder::class,
 //            PaymentSeeder::class,
 //            HematologySeeder::class,

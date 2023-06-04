@@ -121,6 +121,7 @@ const printError = (error) => {
         'type': 'warning',
         'message': error.message,
     }
+    console.log(error);
     pushNotification(notif);
     // error code for validation errors.
     if (typeof error.response != 'undefined' && error.response.status === 422)

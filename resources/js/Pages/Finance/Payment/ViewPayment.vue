@@ -31,7 +31,7 @@
                         </div>
                         <template v-if="data.paid_services">
                             <div v-for="srvc in data.paid_services" :key="srvc.id" class="grid grid-cols-2 mt-1 px-2">
-                                <span class="w-full">{{ srvc.service?srvc.service.service.name:'Unable to retrieve service name' }}</span>
+                                <span class="w-full">{{ srvc.fees.service.name?srvc.fees.service.name:'Unable to retrieve service name' }}</span>
                                 <span class="w-full text-center">&#x20B1;{{ srvc.fee?srvc.fee:'Unable to retrieve service fee' }}</span>
                             </div>
                         </template>

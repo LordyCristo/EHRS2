@@ -68,10 +68,28 @@ class FecalysisApi extends Controller
      */
     public function update(FecalysisRequest $request)
     {
-        $record = FecalysisRecord::findOrFail($request->id);
+        $record = Fecalysis::findOrFail($request->id);
+        // check if changes were made
+        if($record->color == $request->color && $record->consistency == $request->consistency && $record->wbc == $request->wbc &&
+        $record->rbc == $request->rbc && $record->fat_globules == $request->fat_globules &&
+        $record->ova == $request->ova && $record->others == $request->others && $record->remarks == $request->remarks &&
+        $record->fecalysisRecord->infirmary_id == $request->infirmary_id && $record->fecalysisRecord->fecalysis_id == $request->fecalysis_id &&
+        $record->fecalysisRecord->rqst_physician == $request->rqst_physician && $record->fecalysisRecord->medical_technologist == $request->medical_technologist &&
+        $record->fecalysisRecord->pathologist == $request->pathologist && $record->fecalysisRecord->or_no == $request->or_no &&
+        $record->fecalysisRecord->ward == $request->ward && $record->fecalysisRecord->status == $request->status) {
+            return response()->json([
+                'data' => (new FecalysisResource($record)),
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'warning',
+                    'message' => 'No changes were made',
+                ]
+            ])->setStatusCode(201);
+        }
         $update = $record->update($request->validated());
         if ($update){
-            $record->fecalysis->update($request->validated());
+            $record->fecalysisRecord->update($request->validated());
             return response()->json([
                 'data' => (new FecalysisResource($record)),
                 'notification' => [

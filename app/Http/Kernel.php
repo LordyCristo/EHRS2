@@ -2,10 +2,21 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AccessControlMiddleware;
+use App\Http\Middleware\AmbulanceACM;
 use App\Http\Middleware\Authenticate;
+use App\Http\Middleware\DentalACM;
+use App\Http\Middleware\EmergencyroomACM;
 use App\Http\Middleware\EncryptCookies;
+use App\Http\Middleware\FecalyasisACM;
+use App\Http\Middleware\FinanceACM;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\LaboratoryACM;
+use App\Http\Middleware\MaternityACM;
+use App\Http\Middleware\MorepagesACM;
+use App\Http\Middleware\PharmacyACM;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
+use App\Http\Middleware\RadiologyACM;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -89,5 +100,14 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
+        'macm' => MorepagesACM::class,
+        'lacm' => LaboratoryACM::class,
+        'facm' => FinanceACM::class,
+        'acm' =>AmbulanceACM::class,
+        'dacm' => DentalACM::class,
+        'eracm' => EmergencyroomACM::class,
+        'mtacm' => MaternityACM::class,
+        'pacm' => PharmacyACM::class,
+        'racm' => RadiologyACM::class,
     ];
 }

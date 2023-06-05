@@ -56,7 +56,7 @@ export default {
                 </div>
                 <div class="flex flex-col" :class="isOpen ? 'justify-center items-center' : 'justify-between px-2'">
                     <SidebarItem v-for="item in items" :subLinks="item.subLinks" :link="item.link" :form="item.form"
-                        :method="item.method" :isOpen="isOpen" :currTab="item.tabName">
+                        :method="item.method" :isOpen="isOpen" :currTab="item.tabName" :show="item.show">
                         <template #icon>
                             <component :is="item.icon" />
                         </template>

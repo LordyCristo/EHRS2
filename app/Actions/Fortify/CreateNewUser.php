@@ -23,32 +23,23 @@ class CreateNewUser implements CreatesNewUsers
     {
         //This is the real create function that makes a new user account
         Validator::make($input, $this->rules(), $this->messages())->validate();
-
-        DB::beginTransaction();
-        try {
-            $user = User::create([
-                'email' => $input['email'],
-                'password' => Hash::make($input['password']),
-                'first_name' => $input['first_name'],
-                'middle_name' => $input['middle_name'],
-                'last_name' => $input['last_name'],
-                'suffix' => $input['suffix'],
-                'birthdate' => $input['birthdate'],
-                'age' => $input['age'],
-                'sex' => $input['sex'],
-                'role' => $input['role'],
-                'specialization' => $input['specialization'],
-                'curr_position' => $input['position'],
-                'license_no' => $input['license'],
-                'landline' => $input['landline'],
-                'mobile' => $input['mobile'],
-            ]);
-            DB::commit();
-        } catch (Exception $e) {
-            DB::rollback();
-            throw $e;
-        }
-        return $user;
+        return User::create([
+            'first_name' => $input['first_name'],
+            'middle_name' => $input['middle_name'],
+            'last_name' => $input['last_name'],
+            'suffix' => $input['suffix'],
+            'birthdate' => $input['birthdate'],
+            'age' => $input['age'],
+            'sex' => $input['sex'],
+            'telephone' => $input['telephone'],
+            'mobile' => $input['mobile'],
+            'specialization' => $input['specialization'],
+            'curr_position' => $input['position'],
+            'license_no' => $input['license_no'],
+            'role' => $input['role'],
+            'email' => $input['email'],
+            'password' => Hash::make($input['password']),
+        ]);
     }
 
     /**
@@ -71,7 +62,7 @@ class CreateNewUser implements CreatesNewUsers
             'specialization' => ['nullable','string', 'max:255'],
             'position' => ['required', 'string', 'max:255'],
             'role' => ['required'],
-            'license_no' => ['required','string', 'max:255', 'unique:user_accounts'],
+            'license_no' => ['required','string', 'max:255', 'unique:users'],
             'telephone' => ['nullable','string', 'max:255'],
             'mobile' => ['required','string', 'max:255'],
         ];

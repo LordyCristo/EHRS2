@@ -50,6 +50,7 @@ export default {
             showingNavigationDropdown: false,
             sidebarItems: [
                 {
+                    show: true,
                     title: 'Dashboard',
                     link: 'dashboard',
                     tabName: '/dashboard',
@@ -60,6 +61,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1,
                     title: 'Clients',
                     link: 'client.index',
                     tabName: '/clients',
@@ -70,6 +72,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1,
                     title: 'Records',
                     link: 'records',
                     tabName: '/records',
@@ -80,6 +83,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 4,
                     title: 'Radiology',
                     link: 'radiology',
                     tabName: '/radiology',
@@ -90,6 +94,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 5,
                     title: 'Dental',
                     link: 'dental',
                     tabName: '/dental',
@@ -99,6 +104,7 @@ export default {
                     form: false,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
                     title: 'Laboratories',
                     link: 'laboratory.index',
                     tabName: '/laboratory',
@@ -129,6 +135,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 3 || this.$page.props.auth.user.role === 1,
                     title: 'Finance',
                     link: 'finance.index',
                     tabName: '/finance',
@@ -154,6 +161,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1,
                     title: 'Surgery',
                     link: 'surgery',
                     tabName: '/surgery',
@@ -164,6 +172,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1,
                     title: 'Maternity',
                     link: 'maternity',
                     tabName: '/maternity',
@@ -174,6 +183,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1,
                     title: 'Ward',
                     link: 'ward',
                     tabName: '/ward',
@@ -184,6 +194,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: this.$page.props.auth.user.role === 1,
                     title: 'More',
                     link: 'more.pages',
                     tabName: '/more',
@@ -219,6 +230,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: true,
                     title: 'Settings',
                     link: 'profile.show',
                     tabName: '/user/profile',
@@ -229,6 +241,7 @@ export default {
                     method: null,
                 },
                 {
+                    show: true,
                     title: 'Logout',
                     link: 'logout',
                     tabName: '/logout',

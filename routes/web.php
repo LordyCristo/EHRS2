@@ -60,7 +60,7 @@ Route::prefix('/public')->group(function(){
     Route::post('/', [ClientApi::class, 'store'])->name('api.public.client.store');
 });
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard', [DashboardController::class, 'dataSummary'])->name('api.dashboard');
@@ -103,15 +103,19 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         })->name('editRecord');
     });
 
-    Route::get('/radiology', function () {
-        return Inertia::render('Radiology/RadiologyDashboard');
-    })->name('radiology');
+    Route::prefix('/radiology')->middleware('racm')->group(function(){
+        Route::get('/', function () {
+            return Inertia::render('Radiology/RadiologyDashboard');
+        })->name('radiology');
+    });
 
-    Route::get('/dental', function () {
-        return Inertia::render('Dental');
-    })->name('dental');
+    Route::prefix('/dental')->middleware('dacm')->group(function(){
+        Route::get('/', function () {
+            return Inertia::render('Dental');
+        })->name('dental');
+    });
 
-    Route::prefix('finance')->group(function (){
+    Route::prefix('finance')->middleware('facm')->group(function (){
         Route::get('/', function (){
             return Inertia::render('Finance/FinanceIndex',[
                 'feesCount' => Fees::count(),
@@ -161,7 +165,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         });
     });
 
-    Route::prefix('/laboratory')->group(function () {
+    Route::prefix('/laboratory')->middleware('lacm')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Laboratory/LaboratoryIndex',[
                 'hematologyCount' => HematologyRecord::count(),
@@ -246,7 +250,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',
         return Inertia::render('Ward');
     })->name('ward');
 
-    Route::prefix('more')->group(function () {
+    Route::prefix('more')->middleware('macm')->group(function () {
         Route::get('/', function () {
             return Inertia::render('MorePages/MorePageIndex',[
                 'collegesCount' => College::count(),

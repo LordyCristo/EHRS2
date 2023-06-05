@@ -8,6 +8,10 @@ const logout = () => {
 <script>
 export default {
     props: {
+        show: {
+            type: Boolean,
+            required: true,
+        },
         title: String,
         link: String,
         subLinks: Array,
@@ -37,7 +41,7 @@ export default {
 </script>
 
 <template>
-    <div class="mb-1 duration-300 ease-in-out active:bg-vsu-yellow rounded-md hover:shadow-lg hover:bg-vsu-olive">
+    <div v-if="show" class="mb-1 duration-300 ease-in-out active:bg-vsu-yellow rounded-md hover:shadow-lg hover:bg-vsu-olive">
         <template v-if="!form">
             <Link :href="route(link)" class="flex flex-row items-center gap-2 text-gray-100 p-2 rounded-md"
             :class="{'bg-vsu-yellow': highlightCurrPage}">

@@ -14,17 +14,13 @@ class HematologyRecord extends Model
     protected $table = 'hematology_records';
     protected $fillable = [
         'id',
-        'hematology_id',
         'infirmary_id',
-        'age',
-        'sex',
-        'ward',
-        'or_no',
+        'hematology_id',
         'rqst_physician',
         'medical_technologist',
         'pathologist',
-        'hospital_no',
-        'remarks',
+        'or_no',
+        'ward',
         'status',
     ];
 

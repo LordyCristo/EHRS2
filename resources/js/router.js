@@ -3,6 +3,26 @@ const history = createWebHistory()
 
 const routes = [
     {
+        path:'/',
+        name: 'dashboard',
+        component: () => import('@/Pages/Dashboard.vue')
+    },
+    {
+        path:'/login',
+        name: 'login',
+        component: () => import('@/Pages/Auth/Login.vue')
+    },
+    {
+        path:'/register',
+        name: 'register',
+        component: () => import('@/Pages/Auth/Register.vue')
+    },
+    {
+        path:'/public/client/new',
+        name: 'public.client.create',
+        component: () => import('@/Pages/Client/PublicNewClient.vue')
+    },
+    {
         path:'/dashboard',
         name: 'dashboard.index',
         component: () => import('@/Pages/Dashboard.vue')
@@ -101,6 +121,26 @@ const routes = [
         path:'/laboratory/fecalysis/show',
         name: 'laboratory.fecalysis.show',
         component: () => import('@/Pages/Laboratory/Fecalysis/ViewFecalysis.vue')
+    },
+    {
+        path:'/laboratory/urinalysis',
+        name: 'laboratory.urinalysis.index',
+        component: () => import('@/Pages/Laboratory/Urinalysis/UrinalysisIndex.vue')
+    },
+    {
+        path:'/laboratory/urinalysis/new',
+        name: 'laboratory.urinalysis.create',
+        component: () => import('@/Pages/Laboratory/Urinalysis/NewUrinalysis.vue')
+    },
+    {
+        path:'/laboratory/urinalysis/edit',
+        name: 'laboratory.urinalysis.edit',
+        component: () => import('@/Pages/Laboratory/Urinalysis/EditUrinalysis.vue')
+    },
+    {
+        path:'/laboratory/urinalysis/show',
+        name: 'laboratory.urinalysis.show',
+        component: () => import('@/Pages/Laboratory/Urinalysis/ViewUrinalysis.vue')
     },
     {
         path:'/more/',

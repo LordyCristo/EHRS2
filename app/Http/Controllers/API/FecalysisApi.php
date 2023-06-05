@@ -31,7 +31,7 @@ class FecalysisApi extends Controller
         $newResult = Fecalysis::create($request->validated());
         if ($newResult){
             $request->merge(['fecalysis_id' => $newResult->id]);
-            $newRecord = FecalysisRecord::create($request->all());
+            $newRecord = $newResult->fecalysisRecord()->create($request->all());
             if ($newRecord){
                 return response()->json([
                     'data' => (new FecalysisResource($newRecord)),
@@ -148,14 +148,14 @@ class FecalysisApi extends Controller
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
                     $q->where('fecalysis_records.infirmary_id', 'like', '%' . $search . '%')
+                    ->orwhere('fecalysis_records.infirmary_id', 'like', '%' . $search . '%')
                         ->orWhere('name', 'like', '%' . $search . '%')
                         ->orWhere('status', 'like', '%' . $search . '%');
                 } elseif ($searchBy == 'name'){
                     $q->where('clients.last_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.first_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.middle_name', 'like', '%' . $search . '%');
-                }
-                else {
+                } else {
                     $q->where('fecalysis_records.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });

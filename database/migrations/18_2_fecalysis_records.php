@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('fecalysis_records', function(Blueprint $table){
             $table->id();
             $table->foreignId('infirmary_id')->nullable()->constrained('clients', 'infirmary_id')->cascadeOnUpdate()->nullOnDelete();
-            $table->foreignId('fecalysis_id')->unique('unq_record_id')->constrained('fecalysis')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('fecalysis_id')->unique()->constrained('fecalysis')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('rqst_physician')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('medical_technologist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('pathologist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
-            $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->restrictOnDelete();
-            $table->string('ward');
+            $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->nullOnDelete();
+            $table->string('ward')->nullable();
             $table->enum('status',['pending','released']);
             $table->timestamps();
             $table->softDeletes();

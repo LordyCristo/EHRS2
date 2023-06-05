@@ -21,14 +21,15 @@ class PaymentFactory extends Factory
      */
     public function definition(): array
     {
-        $clientIds = Client::pluck('id')->toArray();
+        $clientIds = Client::pluck('infirmary_id')->toArray();
+        $users = User::pluck('id')->toArray();
         return [
             'or_no' => $this->faker->unique()->numerify('#####'),
             'payor_name' => $this->faker->name(),
             'payor_email' => $this->faker->email(),
             'payor_mobile' => $this->faker->phoneNumber(),
             'infirmary_id' => $this->faker->randomElement($clientIds),
-            'collector_id' => $this->faker->numberBetween(1, 4),
+            'collector_id' => $this->faker->randomElement($users),
             'total_amount' => $this->faker->numberBetween(100, 1000),
             'remarks' => $this->faker->sentence(),
         ];

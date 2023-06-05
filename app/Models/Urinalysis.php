@@ -23,6 +23,7 @@ class Urinalysis extends Model
         'blood',
         'leukocytes',
         'nitrite',
+        'bilirubin',
         'urobilinogen',
         'ketones',
         'wbc',
@@ -34,7 +35,6 @@ class Urinalysis extends Model
         'mucous_threads',
         'crystals',
         'cast',
-        'remarks',
     ];
 
     public function urinalysisRecord()

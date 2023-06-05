@@ -101,16 +101,6 @@ class FecalysisController extends Controller
             ->get());
     }
 
-    public function editq(Request $request)
-    {
-        return Inertia::render('Laboratory/Fecalysis/EditFecalysis', [
-            'data' => new FecalysisResource(FecalysisRecord::join('fecalysis','fecalysis.id','=','fecalysis_records.id')->findOrFail($request->id)),
-            'physicians' => new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get()),
-            'clients' => new ClientCollection(Payment::join('clients','clients.infirmary_id','=','payments.infirmary_id')->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")->groupBy('clients.infirmary_id')->get()),
-            'or_nos' => new PaymentCollection(Payment::selectRaw("or_no AS id, or_no AS name")->orderBy('or_no','asc')->get()),
-        ]);
-    }
-
     /**
      * Get all the physicians
      */

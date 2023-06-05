@@ -30,20 +30,8 @@ class HematologyApi extends Controller
     {
         $newHematology = Hematology::create($request->validated());
         if ($newHematology){
-            $newRecord = HematologyRecord::create([
-                'hematology_id' => $newHematology->id,
-                'infirmary_id' => $request->infirmary_id,
-                'age' => $request->age,
-                'sex' => $request->sex,
-                'ward' => $request->ward,
-                'or_no' => $request->or_no,
-                'rqst_physician' => $request->rqst_physician,
-                'medical_technologist' => $request->medical_technologist,
-                'pathologist' => $request->pathologist,
-                'hospital_no' => $request->hospital_no,
-                'remarks' =>  $request->remarks,
-                'status' =>  $request->status,
-            ]);
+            $request->merge(['hematology_id' => $newHematology->id]);
+            $newRecord = $newHematology->hematologyRecord()->create($request->all());
             if ($newRecord){
                 return response()->json([
                     'data' => (new HematologyResource($newRecord)),
@@ -128,21 +116,22 @@ class HematologyApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = HematologyRecord::with('hematology')->where('id', '!=', null);
+        $query = HematologyRecord::join('clients', 'hematology_records.infirmary_id', '=', 'clients.infirmary_id')
+            ->selectRaw('hematology_records.*, CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
-            $searchBy = $request->input('search_by', 'id');
+            $searchBy = $request->input('search_by', 'infirmary_id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('infirmary_id', 'like', '%' . $search . '%')
-                        ->orWhere('age', 'like', '%' . $search . '%')
-                        ->orWhere('sex', 'like', '%' . $search . '%')
-                        ->orWhere('ward', 'like', '%' . $search . '%')
-                        ->orWhere('or_no', 'like', '%' . $search . '%')
-                        ->orWhere('rqst_physician', 'like', '%' . $search . '%')
-                        ->orWhere('hospital_no', 'like', '%' . $search . '%');
+                    $q->where('hematology_records.id', 'like', '%' . $search . '%')
+                        ->orwhere('hematology_records.infirmary_id', 'like', '%' . $search . '%')
+                        ->orWhere('name', 'like', '%' . $search . '%')
+                        ->orWhere('status', 'like', '%' . $search . '%');
+                } elseif ($searchBy == 'name'){
+                    $q->where('clients.last_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.first_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.middle_name', 'like', '%' . $search . '%');
                 } else {
                     $q->where('hematology_records.' . $searchBy, 'like', '%' . $search . '%');
                 }
@@ -150,7 +139,7 @@ class HematologyApi extends Controller
         }
 
         // Handle sorting
-        $sortField = $request->input('sort', 'id');
+        $sortField = $request->input('sort', 'hematology_records.id');
         $sortDirection = $request->input('sort_dir', 'asc');
         $query->orderBy($sortField, $sortDirection);
 

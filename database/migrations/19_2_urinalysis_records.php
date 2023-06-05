@@ -13,18 +13,14 @@ return new class extends Migration
     {
         Schema::create('urinalysis_records', function(Blueprint $table){
             $table->id();
-            $table->foreignId('urinalysis_id')->unique('unq_record_id')->constrained('urinalysis')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('infirmary_id')->constrained('clients', 'infirmary_id')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('medical_technologist')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('pathologist')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->integer('age')->nullable();
-            $table->enum('sex', ['male','female']);
+            $table->foreignId('infirmary_id')->nullable()->constrained('clients', 'infirmary_id')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('urinalysis_id')->unique()->constrained('urinalysis')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('rqst_physician')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('medical_technologist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('pathologist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('or_no')->nullable()->constrained('payments','or_no')->cascadeOnUpdate()->nullOnDelete();
             $table->string('ward')->nullable();
-            $table->foreignId('or_no')->constrained('payments','or_no')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('rqst_physician')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('hospital_no')->nullable();
-            $table->longText('remarks')->nullable()->default(null);
-            $table->enum('status',['Pending','Processing','Done','Cancelled','Released']);
+            $table->enum('status',['pending','released']);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -89,7 +89,7 @@ export default {
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-border-sm px-2 text-center',
+                className: 'dt-border-sm px-2 ',
             },
             {
                 data: 'status',
@@ -98,7 +98,7 @@ export default {
                 searchable: true,
                 orderable: true,
                 collapsable: true,
-                className: 'dt-border-sm px-2 text-center uppercase',
+                className: 'dt-border-sm px-2 uppercase',
             },
         ],
     }),

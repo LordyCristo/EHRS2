@@ -50,7 +50,14 @@ const props = defineProps({
 const stayOnPage = ref(false);
 const stayOnPageChange = () => {
     stayOnPage.value = !stayOnPage.value;
+    // save the value to local storage
+    localStorage.setItem('stayOnPage', stayOnPage.value.toString());
 };
+
+onMounted(() => {
+    // get the value from local storage
+    stayOnPage.value = localStorage.getItem('stayOnPage') === 'true';
+});
 
 const submit = () => {
     if (props.action === 'store') {
@@ -72,7 +79,10 @@ const clearForm = () => {
 };
 
 const goBackToIndex = (response) => {
-    pushNotification(response.data.notification);
+    if(typeof response != 'undefined')
+        pushNotification(response.data.notification);
+    else
+        console.log(response);
     if (stayOnPage.value) {
         // reload the page to get the updated data using the same url but without loading the page.
         location.reload();
@@ -84,6 +94,7 @@ const goBackToIndex = (response) => {
 
 
 const storeForm = () => {
+    console.log(props.form);
     axios
         .post(props.storeLink, props.form)
         .then(res => {

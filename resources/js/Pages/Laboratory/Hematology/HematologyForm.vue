@@ -8,35 +8,36 @@
         <template #formBody>
             <!--header form-->
             <div class="grid grid-cols-4 gap-1">
-                <InputText v-model.number="form.infirmary_id" label="Infirmary No." type="number" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                <InputText v-model.number="form.age" label="Age" type="number" :errorMsg="form.errors.age" @input="form.errors['age'] = null" />
-                <RadioButton v-model="form.sex" label="Sex" :options="sexes" :errorMsg="form.errors.sex" @input="form.errors['sex'] = null" />
-                <InputText v-model="form.or_no" label="OR No." :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <SelectElement v-model="form.rqst_physician" label="Requesting Physician" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="form.errors['rqst_physician'] = null" />
-                <InputText v-model="form.hospital_no" label="Hospital No." :errorMsg="form.errors.hospital_no" @input="form.errors['hospital_no'] = null" />
+                <InputTextAuto v-model.number="form.infirmary_id" label="Infirmary No." :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
                 <InputText v-model="form.ward" label="Ward" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
             </div>
             <!--end of header form-->
             <!--hematology body form-->
-            <div class="grid grid-cols-4 gap-1">
-                <InputText v-model.number="form.hemoglobin" label="Hemoglobin" type="number" :step="0.01" :errorMsg="form.errors.hemoglobin" @input="onFocusClearError('hemoglobin')" />
-                <InputText v-model.number="form.hematocrit" label="Hematocrit" type="number" :step="0.01" :errorMsg="form.errors.hematocrit" @input="onFocusClearError('hematocrit')" />
-                <InputText v-model.number="form.wbc" label="WBC" type="number" :step="0.01" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
-                <InputText v-model.number="form.rbc" label="RBC" type="number" :step="0.01" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
-                <InputText v-model.number="form.platelet_count" label="Platelet Count" type="number" :step="0.01" :errorMsg="form.errors.platelet_count" @input="onFocusClearError('platelet_count')" />
-                <InputText v-model.number="form.segmenters" label="Segmenters" type="number" :step="0.01" :errorMsg="form.errors.segmenters" @input="onFocusClearError('segmenters')" />
-                <InputText v-model.number="form.lymphocyte" label="Lymphocytes" type="number" :step="0.01" :errorMsg="form.errors.lymphocyte" @input="onFocusClearError('lymphocytes')" />
-                <InputText v-model.number="form.monocyte" label="Monocytes" type="number" :step="0.01" :errorMsg="form.errors.monocyte" @input="onFocusClearError('monocyte')" />
-                <SelectElement v-model.number="form.blood_type" label="Blood Type" :options="bloodTypes" :errorMsg="form.errors.blood_type" @input="onFocusClearError('blood_type')" />
+            <div class="my-2 border-y py-5">
+                <div class="grid grid-cols-4 gap-1">
+                    <InputText v-model.number="form.hemoglobin" label="Hemoglobin" type="number" :step="0.01" :errorMsg="form.errors.hemoglobin" @input="onFocusClearError('hemoglobin')" />
+                    <InputText v-model.number="form.hematocrit" label="Hematocrit" type="number" :step="0.01" :errorMsg="form.errors.hematocrit" @input="onFocusClearError('hematocrit')" />
+                    <InputText v-model.number="form.wbc" label="WBC" type="number" :step="0.01" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
+                    <InputText v-model.number="form.rbc" label="RBC" type="number" :step="0.01" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
+                    <InputText v-model.number="form.platelet_count" label="Platelet Count" type="number" :step="0.01" :errorMsg="form.errors.platelet_count" @input="onFocusClearError('platelet_count')" />
+                    <InputText v-model.number="form.segmenters" label="Segmenters" type="number" :step="0.01" :errorMsg="form.errors.segmenters" @input="onFocusClearError('segmenters')" />
+                    <InputText v-model.number="form.lymphocyte" label="Lymphocytes" type="number" :step="0.01" :errorMsg="form.errors.lymphocyte" @input="onFocusClearError('lymphocytes')" />
+                    <InputText v-model.number="form.monocyte" label="Monocytes" type="number" :step="0.01" :errorMsg="form.errors.monocyte" @input="onFocusClearError('monocyte')" />
+                    <SelectElement v-model.number="form.blood_type" label="Blood Type" :options="bloodTypes" :errorMsg="form.errors.blood_type" @input="onFocusClearError('blood_type')" />
+                </div>
+                <div class="grid grid-cols-2">
+                    <InputTextArea v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
+                </div>
             </div>
             <!--end of hematology body form-->
             <!--hematology footer form-->
-            <div class="grid grid-cols-2">
+            <div class="grid grid-cols-3">
+                <SelectElement v-model="form.rqst_physician" label="Requesting Physician" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="form.errors['rqst_physician'] = null" />
                 <SelectElement v-model="form.medical_technologist" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
                 <SelectElement v-model="form.pathologist" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
-            <InputText v-model.number="form.diagnosis" label="Diagnosis" :errorMsg="form.errors.diagnosis" @input="onFocusClearError('diagnosis')" />
-            <InputText v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
+
             <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             <!--end of hematology footer form-->
         </template>
@@ -51,6 +52,8 @@ import SubmitButton from "@/Components/Generic/Buttons/SubmitButton.vue";
 import DeleteButton from "@/Components/Generic/Buttons/DeleteButton.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
+import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
+import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -65,14 +68,12 @@ export default {
             form: useForm({
                 // hematology record
                 infirmary_id: null,
-                age: 22,
-                sex: 'male',
-                ward: 'OP',
-                or_no: null,
                 rqst_physician: 2,
                 medical_technologist: 2,
                 pathologist: 3,
-                hospital_no: 901816,
+                or_no: null,
+                ward: 'OP',
+                status: null,
                 //hematology
                 hemoglobin: 0.5,
                 hematocrit: 0.3,
@@ -83,15 +84,14 @@ export default {
                 lymphocyte: 0.8,
                 monocyte: 1.0,
                 blood_type: 'O+',
-                diagnosis: 'Normal',
-                remarks: '',
-                status: null,
+                remarks: null,
             }),
             statuses: RecordStatus,
             bloodTypes: BloodType,
-            sexes: Sex,
             data: null,
             physicians: [],
+            or_nos: [],
+            clients: [],
             formTitle: null,
         };
     },
@@ -102,6 +102,8 @@ export default {
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;
+        this.clients = this.$page.props.clients.data;
+        this.or_nos = this.$page.props.or_nos.data;
         if (this.action === 'update'){
             this.data = this.$page.props.data.data;
             this.form = useForm(this.data);

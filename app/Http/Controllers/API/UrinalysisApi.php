@@ -30,20 +30,8 @@ class UrinalysisApi extends Controller
     {
         $newUrinalysis = Urinalysis::create($request->validated());
         if ($newUrinalysis){
-            $newRecord = UrinalysisRecord::create([
-                'urinalysis_id' => $newUrinalysis->id,
-                'infirmary_id' => $request->infirmary_id,
-                'age' => $request->age,
-                'sex' => $request->sex,
-                'ward' => $request->ward,
-                'or_no' => $request->or_no,
-                'rqst_physician' => $request->rqst_physician,
-                'medical_technologist' => $request->medical_technologist,
-                'pathologist' => $request->pathologist,
-                'hospital_no' => $request->hospital_no,
-                'remarks' =>  $request->remarks,
-                'status' =>  $request->status,
-            ]);
+            $request->merge(['urinalysis_id' => $newUrinalysis->id]);
+            $newRecord = $newUrinalysis->urinalysisRecord()->create($request->all());
             if ($newRecord){
                 return response()->json([
                     'data' => (new UrinalysisResource($newRecord)),
@@ -128,21 +116,22 @@ class UrinalysisApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = UrinalysisRecord::with('urinalysis')->where('id', '!=', null);
+        $query = UrinalysisRecord::join('clients', 'urinalysis_records.infirmary_id', '=', 'clients.infirmary_id')
+            ->selectRaw('urinalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
-            $searchBy = $request->input('search_by', 'id');
+            $searchBy = $request->input('search_by', 'infirmary_id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('infirmary_id', 'like', '%' . $search . '%')
-                        ->orWhere('age', 'like', '%' . $search . '%')
-                        ->orWhere('sex', 'like', '%' . $search . '%')
-                        ->orWhere('ward', 'like', '%' . $search . '%')
-                        ->orWhere('or_no', 'like', '%' . $search . '%')
-                        ->orWhere('rqst_physician', 'like', '%' . $search . '%')
-                        ->orWhere('hospital_no', 'like', '%' . $search . '%');
+                    $q->where('urinalysis_records.infirmary_id', 'like', '%' . $search . '%')
+                        ->orwhere('urinalysis_records.infirmary_id', 'like', '%' . $search . '%')
+                        ->orWhere('name', 'like', '%' . $search . '%')
+                        ->orWhere('status', 'like', '%' . $search . '%');
+                } elseif ($searchBy == 'name'){
+                    $q->where('clients.last_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.first_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.middle_name', 'like', '%' . $search . '%');
                 } else {
                     $q->where('urinalysis_records.' . $searchBy, 'like', '%' . $search . '%');
                 }
@@ -150,7 +139,7 @@ class UrinalysisApi extends Controller
         }
 
         // Handle sorting
-        $sortField = $request->input('sort', 'id');
+        $sortField = $request->input('sort', 'urinalysis_records.id');
         $sortDirection = $request->input('sort_dir', 'asc');
         $query->orderBy($sortField, $sortDirection);
 

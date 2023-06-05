@@ -54,6 +54,11 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+//public registration access
+Route::prefix('/public')->group(function(){
+    Route::get('/client/new', [ClientController::class, 'public'])->name('public.client');
+    Route::post('/', [ClientApi::class, 'store'])->name('api.public.client.store');
+});
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified',])->group(function () {
     Route::prefix('dashboard')->group(function () {

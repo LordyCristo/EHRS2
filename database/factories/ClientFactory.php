@@ -18,7 +18,7 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'infirmary_id' => $this->faker->randomNumber(5),
+            'infirmary_id' => $this->faker->unique()->numerify('#####'),
             'first_name' => $this->faker->firstName,
             'middle_name' => $this->faker->lastName,
             'last_name' => $this->faker->lastName,

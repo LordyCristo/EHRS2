@@ -32,6 +32,9 @@ export default{
         isRegisterPage() {
             return window.location.pathname === '/register';
         },
+        isPublicClientPage() {
+            return window.location.pathname === '/public/client/new';
+        },
     }
 }
 </script>
@@ -114,6 +117,9 @@ export default{
                             <Link :href="route('register')" class="text-md font-light" :class="{ 'text-vsu-yellow': isRegisterPage }">
                                 REGISTER
                             </Link>
+                            <Link :href="route('public.client')" class="text-md font-light" :class="{ 'text-vsu-yellow': isPublicClientPage }">
+                                PUBLIC
+                            </Link>
                         </PopoverGroup>
                         <div class="text-white w-full md:text-3xl text-sm flex md:flex-col flex-row justify-between gap-4 text-center items-center">
                             <div class="md:hidden flex gap-4">
@@ -125,6 +131,9 @@ export default{
                                 </Link>
                                 <Link :href="route('register')" class="text-xs leading-6" :class="{ 'text-vsu-yellow': isRegisterPage }">
                                     Register
+                                </Link>
+                                <Link :href="route('public.client')" class="text-xs leading-6" :class="{ 'text-vsu-yellow': isPublicClientPage }">
+                                    Public
                                 </Link>
                             </div>
                             <div class="md:block hidden font-montserrat font-semibold tracking-wider">

@@ -18,7 +18,7 @@ class PaymentsServiceFactory extends Factory
      */
     public function definition(): array
     {
-        $paymentIds = Payment::pluck('id')->toArray();
+        $paymentIds = Payment::pluck('or_no')->toArray();
         $serviceIds = Fees::pluck('service_id')->toArray();
         return [
             'payment_id' => $this->faker->randomElement($paymentIds),

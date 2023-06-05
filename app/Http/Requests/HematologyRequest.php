@@ -26,16 +26,12 @@ class HematologyRequest extends FormRequest
         return [
             //hematology record
             'infirmary_id' => ['required', 'exists:clients,infirmary_id'],
-            'age' => ['nullable','numeric'],
-            'sex' => ['required','in:male,female'],
-            'ward' => ['nullable'],
-            'or_no' => ['nullable', 'numeric', 'exists:payments,or_no', Rule::unique('hematology_records')->ignore($id)],
             'rqst_physician' => ['required', 'exists:users,id'],
             'medical_technologist' => ['required', 'exists:users,id'],
             'pathologist' => ['required', 'exists:users,id'],
-            'hospital_no' => ['nullable'],
-            'remarks' => ['nullable', 'string'],
-            'status' => ['required', 'in:Pending,Processing,Done,Cancelled,Released'],
+            'ward' => ['nullable'],
+            'or_no' => ['nullable', 'numeric', 'exists:payments,or_no', Rule::unique('hematology_records')->ignore($id)],
+            'status' => ['required', 'in:pending,processing'],
             // hematology
             'hemoglobin' => ['required', 'numeric'],
             'hematocrit' => ['required', 'numeric'],
@@ -46,7 +42,7 @@ class HematologyRequest extends FormRequest
             'lymphocyte' => ['required', 'numeric'],
             'monocyte' => ['required', 'numeric'],
             'blood_type' => ['required', 'string'],
-            'diagnosis' => ['required', 'string'],
+            'remarks' => ['nullable', 'string'],
         ];
     }
 

@@ -2,15 +2,14 @@
     <Laboratory title="Create Form">
         <div class="flex justify-center items-center h-full w-full">
             <div class="sm:p-5 p-1 bg-gray-100 rounded-sm">
-                <FecalysisForm :action="action"/>
+                <UrinalysisForm :action="action"/>
             </div>
         </div>
     </Laboratory>
 </template>
 <script setup>
 import Laboratory from '@/Pages/Laboratories.vue';
-import HematologyForm from "@/Pages/Laboratory/Hematology/HematologyForm.vue";
-import FecalysisForm from "@/Pages/Laboratory/Fecalysis/FecalysisForm.vue";
+import UrinalysisForm from "@/Pages/Laboratory/Urinalysis/UrinalysisForm.vue";
 </script>
 <script>
 export default {

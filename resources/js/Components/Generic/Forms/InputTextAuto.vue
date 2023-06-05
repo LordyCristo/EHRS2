@@ -11,10 +11,10 @@
                 :autofocus="autofocus"
                 class="sm:p-2 p-1 w-full border overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300"
                 :class="errorMsg?'border-red-300':'border-gray-300'"
+                @focus="show = true"
                 @input="filterOptions"
             />
-
-            <div v-if="show" class="absolute bg-white z-50 w-fit mt-2 rounded-md shadow-sm border p-1 max-h-72 overflow-y-scroll">
+            <div v-if="show" class="absolute bg-white z-50 w-fit mt-2 rounded-md shadow-md border p-1 max-h-72 overflow-y-scroll">
                 <div v-for="opt in options" @focusout="show = false">
                     <div v-if="opt.name.toString().toLowerCase().includes(query.toLowerCase())">
                         <div

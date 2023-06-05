@@ -29,6 +29,11 @@ class ClientController extends Controller
         return Inertia::render('Client/NewClient', $this->getFlags());
     }
 
+    public function public()
+    {
+        return Inertia::render('Client/PublicNewClient', $this->getFlags());
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

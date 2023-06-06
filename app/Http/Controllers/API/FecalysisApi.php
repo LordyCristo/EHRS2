@@ -149,7 +149,7 @@ class FecalysisApi extends Controller
                 if ($searchBy == '*') {
                     $q->where('fecalysis_records.infirmary_id', 'like', '%' . $search . '%')
                     ->orwhere('fecalysis_records.infirmary_id', 'like', '%' . $search . '%')
-                        ->orWhere('name', 'like', '%' . $search . '%')
+                        ->orWhereRaw('CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) LIKE ?', '%' . $search . '%')
                         ->orWhere('status', 'like', '%' . $search . '%');
                 } elseif ($searchBy == 'name'){
                     $q->where('clients.last_name', 'like', '%' . $search . '%')

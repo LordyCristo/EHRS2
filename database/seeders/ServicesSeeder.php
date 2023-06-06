@@ -44,5 +44,13 @@ class ServicesSeeder extends Seeder
             'section_name' => 'Outpatient Section',
             'room_no' => 'Room-2',
         ]);
+
+        Services::factory()->create([
+            'name' => 'Radiology',
+            'description' => 'This is where X-ray are done',
+            'schedule' => 'M-F 8am-5pm',
+            'section_name' => 'In/Out-patient Section',
+            'room_no' => 'Room-3',
+        ]);
     }
 }

@@ -3,16 +3,14 @@
 namespace Database\Factories;
 
 use App\Models\Client;
-use App\Models\Hematology;
-use App\Models\HematologyRecord;
-use App\Models\Payment;
 use App\Models\PaymentsService;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<HematologyRecord>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\XrayRequest>
  */
-class HematologyRecordFactory extends Factory
+class XrayRequestFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -21,17 +19,16 @@ class HematologyRecordFactory extends Factory
      */
     public function definition(): array
     {
-        $hematologyIds = Hematology::pluck('id')->toArray();
         $clientIds = Client::pluck('infirmary_id')->toArray();
         $or_nos = PaymentsService::pluck('payment_id')->toArray();
+        $rqst_physician = User::pluck('id')->toArray();
         return [
             'infirmary_id' => $this->faker->randomElement($clientIds),
-            'hematology_id' => $this->faker->randomElement($hematologyIds),
-            'rqst_physician' => $this->faker->numberBetween(2,4),
-            'medical_technologist' => $this->faker->numberBetween(2,4),
-            'pathologist' => $this->faker->numberBetween(2,4),
             'or_no' => $this->faker->randomElement($or_nos),
-            'ward' => $this->faker->randomElement(['OPD','IN','ER','Ward']),
+            'rqst_for' => $this->faker->word,
+            'history' => $this->faker->word,
+            'rqst_physician' => $this->faker->randomElement($rqst_physician),
+            'ward' => $this->faker->word,
             'status' => $this->faker->randomElement(['pending','released']),
         ];
     }

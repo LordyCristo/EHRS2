@@ -108,5 +108,29 @@ class FeesSeeder extends Seeder
             'client_type' => 4,
             'amount' => 250,
         ]);
+
+        Fees::factory()->create([
+            'service_id' => 5,
+            'client_type' => 1,
+            'amount' => 100,
+        ]);
+
+        Fees::factory()->create([
+            'service_id' => 5,
+            'client_type' => 2,
+            'amount' => 150,
+        ]);
+
+        Fees::factory()->create([
+            'service_id' => 5,
+            'client_type' => 3,
+            'amount' => 200,
+        ]);
+
+        Fees::factory()->create([
+            'service_id' => 5,
+            'client_type' => 4,
+            'amount' => 250,
+        ]);
     }
 }

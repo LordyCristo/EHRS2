@@ -78,6 +78,21 @@ const routes = [
         component: () => import('@/Pages/Client/EditClient.vue')
     },
     {
+        path:'/radiology',
+        name: 'radiology.index',
+        component: () => import('@/Pages/Radiology/Result/RadiologyIndex.vue')
+    },
+    {
+        path:'/radiology/new',
+        name: 'radiology.create',
+        component: () => import('@/Pages/Radiology/Result/NewRadiology.vue')
+    },
+    {
+        path:'/radiology/edit/',
+        name: 'radiology.edit',
+        component: () => import('@/Pages/Radiology/Result/EditRadiology.vue')
+    },
+    {
         path:'/laboratory',
         name: 'laboratory.index',
         component: () => import('@/Pages/Laboratory/LaboratoryIndex.vue')

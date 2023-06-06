@@ -126,7 +126,7 @@ class UrinalysisApi extends Controller
                 if ($searchBy == '*') {
                     $q->where('urinalysis_records.infirmary_id', 'like', '%' . $search . '%')
                         ->orwhere('urinalysis_records.infirmary_id', 'like', '%' . $search . '%')
-                        ->orWhere('name', 'like', '%' . $search . '%')
+                        ->orWhereRaw('CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) LIKE ?', '%' . $search . '%')
                         ->orWhere('status', 'like', '%' . $search . '%');
                 } elseif ($searchBy == 'name'){
                     $q->where('clients.last_name', 'like', '%' . $search . '%')

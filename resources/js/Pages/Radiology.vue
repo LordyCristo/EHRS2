@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Toolbar from '@/Pages/Radiology/ToolbarRadiology.vue';
+import Toolbar from '@/Pages/MorePages/ToolbarMorePage.vue';
 </script>
 <template>
     <AppLayout title="Radiology">
@@ -10,4 +10,3 @@ import Toolbar from '@/Pages/Radiology/ToolbarRadiology.vue';
         <slot></slot>
     </AppLayout>
 </template>
- 

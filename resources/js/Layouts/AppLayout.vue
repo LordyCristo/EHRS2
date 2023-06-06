@@ -85,7 +85,7 @@ export default {
                 {
                     show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 4,
                     title: 'Radiology',
-                    link: 'radiology',
+                    link: 'radiology.index',
                     tabName: '/radiology',
                     subLinks: null,
                     isOpen: false,

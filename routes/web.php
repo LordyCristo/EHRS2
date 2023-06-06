@@ -35,6 +35,8 @@ use App\Models\HematologyRecord;
 use App\Models\Payment;
 use App\Models\Services;
 use App\Models\UrinalysisRecord;
+use App\Models\Xray;
+use App\Models\XrayRequest;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -109,7 +111,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     Route::prefix('/radiology')->middleware('racm')->group(function(){
         Route::get('/', function (){
-            return Inertia::render('Radiology/RadiologyIndex');
+            return Inertia::render('Radiology/RadiologyIndex',[
+                'requestsCount' => XrayRequest::count(),
+                'resultsCount' => Xray::count(),
+            ]);
         })->name('radiology.index');
 
         Route::prefix('/request')->group(function(){

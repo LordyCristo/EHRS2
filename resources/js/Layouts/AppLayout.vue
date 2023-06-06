@@ -177,7 +177,7 @@ export default {
                 },
                 {
                     show: this.$page.props.auth.user.role === 1,
-                    title: 'Surgery',
+                    title: 'Outpatient',
                     link: 'surgery',
                     tabName: '/surgery',
                     subLinks: null,

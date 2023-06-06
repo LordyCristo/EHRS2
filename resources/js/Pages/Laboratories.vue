@@ -1,13 +1,12 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import Toolbar from '@/Pages/MorePages/ToolbarMorePage.vue';
 </script>
 
 <template>
     <AppLayout title="Dashboard">
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Laboratories Page
-            </h2>
+        <template #toolbar>
+            <Toolbar></Toolbar>
         </template>
         <slot />
     </AppLayout>

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class RadiologyRequest extends FormRequest
+class RadiologyRequestRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,19 +25,12 @@ class RadiologyRequest extends FormRequest
         $id = $this->route('id');
         return [
             'infirmary_id' => ['required', 'integer', 'exists:clients,infirmary_id'],
-            'or_no' => ['required', 'integer', 'exists:payments_services,payment_id', Rule::unique('xray_requests')->ignore($id)],
+            'or_no' => ['required', 'integer', 'exists:payments_service,payment_id', Rule::unique('xray_requests')->ignore($id)],
             'rqst_for' => ['required', 'string'],
             'history' => ['nullable', 'string'],
             'rqst_physician' => ['required', 'integer', 'exists:users,id'],
             'ward' => ['required', 'string'],
             'status' => ['required', 'string', 'in:pending,released'],
-
-            'rqst_id' => ['required', 'integer', 'exists:xray_requests,id', Rule::unique('xrays')->ignore($id)],
-            'procedure' => ['required', 'string'],
-            'impression' => ['required', 'string'],
-            'radiographic_findings' => ['nullable', 'string'],
-            'rad_tech_id' => ['required', 'integer', 'exists:users,id'],
-            'radiologist_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 
@@ -49,11 +42,24 @@ class RadiologyRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'required' => 'Field is required.',
-            'integer' => 'Field must be an integer.',
-            'exists' => 'ID does not exist.',
-            'string' => 'Field must be a string.',
-            'in' => 'Invalid field value.',
+            'infirmary_id.required' => 'Required field',
+            'infirmary_id.integer' => 'Invalid value',
+            'infirmary_id.exists' => 'Do not exist value',
+            'or_no.required' => 'Required field',
+            'or_no.integer' => 'Invalid value',
+            'or_no.exists' => 'Do not exist value',
+            'or_no.unique' => 'Already taken',
+            'rqst_for.required' => 'Required field',
+            'rqst_for.string' => 'Invalid value',
+            'history.string' => 'Invalid value',
+            'rqst_physician.required' => 'Required field',
+            'rqst_physician.integer' => 'Invalid value',
+            'rqst_physician.exists' => 'Do not exist value',
+            'ward.required' => 'Required field',
+            'ward.string' => 'Invalid value',
+            'status.required' => 'Required field',
+            'status.string' => 'Invalid value',
+            'status.in' => 'Invalid value',
         ];
     }
 }

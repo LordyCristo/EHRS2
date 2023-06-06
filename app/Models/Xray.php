@@ -28,7 +28,7 @@ class Xray extends Model
 
     public function radiologist()
     {
-        return $this->belongsTo(User::class, 'radiologist', 'id');
+        return $this->belongsTo(User::class, 'radiologist_id', 'id');
     }
 
     public function radiographer()

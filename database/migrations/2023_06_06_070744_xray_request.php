@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('infirmary_id')->nullable()->constrained('clients', 'infirmary_id')->cascadeOnDelete()->nullOnDelete();
             $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->nullOnDelete();
             $table->string('rqst_for');
-            $table->string('history');
+            $table->string('history')->nullable();
             $table->foreignId('rqst_physician')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->string('ward')->nullable();
             $table->enum('status', ['pending','released']);

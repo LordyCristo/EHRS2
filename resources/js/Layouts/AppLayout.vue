@@ -73,7 +73,7 @@ export default {
                 },
                 {
                     show: this.$page.props.auth.user.role === 1,
-                    title: 'Records',
+                    title: 'Medical Records',
                     link: 'records',
                     tabName: '/records',
                     subLinks: null,
@@ -87,10 +87,25 @@ export default {
                     title: 'Radiology',
                     link: 'radiology.index',
                     tabName: '/radiology',
-                    subLinks: null,
+                    subLinks: [{
+                        title: 'More',
+                        content: [
+                            {
+                                name: 'X-ray Request ',
+                                link: 'radiology.request.index',
+                                linkName: 'request',
+                            },
+                            {
+                                name: 'X-ray Result',
+                                link: 'radiology.result.index',
+                                linkName: 'result',
+                            },
+                        ],
+                        isOpen: false
+                    }],
                     isOpen: false,
                     icon: markRaw(RadiologyIcon),
-                    form: false,
+                    form: true,
                     method: null,
                 },
                 {

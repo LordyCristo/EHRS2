@@ -30,11 +30,11 @@ class XrayRequest extends Model
 
     public function xray()
     {
-        return $this->hasOne(Xray::class);
+        return $this->belongsTo(Xray::class, 'id', 'rqst_id')->with('radiologist')->with('radiographer');
     }
 
     public function rqstPhysician()
     {
-        return $this->belongsTo(User::class, 'physician', 'id');
+        return $this->belongsTo(User::class, 'rqst_physician', 'id');
     }
 }

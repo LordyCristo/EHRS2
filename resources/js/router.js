@@ -78,18 +78,33 @@ const routes = [
         component: () => import('@/Pages/Client/EditClient.vue')
     },
     {
-        path:'/radiology',
-        name: 'radiology.index',
+        path:'/radiology/request',
+        name: 'radiology.request.index',
+        component: () => import('@/Pages/Radiology/Request/RadiologyRequestIndex.vue')
+    },
+    {
+        path:'/radiology/request/new',
+        name: 'radiology.request.create',
+        component: () => import('@/Pages/Radiology/Request/NewRadiologyRequest.vue')
+    },
+    {
+        path:'/radiology/request/edit',
+        name: 'radiology.request.edit',
+        component: () => import('@/Pages/Radiology/Request/EditRadiologyRequest.vue')
+    },
+    {
+        path:'/radiology/result',
+        name: 'radiology.result.index',
         component: () => import('@/Pages/Radiology/Result/RadiologyIndex.vue')
     },
     {
-        path:'/radiology/new',
-        name: 'radiology.create',
+        path:'/radiology/result/new',
+        name: 'radiology.result.create',
         component: () => import('@/Pages/Radiology/Result/NewRadiology.vue')
     },
     {
-        path:'/radiology/edit/',
-        name: 'radiology.edit',
+        path:'/radiology/result/edit',
+        name: 'radiology.result.edit',
         component: () => import('@/Pages/Radiology/Result/EditRadiology.vue')
     },
     {

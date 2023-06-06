@@ -3,86 +3,75 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RadiologyRequest;
-use App\Http\Resources\XrayCollection;
-use App\Models\Xray;
+use App\Http\Requests\RadiologyRequestRequest;
+use App\Http\Resources\XrayRequestCollection;
+use App\Http\Resources\XrayRequestResource;
 use App\Models\XrayRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class RadiologyAPI extends Controller
+class RadiologyRequestApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new XrayCollection(XrayRequest::all());
+        return new XrayRequestCollection(XrayRequest::all());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(RadiologyRequest $request)
+    public function store(RadiologyRequestRequest $request)
     {
-        $newRecord = XrayRequest::create($request->validated());
-        if ($newRecord){
-            $request->merge(['rqst_id' => $newRecord->id]);
-            $newRecord = $newRecord->xray()->create($request->all());
-            if($newRecord) {
-                return response()->json([
-                    'data' => (new XrayCollection($newRecord)),
-                    'notification' => [
-                        'id' => uniqid(),
-                        'show' => true,
-                        'type' => 'success',
-                        'message' => 'Successfully created Xray with id ' . $newRecord->id,
-                    ]
-                ])->setStatusCode(201);
-            }
+        $newRecord = XrayRequest::create($request->all());
+        if ($newRecord) {
+            return response()->json([
+                'data' => (new XrayRequestResource($newRecord)),
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'success',
+                    'message' => 'Successfully created Xray Request with id ' . $newRecord->id,
+                ]
+            ])->setStatusCode(201);
         }
         return response()->json([
-            'data' => (new XrayCollection($newRecord)),
+            'data' => (new XrayRequestResource($newRecord)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => 'failed',
-                'message' => 'Failed to create Xray record',
+                'message' => 'Failed to create Xray Request record',
             ]
         ])->setStatusCode(500);
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Request $request)
+    {
+        return new XrayRequestResource(XrayRequest::findOrFail($request->id));
+    }
+
+    /**
      * Update the specified resource in storage.
      */
-    public function update(RadiologyRequest $request)
+    public function update(RadiologyRequestRequest $request)
     {
         $record = XrayRequest::findOrFail($request->id);
-        $record->update($request->validated());
-        if ($record){
-            $request->merge(['rqst_id' => $record->id]);
-            $newRecord = $record->xray()->update($request->all());
-            if($newRecord) {
-                return response()->json([
-                    'data' => (new XrayCollection($newRecord)),
-                    'notification' => [
-                        'id' => uniqid(),
-                        'show' => true,
-                        'type' => 'success',
-                        'message' => 'Successfully updated Xray with id ' . $newRecord->id,
-                    ]
-                ])->setStatusCode(201);
-            }
-        }
+        $record->update($request->all());
         return response()->json([
-            'data' => (new XrayCollection($record)),
+            'data' => (new XrayRequestResource($record)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => 'failed',
-                'message' => 'Failed to update Xray record',
+                'type' => 'success',
+                'message' => 'Successfully updated Xray Request with id ' . $record->id,
             ]
-        ])->setStatusCode(500);
+        ])->setStatusCode(200);
     }
 
     /**
@@ -91,15 +80,27 @@ class RadiologyAPI extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        XrayRequest::with('xray')->whereIn('id', $id)->delete();
+        $record = XrayRequest::destroy($id);
+        if ($record) {
+            return response()->json([
+                'data' => (new XrayRequestResource($record)),
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'success',
+                    'message' => 'Successfully deleted Xray Request with id ' . $record->id,
+                ]
+            ])->setStatusCode(200);
+        }
         return response()->json([
+            'data' => (new XrayRequestResource($record)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => 'success',
-                'message' => 'Successfully deleted Xray with id ' . $request->id,
+                'type' => 'failed',
+                'message' => 'Failed to delete Xray Request record',
             ]
-        ])->setStatusCode(200);
+        ])->setStatusCode(500);
     }
 
     /**

@@ -1,46 +1,43 @@
 <template>
     <FormSection :data="data" :form="form" :action="action"
-                 index-link="laboratory.urinalysis.index"
-                 :update-link="data? route('api.urinalysis.update', data.id): null"
-                 :store-link="route('api.urinalysis.store')"
-                 :delete-link="data? route('api.urinalysis.destroy', data.id): null">
+                 index-link="radiology.result.index"
+                 :update-link="data? route('api.radiology.result.update', data.id): null"
+                 :store-link="route('api.radiology.result.store')"
+                 :delete-link="data? route('api.radiology.result.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
-            <div class="grid grid-cols-4 gap-1">
-                <InputTextAuto v-model.number="form.infirmary_id" label="Infirmary No." :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <InputText v-model="form.ward" label="Ward" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+            <div class="grid grid-cols-3 gap-1">
+                <InputTextAuto v-model="form.rqst_id" label="X-ray Request ID" @change="changeRqst" :options="xray_reqs" :errorMsg="form.errors.rqst_id" @input="form.errors['rqst_id'] = null" />
+                <div>
+
+                </div>
             </div>
             <!--end of header form-->
             <!--urinalysis body form-->
             <div class="my-2 border-y py-5">
-                <div class="grid grid-cols-4 gap-1">
-
+                <div class="grid grid-cols-1 gap-1">
+                    <InputText v-model="form.procedure" label="Prodecure" :errorMsg="form.errors.procedure" @input="form.errors['procedure'] = null" />
                 </div>
-                <div class="grid grid-cols-2">
-                    <InputTextArea v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
+                <div class="grid grid-cols-1 gap-1">
+                    <InputText v-model="form.radiographic_findings" label="Radiolographic Findings" :errorMsg="form.errors.radiographic_findings" @input="form.errors['radiographic_findings'] = null" />
+                </div>
+                <div class="grid grid-cols-1 gap-1">
+                    <InputTextArea v-model="form.impression" label="Impression" :errorMsg="form.errors.impression" @input="form.errors['impression'] = null" />
                 </div>
             </div>
             <!--end of urinalysis body form-->
             <!--urinalysis footer form-->
-            <div class="grid grid-cols-3">
-                <SelectElement v-model="form.rqst_physician" label="Requesting Physician" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="form.errors['rqst_physician'] = null" />
-                <SelectElement v-model="form.medical_technologist" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
-                <SelectElement v-model="form.pathologist" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
+            <div class="grid grid-cols-2">
+                <SelectElement v-model="form.rad_tech_id" label="Radiologic Technologist" :options="physicians" :errorMsg="form.errors.rad_tech_id" @input="form.errors['rad_tech_id'] = null" />
+                <SelectElement v-model="form.radiologist_id" label="Radiologist" :options="physicians" :errorMsg="form.errors.radiologist_id" @input="form.errors['radiologist_id'] = null" />
             </div>
-            <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             <!--end of urinalysis footer form-->
         </template>
     </FormSection>
 </template>
 <script setup>
 import InputText from "@/Components/Generic/Forms/InputText.vue";
-import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
-import CancelButton from "@/Components/Generic/Buttons/CancelButton.vue";
-import ClearButton from "@/Components/Generic/Buttons/ClearButton.vue";
-import SubmitButton from "@/Components/Generic/Buttons/SubmitButton.vue";
-import DeleteButton from "@/Components/Generic/Buttons/DeleteButton.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
@@ -57,43 +54,19 @@ export default {
     data() {
         return {
             form: useForm({
-                // urinalysis record
-                infirmary_id: null,
-                rqst_physician: 2,
-                medical_technologist: 2,
-                pathologist: 3,
-                ward: 'OP',
-                or_no: null,
-                status: null,
-                //urinalysis
-                color: null,
-                clarity: null,
-                ph: null,
-                specific_gravity: null,
-                albumin: null,
-                glucose: null,
-                blood: null,
-                leukocytes: null,
-                nitrite: null,
-                bilirubin: null,
-                urobilinogen: null,
-                ketones: null,
-                wbc: null,
-                rbc: null,
-                epithelial_cells: null,
-                bacteria: null,
-                amorphous_urates: null,
-                amorphous_phosphates: null,
-                mucous_threads: null,
-                crystals: null,
-                cast: null,
-                remarks: null,
+                // radiology
+                rqst_id: null,
+                procedure: null,
+                impression: null,
+                radiographic_findings: null,
+                rad_tech_id: null,
+                radiologist_id: null,
             }),
             statuses: RecordStatus,
-            bloodTypes: BloodType,
             data: null,
             physicians: [],
             or_nos: [],
+            xray_reqs: [],
             clients: [],
             formTitle: null,
         };
@@ -102,22 +75,25 @@ export default {
         onFocusClearError(field) {
             this.form.errors[field] = null;
         },
+        changeRqst(){
+            const select = this.xray_reqs.find(x => x.id === this.form.rqst_id);
+            console.log(select.value);
+        }
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;
-        this.clients = this.$page.props.clients.data;
-        this.or_nos = this.$page.props.or_nos.data;
+        this.xray_reqs = this.$page.props.xray_reqs.data;
         if (this.action === 'update'){
-            this.data = this.$page.props.data.data;
+            this.data = this.$page.props.data.data.xray;
             this.form = useForm(this.data);
-            this.formTitle = 'Update Xray Record';
+            this.formTitle = 'Update X-ray Result';
         }
         else {
-            this.formTitle = 'Create Xray Record';
+            this.formTitle = 'Create X-ray Result';
             this.form.infirmary_id = this.$page.props.last_client_id;
         }
 
-    }
+    },
 };
 </script>
 

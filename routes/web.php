@@ -8,7 +8,8 @@ use App\Http\Controllers\API\FecalysisApi;
 use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
 use App\Http\Controllers\API\PaymentApi;
-use App\Http\Controllers\API\RadiologyAPI;
+use App\Http\Controllers\API\RadiologyRequestApi;
+use App\Http\Controllers\API\RadiologyResultAPI;
 use App\Http\Controllers\API\ServiceApi;
 use App\Http\Controllers\API\UrinalysisApi;
 use App\Http\Controllers\ClientController;
@@ -21,7 +22,8 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\RadiologyController;
+use App\Http\Controllers\RadiologyRequestController;
+use App\Http\Controllers\RadiologyResultController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UrinalysisController;
 use App\Models\College;
@@ -106,25 +108,47 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     Route::prefix('/radiology')->middleware('racm')->group(function(){
+        Route::get('/', function (){
+            return Inertia::render('Radiology/RadiologyIndex');
+        })->name('radiology.index');
+
         Route::prefix('/request')->group(function(){
-            Route::get('/', [RadiologyController::class, 'index'])->name('radiology.index');
-            Route::get('/new', [RadiologyController::class, 'create'])->name('radiology.create');
-            Route::get('/edit/{id}', [RadiologyController::class, 'edit'])->name('radiology.edit');
-            Route::get('/show/{id}', [RadiologyController::class, 'show'])->name('radiology.show');
+            Route::get('/', [RadiologyRequestController::class, 'index'])->name('radiology.request.index');
+            Route::get('/new', [RadiologyRequestController::class, 'create'])->name('radiology.request.create');
+            Route::get('/edit/{id}', [RadiologyRequestController::class, 'edit'])->name('radiology.request.edit');
+            Route::get('/show/{id}', [RadiologyRequestController::class, 'show'])->name('radiology.request.show');
             Route::prefix('api')->group(function (){
                 // Radiology GET ALL route
-                Route::get('/', [RadiologyAPI::class, 'index'])->name('api.radiology.index');
+                Route::get('/', [RadiologyRequestApi::class, 'index'])->name('api.radiology.request.index');
                 // Radiology STORE route
-                Route::post('/', [RadiologyAPI::class, 'store'])->name('api.radiology.store');
+                Route::post('/', [RadiologyRequestApi::class, 'store'])->name('api.radiology.request.store');
                 // Radiology UPDATE route
-                Route::put('/{id}', [RadiologyAPI::class, 'update'])->name('api.radiology.update');
+                Route::put('/{id}', [RadiologyRequestApi::class, 'update'])->name('api.radiology.request.update');
                 // Radiology DELETE route
-                Route::delete('/{id}', [RadiologyAPI::class, 'destroy'])->name('api.radiology.destroy');
+                Route::delete('/{id}', [RadiologyRequestApi::class, 'destroy'])->name('api.radiology.request.destroy');
                 // Radiology DATATABLE API route
-                Route::get('/all', [RadiologyAPI::class, 'tableApi'])->name('api.radiology.table');
+                Route::get('/all', [RadiologyRequestApi::class, 'tableApi'])->name('api.radiology.request.table');
             });
         });
-        
+        Route::prefix('/result')->group(function(){
+            Route::get('/', [RadiologyResultController::class, 'index'])->name('radiology.result.index');
+            Route::get('/new', [RadiologyResultController::class, 'create'])->name('radiology.result.create');
+            Route::get('/edit/{id}', [RadiologyResultController::class, 'edit'])->name('radiology.result.edit');
+            Route::get('/show/{id}', [RadiologyResultController::class, 'show'])->name('radiology.result.show');
+            Route::prefix('api')->group(function (){
+                // Radiology GET ALL route
+                Route::get('/', [RadiologyResultAPI::class, 'index'])->name('api.radiology.result.index');
+                // Radiology STORE route
+                Route::post('/', [RadiologyResultAPI::class, 'store'])->name('api.radiology.result.store');
+                // Radiology UPDATE route
+                Route::put('/{id}', [RadiologyResultAPI::class, 'update'])->name('api.radiology.result.update');
+                // Radiology DELETE route
+                Route::delete('/{id}', [RadiologyResultAPI::class, 'destroy'])->name('api.radiology.result.destroy');
+                // Radiology DATATABLE API route
+                Route::get('/all', [RadiologyResultAPI::class, 'tableApi'])->name('api.radiology.result.table');
+            });
+        });
+
     });
 
     Route::prefix('/dental')->middleware('dacm')->group(function(){

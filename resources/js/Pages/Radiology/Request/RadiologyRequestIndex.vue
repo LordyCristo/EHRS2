@@ -7,23 +7,23 @@ export default {
     data: () => ({
         apiLink: {
             // create form
-            create: 'radiology.result.create',
+            create: 'radiology.request.create',
             // edit form
-            edit: 'radiology.result.edit',
+            edit: 'radiology.request.edit',
             //view form
-            show: 'radiology.result.show',
+            //show: 'radiology.request.show',
             // return all data
-            index: 'api.radiology.result.index',
+            index: 'api.radiology.request.index',
             // return data compatible for datatable requests
-            table: 'api.radiology.result.table',
+            table: 'api.radiology.request.table',
             // store data from create form
-            store: 'api.radiology.result.store',
+            store: 'api.radiology.request.store',
             // update data from edit form
-            update: 'api.radiology.result.update',
+            update: 'api.radiology.request.update',
             // delete a specific data
-            destroy: 'api.radiology.result.destroy',
+            destroy: 'api.radiology.request.destroy',
             // import data from excel
-            import: 'api.radiology.result.import',
+            import: 'api.radiology.request.import',
         },
         columnsSmall:[
             {

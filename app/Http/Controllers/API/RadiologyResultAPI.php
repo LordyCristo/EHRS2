@@ -112,7 +112,7 @@ class RadiologyResultAPI extends Controller
     {
         $query = Xray::join('xray_requests', 'xrays.rqst_id', '=', 'xray_requests.id')
             ->join('clients', 'xray_requests.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('xray_requests.*, CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) as name');
+            ->selectRaw('xray_requests.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -121,7 +121,7 @@ class RadiologyResultAPI extends Controller
                 if ($searchBy == '*') {
                     $q->where('xray_requests.id', 'like', '%' . $search . '%')
                         ->orwhere('xray_requests.infirmary_id', 'like', '%' . $search . '%')
-                        ->orWhereRaw('CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) LIKE ?', '%' . $search . '%')
+                        ->orWhereRaw('CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) LIKE ?', '%' . $search . '%')
                         ->orWhere('status', 'like', '%' . $search . '%');
                 } elseif ($searchBy == 'name'){
                     $q->where('clients.last_name', 'like', '%' . $search . '%')

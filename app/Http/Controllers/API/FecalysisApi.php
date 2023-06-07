@@ -140,7 +140,7 @@ class FecalysisApi extends Controller
     public function tableApi(Request $request): JsonResponse
     {
         $query = FecalysisRecord::join('clients', 'fecalysis_records.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('fecalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) as name');
+            ->selectRaw('fecalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
@@ -149,7 +149,7 @@ class FecalysisApi extends Controller
                 if ($searchBy == '*') {
                     $q->where('fecalysis_records.infirmary_id', 'like', '%' . $search . '%')
                     ->orwhere('fecalysis_records.infirmary_id', 'like', '%' . $search . '%')
-                        ->orWhereRaw('CONCAT(clients.last_name, ", ", clients.first_name, " ", clients.middle_name) LIKE ?', '%' . $search . '%')
+                        ->orWhereRaw('CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) LIKE ?', '%' . $search . '%')
                         ->orWhere('status', 'like', '%' . $search . '%');
                 } elseif ($searchBy == 'name'){
                     $q->where('clients.last_name', 'like', '%' . $search . '%')

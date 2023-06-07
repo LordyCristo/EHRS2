@@ -39,7 +39,7 @@ class User extends Authenticatable
         'specialization',
         'curr_position',
         'license_no',
-        'landline',
+        'telephone',
         'mobile',
     ];
 
@@ -91,5 +91,10 @@ class User extends Authenticatable
     public function role()
     {
         return $this->hasOne(ClientType::class);
+    }
+
+    public function getAccount()
+    {
+        return null;
     }
 }

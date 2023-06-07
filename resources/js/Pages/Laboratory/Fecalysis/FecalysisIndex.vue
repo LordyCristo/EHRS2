@@ -27,15 +27,6 @@ export default {
         },
         columnsSmall:[
             {
-                data: 'id',
-                name:'id',
-                title: 'Record No.',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-center dt-border-sm px-2 text-center'
-            },
-            {
                 data: 'infirmary_id',
                 name:'infirmary_id',
                 title: 'Infirmary ID',
@@ -64,15 +55,6 @@ export default {
             },
         ],
         columnsLarge: [
-            {
-                data: 'id',
-                name:'id',
-                title: 'Record No.',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-center dt-border-sm px-2 text-center'
-            },
             {
                 data: 'infirmary_id',
                 name:'infirmary_id',

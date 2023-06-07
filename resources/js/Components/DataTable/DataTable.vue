@@ -202,7 +202,7 @@ export default {
                     page: this.pageNumber,
                     per_page: this.perPage,
                     search: this.search,
-                    search_by: this.searchBy,
+                    search_by: this.searchBy? this.searchBy : '*',
                     sort: this.sortedColumn,
                     sort_dir: this.sortDir,
                 }
@@ -448,6 +448,7 @@ export default {
         </DtTopContainer>
         <DtTable ref="table">
             <DtTHead>
+                <DtTh title="No." class="max-w-fit absolute" sortDir="asc" :isSortedColumn="false" />
                 <DtTh v-for="col in columns" :key="col.data" :title="col.title" @click="sortColumn(col)" :sortDir="sortDir" :isSortedColumn="isColumnSorted(col)" />
             </DtTHead>
             <DtBody>
@@ -464,7 +465,12 @@ export default {
                     :class="{ 'bg-gray-300 text-gray-900 border-x-0': selected.includes(item.id) }"
                     class="hover:bg-gray-200 border border-x-0"
                     @click="selectRecord($event, item.id)">
+                    <!--index -->
+                    <td class="whitespace-nowrap max-w-fit">
+                        {{ data.indexOf(item) + 1 }}
+                    </td>
                     <template v-for="col in columns" :key="col.data">
+
                         <!-- for data -->
                         <td v-if="col.data" class="whitespace-nowrap border-gray-200 border" :class="col.className">
                             {{ item[col.data] }}

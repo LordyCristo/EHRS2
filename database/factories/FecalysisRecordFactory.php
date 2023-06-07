@@ -21,7 +21,7 @@ class FecalysisRecordFactory extends Factory
     public function definition(): array
     {
         $fecalysisIds = Fecalysis::pluck('id')->toArray();
-        $clientIds = Payment::pluck('infirmary_id')->toArray();
+        $clientIds = Client::pluck('infirmary_id')->toArray();
         $or_nos = PaymentsService::pluck('payment_id')->toArray();
         return [
                 // make the infirmary_id unique from the client_ids

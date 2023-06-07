@@ -18,15 +18,6 @@ export default{
     data: () => ({
         columnsSmall:[
             {
-                data: 'id',
-                name:'id',
-                title: 'ID',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-center dt-border-sm px-2'
-            },
-            {
                 data: 'client_type',
                 name: 'client_type',
                 title: 'Client Type',
@@ -46,24 +37,6 @@ export default{
             },
         ],
         columnsLarge: [
-            {
-                data: 'id',
-                name:'id',
-                title: 'ID',
-                searchable: true,
-                orderable: false,
-                collapsable: false,
-                className: 'dt-center dt-border-sm px-2'
-            },
-            {
-                data: 'service_id',
-                name: 'service_id',
-                title: 'Service ID',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-border-sm px-2',
-            },
             {
                 data: 'service',
                 name: 'service',
@@ -89,7 +62,7 @@ export default{
                 searchable: true,
                 orderable: true,
                 collapsable: true,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 text-center',
             },
         ],
         apiLink: {

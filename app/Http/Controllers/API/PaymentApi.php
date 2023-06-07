@@ -172,9 +172,9 @@ class PaymentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Payment::join('clients', 'clients.infirmary_id', '=', 'payments.infirmary_id')
+        $query = Payment::join('clients', 'payments.infirmary_id', '=', 'payments.infirmary_id')
             ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-            ->selectRaw('payments.or_no, payments.id, payments.payor_name, payments.infirmary_id, COUNT(payments_service.service_id) as services_count, payments.total_amount, payments.remarks')
+            ->selectRaw('LPAD(payments.or_no, 5, "0") as or_no, payments.id, payments.payor_name, payments.infirmary_id, COUNT(payments_service.service_id) as services_count, payments.total_amount, payments.remarks')
             ->groupBy('payments.or_no');
 
         $totalRecords = $query->count();
@@ -183,10 +183,13 @@ class PaymentApi extends Controller
             $searchBy = $request->input('search_by', 'id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('id', 'like', '%' . $search . '%')
-                        ->orWhere('payor_name', 'like', '%' . $search . '%')
-                        ->orWhere('payor_email', 'like', '%' . $search . '%')
-                        ->orWhere('payor_mobile', 'like', '%' . $search . '%');
+                    $q->where('payments.id', 'like', '%' . $search . '%')
+                        ->orWhere('payments.payor_name', 'like', '%' . $search . '%')
+                        ->orWhere('payments.payor_email', 'like', '%' . $search . '%')
+                        ->orWhere('payments.payor_mobile', 'like', '%' . $search . '%')
+                        ->orWhere('payments.infirmary_id', 'like', '%' . $search . '%')
+                        ->orWhere('payments.total_amount', 'like', '%' . $search . '%')
+                        ->orWhere('payments.or_no', 'like', '%' . $search . '%');
                 } else {
                     $q->where('payments.' . $searchBy, 'like', '%' . $search . '%');
                 }

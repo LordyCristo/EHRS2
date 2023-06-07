@@ -93,7 +93,9 @@ class ClientApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Client::join('degree_programs','degree_programs.id','=','clients.program_id')->join('client_types','client_types.id','=','clients.client_type_id')->select('clients.*','degree_programs.abbr as program_name','client_types.name as client_type');
+        $query = Client::join('degree_programs','degree_programs.id','=','clients.program_id')
+            ->join('client_types','client_types.id','=','clients.client_type_id')
+            ->select('clients.*','degree_programs.abbr as program_name','client_types.name as client_type');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

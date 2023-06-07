@@ -1,5 +1,5 @@
 <template>
-    <th v-if="isSortedColumn" class="p-1 bg-vsu-olive whitespace-nowrap">
+    <th v-if="isSortedColumn" class="p-1 bg-vsu-olive whitespace-nowrap max-w-fit">
         {{ title }}
         <template v-if="sortDir === 'asc'">
             <span class="asc"></span>
@@ -8,7 +8,7 @@
             <span class="desc"></span>
         </template>
     </th>
-    <th v-else class="p-1 whitespace-nowrap">
+    <th v-else class="p-1 whitespace-nowrap max-w-fit">
         {{ title }}
     </th>
 </template>

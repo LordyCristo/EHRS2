@@ -24,7 +24,7 @@ defineProps({
             ref="input"
             type="date"
             class="datePicker"
-            :class="errorMsg?'border-red-300':'border-gray-300'"
+            :class="errorMsg?'border-red-300':''"
             :value="modelValue"
             @input="$emit('update:modelValue', $event.target.value)" />
     </InputField>

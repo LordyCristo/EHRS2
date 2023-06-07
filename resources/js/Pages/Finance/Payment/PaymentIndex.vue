@@ -13,15 +13,6 @@ export default{
     data: () => ({
         columnsSmall:[
             {
-                data: 'id',
-                name:'id',
-                title: 'ID',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-center dt-border-sm px-2'
-            },
-            {
                 data: 'infirmary_id',
                 name: 'infirmary_id',
                 title: 'Infirmary ID',
@@ -51,13 +42,13 @@ export default{
         ],
         columnsLarge: [
             {
-                data: 'id',
-                name:'id',
+                data: 'or_no',
+                name:'or_no',
                 title: 'OR No.',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-center dt-border-sm px-2'
+                className: 'dt-center dt-border-sm text-center px-2'
             },
             {
                 data: 'payor_name',

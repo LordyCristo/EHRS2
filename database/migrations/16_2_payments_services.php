@@ -19,6 +19,7 @@ return new class extends Migration
             $table->timestamps();
             // Add any additional columns related to the payment-service relationship
             $table->unique(['payment_id', 'service_id']);
+            $table->softDeletes();
         });
 
     }

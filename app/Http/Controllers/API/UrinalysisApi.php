@@ -20,7 +20,7 @@ class UrinalysisApi extends Controller
      */
     public function index()
     {
-        return new UrinalysisCollection(UrinalysisRecord::all());
+        return new UrinalysisCollection(UrinalysisRecord::join('urinalysis', 'urinalysis.id', '=','urinalysis_records.urinalysis_id')->get());
     }
 
     /**
@@ -117,7 +117,7 @@ class UrinalysisApi extends Controller
     public function tableApi(Request $request): JsonResponse
     {
         $query = UrinalysisRecord::join('clients', 'urinalysis_records.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('urinalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
+            ->selectRaw('urinalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

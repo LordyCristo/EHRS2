@@ -1,5 +1,6 @@
 <template>
     <FormSection :data="data" :form="form" :action="action"
+                 ref="form"
                  index-link="radiology.result.index"
                  :update-link="data? route('api.radiology.result.update', data.id): null"
                  :store-link="route('api.radiology.result.store')"
@@ -7,11 +8,16 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
-            <div class="grid grid-cols-3 gap-1">
-                <InputTextAuto v-model="form.rqst_id" label="X-ray Request ID" @change="changeRqst" :options="xray_reqs" :errorMsg="form.errors.rqst_id" @input="form.errors['rqst_id'] = null" />
-                <div>
-
-                </div>
+            <div>
+                <InputTextAuto v-model="form.rqst_id" label="Patient" @change="changeRqst" :options="xray_reqs" :errorMsg="form.errors.rqst_id" @input="form.errors['rqst_id'] = null" />
+<!--                <div class="flex flex-col text-center text-sm p-1 text-gray-600 max-w-fit justify-between">-->
+<!--                    <span >-->
+<!--                        Xray Request ID-->
+<!--                    </span>-->
+<!--                    <span class="text-lg">-->
+<!--                        {{ form.rqst_id }}-->
+<!--                    </span>-->
+<!--                </div>-->
             </div>
             <!--end of header form-->
             <!--urinalysis body form-->
@@ -20,7 +26,7 @@
                     <InputText v-model="form.procedure" label="Prodecure" :errorMsg="form.errors.procedure" @input="form.errors['procedure'] = null" />
                 </div>
                 <div class="grid grid-cols-1 gap-1">
-                    <InputText v-model="form.radiographic_findings" label="Radiolographic Findings" :errorMsg="form.errors.radiographic_findings" @input="form.errors['radiographic_findings'] = null" />
+                    <InputTextArea v-model="form.radiographic_findings" label="Radiolographic Findings" :errorMsg="form.errors.radiographic_findings" @input="form.errors['radiographic_findings'] = null" />
                 </div>
                 <div class="grid grid-cols-1 gap-1">
                     <InputTextArea v-model="form.impression" label="Impression" :errorMsg="form.errors.impression" @input="form.errors['impression'] = null" />
@@ -78,7 +84,7 @@ export default {
         changeRqst(){
             const select = this.xray_reqs.find(x => x.id === this.form.rqst_id);
             console.log(select.value);
-        }
+        },
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;

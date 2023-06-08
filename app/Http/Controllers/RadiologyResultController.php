@@ -109,6 +109,10 @@ class RadiologyResultController extends Controller
      */
     public function getXrayReq()
     {
-        return new XrayResource(XrayRequest::join('clients', 'clients.infirmary_id','=','xray_requests.infirmary_id')->selectRaw('xray_requests.id, xray_requests.id as name, clients.age, clients.sex, clients.first_name, clients.middle_name, clients.last_name, clients.suffix')->get());
+        return new XrayResource(XrayRequest::join('clients', 'clients.infirmary_id', '=', 'xray_requests.infirmary_id')
+            ->leftJoin('xrays', 'xrays.rqst_id', '=', 'xray_requests.id')
+            ->whereNull('xrays.id')
+            ->selectRaw('xray_requests.id as id, CONCAT(clients.infirmary_id, " - ", CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(clients.suffix, "")) ) as name, clients.age, clients.sex')
+            ->get());
     }
 }

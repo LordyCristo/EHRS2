@@ -85,16 +85,16 @@ class RadiologyResultAPI extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        Xray::destroy($id);
-        if(Xray::deleted($id) > 0)
-        return response()->json([
-            'notification' => [
-                'id' => uniqid(),
-                'show' => true,
-                'type' => 'success',
-                'message' => 'Successfully deleted X-ray with id ' . $request->id,
-            ]
-        ])->setStatusCode(200);
+        $temp = Xray::destroy($id);
+        if($temp)
+            return response()->json([
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'success',
+                    'message' => 'Successfully deleted X-ray with id ' . $request->id . "- ". $temp,
+                ]
+            ])->setStatusCode(200);
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
@@ -112,7 +112,7 @@ class RadiologyResultAPI extends Controller
     {
         $query = Xray::join('xray_requests', 'xrays.rqst_id', '=', 'xray_requests.id')
             ->join('clients', 'xray_requests.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('xray_requests.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
+            ->selectRaw('xray_requests.*, xrays.rqst_id, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

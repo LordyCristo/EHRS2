@@ -1,5 +1,5 @@
 <template>
-    <InputField :name="name" :errorMsg="errorMsg" :label="label">
+    <InputField :name="name" :errorMsg="errorMsg" :label="label" :required="required">
         <div>
             <input
                 v-model="query"
@@ -12,6 +12,7 @@
                 class="sm:p-2 p-1 w-full border overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300"
                 :class="errorMsg ? 'border-red-300' : 'border-gray-300'"
                 @focus="show = true"
+                @keydown.delete="!query.length?$emit('update:modelValue', null):''"
                 @input="filterOptions"
             />
             <div v-if="show" class="absolute bg-white z-50 w-fit mt-2 rounded-md shadow-md border p-1 max-h-72 overflow-y-scroll">
@@ -43,6 +44,7 @@ const props = defineProps({
     id: String,
     name: String,
     label: String,
+    required: Boolean,
     options: [Array, Function],
     class: String,
     step: Number,
@@ -62,9 +64,8 @@ const filteredOptions = computed(() =>
         ? props.options
         : props.options.filter((option) =>
             option.name
-                .toLowerCase()
-                .replace(/\s+/g, '')
-                .includes(query.value.toLowerCase().replace(/\s+/g, ''))
+                .toString() // Convert the numeric value to string for comparison
+                .includes(query.value)
         )
 );
 

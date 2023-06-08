@@ -8,33 +8,33 @@
         <template #formBody>
             <!--header form-->
             <div class="grid grid-cols-4 gap-1">
-                <InputTextAuto v-model.number="form.infirmary_id" label="Infirmary No." :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Infirmary No." :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <InputText v-model="form.ward" label="Ward" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+                <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
             </div>
             <!--end of header form-->
             <!--urinalysis body form-->
            <div class="my-2 border-y py-5">
                <div class="grid grid-cols-4 gap-1">
-                   <InputText v-model="form.color" label="Color" :errorMsg="form.errors.color" @input="onFocusClearError('color')" />
-                   <InputText v-model="form.clarity" label="Clarity" :errorMsg="form.errors.clarity" @input="onFocusClearError('clarity')" />
-                   <InputText v-model="form.ph" label="pH" type="number" step="0.1" :errorMsg="form.errors.ph" @input="onFocusClearError('ph')" />
-                   <InputText v-model="form.specific_gravity" type="number" step="0.1" label="Specific Gravity" :errorMsg="form.errors.specific_gravity" @input="onFocusClearError('specific_gravity')" />
-                   <InputText v-model="form.albumin" label="Protein" :errorMsg="form.errors.albumin" @input="onFocusClearError('albumin')" />
-                   <InputText v-model="form.glucose" label="Glucose" :errorMsg="form.errors.glucose" @input="onFocusClearError('glucose')" />
-                   <InputText v-model="form.blood" label="Blood" :errorMsg="form.errors.blood" @input="onFocusClearError('blood')" />
-                   <InputText v-model="form.leukocytes" label="Leukocytes" :errorMsg="form.errors.leukocytes" @input="onFocusClearError('leukocytes')" />
-                   <InputText v-model="form.nitrite" label="Nitrite" :errorMsg="form.errors.nitrite" @input="onFocusClearError('nitrite')" />
-                   <InputText v-model="form.bilirubin" label="Bilirubin" :errorMsg="form.errors.bilirubin" @input="onFocusClearError('bilirubin')" />
-                   <InputText v-model="form.urobilinogen" label="Urobilinogen" :errorMsg="form.errors.urobilinogen" @input="onFocusClearError('urobilinogen')" />
-                   <InputText v-model="form.ketones" label="Ketones" :errorMsg="form.errors.ketones" @input="onFocusClearError('ketones')" />
-                   <InputText v-model="form.wbc" label="WBC" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
-                   <InputText v-model="form.rbc" label="RBC" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
-                   <InputText v-model="form.epithelial_cells" label="Epithelial Cells" :errorMsg="form.errors.epithelial_cells" @input="onFocusClearError('epithelial_cells')" />
-                   <InputText v-model="form.bacteria" label="Bacteria" :errorMsg="form.errors.bacteria" @input="onFocusClearError('bacteria')" />
-                   <InputText v-model="form.amorphous_urates" label="Amorphous Urates" :errorMsg="form.errors.amorphous_urates" @input="onFocusClearError('amorphous_urates')" />
-                   <InputText v-model="form.amorphous_phosphates" label="Amorphous Phosphates" :errorMsg="form.errors.amorphous_phosphates" @input="onFocusClearError('amorphous_phosphates')" />
-                   <InputText v-model="form.mucous_threads" label="Mucus Threads" :errorMsg="form.errors.mucous_threads" @input="onFocusClearError('mucous_threads')" />
+                   <InputText v-model="form.color" label="Color" :errorMsg="form.errors.color" :required="true" @input="onFocusClearError('color')" />
+                   <SelectElement v-model="form.clarity" label="Clarity" :options="Lab_Group_5" :errorMsg="form.errors.clarity" :required="true" @input="onFocusClearError('clarity')" />
+                   <InputText v-model="form.ph" label="pH" type="number" :step="0.1" :errorMsg="form.errors.ph" :required="true" @input="onFocusClearError('ph')" />
+                   <InputText v-model="form.specific_gravity" type="number" :step="0.1" :required="true" label="Specific Gravity" :errorMsg="form.errors.specific_gravity" @input="onFocusClearError('specific_gravity')" />
+                   <SelectElement v-model="form.albumin" :options="Lab_Group_1" label="Albumin" :errorMsg="form.errors.albumin" :required="true" @input="onFocusClearError('albumin')" />
+                   <SelectElement v-model="form.glucose" :options="Lab_Group_1"  label="Glucose" :errorMsg="form.errors.glucose" :required="true" @input="onFocusClearError('glucose')" />
+                   <SelectElement v-model="form.blood" :options="Lab_Group_1"  label="Blood" :errorMsg="form.errors.blood" :required="true" @input="onFocusClearError('blood')" />
+                   <SelectElement v-model="form.leukocytes" :options="Lab_Group_1"  label="Leukocytes" :errorMsg="form.errors.leukocytes" :required="true" @input="onFocusClearError('leukocytes')" />
+                   <SelectElement v-model="form.nitrite" :options="Lab_Group_2" label="Nitrite" :errorMsg="form.errors.nitrite" :required="true" @input="onFocusClearError('nitrite')" />
+                   <SelectElement v-model="form.bilirubin" :options="Lab_Group_1" label="Bilirubin" :errorMsg="form.errors.bilirubin" :required="true" @input="onFocusClearError('bilirubin')" />
+                   <SelectElement v-model="form.urobilinogen" :options="Lab_Group_3" label="Urobilinogen" :errorMsg="form.errors.urobilinogen" :required="true" @input="onFocusClearError('urobilinogen')" />
+                   <SelectElement v-model="form.ketones" label="Ketones" :options="Lab_Group_1" :errorMsg="form.errors.ketones" :required="true" @input="onFocusClearError('ketones')" />
+                   <SelectElement v-model="form.wbc" label="WBC" :options="Lab_Group_4" :errorMsg="form.errors.wbc" :required="true" @input="onFocusClearError('wbc')" />
+                   <SelectElement v-model="form.rbc" label="RBC" :options="Lab_Group_4" :errorMsg="form.errors.rbc" :required="true" @input="onFocusClearError('rbc')" />
+                   <SelectElement v-model="form.epithelial_cells" :options="Lab_Group_1" label="Epithelial Cells" :required="true" :errorMsg="form.errors.epithelial_cells" @input="onFocusClearError('epithelial_cells')" />
+                   <SelectElement v-model="form.bacteria" label="Bacteria" :options="Lab_Group_1" :errorMsg="form.errors.bacteria" :required="true" @input="onFocusClearError('bacteria')" />
+                   <SelectElement v-model="form.amorphous_urates" :options="Lab_Group_1" label="Amorphous Urates" :required="true" :errorMsg="form.errors.amorphous_urates" @input="onFocusClearError('amorphous_urates')" />
+                   <SelectElement v-model="form.amorphous_phosphates" :options="Lab_Group_1" label="Amorphous Phosphates" :required="true" :errorMsg="form.errors.amorphous_phosphates" @input="onFocusClearError('amorphous_phosphates')" />
+                   <SelectElement v-model="form.mucous_threads" :options="Lab_Group_1" label="Mucus Threads" :required="true" :errorMsg="form.errors.mucous_threads" @input="onFocusClearError('mucous_threads')" />
                    <InputText v-model="form.crystals" label="Crystals" :errorMsg="form.errors.crystals" @input="onFocusClearError('crystals')" />
                    <InputText v-model="form.cast" label="Cast" :errorMsg="form.errors.cast" @input="onFocusClearError('cast')" />
                </div>
@@ -45,11 +45,11 @@
             <!--end of urinalysis body form-->
             <!--urinalysis footer form-->
             <div class="grid grid-cols-3">
-                <SelectElement v-model="form.rqst_physician" label="Requesting Physician" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="form.errors['rqst_physician'] = null" />
-                <SelectElement v-model="form.medical_technologist" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
-                <SelectElement v-model="form.pathologist" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
+                <SelectElement v-model="form.rqst_physician" label="Requesting Physician" :required="true" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="form.errors['rqst_physician'] = null" />
+                <SelectElement v-model="form.medical_technologist" label="Medical Technologist" :required="true" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
+                <SelectElement v-model="form.pathologist" label="Pathologist" :options="physicians" :required="true" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
-            <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
+            <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :required="true" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             <!--end of urinalysis footer form-->
         </template>
     </FormSection>
@@ -65,6 +65,7 @@ import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
+import {Lab_Group_1, Lab_Group_2, Lab_Group_3, Lab_Group_4, Lab_Group_5, WardType} from "@/Legends/legends";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -135,6 +136,22 @@ export default {
         else {
             this.formTitle = 'Create Urinalysis Record';
             this.form.infirmary_id = this.$page.props.last_client_id;
+            // set all required field to negative as default
+            this.form.albumin = 'negative';
+            this.form.glucose = 'negative';
+            this.form.blood = 'negative';
+            this.form.leukocytes = 'negative';
+            this.form.nitrite = 'negative';
+            this.form.bilirubin = 'negative';
+            this.form.urobilinogen = 'negative';
+            this.form.ketones = 'negative';
+            this.form.wbc = '0-2';
+            this.form.rbc = '0-2';
+            this.form.epithelial_cells = 'negative';
+            this.form.bacteria = 'negative';
+            this.form.amorphous_urates = 'negative';
+            this.form.amorphous_phosphates = 'negative';
+            this.form.mucous_threads = 'negative';
         }
 
     }

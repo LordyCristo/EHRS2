@@ -27,8 +27,8 @@ export default {
         },
         columnsSmall:[
             {
-                data: 'id',
-                name:'id',
+                data: 'rqst_id',
+                name:'rqst_id',
                 title: 'Record No.',
                 searchable: true,
                 orderable: true,
@@ -65,9 +65,9 @@ export default {
         ],
         columnsLarge: [
             {
-                data: 'id',
-                name:'id',
-                title: 'Record No.',
+                data: 'rqst_id',
+                name:'rqst_id',
+                title: 'Request ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,

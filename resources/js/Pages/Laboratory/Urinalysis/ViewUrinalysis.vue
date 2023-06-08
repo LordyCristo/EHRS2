@@ -2,7 +2,7 @@
     <Laboratory title="View Urinalysis">
         <ViewForm :link="route('laboratory.urinalysis.index')">
             <ViewHeader>Urinalysis Report</ViewHeader>
-            <div class="grid grid-rows-2" v-if="data">
+            <div class="grid grid-rows-2 pb-10" v-if="data">
                 <div class="flex flex-row justify-between gap-2">
                     <view-field label="Patient" :value="formattedFullName(data.client)" />
                     <view-field label="Age" :value="data.age" />
@@ -26,7 +26,7 @@
                         <view-dt-result>{{ data.urinalysis.color }}</view-dt-result>
                         <view-dt-label>WBC</view-dt-label>
                         <view-dt-result>{{ data.urinalysis.wbc }}</view-dt-result>
-                        <view-dt-note style="max-width: 1rem">
+                        <view-dt-note style="max-width: 2.5rem">
                             <view-dt-note-item>/hpf</view-dt-note-item>
                         </view-dt-note>
                     </tr>

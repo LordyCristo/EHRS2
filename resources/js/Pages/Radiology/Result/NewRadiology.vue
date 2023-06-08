@@ -1,6 +1,15 @@
 <template>
     <Radiology title="Create Form">
-        <div class="flex justify-center items-center h-full w-full">
+        <div class="flex flex-row justify-evenly items-center h-full w-full">
+            <div class="flex flex-col gap-2 sm:p-5 p-1 bg-gray-50 border rounded-sm h-full w-fit">
+                <h2 class="font-semibold">Pending Requests: {{ xray_reqs.data.length }}</h2>
+                <div class="p-1">
+                    <div v-for="req in xray_reqs.data">
+                        {{ xray_reqs.data.indexOf(req) + 1 }}.
+                        {{ req.name }}
+                    </div>
+                </div>
+            </div>
             <div class="sm:p-5 p-1 bg-gray-100 rounded-sm">
                 <RadiologyForm :action="action"/>
             </div>
@@ -13,6 +22,9 @@ import RadiologyForm from "@/Pages/Radiology/Result/RadiologyForm.vue";
 </script>
 <script>
 export default {
+    props: {
+        xray_reqs: Object
+    },
     data: () => ({
         action: 'store',
     }),

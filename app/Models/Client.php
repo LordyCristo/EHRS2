@@ -47,6 +47,21 @@ class Client extends Model
 
     function hematology()
     {
-        return $this->hasMany(HematologyRecord::class);
+        return $this->hasMany(HematologyRecord::class, 'infirmary_id', 'infirmary_id');
+    }
+
+    function urinalysis()
+    {
+        return $this->hasMany(UrinalysisRecord::class, 'infirmary_id', 'infirmary_id');
+    }
+
+    function fecalysis()
+    {
+        return $this->hasMany(FecalysisRecord::class, 'infirmary_id', 'infirmary_id');
+    }
+
+    function xray()
+    {
+        return $this->hasMany(XrayRequest::class, 'infirmary_id', 'infirmary_id');
     }
 }

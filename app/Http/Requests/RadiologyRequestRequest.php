@@ -25,7 +25,7 @@ class RadiologyRequestRequest extends FormRequest
         $id = $this->route('id');
         return [
             'infirmary_id' => ['required', 'integer', 'exists:clients,infirmary_id'],
-            'or_no' => ['required', 'integer', 'exists:payments_service,payment_id', Rule::unique('xray_requests')->ignore($id)],
+            'or_no' => ['nullable', 'integer', 'exists:payments_service,payment_id', Rule::unique('xray_requests')->ignore($id)],
             'rqst_for' => ['required', 'string'],
             'history' => ['nullable', 'string'],
             'rqst_physician' => ['required', 'integer', 'exists:users,id'],

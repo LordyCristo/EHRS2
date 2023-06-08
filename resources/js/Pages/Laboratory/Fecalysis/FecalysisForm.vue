@@ -17,9 +17,9 @@
             <div class="my-2 border-y py-5">
                 <div class="grid grid-cols-4 gap-1">
                     <InputText v-model="form.color" :required="true" label="Color" :errorMsg="form.errors.color" @input="onFocusClearError('color')" />
-                    <InputText v-model="form.consistency" :required="true" label="Consistency" :errorMsg="form.errors.consistency" @input="onFocusClearError('consistency')" />
-                    <InputText v-model.number="form.wbc" :required="true" label="WBC" type="number" :step="0.01" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
-                    <InputText v-model.number="form.rbc" :required="true" label="RBC" type="number" :step="0.01" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
+                    <SelectElement v-model="form.consistency" :required="true" label="Consistency" :options="Lab_Group_6" :errorMsg="form.errors.consistency" @input="onFocusClearError('consistency')" />
+                    <SelectElement v-model="form.wbc" :required="true" label="WBC" :options="Lab_Group_4" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
+                    <SelectElement v-model="form.rbc" :required="true" label="RBC" :options="Lab_Group_4" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
                     <InputText v-model.number="form.fat_globules" :required="true" label="Fat Globules" type="number" :step="0.01" :errorMsg="form.errors.fat_globules" @input="onFocusClearError('fat_globules')" />
                     <InputText v-model="form.ova" label="Ova" :errorMsg="form.errors.ova" @input="onFocusClearError('ova')" />
                 </div>
@@ -47,6 +47,7 @@ import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
+import {Lab_Group_4, Lab_Group_6} from "@/Legends/legends";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";

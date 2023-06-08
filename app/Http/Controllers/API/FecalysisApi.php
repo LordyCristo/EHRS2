@@ -20,7 +20,7 @@ class FecalysisApi extends Controller
      */
     public function index()
     {
-        return new FecalysisCollection(FecalysisRecord::all());
+        return new FecalysisCollection(FecalysisRecord::join('fecalysis', 'fecalysis.id', '=','fecalysis_records.fecalysis_id')->get());
     }
 
     /**
@@ -140,7 +140,7 @@ class FecalysisApi extends Controller
     public function tableApi(Request $request): JsonResponse
     {
         $query = FecalysisRecord::join('clients', 'fecalysis_records.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('fecalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
+            ->selectRaw('fecalysis_records.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

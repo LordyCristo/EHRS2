@@ -11,7 +11,6 @@
                 :autofocus="autofocus"
                 class="sm:p-2 p-1 w-full border overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300"
                 :class="errorMsg ? 'border-red-300' : 'border-gray-300'"
-                @focus="show = true"
                 @keydown.delete="!query.length?$emit('update:modelValue', null):''"
                 @input="filterOptions"
             />

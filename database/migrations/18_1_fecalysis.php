@@ -16,9 +16,9 @@ return new class extends Migration
             $table->string('color');
             $table->string('consistency');
             $table->string('ova')->nullable();
-            $table->double('wbc');
-            $table->double('rbc');
-            $table->double('fat_globules');
+            $table->string('wbc');
+            $table->string('rbc');
+            $table->string('fat_globules');
             $table->string('others')->nullable();
             $table->longText('remarks')->nullable();
             $table->timestamps();

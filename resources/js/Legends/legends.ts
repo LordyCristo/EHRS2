@@ -89,4 +89,11 @@ export const Lab_Group_5 = Array(
     { id: 'turbid', name: 'Turbid' },
 );
 
+export const Lab_Group_6 = Array(
+    { id: 'soft', name: 'Soft' },
+    { id: 'loose', name: 'Loose' },
+    { id: 'watery', name: 'Watery' },
+    { id: 'formed', name: 'Formed' },
+    { id: 'hard', name: 'Hard' },
+);
 export {};

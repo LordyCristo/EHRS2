@@ -10,16 +10,19 @@
                 :type="type"
                 :autofocus="autofocus"
                 class="sm:p-2 p-1 w-full border overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300"
-                :class="errorMsg?'border-red-300':'border-gray-300'"
+                :class="errorMsg ? 'border-red-300' : 'border-gray-300'"
                 @focus="show = true"
                 @input="filterOptions"
             />
             <div v-if="show" class="absolute bg-white z-50 w-fit mt-2 rounded-md shadow-md border p-1 max-h-72 overflow-y-scroll">
-                <div v-for="opt in options" @focusout="show = false">
-                    <div v-if="opt.name.toString().toLowerCase().includes(query.toLowerCase())">
+                <div v-if="filteredOptions.length === 0" class="py-0.5 px-4 text-gray-500">
+                    No record found
+                </div>
+                <div v-for="opt in filteredOptions" @focusout="show = false">
+                    <div>
                         <div
                             class="py-0.5 px-4 cursor-pointer hover:bg-vsu-olive hover:text-white rounded-md"
-                            @click="selected = opt.name; query = opt.name; $emit('update:modelValue', opt.id); show = false"
+                            @click="selectOption(opt); $emit('update:modelValue', opt.id);"
                         >
                             {{ opt.name }}
                         </div>
@@ -31,8 +34,8 @@
 </template>
 
 <script setup>
-import {ref, computed, defineProps, watch} from 'vue';
-import InputField from "@/Components/Generic/Forms/InputField.vue";
+import { ref, computed, defineProps, watch } from 'vue';
+import InputField from '@/Components/Generic/Forms/InputField.vue';
 
 const props = defineProps({
     modelValue: [String, Number],
@@ -50,11 +53,11 @@ const props = defineProps({
     },
 });
 
-let selected = ref('');
-let query = ref('');
-let show = ref(false);
+const selected = ref('');
+const query = ref('');
+const show = ref(false);
 
-let filteredOptions = computed(() =>
+const filteredOptions = computed(() =>
     query.value === ''
         ? props.options
         : props.options.filter((option) =>
@@ -65,12 +68,20 @@ let filteredOptions = computed(() =>
         )
 );
 
-const filterOptions = (event) => {
+const filterOptions = () => {
     show.value = query.value.length > 0;
     query.value = query.value.trim();
 };
 
+const selectOption = (option) => {
+    selected.value = option.name;
+    query.value = option.name;
+   //this.$emit('update:modelValue', option.id);
+    show.value = false;
+};
+
 watch(() => props.modelValue, (newValue) => {
-    query.value = props.options.find((option) => option.id === newValue)?.name ?? '';
+    query.value =
+        props.options.find((option) => option.id === newValue)?.name ?? '';
 });
 </script>

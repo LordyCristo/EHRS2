@@ -31,6 +31,7 @@ class Client extends Model
         'program_id',
         'year_lvl',
         'client_type_id',
+        'is_out_patient',
     ];
 
     function program()

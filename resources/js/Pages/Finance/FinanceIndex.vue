@@ -7,6 +7,7 @@
                 <template #description>{{ card.description }}</template>
             </CardWithAction>
         </div>
+        {{ summary }}
     </MorePages>
 </template>
 <script setup>
@@ -18,6 +19,7 @@ export default {
     props: {
         feesCount: Number,
         paymentsCount: Number,
+        summary: Object,
     },
     data: () => ({
         cards: [

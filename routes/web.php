@@ -26,13 +26,18 @@ use App\Http\Controllers\RadiologyRequestController;
 use App\Http\Controllers\RadiologyResultController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UrinalysisController;
+use App\Http\Resources\DentalResource;
 use App\Models\College;
 use App\Models\DegreeProgram;
+use App\Models\Dental;
+use App\Models\DentalRecord;
+use App\Models\DentalTreatment;
 use App\Models\Department;
 use App\Models\FecalysisRecord;
 use App\Models\Fees;
 use App\Models\HematologyRecord;
 use App\Models\Payment;
+use App\Models\PaymentsService;
 use App\Models\Services;
 use App\Models\UrinalysisRecord;
 use App\Models\Xray;
@@ -60,11 +65,13 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-//public registration access
-Route::prefix('/public')->group(function(){
-    Route::get('/client/new', [ClientController::class, 'public'])->name('public.client');
-    Route::post('/', [ClientApi::class, 'store'])->name('api.public.client.store');
-});
+
+// Public registration access
+// Recommend to be removed in production
+// Route::prefix('/public')->middleware('auth:sanctum')->group(function(){
+// Route::get('/client/new', [ClientController::class, 'public'])->name('public.client');
+// Route::post('/', [ClientApi::class, 'store'])->name('api.public.client.store');
+//});
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::prefix('dashboard')->group(function () {
@@ -72,11 +79,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/dashboard', [DashboardController::class, 'dataSummary'])->name('api.dashboard');
     });
 
+    // Routes for the Client Management Section
     Route::prefix('clients')->group(callback: function () {
         Route::get('/', [ClientController::class, 'index'])->name('client.index');
         Route::get('/new', [ClientController::class, 'create'])->name('client.create');
         Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('client.edit');
-
         Route::prefix('api')->group(callback: function () {
             // Client GET ALL route
             Route::get('/', [ClientApi::class, 'index'])->name('api.client.index');
@@ -109,14 +116,30 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         })->name('editRecord');
     });
 
-    Route::prefix('/radiology')->middleware('racm')->group(function(){
+    Route::prefix('/emergency')->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('ER/ERClientIndex');
+        })->name('er.index');
+
+        Route::get('/new', function () {
+            return Inertia::render('ER/ERNewClient');
+        })->name('er.new.client');
+
+        Route::get('/edit', function () {
+            return Inertia::render('ER/EREditClient');
+        })->name('er.edit.client');
+    });
+
+    // Routes for the Radiology Section
+    Route::prefix('radiology')->middleware('racm')->group(function(){
+        // Radiology index page
         Route::get('/', function (){
             return Inertia::render('Radiology/RadiologyIndex',[
                 'requestsCount' => XrayRequest::count(),
                 'resultsCount' => Xray::count(),
             ]);
         })->name('radiology.index');
-
+        // Routes to handle Xray requests
         Route::prefix('/request')->group(function(){
             Route::get('/', [RadiologyRequestController::class, 'index'])->name('radiology.request.index');
             Route::get('/new', [RadiologyRequestController::class, 'create'])->name('radiology.request.create');
@@ -135,6 +158,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::get('/all', [RadiologyRequestApi::class, 'tableApi'])->name('api.radiology.request.table');
             });
         });
+        // Routes to handle radiology results
         Route::prefix('/result')->group(function(){
             Route::get('/', [RadiologyResultController::class, 'index'])->name('radiology.result.index');
             Route::get('/new', [RadiologyResultController::class, 'create'])->name('radiology.result.create');
@@ -153,23 +177,32 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::get('/all', [RadiologyResultAPI::class, 'tableApi'])->name('api.radiology.result.table');
             });
         });
-
     });
 
-    Route::prefix('/dental')->middleware('dacm')->group(function(){
+    // Routes for the Dental Section
+    Route::prefix('dental')->middleware('dacm')->group(function(){
         Route::get('/', function () {
-            return Inertia::render('Dental');
+            return Inertia::render('Dental',[
+                'results' => new DentalResource(DentalRecord::withCount('dentalResult')->withCount('treatments')->get()),
+            ]);
         })->name('dental');
     });
 
+    // Routes for the Payment Section
     Route::prefix('finance')->middleware('facm')->group(function (){
+        // Finance dashboard and summary of revenue
         Route::get('/', function (){
             return Inertia::render('Finance/FinanceIndex',[
                 'feesCount' => Fees::count(),
                 'paymentsCount' => Payment::count(),
+                'summary' => [
+                    // total revenue per service
+                    'totalRevenue' => PaymentsService::join('services', 'payments_service.service_id', '=', 'services.id')
+                    ->groupBy('service_id')->selectRaw('services.name, SUM(fee) as total')->get(),
+                ]
             ]);
         })->name('finance.index');
-
+        // Routes to manage the fees assigned to every service offered
         Route::prefix('fee')->group(function(){
             Route::get('/', [FeeController::class, 'index'])->name('finance.fee.index');
             Route::get('/new', [FeeController::class, 'create'])->name('finance.fee.create');
@@ -189,7 +222,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::post('/import', [FeeApi::class, 'import'])->name('api.fee.import');
             });
         });
-
+        // Routes for payment transactions
         Route::prefix('payment')->group(function(){
             Route::get('/', [PaymentController::class, 'index'])->name('finance.payment.index');
             Route::get('/new', [PaymentController::class, 'create'])->name('finance.payment.create');
@@ -212,7 +245,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
     });
 
-    Route::prefix('/laboratory')->middleware('lacm')->group(function () {
+    // Routes for Laboratory Services
+    Route::prefix('laboratory')->middleware('lacm')->group(function () {
+        // Summary index page for laboratories
         Route::get('/', function () {
             return Inertia::render('Laboratory/LaboratoryIndex',[
                 'hematologyCount' => HematologyRecord::count(),
@@ -220,7 +255,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 'urinalysisCount' => UrinalysisRecord::count(),
             ]);
         })->name('laboratory.index');
-
+        // Routes for hematology record management
         Route::prefix('/hematology')->group(function () {
             Route::get('/', [HematologyController::class, 'index'])->name('laboratory.hematology.index');
             Route::get('/new', [HematologyController::class, 'create'])->name('laboratory.hematology.create');
@@ -241,7 +276,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::post('/import', [HematologyApi::class, 'import'])->name('api.hematology.import');
             });
         });
-
+        // Routes for Fecalaysis Record Management
         Route::prefix('/fecalysis')->group(function () {
             Route::get('/', [FecalysisController::class, 'index'])->name('laboratory.fecalysis.index');
             Route::get('/new', [FecalysisController::class, 'create'])->name('laboratory.fecalysis.create');
@@ -262,7 +297,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::post('/import', [FecalysisApi::class, 'import'])->name('api.fecalysis.import');
             });
         });
-
+        // Routes for Urinalysis Result Record Management
         Route::prefix('/urinalysis')->group(function () {
             Route::get('/', [UrinalysisController::class, 'index'])->name('laboratory.urinalysis.index');
             Route::get('/new', [UrinalysisController::class, 'create'])->name('laboratory.urinalysis.create');
@@ -285,19 +320,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
     });
 
-    Route::get('/surgery', function () {
-        return Inertia::render('Surgery');
-    })->name('surgery');
-
-    Route::get('/maternity', function () {
-        return Inertia::render('Maternity');
-    })->name('maternity');
-
-    Route::get('/ward', function () {
-        return Inertia::render('Ward');
-    })->name('ward');
-
+    // Routes for the more pages section of the application.
     Route::prefix('more')->middleware('macm')->group(function () {
+        // Summary page for all the pages in the more section.
         Route::get('/', function () {
             return Inertia::render('MorePages/MorePageIndex',[
                 'collegesCount' => College::count(),
@@ -306,7 +331,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 'servicesCount' => Services::count(),
             ]);
         })->name('more.pages');
-
+        // Routes to manage colleges in the university.
         Route::prefix('college')->group(function(){
             Route::get('/', [CollegeController::class, 'index'])->name('more.college.index');
             Route::get('/new', [CollegeController::class, 'create'])->name('more.college.create');
@@ -326,7 +351,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::post('/import', [CollegeApi::class, 'import'])->name('api.college.import');
             });
         });
-
+        // Routes to manage departments in the university.
         Route::prefix('department')->group(function(){
             Route::get('/', [DepartmentController::class, 'index'])->name('more.department.index');
             Route::get('/new',[DepartmentController::class, 'create'])->name('more.department.create');
@@ -346,7 +371,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::post('/import', [DepartmentApi::class, 'import'])->name('api.department.import');
             });
         });
-
+        // Routes to manage the degree programs in the university.
         Route::prefix('program')->group(function(){
             Route::get('/', [DegreeProgramController::class, 'index'])->name('more.program.index');
             Route::get('/new', [DegreeProgramController::class, 'create'])->name('more.program.create');
@@ -366,7 +391,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::post('/import', [DegreeProgramApi::class, 'import'])->name('api.program.import');
             });
         });
-
+        // Routes to manage services offered by the hospital.
         Route::prefix('service')->group(function (){
             Route::get('/', [ServiceController::class, 'index'])->name('more.service.index');
             Route::get('/new', [ServiceController::class, 'create'])->name('more.service.create');

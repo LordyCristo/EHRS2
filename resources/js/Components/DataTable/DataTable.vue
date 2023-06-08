@@ -467,7 +467,7 @@ export default {
                     @click="selectRecord($event, item.id)">
                     <!--index -->
                     <td class="whitespace-nowrap max-w-fit">
-                        {{ data.indexOf(item) + 1 }}
+                        {{ pageStart + data.indexOf(item) }}
                     </td>
                     <template v-for="col in columns" :key="col.data">
 

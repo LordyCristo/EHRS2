@@ -59,7 +59,9 @@ class HematologyController extends Controller
     {
         return Inertia::render('Laboratory/Hematology/EditHematology',[
             'data' => new HematologyResource(HematologyRecord::join('hematology', 'hematology.id', '=', 'hematology_records.id')->findOrFail($request->id)),
-            'physicians' => new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get()),
+            'physicians' => $this->getPhysicians(),
+            'clients' => $this->getClients(),
+            'or_nos' => $this->getOrNos(),
         ]);
     }
 
@@ -68,16 +70,19 @@ class HematologyController extends Controller
      */
     private function getClients()
     {
-        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
-            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-            ->leftJoin('hematology_records', function ($join) {
-                $join->on('hematology_records.or_no', '=', 'payments_service.payment_id')
-                    ->whereNull('hematology_records.or_no');
-            })
-            ->where('payments_service.service_id', 3)
-            ->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")
-            ->groupBy('clients.infirmary_id')
-            ->get());
+        // get all clients
+        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
+
+//        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
+//            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
+//            ->leftJoin('hematology_records', function ($join) {
+//                $join->on('hematology_records.or_no', '=', 'payments_service.payment_id')
+//                    ->whereNull('hematology_records.or_no');
+//            })
+//            ->where('payments_service.service_id', 3)
+//            ->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")
+//            ->groupBy('clients.infirmary_id')
+//            ->get());
     }
 
     /**

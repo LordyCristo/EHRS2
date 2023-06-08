@@ -67,16 +67,19 @@ class FecalysisController extends Controller
      */
     private function getClients()
     {
-        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
-            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-            ->leftJoin('fecalysis_records', function ($join) {
-                $join->on('fecalysis_records.or_no', '=', 'payments_service.payment_id')
-                    ->whereNull('fecalysis_records.or_no');
-            })
-            ->where('payments_service.service_id', 2)
-            ->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")
-            ->groupBy('clients.infirmary_id')
-            ->get());
+        // get all clients
+        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
+//        Get all client who paid for fecalysis service but hasn't been used in fecalysis records
+//        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
+//            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
+//            ->leftJoin('fecalysis_records', function ($join) {
+//                $join->on('fecalysis_records.or_no', '=', 'payments_service.payment_id')
+//                    ->whereNull('fecalysis_records.or_no');
+//            })
+//            ->where('payments_service.service_id', 2)
+//            ->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")
+//            ->groupBy('clients.infirmary_id')
+//            ->get());
     }
 
     /**

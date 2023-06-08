@@ -31,7 +31,7 @@ class HematologyRequest extends FormRequest
             'pathologist' => ['required', 'exists:users,id'],
             'ward' => ['nullable'],
             'or_no' => ['nullable', 'numeric', 'exists:payments,or_no', Rule::unique('hematology_records')->ignore($id)],
-            'status' => ['required', 'in:pending,processing'],
+            'status' => ['required', 'in:pending,released'],
             // hematology
             'hemoglobin' => ['required', 'numeric'],
             'hematocrit' => ['required', 'numeric'],

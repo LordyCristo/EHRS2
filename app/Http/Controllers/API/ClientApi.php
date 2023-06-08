@@ -95,6 +95,7 @@ class ClientApi extends Controller
     {
         $query = Client::join('degree_programs','degree_programs.id','=','clients.program_id')
             ->join('client_types','client_types.id','=','clients.client_type_id')
+            ->where('clients.is_out_patient', '=', '0')
             ->selectRaw('clients.*, degree_programs.abbr as program_name, client_types.name as client_type, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as fullname');        $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

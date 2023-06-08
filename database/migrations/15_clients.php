@@ -30,6 +30,7 @@ return new class extends Migration
             $table->foreignId('program_id')->nullable()->constrained('degree_programs')->onDelete('cascade')->onUpdate('cascade');
             $table->enum('year_lvl', ['1st', '2nd','3rd','4th','5th','6th'])->nullable();
             $table->foreignId('client_type_id')->constrained('client_types')->onDelete('cascade')->onUpdate('cascade');
+            $table->boolean('is_out_patient')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

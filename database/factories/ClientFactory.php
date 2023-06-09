@@ -26,7 +26,7 @@ class ClientFactory extends Factory
             'birthdate' => $this->faker->date(),
             'age' => $this->faker->numberBetween(18, 60),
             'sex' => $this->faker->randomElement(['male','female']),
-            'civil_status' => $this->faker->randomElement(['Single', 'Married', 'Widowed', 'Separated', 'Divorced']),
+            'civil_status' => $this->faker->randomElement(['single', 'married', 'widowed', 'separated', 'divorced']),
             'phone' => function(){
                 // format 09XX-XXX-XXXX or 09XXXXXXXXX or 639XXXXXXXXX and maximum of 11 digits
                 $phone = '09';

@@ -5,13 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ClientCollection;
 use App\Http\Resources\FeeCollection;
 use App\Http\Resources\PaymentResource;
-use App\Http\Resources\ServiceCollection;
 use App\Models\Client;
 use App\Models\Fees;
 use App\Models\Payment;
-use App\Models\Services;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PaymentController extends Controller
@@ -32,10 +29,10 @@ class PaymentController extends Controller
         return Inertia::render('Finance/Payment/NewPayment', [
             'clients' => new ClientCollection(Client::selectRaw("infirmary_id as id, CONCAT(infirmary_id, ' - ',first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name")->get()),
             //'services' => new ServiceCollection(Services::select('id', 'name')->get()),
-            'last_payment_id' => (int) Payment::select('or_no')->orderBy('or_no', 'desc')->withTrashed()->first()?->or_no,
-            'services' => new FeeCollection(Fees::join('services','services.id','=','fees.service_id')
-                ->join('client_types','client_types.id','=','fees.client_type')
-                ->selectRaw("fees.service_id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name, fees.amount as fee")->orderBy('fees.id','asc')->get()),
+            'last_payment_id' => (int)Payment::select('or_no')->orderBy('or_no', 'desc')->withTrashed()->first()?->or_no,
+            'services' => new FeeCollection(Fees::join('services', 'services.id', '=', 'fees.service_id')
+                ->join('client_types', 'client_types.id', '=', 'fees.client_type')
+                ->selectRaw("fees.id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name")->orderBy('fees.id', 'asc')->get()),
         ]);
     }
 
@@ -49,9 +46,9 @@ class PaymentController extends Controller
         return Inertia::render('Finance/Payment/EditPayment', [
             'data' => new PaymentResource(Payment::with('paidServices')->findOrFail($request->id)),
             'clients' => new ClientCollection(Client::selectRaw("infirmary_id as id, CONCAT(infirmary_id, ' - ',first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name")->get()),
-            'services' => new FeeCollection(Fees::join('services','services.id','=','fees.service_id')
-                ->join('client_types','client_types.id','=','fees.client_type')
-                ->selectRaw("fees.service_id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name, fees.amount as fee")->orderBy('fees.id','asc')->get()),
+            'services' => new FeeCollection(Fees::join('services', 'services.id', '=', 'fees.service_id')
+                ->join('client_types', 'client_types.id', '=', 'fees.client_type')
+                ->selectRaw("fees.id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name")->orderBy('fees.id', 'asc')->get()),
             'last_payment_id' => new PaymentResource($lastPaymentOrNo),
         ]);
     }

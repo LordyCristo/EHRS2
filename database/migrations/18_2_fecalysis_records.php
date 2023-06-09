@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('pathologist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->nullOnDelete();
             $table->string('ward')->nullable();
-            $table->enum('status',['pending','released']);
+            $table->enum('status',['pending','done','released']);
             $table->timestamps();
             $table->softDeletes();
         });

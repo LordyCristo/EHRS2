@@ -5,8 +5,8 @@
             <div class="grid grid-rows-2 pb-10" v-if="data">
                 <div class="flex flex-row justify-between gap-2">
                     <view-field label="Patient" :value="formattedFullName(data.client)" />
-                    <view-field label="Age" :value="data.age" />
-                    <view-field label="Sex" :value="data.sex" />
+                    <view-field label="Age" :value="data.client.age" />
+                    <view-field label="Sex" :value="data.client.sex" />
                     <view-field label="Hospital No." :value="data.infirmary_id" />
                     <view-field label="Ward" :value="data.ward" />
                     <view-field label="OR No." :value="data.or_no?data.or_no:'Unpaid'" />

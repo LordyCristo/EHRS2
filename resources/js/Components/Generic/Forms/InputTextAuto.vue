@@ -64,6 +64,7 @@ const filteredOptions = computed(() =>
         : props.options.filter((option) =>
             option.name
                 .toString() // Convert the numeric value to string for comparison
+                .toLowerCase()
                 .includes(query.value)
         )
 );

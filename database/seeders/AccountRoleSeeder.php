@@ -21,8 +21,6 @@ class AccountRoleSeeder extends Seeder
             'Dental', // 5 DentalACM
             'ER', // 6 EmergencyroomACM
             'Pharmacy', // 7 Pharmacy
-            'Maternity', // 8 Maternity
-            'Ambulance', // 9 Ambulance
         ];
 
         foreach ($roles as $role) {

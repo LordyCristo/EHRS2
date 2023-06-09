@@ -25,13 +25,15 @@
                             <span class="w-full whitespace-nowrap"><b>Infirmary No.: </b>{{ data.client.infirmary_id }}</span>
                             <span class="w-full whitespace-nowrap"><b>Payor Contact: </b>{{ data.payor_mobile }}</span>
                         </div>
-                        <div class="grid grid-cols-2 mt-3 border-y-2">
+                        <div class="grid grid-cols-3 mt-3 border-y-2">
                             <div class="font-bold text-center">Service Name</div>
+                            <div class="font-bold text-center">Type</div>
                             <div class="font-bold text-center">Amount</div>
                         </div>
                         <template v-if="data.paid_services">
-                            <div v-for="srvc in data.paid_services" :key="srvc.id" class="grid grid-cols-2 mt-1 px-2">
+                            <div v-for="srvc in data.paid_services" :key="srvc.id" class="grid grid-cols-3 mt-1 px-2">
                                 <span class="w-full">{{ srvc.fees.service.name?srvc.fees.service.name:'Unable to retrieve service name' }}</span>
+                                <span class="w-full text-center">{{ srvc.fees.client_type.name?srvc.fees.client_type.name:'Unable to retrieve service name' }}</span>
                                 <span class="w-full text-center">&#x20B1;{{ srvc.fee?srvc.fee:'Unable to retrieve service fee' }}</span>
                             </div>
                         </template>

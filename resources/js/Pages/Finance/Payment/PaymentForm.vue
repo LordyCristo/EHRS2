@@ -8,7 +8,7 @@
         <template #formBody>
             <div class="grid grid-cols-2">
                 <InputText v-model.number="form.or_no" @keydown.prevent="null" @click.prevent="null" label="OR No." :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <InputTextAuto v-model.model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
             </div>
             <InputText v-model="form.payor_name" required label="Payor Name" :errorMsg="form.errors.payor_name" @input="form.errors['payor_name'] = null" />
             <div class="grid grid-cols-2">
@@ -28,14 +28,14 @@
                 <div class="w-full flex justify-center">
                     <input-error :message="form.errors.rows" />
                 </div>
-                <div v-for="(row, index) in form.rows" :key="index" class="inline-flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300':form.errors.rows}">
+                <div v-for="(row, index) in form.rows" :key="index" class="inline-flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
                     <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
                     <div class="grid grid-cols-2 w-full">
-                        <SelectElement v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" @input="form.errors['rows'] = null" />
-                        <InputText v-model="row.fee" type="number" @input="calculateTotalAmount(row.fee)" />
+                        <SelectElement v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null" />
+                        <InputText v-model="row.fee" type="number" @input="calculateTotalAmount(row.fee);form.errors['rows.' + index + '.fee'] = null;" :errorMsg="form.errors['rows.' + index + '.fee']" />
                     </div>
                     <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
-                        <CloseIcon class="w-5 h-5 text-red-500" @click="deleteRow(index)" />
+                        <CloseIcon class="w-5 h-5 text-red-500 " @click="deleteRow(index)" />
                     </div>
                 </div>
             </div>
@@ -115,8 +115,22 @@ export default {
             this.form.rows.push({ service_id: null, fee: null });
         },
         deleteRow(index) {
+            // dont delete if there is only one row but reset the values
+            if (this.form.rows.length === 1) {
+                // reset also the error message
+                this.form.errors['rows.' + index + '.service_id'] = null;
+                this.form.errors['rows.' + index + '.fee'] = null;
+                this.form.rows[0].service_id = null;
+                this.form.rows[0].fee = null;
+                return;
+            }
+
             const fee = this.form.rows[index].fee; // Get the fee of the row to be deleted
             this.form.rows.splice(index, 1); // Remove the row from the form
+
+            //remove the error message of the deleted row
+            this.form.errors['rows.' + index + '.service_id'] = null;
+            this.form.errors['rows.' + index + '.fee'] = null;
 
             if (fee) {
                 this.calculateTotalAmount(-fee); // Subtract the fee from the total amount
@@ -142,8 +156,24 @@ export default {
 
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;
-            this.form = useForm(this.data);
-            this.form.rows = this.data.paid_services;
+            //transform the data to add paid services to the rows
+            console.log(this.data.paid_services);
+            this.data.paid_services.forEach((service) => {
+                this.form.rows.push({
+                    service_id: service.service_id,
+                    fee: service.fee,
+                });
+            });
+
+            this.form.or_no = this.data.or_no;
+            this.form.payor_name = this.data.payor_name;
+            this.form.payor_email = this.data.payor_email;
+            this.form.payor_mobile = this.data.payor_mobile;
+            this.form.infirmary_id = this.data.infirmary_id;
+            this.form.collector_id = this.data.collector_id;
+            this.calculateTotalAmount(0);
+            this.form.remarks = this.data.remarks;
+
             this.formTitle = 'Update Form Details';
         }
         else {
@@ -151,6 +181,8 @@ export default {
             this.form.collector_id = this.$page.props.auth.user.id;
             this.formTitle = 'New Transaction Record';
         }
+
+        console.log(this.data);
     }
 };
 </script>

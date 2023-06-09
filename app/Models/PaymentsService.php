@@ -27,7 +27,12 @@ class PaymentsService extends Model
 
     public function fees()
     {
-        return $this->belongsTo(Fees::class, 'service_id','service_id')->with('service');
+        return $this->belongsTo(Fees::class, 'service_id','id')->with('service')->with('clientType');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Fees::class, 'service_id','service_id');
     }
 
 }

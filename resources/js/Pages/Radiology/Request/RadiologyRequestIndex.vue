@@ -106,7 +106,7 @@ export default {
 </script>
 
 <template>
-    <Radiology title="Urinalysis">
+    <Radiology title="Radiology">
         <div class="flex flex-col w-full">
             <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink"/>
         </div>

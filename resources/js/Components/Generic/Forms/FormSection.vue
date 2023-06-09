@@ -126,17 +126,21 @@ const deleteForm = () => {
 };
 
 const printError = (error) => {
-    const notif = {
-        'id': error.code,
-        'show': true,
-        'type': 'warning',
-        'message': error.message,
-    }
-    console.log(error);
-    pushNotification(notif);
     // error code for validation errors.
-    if (typeof error.response != 'undefined' && error.response.status === 422)
+    if (typeof error.response != 'undefined' && error.response.status === 422) {
         props.form.errors = error.response.data.errors;
+        pushNotification(error.response.data.notification);
+        console.log(error.response.data.errors);
+    }else {
+        const notif = {
+            'id': error.code,
+            'show': true,
+            'type': 'warning',
+            'message': error.message,
+        }
+        console.log(error);
+        pushNotification(notif);
+    }
 
 };
 </script>

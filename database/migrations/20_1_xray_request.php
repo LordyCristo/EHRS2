@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('history')->nullable();
             $table->foreignId('rqst_physician')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->string('ward')->nullable();
-            $table->enum('status', ['pending','released']);
+            $table->enum('status', ['pending','done','released']);
             $table->timestamps();
             $table->softDeletes();
         });

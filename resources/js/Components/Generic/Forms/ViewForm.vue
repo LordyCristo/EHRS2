@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col justify-center h-full w-fit mx-auto">
+    <div class="flex flex-col justify-center h-full min-w-fit mx-auto">
         <div class="flex items-center justify-end mb-3 gap-2">
             <Link :href="props.link" class="text-gray-600 hover:text-gray-900 duration-300" title="Close">
                 <CloseIcon class="w-7 h-auto hover:rotate-90 duration-300" />

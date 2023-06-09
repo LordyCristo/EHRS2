@@ -36,8 +36,8 @@ class Payment extends Model
         return $this->hasMany(Services::class);
     }
 
-    public function paidServices(): HasMany
+    public function paidServices()
     {
-        return $this->hasMany(PaymentsService::class)->with('fees');
+        return $this->hasMany(PaymentsService::class, 'payment_id', 'id')->with('fees');
     }
 }

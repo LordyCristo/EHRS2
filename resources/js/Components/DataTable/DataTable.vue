@@ -208,6 +208,7 @@ export default {
                 }
             })
                 .then(response => {
+                    console.log(response.data);
                     this.data = response.data.data;
                     this.totalCount = response.data.totalCount;
                     this.totalPages = response.data.totalPages;
@@ -407,7 +408,7 @@ export default {
                     <DownloadIcon class="w-4 mr-1" />
                     Export
                 </DtActionBtn>
-                <DtActionBtn v-if="false" @click="importFromCsv" class="bg-teal-600">
+                <DtActionBtn v-if="true" @click="importFromCsv" class="bg-teal-600">
                     <UploadIcon class="w-4 mr-1" />
                     Import
                 </DtActionBtn>

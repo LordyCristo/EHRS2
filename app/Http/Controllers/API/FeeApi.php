@@ -7,6 +7,7 @@ use App\Http\Requests\FeeRequest;
 use App\Http\Resources\FeeCollection;
 use App\Http\Resources\FeeResource;
 use App\Models\Fees;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -169,7 +170,6 @@ class FeeApi extends Controller
                     $successCount++;
                 } catch (Exception $e) {
                     $failedCount++;
-                    throw $e;
                 }
             }
         }

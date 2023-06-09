@@ -14,14 +14,16 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AccountRoleSeeder::class,
-            ServicesSeeder::class,
             ClientTypeSeeder::class,
             CollegeSeeder::class,
             DepartmentSeeder::class,
             DegreeProgramSeeder::class,
+            ServicesSeeder::class,
+
             UserSeeder::class,
             ClientSeeder::class,
             FeesSeeder::class,
+
 //            PaymentSeeder::class,
 //            PaymentsServiceSeeder::class,
             // HematologySeeder::class,

@@ -23,7 +23,7 @@ class Hematology extends Model
         'lymphocyte',
         'monocyte',
         'blood_type',
-        'diagnosis',
+        'remarks',
     ];
 
     public function hematologyRecord()

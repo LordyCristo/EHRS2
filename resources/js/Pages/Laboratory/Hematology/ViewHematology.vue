@@ -90,8 +90,7 @@
                             <view-dt-note-item><span></span><span>150 - 450 x 10<sup>9</sup>/L</span></view-dt-note-item>
                         </view-dt-note>
                         <view-dt-label>Others</view-dt-label>
-                        <view-dt-note></view-dt-note>
-                        <view-dt-note></view-dt-note>
+                        <view-dt-result colspan="2">{{data.hematology.remarks}}</view-dt-result>
                     </tr>
                     </tbody>
                 </table>

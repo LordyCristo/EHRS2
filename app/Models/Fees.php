@@ -27,7 +27,7 @@ class Fees extends Model
 
     public function clientType()
     {
-        return $this->belongsTo(ClientType::class);
+        return $this->belongsTo(ClientType::class, 'client_type', 'id');
     }
 
     public function paymentServices()

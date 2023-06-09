@@ -10,7 +10,7 @@
             <div class="grid grid-cols-4 gap-1">
                 <InputTextAuto v-model.number="form.infirmary_id" label="Infirmary No." :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <InputText v-model="form.ward" label="Ward" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+                <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
             </div>
             <!--end of header form-->
             <!--urinalysis body form-->
@@ -43,6 +43,7 @@ import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
+import {WardType} from "@/Legends/legends";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";

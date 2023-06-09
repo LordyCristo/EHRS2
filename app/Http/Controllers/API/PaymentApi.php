@@ -4,13 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaymentRequest;
-use App\Http\Resources\PaymentCollection;
 use App\Http\Resources\PaymentResource;
 use App\Models\Payment;
+use App\Models\PaymentsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use function PHPUnit\Framework\isEmpty;
+use Illuminate\Validation\Rule;
 
 class PaymentApi extends Controller
 {
@@ -57,7 +57,7 @@ class PaymentApi extends Controller
      */
     public function store(PaymentRequest $request)
     {
-        if(!empty($request['rows'])){
+        if (!empty($request['rows'])) {
             $newPayment = Payment::create($request->all());
             if ($newPayment) {
                 $rows = $request['rows'];
@@ -76,7 +76,7 @@ class PaymentApi extends Controller
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => $newPayment?'Successfully created Payment with id '.$newPayment->id:'Failed to create Payment record',
+                    'message' => $newPayment ? 'Successfully created Payment with id ' . $newPayment->id : 'Failed to create Payment record',
                     'data' => $newPayment,
                 ]
             ])->setStatusCode(201);
@@ -87,7 +87,7 @@ class PaymentApi extends Controller
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => 'failed',
+                'type' => 'warning',
                 'message' => 'Failed to create transaction record',
                 'data' => $request->all(),
             ]
@@ -110,18 +110,63 @@ class PaymentApi extends Controller
         $payment = Payment::findOrFail($request->id);
 
         if ($payment->update($request->all())) {
-            if (!empty($request['rows'])) {
-                // Delete existing payment services
-                $payment->paidServices()->delete();
+            $rows = $request->input('rows', []);
 
-                // Save new payment services
-                $rows = $request['rows'];
+            if (!empty($rows)) {
+                $validator = Validator::make($rows, [
+                    'rows.*.service_id' => [
+                        'required',
+                        'exists:fees,service_id',
+                        Rule::unique('payments_service', 'service_id')
+                            ->where('payment_id', $payment->id)
+                            ->whereNull('deleted_at'),
+                        'distinct',
+                    ],
+                    'rows.*.fee' => 'required',
+                ], [
+                    'rows.*.service_id.required' => 'Service ID is required.',
+                    'rows.*.service_id.exists' => 'Service ID does not exist.',
+                    'rows.*.service_id.distinct' => 'Service ID is not unique.',
+                    'rows.*.fee.required' => 'Fee is required.',
+                ]);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'data' => null,
+                        'errors' => $validator->errors(),
+                        'notification' => [
+                            'id' => uniqid(),
+                            'show' => true,
+                            'type' => 'warning',
+                            'message' => 'Failed to update Payment record',
+                            'data' => $payment,
+                        ],
+                    ])->setStatusCode(422);
+                }
+
+                $existingServices = $payment->paidServices()->pluck('service_id')->toArray();
+                $requestedServices = collect($rows)->pluck('service_id')->toArray();
+
+                $servicesToDelete = array_diff($existingServices, $requestedServices);
+                $servicesToRestore = array_intersect($existingServices, $requestedServices);
+
+                $payment->paidServices()
+                    ->whereIn('service_id', $servicesToDelete)
+                    ->delete();
+
+                PaymentsService::withTrashed()
+                    ->where('payment_id', $payment->id)
+                    ->whereIn('service_id', $servicesToRestore)
+                    ->restore();
+
                 foreach ($rows as $row) {
-                    $payment->paidServices()->create([
-                        'service_id' => $row['service_id'],
-                        'payment_id' => $payment->id,
-                        'fee' => $row['fee'],
-                    ]);
+                    if (!in_array($row['service_id'], $existingServices)) {
+                        $payment->paidServices()->create([
+                            'service_id' => $row['service_id'],
+                            'payment_id' => $payment->or_no,
+                            'fee' => $row['fee'],
+                        ]);
+                    }
                 }
             }
 
@@ -133,7 +178,7 @@ class PaymentApi extends Controller
                     'type' => 'success',
                     'message' => 'Successfully updated Payment with id ' . $payment->id,
                     'data' => $payment,
-                ]
+                ],
             ])->setStatusCode(200);
         }
 
@@ -143,10 +188,10 @@ class PaymentApi extends Controller
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => 'failed',
+                'type' => 'warning',
                 'message' => 'Failed to update Payment record',
                 'data' => $payment,
-            ]
+            ],
         ])->setStatusCode(422);
     }
 
@@ -156,13 +201,16 @@ class PaymentApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
+        //delete the paid services first
+        $temp = PaymentsService::whereIn('payment_id', $id)->delete();
+        //delete the payment
         $temp = Payment::destroy($id);
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => $temp?'success':'failed',
-                'message' => $temp?'Successfully deleted '.$temp.' Payment record/s':'Failed to delete Payment record with id '. $request->id,
+                'type' => $temp ? 'success' : 'warning',
+                'message' => $temp ? 'Successfully deleted ' . $temp . ' Payment record/s' : 'Failed to delete Payment record with id ' . $request->id,
             ]
         ]);
     }
@@ -172,10 +220,8 @@ class PaymentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Payment::join('clients', 'payments.infirmary_id', '=', 'payments.infirmary_id')
-            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-            ->selectRaw('LPAD(payments.or_no, 5, "0") as or_no, payments.id, payments.payor_name, payments.infirmary_id, COUNT(payments_service.service_id) as services_count, payments.total_amount, payments.remarks')
-            ->groupBy('payments.or_no');
+        $query = Payment::withCount('paidServices');
+        //->groupBy('payments.or_no');
 
         $totalRecords = $query->count();
         if ($request->has('search')) {
@@ -256,8 +302,8 @@ class PaymentApi extends Controller
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => !$failedCount?'success':'warning',
-                'message' => !$failedCount?'Successfully imported Payments without errors':'Failed to import Payments '.$failedCount.' rows out of '.$failedCount+$successCount,
+                'type' => !$failedCount ? 'success' : 'warning',
+                'message' => !$failedCount ? 'Successfully imported Payments without errors' : 'Failed to import Payments ' . $failedCount . ' rows out of ' . $failedCount + $successCount,
             ]
         ]);
     }

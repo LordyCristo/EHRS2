@@ -30,7 +30,7 @@ class RadiologyRequestRequest extends FormRequest
             'history' => ['nullable', 'string'],
             'rqst_physician' => ['required', 'integer', 'exists:users,id'],
             'ward' => ['required', 'string'],
-            'status' => ['required', 'string', 'in:pending,released'],
+            'status' => ['required', 'string', 'in:pending,done,released'],
         ];
     }
 

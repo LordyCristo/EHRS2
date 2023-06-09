@@ -15,9 +15,9 @@ class ClientTypeSeeder extends Seeder
     {
         $types = [
             'Student',
-            'Outsider',
             'Faculty',
-            'Dependent'
+            'Dependent',
+            'Outsider',
         ];
 
         foreach ($types as $type) {

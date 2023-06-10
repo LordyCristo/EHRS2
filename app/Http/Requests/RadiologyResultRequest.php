@@ -24,13 +24,13 @@ class RadiologyResultRequest extends FormRequest
     {
         $id = $this->route('id');
         return [
-
             'rqst_id' => ['required', 'integer', 'exists:xray_requests,id', Rule::unique('xrays')->ignore($id)],
-            'procedure' => ['required', 'string'],
+            'procedure' => ['required'],
             'impression' => ['required', 'string'],
-            'radiographic_findings' => ['nullable', 'string'],
+            'radiographic_findings' => ['required', 'string'],
             'rad_tech_id' => ['required', 'integer', 'exists:users,id'],
             'radiologist_id' => ['required', 'integer', 'exists:users,id'],
+            'image' => ['nullable', 'max:2048'],
         ];
     }
 
@@ -52,12 +52,16 @@ class RadiologyResultRequest extends FormRequest
             'impression.required' => 'Required field',
             'impression.string' => 'Invalid value',
             'radiographic_findings.string' => 'Invalid value',
+            'radiographic_findings.required' => 'Required field',
             'rad_tech_id.required' => 'Required field',
             'rad_tech_id.integer' => 'Invalid value',
             'rad_tech_id.exists' => 'Do not exist value',
             'radiologist_id.required' => 'Required field',
             'radiologist_id.integer' => 'Invalid value',
             'radiologist_id.exists' => 'Do not exist value',
+            'image.image' => 'Not an image file',
+            'image.mimes' => 'Invalid file extension',
+            'image.max' => 'Too big file size',
         ];
     }
 }

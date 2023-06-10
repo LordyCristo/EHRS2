@@ -67,7 +67,7 @@ export default {
             {
                 data: 'id',
                 name:'id',
-                title: 'Record No.',
+                title: 'Request ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
@@ -106,7 +106,7 @@ export default {
 </script>
 
 <template>
-    <Radiology title="Radiology">
+    <Radiology title="Radiology Request">
         <div class="flex flex-col w-full">
             <DataTable :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink"/>
         </div>

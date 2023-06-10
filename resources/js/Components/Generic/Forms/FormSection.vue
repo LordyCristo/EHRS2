@@ -94,7 +94,7 @@ const goBackToIndex = (response) => {
 
 
 const storeForm = () => {
-    console.log(props.form);
+    console.log(props.form.data());
     axios
         .post(props.storeLink, props.form)
         .then(res => {
@@ -104,6 +104,7 @@ const storeForm = () => {
 };
 
 const updateForm = () => {
+    console.log(props.form);
     axios
         .put(props.updateLink, props.form)
         .then(res => {

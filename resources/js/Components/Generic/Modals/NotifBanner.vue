@@ -35,9 +35,16 @@ export { notifications, pushNotification };
                 leave-from-class="translate-x-0"
                 leave-to-class="translate-x-full"
             >
-                <div v-if="notif.show" class="z-50 flex items-center duration-1000 overflow-hidden bg-green-200 px-5 py-1 sm:px-3.5 sm:before:flex-1">
-                    <warning-icon v-if="notif.type === 'success'" class="w-6 mr-2 text-green-800" />
-                    <warning-icon v-if="notif.type === 'warning'" class="w-6 mr-2 text-yellow-400" />
+                <div v-if="notif.show" class="z-50 flex items-center duration-1000 overflow-hidden px-5 py-1 sm:px-3.5 sm:before:flex-1"
+                    :class="{
+                        'bg-green-100 text-green-800':notif.type === 'success',
+                        'bg-yellow-100 text-red-400':notif.type === 'warning',
+                    }"
+                >
+                    <warning-icon class="w-6 mr-2" :class="{
+                        'text-green-800':notif.type === 'success',
+                        'text-yellow-400':notif.type === 'warning',
+                    }"/>
                     <div class="w-full">
                         {{ notif.message }}
                     </div>

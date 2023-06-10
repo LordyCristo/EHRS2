@@ -408,7 +408,7 @@ export default {
                     <DownloadIcon class="w-4 mr-1" />
                     Export
                 </DtActionBtn>
-                <DtActionBtn v-if="true" @click="importFromCsv" class="bg-teal-600">
+                <DtActionBtn v-if="false" @click="importFromCsv" class="bg-teal-600">
                     <UploadIcon class="w-4 mr-1" />
                     Import
                 </DtActionBtn>
@@ -430,7 +430,7 @@ export default {
                     <CheckallIcon class="w-4 mr-1" />
                     Select All Shown
                 </DtActionBtn>
-                <DtActionBtn v-if="isAllSelected" @click="selectAll" class="bg-indigo-500">
+                <DtActionBtn v-if="isAllSelected && false" @click="selectAll" class="bg-indigo-500">
                     <CheckallIcon class="w-4 mr-1" />
                     Select All
                 </DtActionBtn>

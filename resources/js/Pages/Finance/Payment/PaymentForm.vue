@@ -16,12 +16,12 @@
                 <InputText v-model="form.payor_mobile" label="Payor Mobile No." :errorMsg="form.errors.payor_mobile" @input="form.errors['payor_mobile'] = null" />
             </div>
             <div class="flex flex-col">
-                <div class="inline-flex justify-evenly items-center my-2 border-y-2 py-1">
+                <div class="inline-flex justify-evenly items-center my-2 border-y border-gray-400 py-1">
                     <div class="grid grid-cols-2 w-full text-center text-sm text-gray-600">
                         <label>Services <span class="text-red-500">*</span><span v-if="form.rows.length">: {{ form.rows.length }}</span></label>
                         <label>Fees <span class="text-red-500">*</span></label>
                     </div>
-                    <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
+                    <div class="opacity-0 bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
                         <AddIcon class="w-5 h-5 text-vsu-green " @click="addRow" />
                     </div>
                 </div>
@@ -31,11 +31,16 @@
                 <div v-for="(row, index) in form.rows" :key="index" class="inline-flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
                     <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
                     <div class="grid grid-cols-2 w-full">
-                        <SelectElement v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null" />
+                        <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null" />
                         <InputText v-model="row.fee" type="number" @input="calculateTotalAmount(row.fee);form.errors['rows.' + index + '.fee'] = null;" :errorMsg="form.errors['rows.' + index + '.fee']" />
                     </div>
                     <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
                         <CloseIcon class="w-5 h-5 text-red-500 " @click="deleteRow(index)" />
+                    </div>
+                </div>
+                <div class="inline-flex justify-end items-center border-b border-gray-400 py-2">
+                    <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
+                        <AddIcon class="w-5 h-5 text-vsu-green " @click="addRow" />
                     </div>
                 </div>
             </div>

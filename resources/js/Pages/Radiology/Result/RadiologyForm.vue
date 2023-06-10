@@ -9,34 +9,47 @@
         <template #formBody>
             <!--header form-->
             <div>
-                <InputTextAuto v-model="form.rqst_id" label="Patient" @change="changeRqst" :options="xray_reqs" :errorMsg="form.errors.rqst_id" @input="form.errors['rqst_id'] = null" />
-<!--                <div class="flex flex-col text-center text-sm p-1 text-gray-600 max-w-fit justify-between">-->
-<!--                    <span >-->
-<!--                        Xray Request ID-->
-<!--                    </span>-->
-<!--                    <span class="text-lg">-->
-<!--                        {{ form.rqst_id }}-->
-<!--                    </span>-->
-<!--                </div>-->
+                <InputTextAuto v-model="form.rqst_id" required label="Patient" :options="xray_reqs" :errorMsg="form.errors.rqst_id" @input="form.errors['rqst_id'] = null" />
+            </div>
+            <div v-if="form.rqst_id" class="grid grid-cols-2 p-1 text-sm text-gray-500">
+                <div class="flex gap-2 w-fit">
+                    <b>Request ID:</b>
+                    <span class="uppercase">{{rqst_details.id}}</span>
+                </div>
+                <div class="flex gap-2 w-fit">
+                    <b>Infirmary ID:</b>
+                    <span class="uppercase">{{rqst_details.infirmary_id}}</span>
+                </div>
+                <div class="flex gap-2 w-fit">
+                    <b>Sex:</b>
+                    <span class="uppercase">{{rqst_details.sex}}</span>
+                </div>
+                <div class="flex gap-2 w-fit">
+                    <b>Age:</b>
+                    <span class="uppercase">{{rqst_details.age}}</span>
+                </div>
             </div>
             <!--end of header form-->
             <!--urinalysis body form-->
             <div class="my-2 border-y py-5">
                 <div class="grid grid-cols-1 gap-1">
-                    <InputText v-model="form.procedure" label="Prodecure" :errorMsg="form.errors.procedure" @input="form.errors['procedure'] = null" />
+                    <InputTextAuto v-model="form.procedure" required label="Prodecure" :options="procedures" :errorMsg="form.errors.procedure" @input="form.errors['procedure'] = null" />
                 </div>
                 <div class="grid grid-cols-1 gap-1">
-                    <InputTextArea v-model="form.radiographic_findings" label="Radiolographic Findings" :errorMsg="form.errors.radiographic_findings" @input="form.errors['radiographic_findings'] = null" />
+                    <InputText v-model="form.image" type="file" label="Upload Radiolograph Image" @change="onFileChange" accept="image/jpeg,image/png,image/jpg" :errorMsg="form.errors.image" @input="form.errors['image'] = null" />
                 </div>
                 <div class="grid grid-cols-1 gap-1">
-                    <InputTextArea v-model="form.impression" label="Impression" :errorMsg="form.errors.impression" @input="form.errors['impression'] = null" />
+                    <InputTextArea v-model="form.radiographic_findings" required label="Radiolographic Findings" :errorMsg="form.errors.radiographic_findings" @input="form.errors['radiographic_findings'] = null" />
+                </div>
+                <div class="grid grid-cols-1 gap-1">
+                    <InputTextArea v-model="form.impression" required label="Impression" :errorMsg="form.errors.impression" @input="form.errors['impression'] = null" />
                 </div>
             </div>
             <!--end of urinalysis body form-->
             <!--urinalysis footer form-->
             <div class="grid grid-cols-2">
-                <SelectElement v-model="form.rad_tech_id" label="Radiologic Technologist" :options="physicians" :errorMsg="form.errors.rad_tech_id" @input="form.errors['rad_tech_id'] = null" />
-                <SelectElement v-model="form.radiologist_id" label="Radiologist" :options="physicians" :errorMsg="form.errors.radiologist_id" @input="form.errors['radiologist_id'] = null" />
+                <SelectElement v-model="form.rad_tech_id" required label="Radiologic Technologist" :options="physicians" :errorMsg="form.errors.rad_tech_id" @input="form.errors['rad_tech_id'] = null" />
+                <SelectElement v-model="form.radiologist_id" required label="Radiologist" :options="physicians" :errorMsg="form.errors.radiologist_id" @input="form.errors['radiologist_id'] = null" />
             </div>
             <!--end of urinalysis footer form-->
         </template>
@@ -67,6 +80,7 @@ export default {
                 radiographic_findings: null,
                 rad_tech_id: null,
                 radiologist_id: null,
+                image: null,
             }),
             statuses: RecordStatus,
             data: null,
@@ -74,21 +88,29 @@ export default {
             or_nos: [],
             xray_reqs: [],
             clients: [],
+            procedures: [],
             formTitle: null,
         };
+    },
+    computed: {
+        // rqst id age and sex
+        rqst_details() {
+            return this.xray_reqs[this.xray_reqs.findIndex(x => x.id === this.form.rqst_id)];
+        },
     },
     methods: {
         onFocusClearError(field) {
             this.form.errors[field] = null;
         },
-        changeRqst(){
-            const select = this.xray_reqs.find(x => x.id === this.form.rqst_id);
-            console.log(select.value);
+        onFileChange(event) {
+            this.form.image = event.target.files[0];
         },
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;
         this.xray_reqs = this.$page.props.xray_reqs.data;
+        this.procedures = this.$page.props.xray_procedures.data;
+        console.log(this.procedures);
         if (this.action === 'update'){
             this.data = this.$page.props.data.data.xray;
             this.form = useForm(this.data);

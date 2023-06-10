@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ClientCollection;
 use App\Http\Resources\PaymentCollection;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\XrayCollection;
 use App\Http\Resources\XrayResource;
 use App\Models\Client;
 use App\Models\FecalysisRecord;
 use App\Models\PaymentsService;
+use App\Models\Services;
 use App\Models\User;
 use App\Models\XrayRequest;
 use Illuminate\Http\Request;
@@ -31,7 +33,9 @@ class RadiologyResultController extends Controller
     {
         return Inertia::render('Radiology/Result/NewRadiology',[
             'physicians' => $this->getPhysicians(),
+            // only return xray requests that don't have results yet
             'xray_reqs' => $this->getXrayReq(),
+            'xray_procedures' => $this->getXrayProcedures(),
         ]);
     }
 
@@ -53,7 +57,12 @@ class RadiologyResultController extends Controller
         return Inertia::render('Radiology/Result/EditRadiology',[
             'data' => new XrayResource(XrayRequest::with('xray')->findOrFail($request->id)),
             'physicians' => $this->getPhysicians(),
-            'xray_reqs' => $this->getXrayReq(),
+            // when updating, all xray request should be returned to the list of xray requests
+            'xray_reqs' => new XrayResource(XrayRequest::join('clients', 'clients.infirmary_id', '=', 'xray_requests.infirmary_id')
+                ->leftJoin('xrays', 'xrays.rqst_id', '=', 'xray_requests.id')
+                ->selectRaw('xray_requests.id as id, CONCAT(clients.infirmary_id, " - ", CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(clients.suffix, "")) ) as name, clients.age, clients.sex')
+                ->get()),
+            'xray_procedures' => $this->getXrayProcedures(),
         ]);
     }
 
@@ -105,6 +114,15 @@ class RadiologyResultController extends Controller
     }
 
     /**
+     * Get all Xray services
+     */
+    public function getXrayProcedures()
+    {
+        // only return xray services that are in room 2
+        return new XrayCollection(Services::selectRaw("id, CONCAT(id,' ',name) as name")->where('room_no','=','Room-2')->get());
+    }
+
+    /**
      * Get all x-ray requests
      */
     public function getXrayReq()
@@ -112,7 +130,8 @@ class RadiologyResultController extends Controller
         return new XrayResource(XrayRequest::join('clients', 'clients.infirmary_id', '=', 'xray_requests.infirmary_id')
             ->leftJoin('xrays', 'xrays.rqst_id', '=', 'xray_requests.id')
             ->whereNull('xrays.id')
-            ->selectRaw('xray_requests.id as id, CONCAT(clients.infirmary_id, " - ", CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(clients.suffix, "")) ) as name, clients.age, clients.sex')
+            ->selectRaw('xray_requests.id as id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
+            ->orderBy('xray_requests.created_at', 'asc')
             ->get());
     }
 }

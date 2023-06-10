@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RadiologyRequestRequest;
 use App\Http\Resources\XrayRequestCollection;
 use App\Http\Resources\XrayRequestResource;
+use App\Models\Xray;
 use App\Models\XrayRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -82,25 +83,27 @@ class RadiologyRequestApi extends Controller
         $id = explode(',', $request->id);
         $record = XrayRequest::destroy($id);
         if ($record) {
+            // delete the xray result
+            Xray::where('rqst_id', $id)->delete();
             return response()->json([
-                'data' => (new XrayRequestResource($record)),
+                'data' => $record,
                 'notification' => [
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => 'Successfully deleted Xray Request with id ' . $record->id,
+                    'message' => 'Successfully deleted Xray Request and its Xray Result',
                 ]
             ])->setStatusCode(200);
         }
         return response()->json([
-            'data' => (new XrayRequestResource($record)),
+            'data' => $record,
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => 'failed',
                 'message' => 'Failed to delete Xray Request record',
             ]
-        ])->setStatusCode(500);
+        ])->setStatusCode(200);
     }
 
     /**

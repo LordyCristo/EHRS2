@@ -36,4 +36,9 @@ class Xray extends Model
     {
         return $this->belongsTo(User::class, 'rad_tech_id', 'id');
     }
+
+    public function radiograph()
+    {
+        return $this->hasOne(Radiograph::class, 'xray_id', 'id');
+    }
 }

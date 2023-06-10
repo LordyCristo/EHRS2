@@ -3,9 +3,13 @@
         <div class="flex flex-row justify-evenly items-center h-full w-full">
             <div class="flex flex-col gap-2 sm:p-5 p-1 bg-gray-50 border rounded-sm h-full w-fit">
                 <h2 class="font-semibold">Pending Requests: {{ xray_reqs.data.length }}</h2>
+                <p class="text-sm text-gray-600 max-w-[20rem]">
+                    <b>Note:</b>This list is in ascending order of the date of request. Request number is enclosed in parentheses.
+                </p>
                 <div class="p-1">
                     <div v-for="req in xray_reqs.data">
                         {{ xray_reqs.data.indexOf(req) + 1 }}.
+                        ({{ req.id }})
                         {{ req.name }}
                     </div>
                 </div>

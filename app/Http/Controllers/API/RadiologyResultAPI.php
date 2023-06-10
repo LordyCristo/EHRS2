@@ -11,6 +11,7 @@ use App\Models\Xray;
 use App\Models\XrayRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RadiologyResultAPI extends Controller
 {
@@ -29,6 +30,36 @@ class RadiologyResultAPI extends Controller
     {
         $newRecord = Xray::create($request->validated());
         if ($newRecord) {
+            if ($request->hasFile('image')) {
+                return null;
+//                $image = $request->file('image');
+//                $imagePath = $image->store('images', 'public'); // Store the image in the "public" disk under the "images" directory
+//                // Store the image in the 'radiograph_images' table with the foreign key 'xray_id
+//                $temp = $newRecord->radiograph()->create([
+//                    'xray_id' => $newRecord->id,
+//                    'image' => $imagePath,
+//                ]);
+//                if (!$temp) {
+//                    return response()->json([
+//                        'data' => (new XrayResource($request->all())),
+//                        'notification' => [
+//                            'id' => uniqid(),
+//                            'show' => true,
+//                            'type' => 'failed',
+//                            'message' => 'Failed to upload X-ray image',
+//                        ]
+//                    ])->setStatusCode(500);
+//                }
+            }
+
+            // change the status of the xray request to done
+            //find the xray request
+            $xrayRequest = XrayRequest::findOrFail($request->rqst_id);
+            // update the status
+            $xrayRequest->update([
+                'status' => 'done',
+            ]);
+
             return response()->json([
                 'data' => (new XrayResource($newRecord)),
                 'notification' => [
@@ -56,8 +87,7 @@ class RadiologyResultAPI extends Controller
     public function update(RadiologyResultRequest $request)
     {
         $record = XrayRequest::findOrFail($request->rqst_id);
-        $record->xray()->update($request->validated());
-        if ($record){
+        if ($record->xray()->update($request->validated())) {
             return response()->json([
                 'data' => (new XrayResource($record)),
                 'notification' => [
@@ -68,16 +98,18 @@ class RadiologyResultAPI extends Controller
                 ]
             ])->setStatusCode(201);
         }
+
         return response()->json([
             'data' => (new XrayResource($record)),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
-                'type' => 'failed',
+                'type' => 'warning',
                 'message' => 'Failed to update Xray record',
             ]
-        ])->setStatusCode(500);
+        ])->setStatusCode(200);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -85,16 +117,25 @@ class RadiologyResultAPI extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        $temp = Xray::destroy($id);
-        if($temp)
+        //permanent delete the xray result
+        $temp =DB::table('xrays')->whereIn('rqst_id', $id)->delete();
+        if($temp) {
+            // change the status of the xray request to pending
+            //find all the xray request
+            $xrayRequest = XrayRequest::whereIn('id', $id);
+            // update all the status
+            $xrayRequest->update([
+                'status' => 'pending',
+            ]);
             return response()->json([
                 'notification' => [
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => 'Successfully deleted X-ray with id ' . $request->id . "- ". $temp,
+                    'message' => 'Successfully deleted X-ray with id ' . $request->id,
                 ]
             ])->setStatusCode(200);
+        }
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
@@ -112,7 +153,7 @@ class RadiologyResultAPI extends Controller
     {
         $query = Xray::join('xray_requests', 'xrays.rqst_id', '=', 'xray_requests.id')
             ->join('clients', 'xray_requests.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('xray_requests.*, xrays.rqst_id, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
+            ->selectRaw('xray_requests.*, xrays.rqst_id, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

@@ -8,15 +8,15 @@
         <template #formBody>
             <!--header form-->
             <div class="grid grid-cols-4 gap-1">
-                <InputTextAuto v-model.number="form.infirmary_id" label="Infirmary No." :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <InputTextAuto v-model.number="form.infirmary_id" required label="Infirmary No." :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+                <SelectElement v-model="form.ward" label="Ward" required :options="WardType" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
             </div>
             <!--end of header form-->
             <!--urinalysis body form-->
             <div class="my-2 border-y py-5">
                 <div class="grid grid-cols-1">
-                    <InputTextArea v-model.number="form.rqst_for" label="X-ray Request For" :errorMsg="form.errors.rqst_for" @input="onFocusClearError('rqst_for')" />
+                    <InputTextArea v-model.number="form.rqst_for" required label="X-ray Request For" :errorMsg="form.errors.rqst_for" @input="onFocusClearError('rqst_for')" />
                 </div>
                 <div class="grid grid-cols-1">
                     <InputTextArea v-model.number="form.history" label="History" :errorMsg="form.errors.history" @input="onFocusClearError('history')" />
@@ -25,9 +25,9 @@
             <!--end of urinalysis body form-->
             <!--urinalysis footer form-->
             <div class="grid grid-cols-1">
-                <SelectElement v-model="form.rqst_physician" label="Requesting Physician" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="form.errors['rqst_physician'] = null" />
+                <SelectElement v-model="form.rqst_physician" required label="Requesting Physician" :options="physicians" :errorMsg="form.errors.rqst_physician" @input="form.errors['rqst_physician'] = null" />
             </div>
-            <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
+            <RadioButton v-model="form.status" id="status" required label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             <!--end of urinalysis footer form-->
         </template>
     </FormSection>
@@ -89,6 +89,7 @@ export default {
         else {
             this.formTitle = 'Create X-ray Request';
             this.form.infirmary_id = this.$page.props.last_client_id;
+            this.form.status = 'pending';
         }
 
     }

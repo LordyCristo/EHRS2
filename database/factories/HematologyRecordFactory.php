@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Client;
+use App\Models\Fees;
 use App\Models\Hematology;
 use App\Models\HematologyRecord;
 use App\Models\Payment;
@@ -21,18 +22,35 @@ class HematologyRecordFactory extends Factory
      */
     public function definition(): array
     {
-        $hematologyIds = Hematology::pluck('id')->toArray();
         $clientIds = Client::pluck('infirmary_id')->toArray();
-        $or_nos = PaymentsService::pluck('payment_id')->toArray();
+        $record = Hematology::factory()->create();
+        $client = $this->faker->randomElement($clientIds);
+        $services = Fees::pluck('service_id')->toArray();
+        $fees = Fees::pluck('amount')->toArray();
+        $payment = Payment::factory()->create(
+            [
+                'payor_name' => $this->faker->name,
+                'infirmary_id' => $client,
+                'collector_id' => $this->faker->numberBetween(2,4),
+                'total_amount' => $this->faker->randomElement($fees),
+            ]
+        );
+        $payment = PaymentsService::factory()->create(
+            [
+                'payment_id' => $payment->or_no,
+                'service_id' => $this->faker->randomElement($services),
+                'fee' => $this->faker->randomElement($fees),
+            ]
+        );
         return [
-            'infirmary_id' => $this->faker->randomElement($clientIds),
-            'hematology_id' => $this->faker->randomElement($hematologyIds),
+            'infirmary_id' => $client,
+            'hematology_id' => $record->id,
             'rqst_physician' => $this->faker->numberBetween(2,4),
             'medical_technologist' => $this->faker->numberBetween(2,4),
             'pathologist' => $this->faker->numberBetween(2,4),
-            'or_no' => $this->faker->randomElement($or_nos),
-            'ward' => $this->faker->randomElement(['OPD','IN','ER','Ward']),
-            'status' => $this->faker->randomElement(['pending','released']),
+            'or_no' => $payment->payment_id,
+            'ward' => $this->faker->randomElement(['opd','er','male-ward','female-ward','pedia-ward']),
+            'status' => $this->faker->randomElement(['pending','done','released']),
         ];
     }
 }

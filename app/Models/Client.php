@@ -37,6 +37,11 @@ class Client extends Model
         'is_emergency',
     ];
 
+    function fullName()
+    {
+        return $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name . ' ' . $this->suffix;
+    }
+
     function program()
     {
         return $this->hasOne(DegreeProgram::class);
@@ -50,22 +55,22 @@ class Client extends Model
 
     function hematology()
     {
-        return $this->hasMany(HematologyRecord::class, 'infirmary_id', 'infirmary_id');
+        return $this->hasMany(HematologyRecord::class, 'infirmary_id', 'infirmary_id')->with('hematology');
     }
 
     function urinalysis()
     {
-        return $this->hasMany(UrinalysisRecord::class, 'infirmary_id', 'infirmary_id');
+        return $this->hasMany(UrinalysisRecord::class, 'infirmary_id', 'infirmary_id')->with('urinalysis');
     }
 
     function fecalysis()
     {
-        return $this->hasMany(FecalysisRecord::class, 'infirmary_id', 'infirmary_id');
+        return $this->hasMany(FecalysisRecord::class, 'infirmary_id', 'infirmary_id')->with('fecalysis');
     }
 
     function xray()
     {
-        return $this->hasMany(XrayRequest::class, 'infirmary_id', 'infirmary_id');
+        return $this->hasMany(XrayRequest::class, 'infirmary_id', 'infirmary_id')->with('xray');
     }
 
     function erDetails()

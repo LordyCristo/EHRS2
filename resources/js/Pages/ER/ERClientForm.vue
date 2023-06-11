@@ -63,41 +63,41 @@
                     <div class="grid grid-cols-4">
                         <Datepicker v-model="form.date_admitted" label="Date" required :errorMsg="form.errors.date_admitted" @input="onFocusClearError('date_admitted')" />
                         <DateTimePicker v-model="form.time_admitted" label="Time" required :errorMsg="form.errors.time_admitted" @input="onFocusClearError('time_admitted')" />
-                        <SelectElement v-model="form.brought_by" label="Brought By" :options="BroughtBy" :errorMsg="form.errors.brought_by" @input="onFocusClearError('brought_by')" />
-                        <SelectElement v-model="form.arrival_condition" label="Arrival Condition" :options="ArrivalCondition" :errorMsg="form.errors.arrival_condition" @input="onFocusClearError('arrival_condition')" />
+                        <SelectElement v-model="form.brought_by" label="Brought By" :options="BroughtBy" required :errorMsg="form.errors.brought_by" @input="onFocusClearError('brought_by')" />
+                        <SelectElement v-model="form.arrival_condition" label="Arrival Condition" required :options="ArrivalCondition" :errorMsg="form.errors.arrival_condition" @input="onFocusClearError('arrival_condition')" />
                     </div>
                     <div class="grid grid-cols-2">
                         <RadioButton v-model="form.temperature_location" label="Temperature Location" :options="TemperatureLocation" required :errorMsg="form.errors.temperature_location" @input="onFocusClearError('temperature_location')" />
                         <div class="grid grid-cols-2">
-                            <InputText v-model="form.temperature" label="Temperature" required type="number" :errorMsg="form.errors.temperature" @input="onFocusClearError('temperature')" />
-                            <InputText v-model="form.pulse_rate" label="Pulse Rate" required type="number" :errorMsg="form.errors.pulse_rate" @input="onFocusClearError('pulse_rate')" />
+                            <InputText v-model="form.temperature" label="Temperature" type="number" :errorMsg="form.errors.temperature" @input="onFocusClearError('temperature')" />
+                            <InputText v-model="form.pulse_rate" label="Pulse Rate" type="number" :errorMsg="form.errors.pulse_rate" @input="onFocusClearError('pulse_rate')" />
                         </div>
                     </div>
                     <div class="grid grid-cols-5">
-                        <InputText v-model="form.blood_pressure" label="Blood Pressure" required type="text" :errorMsg="form.errors.blood_pressure" @input="onFocusClearError('blood_pressure')" />
-                        <InputText v-model="form.cardiac_rate" label="Cardiac Rate" required type="number" :errorMsg="form.errors.cardiac_rate" @input="onFocusClearError('cardiac_rate')" />
-                        <InputText v-model="form.respiratory_rate" label="Respiratory Rate" required type="number" :errorMsg="form.errors.respiratory_rate" @input="onFocusClearError('respiratory_rate')" />
-                        <InputText v-model="form.oxygen_saturation" label="Oxygen Saturation" required type="number" :errorMsg="form.errors.oxygen_saturation" @input="onFocusClearError('oxygen_saturation')" />
-                        <InputText v-model="form.weight" label="Weight" required type="number" :errorMsg="form.errors.weight" @input="onFocusClearError('weight')" />
+                        <InputText v-model="form.blood_pressure" label="Blood Pressure" type="text" :errorMsg="form.errors.blood_pressure" @input="onFocusClearError('blood_pressure')" />
+                        <InputText v-model="form.cardiac_rate" label="Cardiac Rate" type="number" :errorMsg="form.errors.cardiac_rate" @input="onFocusClearError('cardiac_rate')" />
+                        <InputText v-model="form.respiratory_rate" label="Respiratory Rate" type="number" :errorMsg="form.errors.respiratory_rate" @input="onFocusClearError('respiratory_rate')" />
+                        <InputText v-model="form.oxygen_saturation" label="Oxygen Saturation" type="number" :errorMsg="form.errors.oxygen_saturation" @input="onFocusClearError('oxygen_saturation')" />
+                        <InputText v-model="form.weight" label="Weight" type="number" :errorMsg="form.errors.weight" @input="onFocusClearError('weight')" />
                     </div>
                     <div class="grid grid-cols-2">
-                        <InputTextArea v-model="form.chief_complaint" label="Chief Complaint" required :errorMsg="form.errors.chief_complaint" @input="onFocusClearError('chief_complaint')" />
-                        <InputTextArea v-model="form.allergies" label="Allergies" required :errorMsg="form.errors.allergies" @input="onFocusClearError('allergies')" />
-                        <InputTextArea v-model="form.physical_exam" label="Physical Exam Findings" required :errorMsg="form.errors.physical_exam" @input="onFocusClearError('physical_exam')" />
-                        <InputTextArea v-model="form.current_medications" label="Current Medications" required :errorMsg="form.errors.current_medications" @input="onFocusClearError('current_medications')" />
-                        <InputTextArea v-model="form.treatment" label="Treatment" required :errorMsg="form.errors.treatment" @input="onFocusClearError('treatment')" />
-                        <InputTextArea v-model="form.nurse_notes" label="Nurse Notes" required :errorMsg="form.errors.nurse_notes" @input="onFocusClearError('nurse_notes')" />
+                        <InputTextArea v-model="form.chief_complaint" label="Chief Complaint" :errorMsg="form.errors.chief_complaint" @input="onFocusClearError('chief_complaint')" />
+                        <InputTextArea v-model="form.allergies" label="Allergies" :errorMsg="form.errors.allergies" @input="onFocusClearError('allergies')" />
+                        <InputTextArea v-model="form.physical_exam" label="Physical Exam Findings" :errorMsg="form.errors.physical_exam" @input="onFocusClearError('physical_exam')" />
+                        <InputTextArea v-model="form.current_medications" label="Current Medications" :errorMsg="form.errors.current_medications" @input="onFocusClearError('current_medications')" />
+                        <InputTextArea v-model="form.treatment" label="Treatment" :errorMsg="form.errors.treatment" @input="onFocusClearError('treatment')" />
+                        <InputTextArea v-model="form.nurse_notes" label="Nurse Notes" :errorMsg="form.errors.nurse_notes" @input="onFocusClearError('nurse_notes')" />
                     </div>
                     <div class="grid grid-cols-1">
-                        <InputTextArea v-model="form.diagnosis" label="Diagnosis" required :errorMsg="form.errors.diagnosis" @input="onFocusClearError('diagnosis')" />
+                        <InputTextArea v-model="form.diagnosis" label="Diagnosis" :errorMsg="form.errors.diagnosis" @input="onFocusClearError('diagnosis')" />
                     </div>
                     <div class="grid grid-cols-3">
-                        <Datepicker v-model="form.date_disposition" label="Date of Disposition" required :errorMsg="form.errors.date_disposition" @input="onFocusClearError('date_disposition')" />
-                        <DateTimePicker v-model="form.time_disposition" label="Time of Disposition" required :errorMsg="form.errors.time_disposition" @input="onFocusClearError('time_disposition')" />
-                        <RadioButton v-model="form.discharge_condition" label="Condition on Discharge" :options="DepartCondition" required :errorMsg="form.errors.discharge_condition" @input="onFocusClearError('discharge_condition')" />
+                        <Datepicker v-model="form.date_disposition" label="Date of Disposition" :errorMsg="form.errors.date_disposition" @input="onFocusClearError('date_disposition')" />
+                        <DateTimePicker v-model="form.time_disposition" label="Time of Disposition" :errorMsg="form.errors.time_disposition" @input="onFocusClearError('time_disposition')" />
+                        <RadioButton v-model="form.discharge_condition" label="Condition on Discharge" :options="DepartCondition" :errorMsg="form.errors.discharge_condition" @input="onFocusClearError('discharge_condition')" />
                         <SelectElement v-model="form.disposition" label="Disposition" :options="Disposition" :errorMsg="form.errors.disposition" @input="onFocusClearError('disposition')" />
-                        <InputText v-model="form.attending_nurse" label="Attending Nurse" required :errorMsg="form.errors.attending_nurse" @input="onFocusClearError('attending_nurse')" />
-                        <InputText v-model="form.attending_physician" label="Attending Physician" required :errorMsg="form.errors.attending_physician" @input="onFocusClearError('attending_physician')" />
+                        <InputText v-model="form.attending_nurse" label="Attending Nurse" :errorMsg="form.errors.attending_nurse" @input="onFocusClearError('attending_nurse')" />
+                        <InputText v-model="form.attending_physician" label="Attending Physician" :errorMsg="form.errors.attending_physician" @input="onFocusClearError('attending_physician')" />
                     </div>
                 </div>
             </template>

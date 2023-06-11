@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import Toolbar from '@/Pages/Records/ToolbarRecord.vue';
+import Toolbar from '@/Pages/MorePages/ToolbarMorePage.vue';
 </script>
 <template>
     <AppLayout title="Records">

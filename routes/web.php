@@ -8,6 +8,7 @@ use App\Http\Controllers\API\DepartmentApi;
 use App\Http\Controllers\API\FecalysisApi;
 use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
+use App\Http\Controllers\API\MedicalRecordApi;
 use App\Http\Controllers\API\PaymentApi;
 use App\Http\Controllers\API\RadiologyRequestApi;
 use App\Http\Controllers\API\RadiologyResultAPI;
@@ -29,6 +30,8 @@ use App\Http\Controllers\RadiologyResultController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\UrinalysisController;
 use App\Http\Resources\DentalResource;
+use App\Http\Resources\MedicalRecordResource;
+use App\Models\Client;
 use App\Models\College;
 use App\Models\DegreeProgram;
 use App\Models\Dental;
@@ -113,9 +116,24 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             ]);
         })->name('newRecord');
 
-        Route::get('/edit', function () {
+        Route::get('/edit/{id}', function () {
             return Inertia::render('Records/EditRecord');
         })->name('editRecord');
+
+        Route::get('/show/{id}', function () {
+            return Inertia::render('Records/ViewRecord',[
+                'data' => new MedicalRecordResource( Client::with('hematology')
+                    ->with('fecalysis')
+                    ->with('urinalysis')
+                    ->with('xray')
+                    ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
+                    ->find(request()->id))
+            ]);
+        })->name('records.show');
+
+        Route::prefix('/api')->group(function (){
+            Route::get('/all', [MedicalRecordApi::class, 'tableApi'])->name('api.record.index');
+        });
     });
 
     Route::prefix('/emergency')->group(function () {

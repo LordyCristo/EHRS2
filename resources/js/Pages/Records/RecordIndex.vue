@@ -4,111 +4,81 @@ import DataTable from '@/Components/DataTable/DataTable.vue';
 </script>
 <script>
 export default {
-    props: {
-        notifMessage: {
-            type: String,
-            required: false,
-        },
-        notifType: {
-            type: String,
-            required: false,
-        },
-    },
     data: () => ({
-        options:{
-            addBtn: true,
-            deleteBtn: true,
-            selectAllBtn: true,
-            refreshBtn: true,
-            printBtn: true,
-            excelBtn: true,
-            viewBtn: true,
-            searchBtn: true,
-        },
         apiLink: {
-            index: 'api.programs',
-            create: 'newRecord',
-            store: 'api.patient.store',
-            edit: 'editRecord',
-            update: 'api.patient.update',
-            destroy: 'api.patient.destroy',
-            getall: 'api.patient.all',
-            import: 'api.patient.import',
+            // create form
+            create: 'radiology.result.create',
+            // edit form
+            edit: 'radiology.result.edit',
+            //view form
+            show: 'records.show',
+            // return all data
+            index: 'api.radiology.result.index',
+            // return data compatible for datatable requests
+            table: 'api.record.index',
+            // store data from create form
+            store: 'api.radiology.result.store',
+            // update data from edit form
+            update: 'api.radiology.result.update',
+            // delete a specific data
+            destroy: 'api.radiology.result.destroy',
+            // import data from excel
+            import: 'api.radiology.result.import',
         },
-        columnsSmall:[
-            {
-                data: 'id',
-                name:'id',
-                title: 'ID',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-center dt-border-sm px-2'
-            },
-            {
-                data: 'abbr',
-                name: 'abbr',
-                title: 'Abbreviation',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-border-sm px-2',
-            },
-            {
-                data: 'major',
-                name: 'major',
-                title: 'Major',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-border-sm px-2',
-            },
-        ],
         columnsLarge: [
             {
                 data: 'id',
                 name:'id',
-                title: 'ID',
+                title: 'Infirmary ID',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-center dt-border-sm px-2'
+                className: 'dt-center dt-border-sm text-center px-2'
             },
             {
                 data: 'name',
                 name: 'name',
-                title: 'Program Description',
+                title: 'Name',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'abbr',
-                name: 'abbr',
-                title: 'Abbreviation',
+                data: 'hematology_count',
+                name: 'hematology_count',
+                title: 'Hematology',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 text-center',
             },
             {
-                data: 'major',
-                name: 'major',
-                title: 'Major',
+                data: 'fecalysis_count',
+                name: 'fecalysis_count',
+                title: 'Fecalysis',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 text-center',
             },
             {
-                data: 'department_id',
-                name: 'department_id',
-                title: 'Department',
+                data: 'urinalysis_count',
+                name: 'urinalysis_count',
+                title: 'Urinalysis',
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 text-center',
+            },
+            {
+                data: 'xray_count',
+                name: 'xray_count',
+                title: 'Xray',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-border-sm px-2 text-center',
             },
         ],
     }),
@@ -117,14 +87,8 @@ export default {
 
 <template>
     <MedicalRecords title="Medical Records">
-        <div class="py-3">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden">
-                    <div class="row">
-                        <data-table :columnsLarge="columnsLarge" :columnsSmall="columnsSmall" :apiLink="apiLink" ></data-table>
-                    </div>
-                </div>
-            </div>
+        <div class="flex flex-col w-full">
+            <DataTable :columnsLarge="columnsLarge" :apiLink="apiLink"/>
         </div>
     </MedicalRecords>
 </template>

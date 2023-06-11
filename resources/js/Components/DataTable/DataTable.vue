@@ -45,7 +45,8 @@ export default {
         },
         columnsSmall: {
             type: Array,
-            required: true,
+            required: false,
+            default: () => [],
         },
         apiLink: {
             type: [Array, Object],

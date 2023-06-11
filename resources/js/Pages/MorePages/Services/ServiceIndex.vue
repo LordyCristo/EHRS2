@@ -57,7 +57,7 @@ export default{
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-center dt-border-sm px-2'
+                className: 'dt-center dt-border-sm px-2 max-w-xs truncate'
             },
             {
                 data: 'name',
@@ -66,7 +66,7 @@ export default{
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 max-w-xs truncate',
             },
             {
                 data: 'description',
@@ -75,7 +75,7 @@ export default{
                 searchable: true,
                 orderable: true,
                 collapsable: true,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 max-w-xs truncate',
             },
             {
                 data: 'schedule',
@@ -84,7 +84,7 @@ export default{
                 searchable: true,
                 orderable: true,
                 collapsable: true,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 max-w-xs truncate',
             },
             {
                 data: 'section_name',
@@ -93,7 +93,7 @@ export default{
                 searchable: true,
                 orderable: true,
                 collapsable: true,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 max-w-xs truncate',
             },
             {
                 data: 'room_no',
@@ -102,7 +102,7 @@ export default{
                 searchable: true,
                 orderable: true,
                 collapsable: true,
-                className: 'dt-border-sm px-2',
+                className: 'dt-border-sm px-2 max-w-xs truncate',
             },
         ],
         apiLink: {

@@ -95,7 +95,7 @@ export default {
                 },
                 {
                     show: this.$page.props.auth.user.role === 1,
-                    title: 'Medical Records (NULL)',
+                    title: 'Medical Records',
                     link: 'records',
                     tabName: '/records',
                     subLinks: null,

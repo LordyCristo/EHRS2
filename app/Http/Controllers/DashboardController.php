@@ -7,6 +7,8 @@ use App\Models\FecalysisRecord;
 use App\Models\HematologyRecord;
 use App\Models\PaymentsService;
 use App\Models\UrinalysisRecord;
+use App\Models\Xray;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Department;
@@ -21,6 +23,8 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $startOfSemester = Carbon::create(Carbon::now()->year, 8, 1, 0, 0, 0);
+        $endOfSemester = Carbon::create(Carbon::now()->year, 6, 30, 0, 0, 0);
         return Inertia::render('Dashboard',[
             'cards' => [
                 'hematology' => [
@@ -49,6 +53,11 @@ class DashboardController extends Controller
                         ->orderBy('colleges.abbr')
                         ->get(),
                     'total_revenue' => PaymentsService::selectRaw('SUM(fee) as total_revenue')->where('service_id',3)->get(),
+                    'daily_records_count' => HematologyRecord::whereDate('created_at', Carbon::today())->count(),
+                    'weekly_records_count' => HematologyRecord::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count(),
+                    'monthly_records_count' => HematologyRecord::whereMonth('created_at', Carbon::now()->month)->count(),
+                    'semester_records_count' => HematologyRecord::whereBetween('created_at', [$startOfSemester, $endOfSemester])->count(),
+                    'annually_records_count' => HematologyRecord::whereYear('created_at', Carbon::now()->year)->count(),
                 ],
                 'fecalysis' => [
                     'title' => 'Fecalysis Report',
@@ -104,6 +113,33 @@ class DashboardController extends Controller
                         ->get(),
                     'total_revenue' => PaymentsService::selectRaw('SUM(fee) as total_revenue')->where('service_id',5)->get(),
                 ],
+                'radiology' => [
+                    'title' => 'Radiology Report',
+                    'description' => 'Number of radiology records per Program, Department, and College',
+                    'records_count' => Xray::all()->count(),
+                    'records_count_per_department' => Department::leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
+                        ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                        ->leftJoin('xray_requests', 'clients.infirmary_id', '=', 'xray_requests.infirmary_id')
+                        ->select('departments.name', 'departments.abbr', DB::raw('COUNT(xray_requests.id) as count'))
+                        ->groupBy('departments.abbr')
+                        ->orderBy('departments.abbr')
+                        ->get(),
+                    'records_count_per_program' => DegreeProgram::leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                        ->leftJoin('xray_requests', 'clients.infirmary_id', '=', 'xray_requests.infirmary_id')
+                        ->select('degree_programs.name', 'degree_programs.abbr', DB::raw('COUNT(xray_requests.id) as count'))
+                        ->groupBy('degree_programs.abbr')
+                        ->orderBy('degree_programs.abbr')
+                        ->get(),
+                    'records_count_per_college' => College::leftJoin('departments', 'colleges.id', '=', 'departments.college_id')
+                        ->leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
+                        ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                        ->leftJoin('xray_requests', 'clients.infirmary_id', '=', 'xray_requests.infirmary_id')
+                        ->select('colleges.name', 'colleges.abbr', DB::raw('COUNT(xray_requests.id) as count'))
+                        ->groupBy('colleges.abbr')
+                        ->orderBy('colleges.abbr')
+                        ->get(),
+                    'total_revenue' => PaymentsService::selectRaw('SUM(fee) as total_revenue')->where('service_id',6)->get(),
+                ],
             ],
             'charts' => [
                 'groupBy_sex' => DB::table('clients')
@@ -113,6 +149,54 @@ class DashboardController extends Controller
             ]
         ]);
     }
+
+
+    public function byCollege()
+    {
+        $hematology = $this->getRecordsCountByService('hematology_records');
+        $fecalysis = $this->getRecordsCountByService('fecalysis_records');
+        $urinalysis = $this->getRecordsCountByService('urinalysis_records');
+        $radiology = $this->getRecordsCountByService('xray_requests');
+
+        return response()->json([
+            'labels' => $hematology->pluck('abbr')->toArray(),
+            'datasets' => [
+                [
+                    'label' => 'Hematology',
+                    'color' => '#F44336',
+                    'data' => $hematology->pluck('count')->toArray(),
+                ],
+                [
+                    'label' => 'Fecalysis',
+                    'color' => '#2196F3',
+                    'data' => $fecalysis->pluck('count')->toArray(),
+                ],
+                [
+                    'label' => 'Urinalysis',
+                    'color' => '#4CAF50',
+                    'data' => $urinalysis->pluck('count')->toArray(),
+                ],
+                [
+                    'label' => 'Radiology',
+                    'color' => '#55EB3B',
+                    'data' => $radiology->pluck('count')->toArray(),
+                ],
+            ]
+        ]);
+    }
+
+    private function getRecordsCountByService($serviceTable)
+    {
+        return College::leftJoin('departments', 'colleges.id', '=', 'departments.college_id')
+            ->leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
+            ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+            ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
+            ->select('colleges.name', 'colleges.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
+            ->groupBy('colleges.abbr')
+            ->orderBy('colleges.abbr')
+            ->get();
+    }
+
 
     /**
      * Get the data for the dashboard summary report.

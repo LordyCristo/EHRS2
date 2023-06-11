@@ -15,6 +15,7 @@ import Sidebar from "@/Components/Generic/Layout/Sidebar.vue";
 import { Head } from '@inertiajs/vue3';
 import {markRaw} from "vue";
 import FinanceIcon from "@/Components/Icons/FinanceIcon.vue";
+import ERIcon from "@/Components/Icons/ERIcon.vue";
 
 
 export default {
@@ -89,7 +90,7 @@ export default {
                     tabName: '/emergency',
                     subLinks: null,
                     isOpen: false,
-                    icon: markRaw(MaternityIcon),
+                    icon: markRaw(ERIcon),
                     form: false,
                     method: null,
                 },

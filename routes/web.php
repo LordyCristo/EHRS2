@@ -82,6 +82,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard', [DashboardController::class, 'dataSummary'])->name('api.dashboard');
+        Route::get('/monthlysummary', [DashboardController::class, 'byCollege'])->name('api.monthly.summary');
     });
 
     // Routes for the Client Management Section

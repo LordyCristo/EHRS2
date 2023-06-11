@@ -11,46 +11,15 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Inertia\Inertia;
 
-class ClientApi extends Controller
+class ERDetailApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return new ClientCollection(Client::all());
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(ClientRequest $request)
-    {
-        $newClient = Client::create($request->all());
-        // save the er details
-        if ($request->has('is_emergency') && $request->input('is_emergency')) {
-            $newClient->erDetails()->create($request->all());
-            return response()->json([
-                'data' => (new ClientResource($request->all())),
-                'notification' => [
-                    'id' => uniqid(),
-                    'show' => true,
-                    'type' => 'success',
-                    'message' => 'Successfully created Client with id '.$newClient->id,
-                ]
-            ])->setStatusCode(201);
-        }
-        return response()->json([
-            'data' => (new ClientResource($request->all())),
-            'notification' => [
-                'id' => uniqid(),
-                'show' => true,
-                'type' => $newClient?'success':'warning',
-                'message' => $newClient?'Successfully created Client with id '.$newClient->id:'Failed to create Client record',
-            ]
-        ])->setStatusCode(201);
+        return new ClientCollection(Client::join('er_details','er_details.infirmary_id','=','clients.infirmary_id')->get());
     }
 
     /**
@@ -59,29 +28,6 @@ class ClientApi extends Controller
     public function show(Request $request)
     {
         return new ClientResource(Client::findOrFail($request->id));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ClientRequest $request)
-    {
-        $client = Client::findOrFail($request->id);
-        $update = $client->update($request->all());
-        return response()->json([
-            'notification' => [
-                'id' => uniqid(),
-                'show' => true,
-                'type' => $update?'success':'failed',
-                'message' => $update?'Successfully updated Client record id '.$request->id:'Failed to update Client record with id '. $request->id,
-            ]
-        ])->setStatusCode($update?202:400);
-//        return Inertia::render('Client/ClientIndex',['notification' => [
-//            'id' => uniqid(),
-//            'show' => true,
-//            'type' => $update?'success':'failed',
-//            'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
-//        ]]);
     }
 
     /**
@@ -108,7 +54,7 @@ class ClientApi extends Controller
     {
         $query = Client::join('degree_programs','degree_programs.id','=','clients.program_id')
             ->join('client_types','client_types.id','=','clients.client_type_id')
-            ->where('clients.is_emergency', '0')
+            ->where('clients.is_emergency', '1')
             ->selectRaw('clients.*, degree_programs.abbr as program_name, client_types.name as client_type, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as fullname');        $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

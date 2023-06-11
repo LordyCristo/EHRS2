@@ -1,4 +1,47 @@
 export default null;
+export const Religion = Array(
+    { id: 'roman-catholic', name: 'Roman Catholic' },
+    { id: 'iglesia-ni-cristo', name: 'Iglesia Ni Cristo' },
+    { id: 'islam', name: 'Islam' },
+    { id: 'buddhism', name: 'Buddhism' },
+    { id: 'hinduism', name: 'Hinduism' },
+    { id: 'judaism', name: 'Judaism' },
+    { id: 'atheism', name: 'Atheism' },
+    { id: 'other', name: 'Other' },
+);
+export const BroughtBy = Array(
+    { id: 'self', name: 'Self' },
+    { id: 'police', name: 'Police' },
+    { id: 'family', name: 'Family' },
+    { id: 'neighbour', name: 'Neighbour' },
+    { id: 'relative', name: 'Relative' },
+    { id: 'friend', name: 'Friend' },
+    { id: 'others', name: 'Others' },
+    { id: 'unknown', name: 'Unknown' },
+);
+export const ArrivalCondition = Array(
+    //good, fair, poor, shock, comatose, haemorrhagic, doa
+    { id: 'good', name: 'Good' },
+    { id: 'fair', name: 'Fair' },
+    { id: 'poor', name: 'Poor' },
+    { id: 'shock', name: 'Shock' },
+    { id: 'comatose', name: 'Comatose' },
+    { id: 'haemorrhagic', name: 'Haemorrhagic' },
+    { id: 'doa', name: 'DOA' },
+);
+
+export const DepartCondition = Array(
+    //stable, critical, expired
+    { id: 'stable', name: 'Stable' },
+    { id: 'critical', name: 'Critical' },
+    { id: 'expired', name: 'Expired' },
+);
+
+export const TemperatureLocation = Array(
+    { id: 'axilla', name: 'Axilla' },
+    { id: 'oral', name: 'Oral' },
+    { id: 'anal', name: 'Anal' },
+);
 export const BloodType = Array(
     { id: 'O+', name: 'O+' },
     { id: 'O-', name: 'O-' },

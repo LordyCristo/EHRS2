@@ -5,7 +5,7 @@
             <div class="grid grid-rows-1 gap-2 mb-5" v-if="data">
                 <div class="grid grid-cols-4 gap-5">
                     <ViewField label="X-ray No." :value="data.xray.rqst_id" />
-                    <ViewField label="Infirmary No." :value="data.infirmary_id" />
+                    <ViewField label="Hospital No." :value="data.infirmary_id" />
                     <ViewField label="Date" :value="new Date(data.xray.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })" />
                     <view-field label="OR No." :value="data.or_no?data.or_no:'Unpaid'" />
                 </div>

@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\ClientApi;
+use App\Http\Controllers\API\ERDetailApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;

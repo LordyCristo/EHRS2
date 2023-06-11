@@ -22,17 +22,17 @@ export default {
             // edit form
             edit: 'client.edit',
             // return all data
-            index: 'api.client.index',
+            index: 'api.er.index',
             // return data compatible for datatable requests
-            table: 'api.client.table',
+            table: 'api.er.table',
             // store data from create form
-            store: 'api.client.store',
+            store: 'api.er.store',
             // update data from edit form
-            update: 'api.client.update',
+            update: 'api.er.update',
             // delete a specific data
-            destroy: 'api.client.destroy',
+            destroy: 'api.er.destroy',
             // import data from excel
-            import: 'api.client.import',
+            import: 'api.er.import',
         },
         columnsSmall:[
             {

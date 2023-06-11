@@ -3,16 +3,17 @@
         <ViewForm :link="route('laboratory.urinalysis.index')">
             <ViewHeader>Urinalysis Report</ViewHeader>
             <div class="grid grid-rows-2 pb-10" v-if="data">
-                <div class="flex flex-row justify-between gap-2">
+                <div class="flex flex-row justify-between gap-5">
                     <view-field label="Patient" :value="formattedFullName(data.client)" />
                     <view-field label="Age" :value="data.client.age" />
-                    <view-field label="Sex" :value="data.client.sex" />
-                    <view-field label="Hospital No." :value="data.infirmary_id" />
-                    <view-field label="Ward" :value="data.ward" />
+                    <view-field label="Sex" :value="data.client.sex.toString().toUpperCase()" />
+
+                    <view-field label="Ward" :value="data.ward.toString().toUpperCase()" />
                     <view-field label="OR No." :value="data.or_no?data.or_no:'Unpaid'" />
                 </div>
-                <div class="flex flex-row justify-between gap-2">
+                <div class="flex flex-row justify-between gap-5">
                     <view-field label="Requesting Physician" :value="`Dr. ${formattedFullName(data.rqst_physician)}`" />
+                    <view-field label="Hospital No." :value="data.infirmary_id" />
                     <view-field label="Date" :value="new Date(data.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' })" />
                 </div>
                 <table style="table-layout: fixed; margin: 0.5rem 0; border-collapse: collapse">

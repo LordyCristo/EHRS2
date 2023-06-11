@@ -26,6 +26,8 @@ class ClientFactory extends Factory
             'birthdate' => $this->faker->date(),
             'age' => $this->faker->numberBetween(18, 60),
             'sex' => $this->faker->randomElement(['male','female']),
+            'religion' => $this->faker->randomElement(['roman catholic', 'iglesia ni cristo', 'islam', 'buddhism', 'protestant', 'jehovah\'s witness', 'evangelical', 'atheist', 'other']),
+            'nationality' => $this->faker->country,
             'civil_status' => $this->faker->randomElement(['single', 'married', 'widowed', 'separated', 'divorced']),
             'phone' => function(){
                 // format 09XX-XXX-XXXX or 09XXXXXXXXX or 639XXXXXXXXX and maximum of 11 digits
@@ -38,6 +40,7 @@ class ClientFactory extends Factory
             'email_address' => $this->faker->email,
             'home_address'  => $this->faker->address,
             'curr_address' => $this->faker->address,
+            'employer' => $this->faker->company,
             'id_number' => function () {
                 $year = rand(10, 23);
                 $part1 = str_pad($year, 2, '0', STR_PAD_LEFT);

@@ -22,11 +22,14 @@ class Client extends Model
         'birthdate',
         'age',
         'sex',
+        'religion',
+        'nationality',
         'civil_status',
         'phone',
         'email_address',
         'home_address',
         'curr_address',
+        'employer',
         'id_number',
         'program_id',
         'year_lvl',
@@ -63,5 +66,10 @@ class Client extends Model
     function xray()
     {
         return $this->hasMany(XrayRequest::class, 'infirmary_id', 'infirmary_id');
+    }
+
+    function erDetails()
+    {
+        return $this->hasOne(ERDetail::class, 'infirmary_id', 'infirmary_id');
     }
 }

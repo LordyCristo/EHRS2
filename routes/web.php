@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\ClientApi;
+use App\Http\Controllers\API\ERDetailApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
 use App\Http\Controllers\API\DepartmentApi;
@@ -12,7 +12,7 @@ use App\Http\Controllers\API\RadiologyRequestApi;
 use App\Http\Controllers\API\RadiologyResultAPI;
 use App\Http\Controllers\API\ServiceApi;
 use App\Http\Controllers\API\UrinalysisApi;
-use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ERDetailContoller;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DegreeProgramController;
@@ -81,22 +81,22 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     // Routes for the Client Management Section
     Route::prefix('clients')->group(callback: function () {
-        Route::get('/', [ClientController::class, 'index'])->name('client.index');
-        Route::get('/new', [ClientController::class, 'create'])->name('client.create');
-        Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('client.edit');
+        Route::get('/', [ERDetailContoller::class, 'index'])->name('client.index');
+        Route::get('/new', [ERDetailContoller::class, 'create'])->name('client.create');
+        Route::get('/edit/{id}', [ERDetailContoller::class, 'edit'])->name('client.edit');
         Route::prefix('api')->group(callback: function () {
             // Client GET ALL route
-            Route::get('/', [ClientApi::class, 'index'])->name('api.client.index');
+            Route::get('/', [ERDetailApi::class, 'index'])->name('api.client.index');
             // Client STORE route
-            Route::post('/', [ClientApi::class, 'store'])->name('api.client.store');
+            Route::post('/', [ERDetailApi::class, 'store'])->name('api.client.store');
             // Client UPDATE route
-            Route::put('/{id}', [ClientApi::class, 'update'])->name('api.client.update');
+            Route::put('/{id}', [ERDetailApi::class, 'update'])->name('api.client.update');
             // Client DELETE route
-            Route::delete('/{id}', [ClientApi::class, 'destroy'])->name('api.client.destroy');
+            Route::delete('/{id}', [ERDetailApi::class, 'destroy'])->name('api.client.destroy');
             // Client DATATABLE API route
-            Route::get('/all', [ClientApi::class, 'tableApi'])->name('api.client.table');
+            Route::get('/all', [ERDetailApi::class, 'tableApi'])->name('api.client.table');
             // Client import from a CSV file
-            Route::post('/import', [ClientApi::class, 'import'])->name('api.client.import');
+            Route::post('/import', [ERDetailApi::class, 'import'])->name('api.client.import');
         });
     });
 
@@ -117,17 +117,24 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     Route::prefix('/emergency')->group(function () {
-        Route::get('/', function () {
-            return Inertia::render('ER/ERClientIndex');
-        })->name('er.index');
-
-        Route::get('/new', function () {
-            return Inertia::render('ER/ERNewClient');
-        })->name('er.new.client');
-
-        Route::get('/edit', function () {
-            return Inertia::render('ER/EREditClient');
-        })->name('er.edit.client');
+        Route::get('/', [ERDetailContoller::class, 'index'])->name('er.index');
+        Route::get('/new', [ERDetailContoller::class, 'create'])->name('er.new.client');
+        Route::get('/edit', [ERDetailContoller::class, 'edit'])->name('er.edit.client');
+        //Route::get('/show', [ERDetailContoller::class, 'show'])->name('er.show.client');
+        Route::prefix('/api')->group(function () {
+            // Emergency Room GET ALL route
+            Route::get('/', [ERDetailApi::class, 'index'])->name('api.er.index');
+            // Emergency Room STORE route
+            Route::post('/', [ERDetailApi::class, 'store'])->name('api.er.store');
+            // Emergency Room UPDATE route
+            Route::put('/{id}', [ERDetailApi::class, 'update'])->name('api.er.update');
+            // Emergency Room DELETE route
+            Route::delete('/{id}', [ERDetailApi::class, 'destroy'])->name('api.er.destroy');
+            // Emergency Room DATATABLE API route
+            Route::get('/all', [ERDetailApi::class, 'tableApi'])->name('api.er.table');
+            // Emergency Room import from a CSV file
+            Route::post('/import', [ERDetailApi::class, 'import'])->name('api.er.import');
+        });
     });
 
     // Routes for the Radiology Section

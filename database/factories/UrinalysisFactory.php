@@ -21,7 +21,7 @@ class UrinalysisFactory extends Factory
             'color' => $this->faker->randomElement(["yellow", "brown", "green", "black", "red", "white", "gray", "orange", "blue", "purple", "pink", "other"]),
             'clarity' => $this->faker->randomElement(["clear", "slightly_turbid", "turbid", "other"]),
             'ph' => $this->faker->randomFloat(1, 0, 10),
-            'specific_gravity' => $this->faker->randomFloat(1, 0, 10),
+            'specific_gravity' => $this->faker->randomFloat(1, 0, 16),
             'albumin' => $this->faker->randomElement(["negative", "trace", "1+", "2+", "3+", "4+", "other"]),
             'glucose' => $this->faker->randomElement(["negative", "trace", "1+", "2+", "3+", "4+", "other"]),
             'blood' => $this->faker->randomElement(["negative", "trace", "1+", "2+", "3+", "4+", "other"]),

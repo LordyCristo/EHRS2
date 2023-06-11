@@ -95,8 +95,7 @@
                         <Datepicker v-model="form.date_disposition" label="Date of Disposition" required :errorMsg="form.errors.date_disposition" @input="onFocusClearError('date_disposition')" />
                         <DateTimePicker v-model="form.time_disposition" label="Time of Disposition" required :errorMsg="form.errors.time_disposition" @input="onFocusClearError('time_disposition')" />
                         <RadioButton v-model="form.discharge_condition" label="Condition on Discharge" :options="DepartCondition" required :errorMsg="form.errors.discharge_condition" @input="onFocusClearError('discharge_condition')" />
-                    </div>
-                    <div class="grid grid-cols-2">
+                        <SelectElement v-model="form.disposition" label="Disposition" :options="Disposition" :errorMsg="form.errors.disposition" @input="onFocusClearError('disposition')" />
                         <InputText v-model="form.attending_nurse" label="Attending Nurse" required :errorMsg="form.errors.attending_nurse" @input="onFocusClearError('attending_nurse')" />
                         <InputText v-model="form.attending_physician" label="Attending Physician" required :errorMsg="form.errors.attending_physician" @input="onFocusClearError('attending_physician')" />
                     </div>
@@ -114,7 +113,14 @@ import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import DateTimePicker from "@/Components/Generic/Forms/DateTimePicker.vue";
 import Datepicker from "@/Components/Generic/Forms/Datepicker.vue";
 import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
-import {ArrivalCondition, BroughtBy, DepartCondition, Religion, TemperatureLocation} from "@/Legends/legends";
+import {
+    ArrivalCondition,
+    BroughtBy,
+    DepartCondition,
+    Disposition,
+    Religion,
+    TemperatureLocation
+} from "@/Legends/legends";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 </script>
 <script>
@@ -179,6 +185,7 @@ export default {
                 diagnosis: null,
                 date_disposition: null,
                 time_disposition: null,
+                disposition: null,
                 discharge_condition: null,
                 attending_nurse: null,
                 attending_physician: null,
@@ -223,6 +230,7 @@ export default {
             this.form = useForm(this.data);
             this.formTitle = 'Update Client Details';
             this.data = this.$page.props.data.data;
+            console.log(this.data);
         }else{
             this.formTitle = 'Register New Client';
             this.form.infirmary_id = this.$page.props.last_client_id.infirmary_id? this.$page.props.last_client_id.infirmary_id + 1: 1;

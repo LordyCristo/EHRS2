@@ -30,6 +30,18 @@ export const ArrivalCondition = Array(
     { id: 'doa', name: 'DOA' },
 );
 
+export const Disposition = Array(
+    // treated and sent home, absconded, out when called, for admission, refused admission, hama/dama,  died transferred/reffered
+    { id: 'treated-and-sent-home', name: 'Treated and Sent Home' },
+    { id: 'absconded', name: 'Absconded' },
+    { id: 'out-when-called', name: 'Out When Called' },
+    { id: 'for-admission', name: 'For Admission' },
+    { id: 'refused-admission', name: 'Refused Admission' },
+    { id: 'hama-dama', name: 'HAMA/DAMA' },
+    { id: 'died', name: 'Died' },
+    { id: 'transferred-reffered', name: 'Transferred/Reffered' },
+);
+
 export const DepartCondition = Array(
     //stable, critical, expired
     { id: 'stable', name: 'Stable' },

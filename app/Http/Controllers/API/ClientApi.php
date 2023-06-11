@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
+use App\Http\Requests\ERDetailsRequest;
 use App\Http\Resources\ClientCollection;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
@@ -11,6 +12,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class ClientApi extends Controller
@@ -68,6 +70,18 @@ class ClientApi extends Controller
     {
         $client = Client::findOrFail($request->id);
         $update = $client->update($request->all());
+        // update the er details
+        if ($request->has('is_emergency') && $request->input('is_emergency')) {
+            //make an instance of the er details request
+            $erDetailsRequest = new ERDetailsRequest($request->all());
+            // check if er details exists
+            if ($client->erDetails()->exists()) {
+                $client->erDetails()->update($erDetailsRequest->all());
+            } else {
+                $client->erDetails()->create($erDetailsRequest->all());
+            }
+        }
+
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
@@ -76,12 +90,6 @@ class ClientApi extends Controller
                 'message' => $update?'Successfully updated Client record id '.$request->id:'Failed to update Client record with id '. $request->id,
             ]
         ])->setStatusCode($update?202:400);
-//        return Inertia::render('Client/ClientIndex',['notification' => [
-//            'id' => uniqid(),
-//            'show' => true,
-//            'type' => $update?'success':'failed',
-//            'message' => $update?'Successfully updated record id '.$request->id:'Failed to update record with id '. $request->id,
-//        ]]);
     }
 
     /**

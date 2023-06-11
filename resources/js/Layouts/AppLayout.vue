@@ -84,7 +84,7 @@ export default {
                 // },
                 {
                     show: this.$page.props.auth.user.role === 1,
-                    title: 'ER Section (NULL)',
+                    title: 'ER Section',
                     link: 'er.index',
                     tabName: '/emergency',
                     subLinks: null,

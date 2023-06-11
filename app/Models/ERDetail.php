@@ -13,7 +13,7 @@ class ERDetail extends Model
 
     protected $table = 'er_details';
     protected $fillable =[
-        'client_id',
+        'infirmary_id',
         'date_admitted',
         'time_admitted',
         'brought_by',
@@ -33,6 +33,7 @@ class ERDetail extends Model
         'treatment',
         'nurse_notes',
         'diagnosis',
+        'disposition',
         'date_disposition',
         'time_disposition',
         'discharge_condition',
@@ -41,6 +42,6 @@ class ERDetail extends Model
     ];
 
     public function client(){
-        return $this->belongsTo(Client::class,'client_id');
+        return $this->belongsTo(Client::class,'infirmary_id','infirmary_id');
     }
 }

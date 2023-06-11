@@ -12,6 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('er_details', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('infirmary_id')->constrained('clients', 'infirmary_id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('date_admitted')->nullable();
             $table->time('time_admitted')->nullable();
@@ -32,12 +33,13 @@ return new class extends Migration
             $table->string('treatment')->nullable();
             $table->string('nurse_notes')->nullable();
             $table->string('diagnosis')->nullable();
+            $table->string('disposition')->nullable();
             $table->date('date_disposition')->nullable();
             $table->time('time_disposition')->nullable();
             $table->string('discharge_condition')->nullable();
             $table->string('attending_nurse')->nullable();
             $table->string('attending_physician')->nullable();
-            $table->primary('infirmary_id');
+            $table->unique('infirmary_id');
             $table->timestamps();
             $table->softDeletes();
         });

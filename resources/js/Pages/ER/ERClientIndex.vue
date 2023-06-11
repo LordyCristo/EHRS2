@@ -4,23 +4,12 @@ import DataTable from '@/Components/DataTable/DataTable.vue';
 </script>
 <script>
 export default {
-    props: {
-        notifMessage: {
-            type: String,
-            required: false,
-        },
-        notifType: {
-            type: String,
-            required: false,
-        },
-
-    },
     data: () => ({
         apiLink: {
             // create form
             create: 'client.create',
             // edit form
-            edit: 'client.edit',
+            edit: 'er.edit.client',
             // return all data
             index: 'api.er.index',
             // return data compatible for datatable requests
@@ -28,7 +17,7 @@ export default {
             // store data from create form
             store: 'api.er.store',
             // update data from edit form
-            update: 'api.er.update',
+            update: 'api.client.update',
             // delete a specific data
             destroy: 'api.er.destroy',
             // import data from excel

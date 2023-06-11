@@ -42,6 +42,7 @@ class ERDetailsRequest extends FormRequest
             'treatment' => ['nullable', 'string'],
             'nurse_notes' => ['nullable', 'string'],
             'diagnosis' => ['nullable', 'string'],
+            'disposition' => ['nullable', 'string'],
             'date_disposition' => ['nullable', 'date'],
             'time_disposition' => ['nullable', 'date_format:H:i'],
             'discharge_condition' => ['nullable', 'string'],
@@ -49,5 +50,4 @@ class ERDetailsRequest extends FormRequest
             'attending_physician' => ['nullable', 'string'],
         ];
     }
-
 }

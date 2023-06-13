@@ -6,46 +6,50 @@
                  :delete-link="data? route('api.payment.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
-            <div class="grid grid-cols-2">
-                <InputText v-model.number="form.or_no" @keydown.prevent="null" @click.prevent="null" label="OR No." :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+            <div class="w-full">
+                <div class="flex gap-1">
+<!--                    <InputText v-model.number="form.or_no" required @keydown.prevent="null" @click.prevent="null" label="OR No." :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />-->
+                    <DisplayValue label="OR No." :value="form.or_no" :errorMsg="form.errors.or_no"  required />
+                    <div class="w-full">
+                        <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                    </div>
+                </div>
+                <InputText v-model="form.payor_name" required label="Payor Name" :errorMsg="form.errors.payor_name" @input="form.errors['payor_name'] = null" />
+                <div class="grid grid-cols-2">
+                    <InputText v-model="form.payor_email" label="Payor Email" :errorMsg="form.errors.payor_email" @input="form.errors['payor_email'] = null" />
+                    <InputText v-model="form.payor_mobile" label="Payor Mobile No." :errorMsg="form.errors.payor_mobile" @input="form.errors['payor_mobile'] = null" />
+                </div>
+                <div class="flex flex-col">
+                    <div class="inline-flex justify-evenly items-center my-2 border-y border-gray-400 py-1">
+                        <div class="grid grid-cols-2 w-full text-center text-sm text-gray-600">
+                            <label>Services <span class="text-red-500">*</span><span v-if="form.rows.length">: {{ form.rows.length }}</span></label>
+                            <label>Fees <span class="text-red-500">*</span></label>
+                        </div>
+                    </div>
+                    <div class="w-full flex justify-center">
+                        <input-error :message="form.errors.rows" />
+                    </div>
+                    <div v-for="(row, index) in form.rows" :key="index" class="flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
+                        <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
+                        {{ row }}
+                        <div class="w-full">
+                            <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null" />
+                        </div>
+                        <InputText v-model="row.fee" type="number" class="max-w-[6rem]" @input="calculateTotalAmount(row.fee);form.errors['rows.' + index + '.fee'] = null;" :errorMsg="form.errors['rows.' + index + '.fee']" />
+                        <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm" @click="deleteRow(index)" >
+                            <CloseIcon class="w-5 h-auto text-red-500 bw-sm" />
+                        </div>
+
+                    </div>
+                    <div class="inline-flex justify-end items-center border-b border-gray-400 py-2">
+                        <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
+                            <AddIcon class="w-5 h-5 text-vsu-green " @click="addRow" />
+                        </div>
+                    </div>
+                </div>
+                <InputText @keydown.prevent="null" @click.prevent="null" required v-model="form.total_amount" label="Total Amount" :errorMsg="form.errors.total_amount" @input="form.errors['total_amount'] = null" />
+                <InputTextArea v-model="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="form.errors['remarks'] = null" />
             </div>
-            <InputText v-model="form.payor_name" required label="Payor Name" :errorMsg="form.errors.payor_name" @input="form.errors['payor_name'] = null" />
-            <div class="grid grid-cols-2">
-                <InputText v-model="form.payor_email" label="Payor Email" :errorMsg="form.errors.payor_email" @input="form.errors['payor_email'] = null" />
-                <InputText v-model="form.payor_mobile" label="Payor Mobile No." :errorMsg="form.errors.payor_mobile" @input="form.errors['payor_mobile'] = null" />
-            </div>
-            <div class="flex flex-col">
-                <div class="inline-flex justify-evenly items-center my-2 border-y border-gray-400 py-1">
-                    <div class="grid grid-cols-2 w-full text-center text-sm text-gray-600">
-                        <label>Services <span class="text-red-500">*</span><span v-if="form.rows.length">: {{ form.rows.length }}</span></label>
-                        <label>Fees <span class="text-red-500">*</span></label>
-                    </div>
-                    <div class="opacity-0 bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
-                        <AddIcon class="w-5 h-5 text-vsu-green " @click="addRow" />
-                    </div>
-                </div>
-                <div class="w-full flex justify-center">
-                    <input-error :message="form.errors.rows" />
-                </div>
-                <div v-for="(row, index) in form.rows" :key="index" class="inline-flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
-                    <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
-                    <div class="grid grid-cols-2 w-full">
-                        <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null" />
-                        <InputText v-model="row.fee" type="number" @input="calculateTotalAmount(row.fee);form.errors['rows.' + index + '.fee'] = null;" :errorMsg="form.errors['rows.' + index + '.fee']" />
-                    </div>
-                    <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
-                        <CloseIcon class="w-5 h-5 text-red-500 " @click="deleteRow(index)" />
-                    </div>
-                </div>
-                <div class="inline-flex justify-end items-center border-b border-gray-400 py-2">
-                    <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
-                        <AddIcon class="w-5 h-5 text-vsu-green " @click="addRow" />
-                    </div>
-                </div>
-            </div>
-            <InputText @keydown.prevent="null" @click.prevent="null" v-model="form.total_amount" label="Total Amount" :errorMsg="form.errors.total_amount" @input="form.errors['total_amount'] = null" />
-            <InputTextArea v-model="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="form.errors['remarks'] = null" />
         </template>
     </FormSection>
 </template>
@@ -65,6 +69,7 @@ import InputError from "@/Components/Generic/Forms/InputError.vue";
 import Datepicker from "@/Components/Generic/Forms/Datepicker.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
+import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -116,6 +121,11 @@ export default {
         },
     },
     methods: {
+        filterServices() {
+            this.services = this.data.services.filter((service) => {
+                return service.infirmary_id === this.form.infirmary_id;
+            });
+        },
         addRow() {
             this.form.rows.push({ service_id: null, fee: null });
         },
@@ -127,6 +137,7 @@ export default {
                 this.form.errors['rows.' + index + '.fee'] = null;
                 this.form.rows[0].service_id = null;
                 this.form.rows[0].fee = null;
+                this.form.total_amount = 0;
                 return;
             }
 
@@ -161,8 +172,6 @@ export default {
 
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;
-            //transform the data to add paid services to the rows
-            console.log(this.data.paid_services);
             this.data.paid_services.forEach((service) => {
                 this.form.rows.push({
                     service_id: service.service_id,
@@ -186,8 +195,6 @@ export default {
             this.form.collector_id = this.$page.props.auth.user.id;
             this.formTitle = 'New Transaction Record';
         }
-
-        console.log(this.data);
-    }
+    },
 };
 </script>

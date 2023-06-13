@@ -48,7 +48,7 @@ class PaymentController extends Controller
             'clients' => new ClientCollection(Client::selectRaw("infirmary_id as id, CONCAT(infirmary_id, ' - ',first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name")->get()),
             'services' => new FeeCollection(Fees::join('services', 'services.id', '=', 'fees.service_id')
                 ->join('client_types', 'client_types.id', '=', 'fees.client_type')
-                ->selectRaw("fees.id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name")->orderBy('fees.id', 'asc')->get()),
+                ->selectRaw("fees.id as id, fees.amount as fee, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name")->orderBy('fees.id', 'asc')->get()),
             'last_payment_id' => new PaymentResource($lastPaymentOrNo),
         ]);
     }

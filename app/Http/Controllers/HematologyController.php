@@ -90,21 +90,16 @@ class HematologyController extends Controller
      */
     public function getOrNos()
     {
-        $selectedHematologyId = request()->id;
-        $selectedHematologyInfirmaryId = FecalysisRecord::where('id', $selectedHematologyId)->value('infirmary_id');
-
-        return new PaymentCollection(PaymentsService::select('payments_service.payment_id AS id', 'payments_service.payment_id AS name')
-            ->leftJoin('hematology_records', function ($join) use ($selectedHematologyId, $selectedHematologyInfirmaryId) {
-                $join->on('hematology_records.or_no', '=', 'payments_service.payment_id')
-                    ->where(function ($query) use ($selectedHematologyId, $selectedHematologyInfirmaryId) {
-                        $query->whereNull('hematology_records.or_no')
-                            ->orWhere('hematology_records.id', $selectedHematologyId)
-                            ->orWhere('hematology_records.infirmary_id', $selectedHematologyInfirmaryId);
-                    });
-            })
-            ->where('payments_service.service_id', 3)
-            ->orderBy('payments_service.payment_id', 'asc')
-            ->get());
+        return new PaymentCollection(
+            PaymentsService::selectRaw("payments.or_no AS id, CONCAT(payments.or_no, ' - ', clients.first_name, ' ', clients.last_name) AS name")
+                ->join('payments', 'payments.id', '=', 'payments_service.payment_id')
+                ->join('clients', 'clients.infirmary_id', '=', 'payments.infirmary_id')
+                ->leftJoin('hematology_records', 'hematology_records.or_no', '=', 'payments.or_no')
+                ->where('payments_service.service_id', 128)  //128 is the id for hematology/CBC service\
+                ->whereNull('hematology_records.or_no') // Filter out used or_no in hematology_records
+                ->groupBy('payments.or_no')
+                ->get()
+        );
     }
 
     /**

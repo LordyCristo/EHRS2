@@ -220,7 +220,7 @@ class PaymentApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Payment::withCount('paidServices');
+        $query = Payment::withCount('paidServices')->withSum('paidServices', 'fee');
         //->groupBy('payments.or_no');
 
         $totalRecords = $query->count();

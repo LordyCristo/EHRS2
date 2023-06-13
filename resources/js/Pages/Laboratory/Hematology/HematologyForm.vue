@@ -7,10 +7,12 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
-            <div class="grid grid-cols-4 gap-1">
+            <div class="grid grid-cols-2 gap-1">
                 <InputTextAuto v-model.number="form.infirmary_id" label="Infirmary No." :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <SelectElement v-model="form.ward" label="Ward" :options="WardType" :required="true" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+                <div class="grid grid-cols-2 gap-1">
+                    <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
+                    <SelectElement v-model="form.ward" label="Ward" :options="WardType" :required="true" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+                </div>
             </div>
             <!--end of header form-->
             <!--hematology body form-->
@@ -76,14 +78,14 @@ export default {
                 ward: 'OP',
                 status: null,
                 //hematology
-                hemoglobin: 0.5,
-                hematocrit: 0.3,
-                wbc: 0.3,
-                rbc: 0.1,
-                platelet_count: 0.2,
+                hemoglobin: 11,
+                hematocrit: 0.35,
+                wbc: 4,
+                rbc: 3.5,
+                platelet_count: 150,
                 segmenters: 0.5,
-                lymphocyte: 0.8,
-                monocyte: 1.0,
+                lymphocyte: 0.4,
+                monocyte: 0.15,
                 blood_type: 'O+',
                 remarks: null,
             }),

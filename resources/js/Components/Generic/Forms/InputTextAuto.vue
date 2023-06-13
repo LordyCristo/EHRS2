@@ -84,7 +84,7 @@ const filterOptions = () => {
 
 const selectOption = (option) => {
     selected.value = option.name;
-    query.value = option.name;
+    query.value = option.id;
     show.value = false;
 };
 

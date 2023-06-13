@@ -12,7 +12,10 @@
                     :autofocus="autofocus"
                     class="sm:p-2 p-1 w-full border overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300"
                     :class="errorMsg ? 'border-red-300' : 'border-gray-300'"
+                    @focusin="show = true"
                     @keydown.delete="!query.length?$emit('update:modelValue', null):''"
+                    @keydown.escape="show = false; $emit('update:modelValue', null); query = '';"
+                    @keydown.enter="show = false; query.length?$emit('update:modelValue', filteredOptions[0].id):''"
                     @input="filterOptions"
                 />
                 <div class="flex items-center mx-1">

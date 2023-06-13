@@ -10,14 +10,9 @@ defineProps({
 });
 
 </script>
-<style>
-.inputField{
-    @apply flex flex-row items-center justify-between gap-2;
-}
-</style>
 <template>
-    <div class="p-1">
-        <div class="inputField">
+    <div class="flex flex-col m-1">
+        <div class="flex justify-between">
             <InputLabel :for="name" :value="label" :required="required" />
             <InputError :message="errorMsg" />
         </div>

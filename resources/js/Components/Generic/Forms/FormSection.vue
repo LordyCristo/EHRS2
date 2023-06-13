@@ -60,6 +60,7 @@ onMounted(() => {
 });
 
 const submit = () => {
+    console.log(props.form.data());
     if (props.action === 'store') {
         storeForm();
     } else if (props.action === 'update') {
@@ -94,7 +95,6 @@ const goBackToIndex = (response) => {
 
 
 const storeForm = () => {
-    console.log(props.form.data());
     axios
         .post(props.storeLink, props.form)
         .then(res => {

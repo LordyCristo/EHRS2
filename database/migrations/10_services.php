@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->unique('services_name_unique');
             $table->longText('description')->nullable();
             $table->string('schedule')->nullable();
-            $table->string('section_name')->nullable();
+            $table->string('section_name');
             $table->string('room_no')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();

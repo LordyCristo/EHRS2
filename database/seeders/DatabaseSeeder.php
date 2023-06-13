@@ -23,10 +23,10 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ClientSeeder::class,
             FeesSeeder::class,
-            
-            UrinalysisSeeder::class,
-            HematologyRecordSeeder::class,
-            FecalysisRecordSeeder::class,
+
+//            UrinalysisSeeder::class,
+//            HematologyRecordSeeder::class,
+//            FecalysisRecordSeeder::class,
         ]);
     }
 }

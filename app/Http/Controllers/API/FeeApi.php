@@ -6,10 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FeeRequest;
 use App\Http\Resources\FeeCollection;
 use App\Http\Resources\FeeResource;
+use App\Models\College;
 use App\Models\Fees;
+use App\Models\PaymentsService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class FeeApi extends Controller
@@ -185,5 +188,12 @@ class FeeApi extends Controller
                 'message' => !$failedCount?'Successfully imported Fee without errors':'Failed to import Fee '.$failedCount.' rows out of '.$failedCount+$successCount,
             ]
         ]);
+    }
+
+
+    private function getRevenueApi()
+    {
+        return PaymentsService::join('services', 'payments_service.service_id', '=', 'services.id')
+            ->groupBy('section_name')->selectRaw('services.section_name, SUM(fee) as total')->get();
     }
 }

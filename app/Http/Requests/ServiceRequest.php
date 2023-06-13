@@ -24,9 +24,9 @@ class ServiceRequest extends FormRequest
         $id = $this->route('id');
         return [
             'name' => ['required', 'string', 'max:255', 'unique:services,name,' . $id ],
-            'description' => ['required', 'string', 'min:10'],
-            'schedule' => ['required', 'string'],
-            'section_name' => ['nullable', 'string'],
+            'description' => ['nullable', 'string'],
+            'schedule' => ['nullable', 'string'],
+            'section_name' => ['required', 'string'],
             'room_no' => ['nullable', 'string'],
         ];
     }
@@ -41,6 +41,7 @@ class ServiceRequest extends FormRequest
             'description.string' => 'Must be a string.',
             'schedule.string' => 'Must be a string.',
             'section_name.string' => 'Must be a string.',
+            'section_name.required' => 'Required field',
             'room_no.string' => 'Must be a string.',
         ];
     }

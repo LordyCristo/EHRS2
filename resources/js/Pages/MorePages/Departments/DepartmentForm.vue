@@ -6,9 +6,9 @@
                  :delete-link="data? route('api.department.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
-            <InputText v-model="form.name" label="Department Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
-            <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
-            <SelectElement v-model="form.college_id" label="College" :options="colleges" :errorMsg="form.errors.college_id" @input="form.errors['college_id'] = null" />
+            <InputText v-model="form.name" label="Department Name" required :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
+            <InputText v-model="form.abbr" label="Abbreviation" required :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
+            <SelectElement v-model="form.college_id" label="College" required :options="colleges" :errorMsg="form.errors.college_id" @input="form.errors['college_id'] = null" />
         </template>
     </FormSection>
 </template>

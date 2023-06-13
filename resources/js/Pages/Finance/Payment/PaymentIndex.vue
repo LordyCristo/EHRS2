@@ -31,8 +31,8 @@ export default{
                 className: 'dt-border-sm px-2',
             },
             {
-                data: 'total_amount',
-                name: 'total_amount',
+                data: 'paid_services_sum_fee',
+                name: 'paid_services_sum_fee',
                 title: 'Amount',
                 searchable: true,
                 orderable: true,
@@ -78,8 +78,8 @@ export default{
                 className: 'dt-border-sm text-center px-2',
             },
             {
-                data: 'total_amount',
-                name: 'total_amount',
+                data: 'paid_services_sum_fee',
+                name: 'paid_services_sum_fee',
                 title: 'Amount',
                 searchable: true,
                 orderable: true,

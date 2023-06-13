@@ -209,7 +209,7 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log(response.data);
+                    console.log(response.data.data);
                     this.data = response.data.data;
                     this.totalCount = response.data.totalCount;
                     this.totalPages = response.data.totalPages;

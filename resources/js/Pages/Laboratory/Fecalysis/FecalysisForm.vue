@@ -7,10 +7,12 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
-            <div class="grid grid-cols-4 gap-1">
+            <div class="grid grid-cols-2 gap-1">
                 <InputTextAuto v-model="form.infirmary_id" :required="true" :autofocus="true"  label="Infirmary No" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                <SelectElement v-model="form.ward" :required="true" label="Ward" :options="wards" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+                <div class="grid grid-cols-2 gap-1">
+                    <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
+                    <SelectElement v-model="form.ward" :required="true" label="Ward" :options="wards" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+                </div>
             </div>
             <!--end of header form-->
             <!--fecalysis body form-->

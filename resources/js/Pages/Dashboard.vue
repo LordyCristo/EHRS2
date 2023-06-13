@@ -1,6 +1,5 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { onMounted, ref } from 'vue';
 import PieChart from '@/Components/Generic/Charts/PieChart.vue';
 import Pie from '@/Components/Generic/Charts/Pie.vue';
 import BarChart from '@/Components/Generic/Charts/BarChart.vue';
@@ -55,7 +54,7 @@ export default {
 
 <template>
     <AppLayout title="Dashboard">
-        <div class="w-full">
+        <div class="flex flex-col">
             <h2 class="font-semibold text-xl text-center text-gray-800 leading-tight">
                 Summary of Records for Student
             </h2>

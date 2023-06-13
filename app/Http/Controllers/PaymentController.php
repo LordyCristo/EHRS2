@@ -32,7 +32,7 @@ class PaymentController extends Controller
             'last_payment_id' => (int)Payment::select('or_no')->orderBy('or_no', 'desc')->withTrashed()->first()?->or_no,
             'services' => new FeeCollection(Fees::join('services', 'services.id', '=', 'fees.service_id')
                 ->join('client_types', 'client_types.id', '=', 'fees.client_type')
-                ->selectRaw("fees.id as id, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name")->orderBy('fees.id', 'asc')->get()),
+                ->selectRaw("fees.id as id, fees.amount as fee, CONCAT(services.name, ' (',client_types.name, ' ', fees.amount,')') as name")->orderBy('fees.id', 'asc')->get()),
         ]);
     }
 

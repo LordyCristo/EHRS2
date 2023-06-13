@@ -6,12 +6,12 @@
                  :delete-link="data? route('api.program.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
-            <InputText v-model="form.name" label="Degree Program Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
+            <InputText v-model="form.name" label="Degree Program Name" required :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
             <InputText v-model="form.major" label="Major" :errorMsg="form.errors.major" @input="form.errors['major'] = null" />
-            <InputTextAuto v-model="form.department_id" label="Department" :options="departments" :errorMsg="form.errors.department_id" @input="form.errors['department_id'] = null" />
+            <InputTextAuto v-model="form.department_id" label="Department" required :options="departments" :errorMsg="form.errors.department_id" @input="form.errors['department_id'] = null" />
             <div class="grid grid-cols-2">
-                <InputText v-model="form.abbr" label="Abbreviation" :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
-                <SelectElement v-model="form.group" label="Group" :options="groups" :errorMsg="form.errors.group" @input="form.errors['group'] = null" />
+                <InputText v-model="form.abbr" label="Abbreviation" required :errorMsg="form.errors.abbr" @input="form.errors['abbr'] = null" />
+                <SelectElement v-model="form.group" label="Group" required :options="groups" :errorMsg="form.errors.group" @input="form.errors['group'] = null" />
             </div>
         </template>
     </FormSection>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueServicePerTransaction;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -31,7 +32,7 @@ class PaymentRequest extends FormRequest
             'infirmary_id' => ['required', 'exists:clients,infirmary_id'],
             // rows must have at least one row and must be an array and the row must have a value service_id and fee
             'rows' => ['required', 'array', 'min:1'],
-            'rows.*.service_id' => ['required', 'exists:fees,id'],
+            'rows.*.service_id' => ['required', 'exists:fees,id', new UniqueServicePerTransaction($id)],
             'rows.*.fee' => ['required', 'numeric'],
             'collector_id' => ['required', 'exists:users,id'],
             'total_amount' => ['required', 'numeric'],

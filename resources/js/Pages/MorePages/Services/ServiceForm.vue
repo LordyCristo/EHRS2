@@ -6,11 +6,11 @@
                  :delete-link="data? route('api.service.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
-            <InputText v-model="form.name" label="Service Name" :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
+            <InputText v-model="form.name" label="Service Name" required :errorMsg="form.errors.name" autofocus @input="form.errors['name'] = null" />
             <InputText v-model="form.description" label="Description" :errorMsg="form.errors.description" @input="form.errors['description'] = null" />
             <InputText v-model="form.schedule" label="Schedule" :errorMsg="form.errors.schedule" @input="form.errors['schedule'] = null" />
             <div class="grid grid-cols-2">
-                <InputText v-model="form.section_name" label="Section Name" :errorMsg="form.errors.section_name" @input="form.errors['section_name'] = null" />
+                <InputText v-model="form.section_name" label="Section Name" required :errorMsg="form.errors.section_name" @input="form.errors['section_name'] = null" />
                 <InputText v-model="form.room_no" label="Room No" :errorMsg="form.errors.room_no" @input="form.errors['room_no'] = null" />
             </div>
         </template>

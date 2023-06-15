@@ -26,7 +26,7 @@ export default {
 <template>
     <InputField :name="name" :errorMsg="errorMsg" :label="label">
         <div class="radioButton" :class="errorMsg ? 'border border-red-300' : 'border-gray-300'">
-            <label v-for="option in options" :key="option.id">
+            <label v-for="option in options" :key="option.id" class="whitespace-nowrap">
                 <input type="radio" :id="id + '-' + option.id" :name="name" :value="option.id"
                     :checked="modelValue === option.id" @click="changeValue(option.id)" />
                 {{ option.name }}

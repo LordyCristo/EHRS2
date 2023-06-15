@@ -51,6 +51,7 @@ class HematologyRecordFactory extends Factory
             'or_no' => $payment->payment_id,
             'ward' => $this->faker->randomElement(['opd','er','male-ward','female-ward','pedia-ward']),
             'status' => $this->faker->randomElement(['pending','done','released']),
+            'created_at' => $this->faker->dateTimeBetween('-1 years', 'now'),
         ];
     }
 }

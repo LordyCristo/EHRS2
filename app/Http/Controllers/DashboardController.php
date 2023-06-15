@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MedicalRecordResource;
 use App\Models\College;
 use App\Models\Dental;
 use App\Models\DentalRecord;
 use App\Models\FecalysisRecord;
 use App\Models\HematologyRecord;
 use App\Models\PaymentsService;
+use App\Models\Services;
 use App\Models\UrinalysisRecord;
 use App\Models\Xray;
 use Carbon\Carbon;
@@ -179,13 +181,79 @@ class DashboardController extends Controller
         ]);
     }
 
+    public function summary(){
+        $hematology = HematologyRecord::count();
+        $fecalysis = FecalysisRecord::count();
+        $urinalysis = UrinalysisRecord::count();
+        $radiology = Xray::count();
+        $dental = DentalRecord::count();
+
+        return response()->json([
+            ['Service', 'Number of Records'],
+            ['Hematology', $hematology],
+            ['Fecalysis', $fecalysis],
+            ['Urinalysis', $urinalysis],
+            ['Radiology', $radiology],
+            ['Dental', $dental],
+        ]);
+    }
+
+    public function monthly()
+    {
+        $records = [
+            'Hematology' => HematologyRecord::class,
+            'Fecalysis' => FecalysisRecord::class,
+            'Urinalysis' => UrinalysisRecord::class,
+            'Radiology' => Xray::class,
+            'Dental' => DentalRecord::class,
+        ];
+
+        $monthlyCounts = [];
+
+        foreach ($records as $recordName => $recordClass) {
+            $monthlyCounts[$recordName] = $recordClass::select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('COUNT(id) as count')
+            )
+                ->groupBy('month')
+                ->get()
+                ->keyBy('month') // Use keyBy instead of pluck
+                ->map(function ($record) {
+                    return $record->count;
+                })
+                ->toArray();
+        }
+
+        $months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December',
+        ];
+
+        $data = [['Month', ...array_keys($records)]];
+
+        foreach ($months as $month) {
+            $row = [$month];
+
+            foreach ($records as $recordName => $recordClass) {
+                $count = $monthlyCounts[$recordName][$month] ?? 0;
+                $row[] = $count;
+            }
+
+            $data[] = $row;
+        }
+
+        return response()->json($data);
+    }
+
+
+
 
     public function byCollege(Request $request)
     {
-        $hematology = $this->getRecordsCountByService($request->getBy,'hematology_records');
-        $fecalysis = $this->getRecordsCountByService($request->getBy,'fecalysis_records');
-        $urinalysis = $this->getRecordsCountByService($request->getBy,'urinalysis_records');
-        $radiology = $this->getRecordsCountByService($request->getBy,'xray_requests');
+        $hematology = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'hematology_records');
+        $fecalysis = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'fecalysis_records');
+        $urinalysis = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'urinalysis_records');
+        $radiology = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'xray_requests');
 
         return response()->json([
             'params' => [
@@ -234,7 +302,7 @@ class DashboardController extends Controller
         ]);
     }
 
-    private function getRecordsCountByService($getBy, $serviceTable)
+    private function getRecordsCount($getBy, $getByColumn, $serviceTable)
     {
         if ($getBy === 'colleges')
             return College::leftJoin('departments', 'colleges.id', '=', 'departments.college_id')
@@ -243,6 +311,7 @@ class DashboardController extends Controller
                 ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
                 ->select('colleges.name', 'colleges.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
                 ->groupBy('colleges.abbr')
+                ->having('count', '>', 0)
                 ->orderBy('colleges.abbr')
                 ->get();
         else if ($getBy === 'departments')
@@ -251,19 +320,24 @@ class DashboardController extends Controller
                 ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
                 ->select('departments.name', 'departments.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
                 ->groupBy('departments.abbr')
+                ->having('count', '>', 0)
                 ->orderBy('departments.abbr')
                 ->get();
         else if ($getBy === 'degree_programs')
             return DegreeProgram::leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
                 ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
                 ->select('degree_programs.name', 'degree_programs.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
-                ->groupBy('degree_programs.abbr')
+                ->groupBy('clients.sex','degree_programs.abbr')
+                ->where('degree_programs.abbr', 'bscs')
+                ->having('count', '>', 0)
                 ->orderBy('degree_programs.abbr')
                 ->get();
-        else
-            return Client::leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
+
+        else if ($getBy === 'sex')
+            return DB::table($serviceTable)->leftJoin('clients', $serviceTable.'.infirmary_id', '=', 'clients.infirmary_id')
                 ->selectRaw('COUNT(clients.id) as count, clients.sex as name, clients.sex as abbr')
                 ->groupBy('clients.sex')
+                ->having('count', '>', 0)
                 ->get();
     }
 

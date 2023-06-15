@@ -85,6 +85,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/dashboard', [DashboardController::class, 'dataSummary'])->name('api.dashboard');
         Route::get('/monthlysummary', [DashboardController::class, 'byCollege'])->name('api.monthly.summary');
+        Route::get('/summary', [DashboardController::class, 'summary'])->name('api.summary');
+        Route::get('/monthly', [DashboardController::class, 'monthly'])->name('api.monthly');
     });
 
     // Routes for the Client Management Section

@@ -1,5 +1,6 @@
 <template>
-    <Pie :data="data" :options="options" type="doughnut" />
+    <Pie :data="data" :options="options" />
+    <span class="font-medium text-2xl">{{ data.datasets[0].data.reduce((accumulator, currentValue) => accumulator + currentValue, 0) }} Records</span>
 </template>
 
 <script lang="ts">

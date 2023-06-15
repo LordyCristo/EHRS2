@@ -14,14 +14,13 @@ class AccountRoleSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            'Admin', // 1 Admin, MorepageACM
-            'Laboratory', // 2 LaboratoryACM
-            'Cashier', // 3 FinanceACM
-            'Radiology', // 4 RadiologyACM
-            'Dental', // 5 DentalACM
-            'ER', // 6 EmergencyroomACM
-            'Pharmacy', // 7 Pharmacy
-            'IO', // 8 InformationOfficerACM
+            'admin', // 1 Admin
+            'laboratory', // 2 LaboratoryACM
+            'cashier', // 3 FinanceACM
+            'radiology', // 4 RadiologyACM
+            'dental', // 5 DentalACM
+            'er', // 6 EmergencyroomACM
+            'io', // 7 InformationOfficerACM
         ];
 
         foreach ($roles as $role) {

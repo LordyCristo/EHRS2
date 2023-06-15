@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\College;
+use App\Models\Dental;
+use App\Models\DentalRecord;
 use App\Models\FecalysisRecord;
 use App\Models\HematologyRecord;
 use App\Models\PaymentsService;
@@ -140,6 +142,33 @@ class DashboardController extends Controller
                         ->get(),
                     'total_revenue' => PaymentsService::selectRaw('SUM(fee) as total_revenue')->where('service_id',6)->get(),
                 ],
+                'dental' => [
+                    'title' => 'Dental Report',
+                    'description' => 'Number of dental records per Program, Department, and College',
+                    'records_count' => DentalRecord::all()->count(),
+                    'records_count_per_department' => Department::leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
+                        ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                        ->leftJoin('dental_records', 'clients.infirmary_id', '=', 'dental_records.infirmary_id')
+                        ->select('departments.name', 'departments.abbr', DB::raw('COUNT(dental_records.id) as count'))
+                        ->groupBy('departments.abbr')
+                        ->orderBy('departments.abbr')
+                        ->get(),
+                    'records_count_per_program' => DegreeProgram::leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                        ->leftJoin('dental_records', 'clients.infirmary_id', '=', 'dental_records.infirmary_id')
+                        ->select('degree_programs.name', 'degree_programs.abbr', DB::raw('COUNT(dental_records.id) as count'))
+                        ->groupBy('degree_programs.abbr')
+                        ->orderBy('degree_programs.abbr')
+                        ->get(),
+                    'records_count_per_college' => College::leftJoin('departments', 'colleges.id', '=', 'departments.college_id')
+                        ->leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
+                        ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                        ->leftJoin('dental_records', 'clients.infirmary_id', '=', 'dental_records.infirmary_id')
+                        ->select('colleges.name', 'colleges.abbr', DB::raw('COUNT(dental_records.id) as count'))
+                        ->groupBy('colleges.abbr')
+                        ->orderBy('colleges.abbr')
+                        ->get(),
+                    'total_revenue' => PaymentsService::selectRaw('SUM(fee) as total_revenue')->where('service_id',6)->get(),
+                ],
             ],
             'charts' => [
                 'groupBy_sex' => DB::table('clients')
@@ -151,50 +180,91 @@ class DashboardController extends Controller
     }
 
 
-    public function byCollege()
+    public function byCollege(Request $request)
     {
-        $hematology = $this->getRecordsCountByService('hematology_records');
-        $fecalysis = $this->getRecordsCountByService('fecalysis_records');
-        $urinalysis = $this->getRecordsCountByService('urinalysis_records');
-        $radiology = $this->getRecordsCountByService('xray_requests');
+        $hematology = $this->getRecordsCountByService($request->getBy,'hematology_records');
+        $fecalysis = $this->getRecordsCountByService($request->getBy,'fecalysis_records');
+        $urinalysis = $this->getRecordsCountByService($request->getBy,'urinalysis_records');
+        $radiology = $this->getRecordsCountByService($request->getBy,'xray_requests');
 
         return response()->json([
-            'labels' => $hematology->pluck('abbr')->toArray(),
-            'datasets' => [
-                [
-                    'label' => 'Hematology',
-                    'color' => '#F44336',
-                    'data' => $hematology->pluck('count')->toArray(),
+            'params' => [
+                $request->all()
+            ],
+            'hematology' => [
+                'labels' => $hematology->pluck('abbr')->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Hematology',
+                        'color' => '#F44336',
+                        'data' => $hematology->pluck('count')->toArray(),
+                    ],
                 ],
-                [
-                    'label' => 'Fecalysis',
-                    'color' => '#2196F3',
-                    'data' => $fecalysis->pluck('count')->toArray(),
+            ],
+            'fecalysis' => [
+                'labels' => $fecalysis->pluck('abbr')->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Fecalysis',
+                        'color' => '#2196F3',
+                        'data' => $fecalysis->pluck('count')->toArray(),
+                    ],
                 ],
-                [
-                    'label' => 'Urinalysis',
-                    'color' => '#4CAF50',
-                    'data' => $urinalysis->pluck('count')->toArray(),
+            ],
+            'urinalysis' => [
+                'labels' => $urinalysis->pluck('abbr')->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Urinalysis',
+                        'color' => '#4CAF50',
+                        'data' => $urinalysis->pluck('count')->toArray(),
+                    ],
                 ],
-                [
-                    'label' => 'Radiology',
-                    'color' => '#55EB3B',
-                    'data' => $radiology->pluck('count')->toArray(),
+            ],
+            'radiology' => [
+                'labels' => $urinalysis->pluck('abbr')->toArray(),
+                'datasets' => [
+                    [
+                        'label' => 'Radiology',
+                        'color' => '#55EB3B',
+                        'data' => $radiology->pluck('count')->toArray(),
+                    ],
                 ],
-            ]
+            ],
         ]);
     }
 
-    private function getRecordsCountByService($serviceTable)
+    private function getRecordsCountByService($getBy, $serviceTable)
     {
-        return College::leftJoin('departments', 'colleges.id', '=', 'departments.college_id')
-            ->leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
-            ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
-            ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
-            ->select('colleges.name', 'colleges.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
-            ->groupBy('colleges.abbr')
-            ->orderBy('colleges.abbr')
-            ->get();
+        if ($getBy === 'colleges')
+            return College::leftJoin('departments', 'colleges.id', '=', 'departments.college_id')
+                ->leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
+                ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
+                ->select('colleges.name', 'colleges.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
+                ->groupBy('colleges.abbr')
+                ->orderBy('colleges.abbr')
+                ->get();
+        else if ($getBy === 'departments')
+            return Department::leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
+                ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
+                ->select('departments.name', 'departments.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
+                ->groupBy('departments.abbr')
+                ->orderBy('departments.abbr')
+                ->get();
+        else if ($getBy === 'degree_programs')
+            return DegreeProgram::leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
+                ->select('degree_programs.name', 'degree_programs.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
+                ->groupBy('degree_programs.abbr')
+                ->orderBy('degree_programs.abbr')
+                ->get();
+        else
+            return Client::leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
+                ->selectRaw('COUNT(clients.id) as count, clients.sex as name, clients.sex as abbr')
+                ->groupBy('clients.sex')
+                ->get();
     }
 
 

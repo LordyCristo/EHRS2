@@ -88,7 +88,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for the Client Management Section
-    Route::prefix('clients')->group(callback: function () {
+    Route::prefix('clients')->middleware('ioacm')->group(callback: function () {
         Route::get('/', [ClientController::class, 'index'])->name('client.index');
         Route::get('/new', [ClientController::class, 'create'])->name('client.create');
         Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('client.edit');

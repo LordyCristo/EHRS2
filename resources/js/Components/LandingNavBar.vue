@@ -63,9 +63,6 @@ export default{
 <template>
     <header>
         <nav class="text-white" aria-label="Global">
-           <!-- <div class="cosine-yellow min-w-full bg-vsu-yellow md:pb-7 pb-2">-->
-<!--                <div class="cosine-olive bg-vsu-olive md:pb-7 pb-2"> -->
-<!--                    <div class="cosine-green bg-vsu-green flex md:flex-col md:pb-64 py-1 items-center justify-between text-white">-->
             <div class="min-w-full bg-vsu-yellow md:pb-3 pb-1 shadow-md">
                 <div class="bg-vsu-olive md:pb-3 pb -1 shadow-md">
                     <div class="bg-vsu-green flex md:flex-col md:py-1 items-center justify-between text-white shadow-md">
@@ -108,18 +105,15 @@ export default{
 <!--                            </Popover>-->
 <!--                            <a href="#" class="text-xs leading-6">EVENTS</a>-->
 <!--                            <a href="#" class="text-xs leading-6">ABOUT</a>-->
-                            <Link :href="'/'" class="text-md font-light" :class="{ 'text-vsu-yellow': isHomePage }">
+                            <Link :href="'/'" class="text-sm font-light" :class="{ 'text-vsu-yellow': isHomePage }">
                                 HOME
                             </Link>
-                            <Link :href="route('login')" class="text-md font-light" :class="{ 'text-vsu-yellow': isLoginPage }">
+                            <Link :href="route('login')" class="text-sm font-light" :class="{ 'text-vsu-yellow': isLoginPage }">
                                 LOGIN
                             </Link>
-                            <Link :href="route('register')" class="text-md font-light" :class="{ 'text-vsu-yellow': isRegisterPage }">
+                            <Link :href="route('register')" class="text-sm font-light" :class="{ 'text-vsu-yellow': isRegisterPage }">
                                 REGISTER
                             </Link>
-<!--                            <Link :href="route('public.client')" class="text-md font-light" :class="{ 'text-vsu-yellow': isPublicClientPage }">-->
-<!--                                PUBLIC-->
-<!--                            </Link>-->
                         </PopoverGroup>
                         <div class="text-white w-full md:text-3xl text-sm flex md:flex-col flex-row justify-between gap-4 text-center items-center">
                             <div class="md:hidden flex gap-4">
@@ -132,9 +126,6 @@ export default{
                                 <Link :href="route('register')" class="text-xs leading-6" :class="{ 'text-vsu-yellow': isRegisterPage }">
                                     Register
                                 </Link>
-<!--                                <Link :href="route('public.client')" class="text-xs leading-6" :class="{ 'text-vsu-yellow': isPublicClientPage }">-->
-<!--                                    Public-->
-<!--                                </Link>-->
                             </div>
                             <div class="md:block hidden font-montserrat font-semibold tracking-wider">
                                 ELECTRONIC HEALTH RECORDS SYSTEM

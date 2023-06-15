@@ -62,7 +62,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
                     title: 'In/Out Patient',
                     link: 'client.index',
                     tabName: '/clients',

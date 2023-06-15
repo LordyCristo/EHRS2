@@ -21,7 +21,7 @@ defineExpose({ focus: () => input.value.focus() });
         <input
             ref="input"
             type="checkbox"
-            class="rounded-full border-gray-900"
+            class="border-gray-900"
             :checked="props.modelValue"
             @input="$emit('update:modelValue', props.modelValue = !props.modelValue)"
         />

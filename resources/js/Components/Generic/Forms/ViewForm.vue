@@ -5,7 +5,7 @@
                 <CloseIcon class="w-7 h-auto hover:rotate-90 duration-300" />
             </Link>
         </div>
-        <div id="official-receipt-printable" class="printTable shadow-2xl px-10 py-15 mx-auto max-w-fit">
+        <div id="official-receipt-printable" class="printTable shadow-2xl text-sm px-10 py-10 mx-auto max-w-fit">
             <slot />
         </div>
         <div class="fixed bottom-5 right-5">

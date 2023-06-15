@@ -31,6 +31,10 @@ import DtLengthContainer from "@/Components/DataTable/DtComponents/DtLengthConta
 import SpinnerIcon from "@/Components/Icons/SpinnerIcon.vue";
 import { pushNotification } from "@/Components/Generic/Modals/NotifBanner.vue";
 import WarningIcon from "@/Components/Icons/WarningIcon.vue";
+import DialogModal from "@/Components/DialogModal.vue";
+import TextInput from "@/Components/TextInput.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
 </script>
 <script>
 import { markRaw } from 'vue';
@@ -54,6 +58,8 @@ export default {
         },
     },
     data: () => ({
+        deleteId: null,
+        showModal: false,
         dtMessage: '',
         showMenu: false,
         columns: [],    // columns to be displayed
@@ -111,21 +117,21 @@ export default {
             }
         },
         deleteSingleRecord(id) {
-            if (confirm(`Are you sure you want to delete this record?`)) {
-                this.processing = true;
-                this.dtMessage = 'Please wait while deleting records...';
-                axios.delete(route(this.apiLink.destroy, id))
-                    .then( response => {
-                        pushNotification(response.data.notification);
-                        this.getData();
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-                    .finally(() => {
-                        this.processing = false;
-                    });
-            }
+            this.processing = true;
+            this.dtMessage = 'Please wait while deleting records...';
+            axios.delete(route(this.apiLink.destroy, id))
+                .then( response => {
+                    pushNotification(response.data.notification);
+                    this.getData();
+                    this.deleteId = null;
+                    this.showModal = false;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+                .finally(() => {
+                    this.processing = false;
+                });
         },
         async deleteMultiRecord() {
             if (confirm(`Are you sure you want to delete these ${this.selected.length} records?`)) {
@@ -383,6 +389,13 @@ export default {
         isColumnSorted(col) {
             return col.name === this.sortedColumn;
         },
+        closeModal() {
+            this.showModal = false;
+        },
+        showDeleteModal(id) {
+            this.deleteId = id;
+            this.showModal = true;
+        },
     },
     computed: {
         isAllSelected() {
@@ -394,6 +407,27 @@ export default {
 <template>
     <DtContainer>
 <!--        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>-->
+        <DialogModal :show="showModal" @close="closeModal">
+            <template #title>
+                Delete Record
+            </template>
+            <template #content>
+                Are you sure you want to delete this record?
+            </template>
+            <template #footer>
+                <SecondaryButton @click="closeModal">
+                    Cancel
+                </SecondaryButton>
+                <DangerButton
+                    class="ml-3"
+                    :class="{ 'opacity-25': processing }"
+                    :disabled="processing"
+                    @click="deleteSingleRecord(deleteId)"
+                >
+                    Delete
+                </DangerButton>
+            </template>
+        </DialogModal>
         <DtTopContainer>
             <DtActionContainer>
                 <DtActionBtn v-if="apiLink.create" :href="route(apiLink.create)" class="bg-yellow-500">
@@ -485,9 +519,9 @@ export default {
                                 <Link title="Update" v-if="apiLink.edit" :href="route(apiLink.edit, item.id)" class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-100 ease-in">
                                     <component :is="col.icon[2]" />
                                 </Link>
-                                <a title="Delete" v-if="apiLink.destroy" @click="deleteRecord(item.id)" class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-gray-500 duration-100 ease-in">
+                                <button title="Delete" v-if="apiLink.destroy" @click="showDeleteModal(item.id)" class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-gray-500 duration-100 ease-in">
                                     <component :is="col.icon[1]" />
-                                </a>
+                                </button>
                             </div>
                         </td>
                     </template>

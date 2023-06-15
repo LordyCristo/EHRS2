@@ -18,11 +18,10 @@ class XrayFactory extends Factory
      */
     public function definition(): array
     {
-        $rqstIds = XrayRequest::pluck('id')->toArray();
         $rad_tech_id = User::pluck('id')->toArray();
         $radiologist_id = User::pluck('id')->toArray();
         return [
-            'rqst_id' => $this->faker->randomElement($rqstIds),
+            'rqst_id' => XrayRequest::factory()->create()->id,
             'procedure' => $this->faker->word,
             'impression' => $this->faker->word,
             'radiographic_findings' => $this->faker->word,

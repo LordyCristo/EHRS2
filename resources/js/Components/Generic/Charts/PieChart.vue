@@ -1,5 +1,5 @@
 <template>
-    <Pie :data="data" :options="options" />
+    <Pie :data="data" :options="options" type="doughnut" />
 </template>
 
 <script lang="ts">

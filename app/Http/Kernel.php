@@ -11,6 +11,7 @@ use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\FecalyasisACM;
 use App\Http\Middleware\FinanceACM;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\IOACM;
 use App\Http\Middleware\LaboratoryACM;
 use App\Http\Middleware\MaternityACM;
 use App\Http\Middleware\MorepagesACM;
@@ -109,5 +110,6 @@ class Kernel extends HttpKernel
         'mtacm' => MaternityACM::class,
         'pacm' => PharmacyACM::class,
         'racm' => RadiologyACM::class,
+        'ioacm' => IOACM::class,
     ];
 }

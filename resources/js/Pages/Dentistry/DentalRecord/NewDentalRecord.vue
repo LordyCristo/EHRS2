@@ -1,4 +1,20 @@
-
-<template></template>
+<template>
+    <Laboratory title="Create Form">
+        <div class="flex justify-center items-center h-full w-full">
+            <div class="sm:p-5 p-1 bg-gray-100 rounded-sm">
+                <DentalRecordForm :action="action"/>
+            </div>
+        </div>
+    </Laboratory>
+</template>
 <script setup>
+import Laboratory from '@/Pages/Laboratories.vue';
+import DentalRecordForm from "@/Pages/Dentistry/DentalRecord/DentalRecordForm.vue";
+</script>
+<script>
+export default {
+    data: () => ({
+        action: 'store',
+    }),
+}
 </script>

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('dental_result_id')->nullable()->constrained('dentals')->cascadeOnUpdate()->nullOnDelete();
             $table->boolean('is_out_patient')->default(false);
             $table->enum('status', ['pending','done','released']);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -133,8 +133,8 @@ export default {
                 },
                 {
                     show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 5,
-                    title: 'Dental (NULL)',
-                    link: 'dental',
+                    title: 'Dental',
+                    link: 'dental.index',
                     tabName: '/dental',
                     subLinks: null,
                     isOpen: false,

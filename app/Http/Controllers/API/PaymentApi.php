@@ -9,6 +9,7 @@ use App\Models\Payment;
 use App\Models\PaymentsService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -113,61 +114,33 @@ class PaymentApi extends Controller
             $rows = $request->input('rows', []);
 
             if (!empty($rows)) {
-                $validator = Validator::make($rows, [
-                    'rows.*.service_id' => [
-                        'required',
-                        'exists:fees,service_id',
-                        Rule::unique('payments_service', 'service_id')
-                            ->where('payment_id', $payment->id)
-                            ->whereNull('deleted_at'),
-                        'distinct',
-                    ],
-                    'rows.*.fee' => 'required',
-                ], [
-                    'rows.*.service_id.required' => 'Service ID is required.',
-                    'rows.*.service_id.exists' => 'Service ID does not exist.',
-                    'rows.*.service_id.distinct' => 'Service ID is not unique.',
-                    'rows.*.fee.required' => 'Fee is required.',
-                ]);
-
-                if ($validator->fails()) {
-                    return response()->json([
-                        'data' => null,
-                        'errors' => $validator->errors(),
-                        'notification' => [
-                            'id' => uniqid(),
-                            'show' => true,
-                            'type' => 'warning',
-                            'message' => 'Failed to update Payment record',
-                            'data' => $payment,
-                        ],
-                    ])->setStatusCode(422);
-                }
-
                 $existingServices = $payment->paidServices()->pluck('service_id')->toArray();
                 $requestedServices = collect($rows)->pluck('service_id')->toArray();
 
+                // Delete the services that are removed from the receipt
                 $servicesToDelete = array_diff($existingServices, $requestedServices);
-                $servicesToRestore = array_intersect($existingServices, $requestedServices);
-
-                $payment->paidServices()
+                PaymentsService::where('payment_id', $payment->id)
                     ->whereIn('service_id', $servicesToDelete)
-                    ->delete();
+                    ->forceDelete();
 
-                PaymentsService::withTrashed()
-                    ->where('payment_id', $payment->id)
-                    ->whereIn('service_id', $servicesToRestore)
-                    ->restore();
-
+                // save the new services in payments_services table
                 foreach ($rows as $row) {
-                    if (!in_array($row['service_id'], $existingServices)) {
+                    $serviceId = $row['service_id'];
+                    $fee = $row['fee'];
+
+                    $existingService = $payment->paidServices()->where('service_id', $serviceId)->first();
+
+                    if ($existingService) {
+                        $existingService->update(['fee' => $fee]);
+                    } else {
                         $payment->paidServices()->create([
-                            'service_id' => $row['service_id'],
+                            'service_id' => $serviceId,
                             'payment_id' => $payment->or_no,
-                            'fee' => $row['fee'],
+                            'fee' => $fee,
                         ]);
                     }
                 }
+
             }
 
             return response()->json([

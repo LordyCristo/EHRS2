@@ -209,7 +209,6 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log(response.data.data);
                     this.data = response.data.data;
                     this.totalCount = response.data.totalCount;
                     this.totalPages = response.data.totalPages;
@@ -397,7 +396,7 @@ export default {
 <!--        <DtProcessing v-if="processing" >{{ completedCount? completedCount:'' }}</DtProcessing>-->
         <DtTopContainer>
             <DtActionContainer>
-                <DtActionBtn :href="route(apiLink.create)" class="bg-yellow-500">
+                <DtActionBtn v-if="apiLink.create" :href="route(apiLink.create)" class="bg-yellow-500">
                     <AddIcon class="w-4 mr-1" />
                     New
                 </DtActionBtn>
@@ -413,7 +412,7 @@ export default {
                     <UploadIcon class="w-4 mr-1" />
                     Import
                 </DtActionBtn>
-                <DtActionBtn v-if="selected.length > 1" @click="deleteRecord(null, true)" class="bg-red-600">
+                <DtActionBtn v-if="selected.length > 1 && apiLink.destroy" @click="deleteRecord(null, true)" class="bg-red-600">
                     <DeleteIcon class="w-4 mr-1" />
                     Delete
                 </DtActionBtn>
@@ -427,7 +426,7 @@ export default {
                         Expand
                     </template>
                 </DtActionBtn>
-                <DtActionBtn v-if="isAllSelected" @click="selectAllShown" class="bg-orange-500">
+                <DtActionBtn v-if="isAllSelected && apiLink.destroy" @click="selectAllShown" class="bg-orange-500">
                     <CheckallIcon class="w-4 mr-1" />
                     Select All Shown
                 </DtActionBtn>
@@ -435,7 +434,7 @@ export default {
                     <CheckallIcon class="w-4 mr-1" />
                     Select All
                 </DtActionBtn>
-                <DtActionBtn v-if="selected.length" class="bg-vsu-olive" @click="deselectAll">
+                <DtActionBtn v-if="selected.length && apiLink.destroy" class="bg-vsu-olive" @click="deselectAll">
                     <CloseIcon class="w-4 mr-1" />
                     Deselect All
                 </DtActionBtn>

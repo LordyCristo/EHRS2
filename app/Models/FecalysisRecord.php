@@ -23,6 +23,7 @@ class FecalysisRecord extends Model
         'or_no',
         'ward',
         'status',
+        'is_out_patient',
     ];
 
     public function fecalysis(): BelongsTo

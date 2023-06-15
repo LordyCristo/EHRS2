@@ -7,13 +7,13 @@ export default {
     data: () => ({
         apiLink: {
             // create form
-            create: 'radiology.result.create',
+            //create: 'radiology.result.create',
             // edit form
-            edit: 'radiology.result.edit',
+            //edit: 'radiology.result.edit',
             //view form
             show: 'records.show',
             // return all data
-            index: 'api.radiology.result.index',
+            index: 'api.record.export',
             // return data compatible for datatable requests
             table: 'api.record.index',
             // store data from create form
@@ -21,14 +21,14 @@ export default {
             // update data from edit form
             update: 'api.radiology.result.update',
             // delete a specific data
-            destroy: 'api.radiology.result.destroy',
+            //destroy: 'api.radiology.result.destroy',
             // import data from excel
             import: 'api.radiology.result.import',
         },
         columnsLarge: [
             {
-                data: 'id',
-                name:'id',
+                data: 'infirmary_id',
+                name:'infirmary_id',
                 title: 'Infirmary ID',
                 searchable: true,
                 orderable: true,
@@ -79,7 +79,16 @@ export default {
                 orderable: true,
                 collapsable: false,
                 className: 'dt-border-sm px-2 text-center',
+            },{
+                data: 'dental_count',
+                name: 'dental_count',
+                title: 'Dental',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-border-sm px-2 text-center',
             },
+
         ],
     }),
 }

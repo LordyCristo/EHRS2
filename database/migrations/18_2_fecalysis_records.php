@@ -21,6 +21,7 @@ return new class extends Migration
             $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->nullOnDelete();
             $table->string('ward')->nullable();
             $table->enum('status',['pending','done','released']);
+            $table->boolean('is_out_patient')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

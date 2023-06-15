@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\ClientApi;
+use App\Http\Controllers\API\DentalApi;
 use App\Http\Controllers\API\ERDetailApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
@@ -15,6 +16,7 @@ use App\Http\Controllers\API\RadiologyResultAPI;
 use App\Http\Controllers\API\ServiceApi;
 use App\Http\Controllers\API\UrinalysisApi;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\DentalController;
 use App\Http\Controllers\ERDetailContoller;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DashboardController;
@@ -127,14 +129,25 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                     ->with('fecalysis')
                     ->with('urinalysis')
                     ->with('xray')
+                    ->with('dental')
                     ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
                     ->find(request()->id))
             ]);
         })->name('records.show');
 
+        Route::get('/medical-certificate/', function (){
+            return Inertia::render('Records/MedicalCertificate',[
+                'data' => new MedicalRecordResource( Client::selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
+                    ->where('clients.infirmary_id', request()->id))
+            ]);
+        })->name('records.medcert');
+
+
         Route::prefix('/api')->group(function (){
             Route::get('/all', [MedicalRecordApi::class, 'tableApi'])->name('api.record.index');
         });
+
+        Route::get('/api/medical-certificate', [MedicalRecordApi::class, 'medicalCertificate'])->name('api.record.medcert');
     });
 
     Route::prefix('/emergency')->group(function () {
@@ -209,11 +222,22 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     // Routes for the Dental Section
     Route::prefix('dental')->middleware('dacm')->group(function(){
-        Route::get('/', function () {
-            return Inertia::render('Dental',[
-                'results' => new DentalResource(DentalRecord::withCount('dentalResult')->withCount('treatments')->get()),
-            ]);
-        })->name('dental');
+        Route::get('/', [DentalController::class, 'index'])->name('dental.index');
+        Route::get('/new', [DentalController::class, 'create'])->name('dental.create');
+        Route::get('/edit/{id}', [DentalController::class, 'edit'])->name('dental.edit');
+        Route::get('/show/{id}', [DentalController::class, 'show'])->name('dental.show');
+        Route::prefix('api')->group(function (){
+            // Dental GET ALL route
+            Route::get('/', [DentalApi::class, 'index'])->name('api.dental.index');
+            // Dental STORE route
+            Route::post('/', [DentalApi::class, 'store'])->name('api.dental.store');
+            // Dental UPDATE route
+            Route::put('/{id}', [DentalApi::class, 'update'])->name('api.dental.update');
+            // Dental DELETE route
+            Route::delete('/{id}', [DentalApi::class, 'destroy'])->name('api.dental.destroy');
+            // Dental DATATABLE API route
+            Route::get('/all', [DentalApi::class, 'tableApi'])->name('api.dental.table');
+        });
     });
 
     // Routes for the Payment Section
@@ -223,11 +247,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             return Inertia::render('Finance/FinanceIndex',[
                 'feesCount' => Fees::count(),
                 'paymentsCount' => Payment::count(),
-                'summary' => [
-                    // total revenue per service
-                    'totalRevenue' => PaymentsService::join('services', 'payments_service.service_id', '=', 'services.id')
-                    ->groupBy('service_id')->selectRaw('services.name, SUM(fee) as total')->get(),
-                ]
+//                'summary' => [
+//                    'totalRevenue' => PaymentsService::join('services', 'payments_service.service_id', '=', 'services.id')
+//                    ->groupBy('section_name')->selectRaw('services.section_name, SUM(fee) as total')->get(),
+//                ]
             ]);
         })->name('finance.index');
         // Routes to manage the fees assigned to every service offered
@@ -248,6 +271,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::get('/all', [FeeApi::class, 'tableApi'])->name('api.fee.table');
                 // Fee import from a CSV file
                 Route::post('/import', [FeeApi::class, 'import'])->name('api.fee.import');
+                // Summary of revenue
+                Route::get('/summary', [FeeApi::class, 'getRevenueApi'])->name('api.fee.revenue');
             });
         });
         // Routes for payment transactions

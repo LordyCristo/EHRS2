@@ -20,6 +20,7 @@ class Xray extends Model
         'radiographic_findings',
         'rad_tech_id',
         'radiologist_id',
+        'is_out_patient',
     ];
 
     public function xrayRequest()

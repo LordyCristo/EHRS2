@@ -35,9 +35,9 @@ class DentalRecord extends Model
         return $this->belongsTo(PaymentsService::class, 'or_no');
     }
 
-    public function dentalResult()
+    public function dental()
     {
-        return $this->belongsTo(Dental::class, 'dental_result_id');
+        return $this->belongsTo(Dental::class, 'dental_result_id', 'id');
     }
 
     public function treatments()

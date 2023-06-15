@@ -205,7 +205,7 @@ class Dental extends Model
 
     public function dentalRecord()
     {
-        return $this->hasOne(DentalRecord::class);
+        return $this->hasOne(DentalRecord::class, 'dental_result_id', 'id');
     }
 }
 

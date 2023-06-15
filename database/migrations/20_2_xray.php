@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('radiographic_findings');
             $table->foreignId('rad_tech_id')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('radiologist_id')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->nullOnDelete();
             $table->timestamps();
             $table->softDeletes();
         });

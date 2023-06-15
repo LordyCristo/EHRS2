@@ -204,6 +204,8 @@ return new class extends Migration
             $table->integer('filled_restored')->default(0); // number of filled restored
             $table->integer('cnt_df_dmf')->default(0); // number of decayed, filled, missing teeth
             $table->integer('flouride_app')->default(0); // number of flouride application
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

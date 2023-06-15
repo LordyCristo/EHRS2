@@ -77,4 +77,9 @@ class Client extends Model
     {
         return $this->hasOne(ERDetail::class, 'infirmary_id', 'infirmary_id');
     }
+
+    function dental()
+    {
+        return $this->hasMany(DentalRecord::class, 'infirmary_id', 'infirmary_id')->with('dental');
+    }
 }

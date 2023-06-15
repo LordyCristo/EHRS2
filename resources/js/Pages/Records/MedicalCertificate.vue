@@ -1,6 +1,6 @@
 <template>
     <Laboratory title="Medical Records">
-        <div class="flex flex-col justify-center">
+        <div class="flex flex-col">
             <ViewForm :link="route('records')">
                 <ViewHeader>MEDICAL RECORD</ViewHeader>
                 <div class="grid grid-rows-1 gap-2 mb-5" v-if="data">
@@ -121,28 +121,13 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="data.dental.length">
-                        <h1 class="w-full text-center font-semibold text-gray-900 uppercase">Dental Results</h1>
-                        <div v-for="dental in data.dental" class="flex flex-col gap-3 rounded-md my-3">
-                            <div class="grid grid-cols-2 text-white px-2 py-1 rounded-tl-md rounded-tr-md" style="background-color: rgb(6, 67, 13); color: white;">
-                                <ViewField label="Date of Examination" :value="formattedDate(dental.created_at)" />
-                                <ViewField label="Status" :value="dental.status.toString().toUpperCase()" />
-                            </div>
-                            <div class="grid grid-cols-2 gap-1 px-2 pb-2">
-                                <ViewField label="Purpose" :value="dental.rqst_for" />
-                                <ViewField label="Procedure" :value="dental.dental.procedure" />
-                                <ViewField label="Impression" :value="dental.dental.impression" />
-                                <ViewField label="Radiographic Findings" :value="dental.dental.radiographic_findings" />
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <div v-else class="text-center">
                     <span>Unable to retrieve Medical Records</span>
                 </div>
             </ViewForm>
-
+            <Link class="absolute top-20 right-1/3 gap-1 py-1 px-4 bg-vsu-green text-white rounded-md duration-100 active:scale-95 hover:bg-vsu-olive">
+                Generate Medical Certificate</Link>
         </div>
     </Laboratory>
 </template>
@@ -167,11 +152,9 @@ import EditIcon from "@/Components/Icons/EditIcon.vue";
 export default {
     data: () => ({
         data: null,
-        infirmary_id: null,
     }),
     mounted() {
         this.data = this.$page.props.data.data;
-        this.infirmary_id = this.data.infirmary_id;
     },
     methods: {
         formattedFullName(data) {

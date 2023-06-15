@@ -84,20 +84,12 @@ class UrinalysisController extends Controller
      */
     public function getOrNos()
     {
-        $selectedUrinalysisId = request()->id;
-        $selectedUrinalysisInfirmaryId = UrinalysisRecord::where('id', $selectedUrinalysisId)->value('infirmary_id');
-
-        return new PaymentCollection(PaymentsService::select('payments_service.payment_id AS id', 'payments_service.payment_id AS name')
-            ->leftJoin('urinalysis_records', function ($join) use ($selectedUrinalysisId, $selectedUrinalysisInfirmaryId) {
-                $join->on('urinalysis_records.or_no', '=', 'payments_service.payment_id')
-                    ->where(function ($query) use ($selectedUrinalysisId, $selectedUrinalysisInfirmaryId) {
-                        $query->whereNull('urinalysis_records.or_no')
-                            ->orWhere('urinalysis_records.id', $selectedUrinalysisId)
-                            ->orWhere('urinalysis_records.infirmary_id', $selectedUrinalysisInfirmaryId);
-                    });
-            })
-            ->where('payments_service.service_id', 1)
-            ->orderBy('payments_service.payment_id', 'asc')
+        return new PaymentCollection(PaymentsService::join('payments', 'payments_service.payment_id', '=', 'payments.id')
+            ->join('clients', 'clients.infirmary_id', '=', 'payments.infirmary_id')
+            ->leftJoin('fees', 'payments_service.service_id', '=', 'fees.service_id')
+            ->leftJoin('services', 'services.id', '=', 'fees.service_id')
+            ->selectRaw("payments_service.payment_id AS id, CONCAT(payments_service.payment_id, ' - ', clients.infirmary_id) AS name")
+            ->where('services.section_name', 'LIKE', '%Laboratory%')
             ->get());
     }
 

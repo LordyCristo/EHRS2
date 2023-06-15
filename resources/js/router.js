@@ -106,6 +106,20 @@ const routes = [
         path:'/radiology/result/edit',
         name: 'radiology.result.edit',
         component: () => import('@/Pages/Radiology/Result/EditRadiology.vue')
+    },{
+        path:'/dental',
+        name: 'dental.index',
+        component: () => import('@/Pages/Dentistry/DentalRecord/DentalRecordIndex.vue')
+    },
+    {
+        path:'/dental/new',
+        name: 'dental.create',
+        component: () => import('@/Pages/Dentistry/DentalRecord/NewDentalRecord.vue')
+    },
+    {
+        path:'/dental/edit',
+        name: 'dental.edit',
+        component: () => import('@/Pages/Dentistry/DentalRecord/EditDentalRecord.vue')
     },
     {
         path:'/laboratory',

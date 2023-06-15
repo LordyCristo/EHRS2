@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MedicalRecordCollection;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,11 @@ class MedicalRecordApi extends Controller
      */
     public function index()
     {
-        //
+        return new MedicalRecordCollection(Client::withCount('hematology')
+            ->withCount('fecalysis')
+            ->withCount('urinalysis')
+            ->withCount('xray')
+            ->withCount('dental'));
     }
 
     /**
@@ -59,6 +64,7 @@ class MedicalRecordApi extends Controller
             ->withCount('fecalysis')
             ->withCount('urinalysis')
             ->withCount('xray')
+            ->withCount('dental')
             ->selectRaw('CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
             ->groupBy('clients.infirmary_id');
 

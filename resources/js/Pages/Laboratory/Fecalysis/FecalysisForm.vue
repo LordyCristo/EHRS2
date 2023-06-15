@@ -37,7 +37,10 @@
                 <SelectElement v-model="form.medical_technologist" :required="true" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
                 <SelectElement v-model="form.pathologist" :required="true" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
-            <RadioButton v-model="form.status" :required="true" id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
+            <div class="grid grid-cols-2">
+                <RadioButton v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
+                <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :required="true" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
+            </div>
             <!--end of fecalysis footer form-->
         </template>
     </FormSection>
@@ -49,7 +52,7 @@ import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
-import {Lab_Group_4, Lab_Group_6} from "@/Legends/legends";
+import {InOutPatient, Lab_Group_4, Lab_Group_6} from "@/Legends/legends";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -70,6 +73,7 @@ export default {
                 or_no: null,
                 ward: null,
                 status: null,
+                is_out_patient: null,
                 //fecalysis
                 color: null,
                 consistency: null,

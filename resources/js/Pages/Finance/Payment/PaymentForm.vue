@@ -31,7 +31,6 @@
                     </div>
                     <div v-for="(row, index) in form.rows" :key="index" class="flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
                         <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
-                        {{ row }}
                         <div class="w-full">
                             <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null" />
                         </div>

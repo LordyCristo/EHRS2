@@ -9,9 +9,6 @@ export default {
         records: Object,
         treatments: Object,
     },
-    mounted() {
-        console.log(this.$page.props);
-    }
 };
 </script>
 
@@ -20,15 +17,6 @@ export default {
         <template #toolbar>
             <ToolbarMorePage />
         </template>
-        <div>
-            {{ results }}
-        </div>
-        <div>
-            {{ records }}
-        </div>
-        <div>
-            {{ treatments }}
-        </div>
         <slot></slot>
     </AppLayout>
 </template>

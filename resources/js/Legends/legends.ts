@@ -121,6 +121,16 @@ export const Lab_Group_2 = Array(
     {id:'positive', name:'Positive'}
 );
 
+export const InOutPatient = Array(
+    {id:0, name:'Outpatient'},
+    {id:1, name:'In-patient'},
+);
+
+export const BooleanValues = Array(
+    {id:1, name:'Yes'},
+    {id:0, name:'No'}
+);
+
 export const Lab_Group_3 = Array(
     {id:'negative', name:'Negative'},
     {id:'increased', name:'Increased'},

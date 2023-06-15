@@ -22,6 +22,7 @@ class HematologyRecord extends Model
         'or_no',
         'ward',
         'status',
+        'is_out_patient',
     ];
 
     public function hematology()

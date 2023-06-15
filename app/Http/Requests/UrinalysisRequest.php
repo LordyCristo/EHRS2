@@ -34,7 +34,7 @@ class UrinalysisRequest extends FormRequest
             'status' => ['required', 'in:pending,done,released'],
             // urinalysis
             'color' => ['required', 'string'],
-            'clarity' => ['required', 'string', 'in:clear,slightly_turbid,turbid'],
+            'clarity' => ['required', 'string', 'in:clear,slightly-turbid,turbid'],
             'ph' => ['required', 'numeric', 'between:0,14'],
             'specific_gravity' => ['required', 'numeric'],
             'albumin' => ['required', 'in:positive,negative,trace,1+,2+,3+,4+'],

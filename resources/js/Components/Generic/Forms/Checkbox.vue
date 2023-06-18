@@ -1,20 +1,23 @@
-<script setup>
-import {onMounted, ref, watch} from 'vue';
-
-const props = defineProps({
-    modelValue: [Boolean, Number],
-    label: String,
-    required: Boolean,
-});
-
-const input = ref(null);
-
-watch(() => props.modelValue, (value) => {
-    input.value.checked = value;
-});
-
-defineExpose({ focus: () => input.value.focus() });
-
+<script>
+export default {
+    data: () => ({
+        input: null,
+    }),
+    props: {
+        modelValue: {
+            type: Boolean,
+            default: false
+        },
+        label: {
+            type: String,
+            default: ''
+        },
+        required: {
+            type: Boolean,
+            default: false
+        }
+    },
+};
 </script>
 <template>
     <div class="w-fit flex flex-row items-center gap-1">
@@ -22,9 +25,9 @@ defineExpose({ focus: () => input.value.focus() });
             ref="input"
             type="checkbox"
             class="border-gray-900"
-            :checked="props.modelValue"
-            @input="$emit('update:modelValue', props.modelValue = !props.modelValue)"
+            :checked="modelValue"
+            @input="$emit('update:modelValue', modelValue = !modelValue)"
         />
-        <label>{{ props.label }}</label>
+        <label>{{ label }}</label>
     </div>
 </template>

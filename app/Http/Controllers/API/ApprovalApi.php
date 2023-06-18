@@ -71,7 +71,7 @@ class ApprovalApi extends Controller
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => 'Successfully created '.$request->id.' record',
+                    'message' => 'Successfully created '.$user->isApprovalBypassed().' record',
                 ]
             ])->setStatusCode(201);
         }

@@ -10,6 +10,7 @@ use App\Http\Controllers\API\DepartmentApi;
 use App\Http\Controllers\API\FecalysisApi;
 use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
+use App\Http\Controllers\API\MedicalCertificateApi;
 use App\Http\Controllers\API\MedicalRecordApi;
 use App\Http\Controllers\API\PaymentApi;
 use App\Http\Controllers\API\RadiologyRequestApi;
@@ -44,10 +45,12 @@ use App\Models\Department;
 use App\Models\FecalysisRecord;
 use App\Models\Fees;
 use App\Models\HematologyRecord;
+use App\Models\MedicalCertificate;
 use App\Models\Payment;
 use App\Models\PaymentsService;
 use App\Models\Services;
 use App\Models\UrinalysisRecord;
+use App\Models\User;
 use App\Models\Xray;
 use App\Models\XrayRequest;
 use Carbon\Carbon;
@@ -101,6 +104,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
     });
 
+
     // Routes for the Client Management Section
     Route::prefix('clients')->middleware('ioacm')->group(callback: function () {
         Route::get('/', [ClientController::class, 'index'])->name('client.index');
@@ -122,6 +126,26 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
     });
 
+    // Routes for the Medical Certificates
+    Route::prefix('records')->middleware('aacm')->group(callback: function () {
+        Route::get('/medical-certificate/{id}', function (){
+            return Inertia::render('Records/MedicalCertificate',[
+                'data' => new MedicalRecordResource(Client::withCount('hematology')
+                    ->withCount('fecalysis')
+                    ->withCount('urinalysis')
+                    ->withCount('xray')
+                    ->where('infirmary_id', request()->id)
+                    ->whereYear('created_at', Carbon::now()->year)
+                    ->first()),
+                'physicians' => User::selectRaw('CONCAT(first_name, " ", last_name) as name, id')->get()
+            ]);
+        })->name('records.medcert');
+        Route::prefix('api')->group(callback: function () {
+            Route::post('/new', [MedicalCertificateApi::class, 'store'])->name('api.certificate.store');
+        });
+    });
+
+    // Routes for Medical Records
     Route::prefix('records')->middleware('aacm')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Records/RecordIndex');
@@ -144,23 +168,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                     ->with('urinalysis')
                     ->with('xray')
                     ->with('dental')
+                    ->with('medicalCertificate')
                     ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
-                    ->find(request()->id))
+                    ->find(request()->id)),
             ]);
         })->name('records.show');
-
-        Route::get('/medical-certificate/{id}', function (){
-            return Inertia::render('Records/MedicalCertificate',[
-                'data' => new MedicalRecordResource(Client::withCount('hematology')
-                    ->withCount('fecalysis')
-                    ->withCount('urinalysis')
-                    ->withCount('xray')
-                    ->where('infirmary_id', request()->id)
-                    ->whereYear('created_at', Carbon::now()->year)
-                    ->first())
-            ]);
-        })->name('records.medcert');
-
 
         Route::prefix('/api')->group(function (){
             Route::get('/all', [MedicalRecordApi::class, 'tableApi'])->name('api.record.index');

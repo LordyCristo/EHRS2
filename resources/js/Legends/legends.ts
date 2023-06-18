@@ -29,7 +29,13 @@ export const ArrivalCondition = Array(
     { id: 'haemorrhagic', name: 'Haemorrhagic' },
     { id: 'doa', name: 'DOA' },
 );
-
+export const PurposesMedicalCertificate = Array([
+    {id:1,name:'Pre-enrolment Medical Certification'},
+    {id:2,name:'Educational tour/trip; seminar/convention'},
+    {id:3,name:'Medical Requirement for On-the-job Training (OJT)'},
+    {id:4,name:'Pre-participation Sports Clearance: Sports/Activity'},
+    {id:5,name:'Others: Please Specify'},
+]);
 export const Disposition = Array(
     // treated and sent home, absconded, out when called, for admission, refused admission, hama/dama,  died transferred/reffered
     { id: 'treated-and-sent-home', name: 'Treated and Sent Home' },

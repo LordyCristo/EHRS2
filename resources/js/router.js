@@ -251,6 +251,22 @@ const routes = [
         name: 'more.service.edit',
         component: () => import('@/Pages/MorePages/Services/EditService.vue')
     },
+    {
+        path:'/records',
+        name: 'records',
+        component: () => import('@/Pages/Records/RecordIndex.vue')
+    },
+    {
+        path:'/records/show',
+        name: 'records',
+        component: () => import('@/Pages/Records/ViewRecord.vue')
+    },
+    {
+        path:'/records/medical-certificate/',
+        name: 'records.medcert',
+        component: () => import('@/Pages/Records/MedicalCertificate.vue')
+    },
+
 ]
 
 const router = createRouter({

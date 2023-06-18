@@ -97,7 +97,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::prefix('api')->group(callback: function () {
             Route::get('/all', [ApprovalApi::class, 'tableApi'])->name('api.user.approval');
             Route::put('/approve/{id}', [ApprovalApi::class, 'approve'])->name('api.user.approve');
-            Route::put('/reject/{id}', [ApprovalApi::class, 'update'])->name('api.user.reject');
+            Route::put('/reject/{id}', [ApprovalApi::class, 'reject'])->name('api.user.reject');
         });
     });
 

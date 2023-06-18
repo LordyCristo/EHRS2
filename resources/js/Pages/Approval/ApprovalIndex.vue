@@ -20,7 +20,6 @@ export default {
     methods: {
         async fetchData() {
             const { data } = await axios.get(route('api.user.approval'));
-
             this.data = data;
         },
         stringToJSON(data) {

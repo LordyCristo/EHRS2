@@ -246,22 +246,28 @@ class DashboardController extends Controller
         return response()->json($data);
     }
 
-
-
-
     public function byCollege(Request $request)
     {
-        $hematology = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'hematology_records');
-        $fecalysis = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'fecalysis_records');
-        $urinalysis = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'urinalysis_records');
-        $radiology = $this->getRecordsCount($request->getByTable, $request->getByColumn, 'xray_requests');
-
+        $hematology = $this->getRecordsCount($request->getByTable, $request->getByColumn, $request->getGroupBy,'hematology_records');
+        $fecalysis = $this->getRecordsCount($request->getByTable, $request->getByColumn, $request->getGroupBy, 'fecalysis_records');
+        $urinalysis = $this->getRecordsCount($request->getByTable, $request->getByColumn, $request->getGroupBy, 'urinalysis_records');
+        $radiology = $this->getRecordsCount($request->getByTable, $request->getByColumn, $request->getGroupBy, 'xray_requests');
+        $labels = $hematology->pluck('abbr')->toArray();
+        if($request->getGroupBy === 'sex'){
+            $labels = ['Male','Female'];
+        } elseif ($request->getGroupBy === 'civil_status'){
+            $labels = ['Single','Married','Widowed','Separated'];
+        } elseif ($request->getGroupBy === 'year_lvl'){
+            $labels = ['1st Year','2nd Year','3rd Year','4th Year','5th Year','6th Year'];
+        } elseif ($request->getGroupBy === 'age'){
+            $labels = ['Below 18','18-25','26-35','36-45','46-55','56-65','Above 65'];
+        }
         return response()->json([
             'params' => [
                 $request->all()
             ],
             'hematology' => [
-                'labels' => $hematology->pluck('abbr')->toArray(),
+                'labels' => $labels,
                 'datasets' => [
                     [
                         'label' => 'Hematology',
@@ -271,7 +277,7 @@ class DashboardController extends Controller
                 ],
             ],
             'fecalysis' => [
-                'labels' => $fecalysis->pluck('abbr')->toArray(),
+                'labels' => $labels,
                 'datasets' => [
                     [
                         'label' => 'Fecalysis',
@@ -281,7 +287,7 @@ class DashboardController extends Controller
                 ],
             ],
             'urinalysis' => [
-                'labels' => $urinalysis->pluck('abbr')->toArray(),
+                'labels' =>$labels,
                 'datasets' => [
                     [
                         'label' => 'Urinalysis',
@@ -291,7 +297,7 @@ class DashboardController extends Controller
                 ],
             ],
             'radiology' => [
-                'labels' => $urinalysis->pluck('abbr')->toArray(),
+                'labels' => $labels,
                 'datasets' => [
                     [
                         'label' => 'Radiology',
@@ -303,17 +309,22 @@ class DashboardController extends Controller
         ]);
     }
 
-    private function getRecordsCount($getBy, $getByColumn, $serviceTable)
+    private function getRecordsCount($getBy, $getByColumn, $getGroupBy, $serviceTable)
     {
+        // set default value for $getByColumn
+        if (empty($getByColumn))
+            $getByColumn = '*';
+        if(empty($getGroupBy))
+            $getGroupBy = 'clients.sex';
         if ($getBy === 'colleges')
             return College::leftJoin('departments', 'colleges.id', '=', 'departments.college_id')
                 ->leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
                 ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
                 ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
-                ->select('colleges.name', 'colleges.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
-                ->groupBy('colleges.abbr')
+                ->select($getGroupBy, DB::raw('COUNT('.$serviceTable.'.id) as count'))
+                ->groupBy('clients.'.$getGroupBy)
                 ->having('count', '>', 0)
-                ->orderBy('colleges.abbr')
+                ->orderBy($getGroupBy)
                 ->get();
         else if ($getBy === 'departments')
             return Department::leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
@@ -324,22 +335,25 @@ class DashboardController extends Controller
                 ->having('count', '>', 0)
                 ->orderBy('departments.abbr')
                 ->get();
-        else if ($getBy === 'degree_programs')
-            return DegreeProgram::leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
-                ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable.'.infirmary_id')
-                ->select('degree_programs.name', 'degree_programs.abbr', DB::raw('COUNT('.$serviceTable.'.id) as count'))
-                ->groupBy('clients.sex','degree_programs.abbr')
-                ->where('degree_programs.abbr', 'bscs')
-                ->having('count', '>', 0)
-                ->orderBy('degree_programs.abbr')
-                ->get();
-
-        else if ($getBy === 'sex')
-            return DB::table($serviceTable)->leftJoin('clients', $serviceTable.'.infirmary_id', '=', 'clients.infirmary_id')
-                ->selectRaw('COUNT(clients.id) as count, clients.sex as name, clients.sex as abbr')
-                ->groupBy('clients.sex')
-                ->having('count', '>', 0)
-                ->get();
+        else{
+            if($getByColumn === '*')
+                return DegreeProgram::leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                    ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable . '.infirmary_id')
+                    ->select('degree_programs.name', 'degree_programs.abbr', DB::raw('COUNT(' . $serviceTable . '.id) as count'))
+                    ->groupBy('clients.sex', 'degree_programs.abbr')
+                    ->having('count', '>', 0)
+                    ->orderBy('degree_programs.abbr')
+                    ->get();
+            else
+                return DegreeProgram::leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
+                    ->leftJoin($serviceTable, 'clients.infirmary_id', '=', $serviceTable . '.infirmary_id')
+                    ->select('degree_programs.name', 'degree_programs.abbr', DB::raw('COUNT(' . $serviceTable . '.id) as count'))
+                    ->groupBy($getGroupBy, 'degree_programs.abbr')
+                    ->where('clients.year_lvl', $getByColumn)
+                    ->having('count', '>', 0)
+                    ->orderBy('degree_programs.abbr')
+                    ->get();
+        }
     }
 
 

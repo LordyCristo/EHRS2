@@ -127,6 +127,7 @@ export const Lab_Group_2 = Array(
     {id:'positive', name:'Positive'}
 );
 
+
 export const InOutPatient = Array(
     {id:0, name:'Outpatient'},
     {id:1, name:'In-patient'},

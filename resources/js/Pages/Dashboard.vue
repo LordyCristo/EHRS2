@@ -9,6 +9,7 @@ import BarChartGoogle from "@/Components/Generic/Charts/BarChartGoogle.vue";
 import LineChartGoogle from "@/Components/Generic/Charts/LineChartGoogle.vue";
 import PieChartGoogle from "@/Components/Generic/Charts/PieChartGoogle.vue";
 import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
+import {Sex} from "@/Legends/legends";
 </script>
 <script>
 export default {
@@ -43,7 +44,9 @@ export default {
                 }
             },
             getByTable: 'colleges',
-            getByColumn: 'sex',
+            getByColumn: 'bscs',
+            getGroupBy: 'civil_status',
+            byColumn: [],
             pieChartData: [],
             barChartData: [],
         }
@@ -54,9 +57,11 @@ export default {
                 params: {
                     getByTable: this.getByTable,
                     getByColumn: this.getByColumn,
+                    getGroupBy: this.getGroupBy,
                 }
             });
             this.data = await response.data;
+            this.byColumn = this.data.hematology.labels.map((label, index) => ({ id: index, name: label }))
         },
         async fetchPieChartData() {
             const response = await axios(route('api.summary'), {
@@ -91,27 +96,24 @@ export default {
             <h2 class="font-semibold text-xl text-center text-gray-800 leading-tight">
                 Summary of Records for Student
             </h2>
-            <SelectElement v-model="getByTable" :options="[
-                {id: 'colleges', name: 'College'},
-                //{id: 'departments', name: 'Department'},
-                {id: 'degree_programs', name: 'Program'},
-                // {id: 'sex', name:'Sex'},
-            ]" label="By"
-                           @change="fetchData"
-            />
-            <SelectElement  @change="fetchData" v-if="data.length" v-model="getByColumn" :options="data.hematology.labels.map((label, index) => ({ id: index, name: label }))" label="Type" />
+            <div class="grid grid-cols-3">
+                <SelectElement v-model="getByTable" :options="[
+                    {id: 'colleges', name: 'College'},
+                    //{id: 'departments', name: 'Department'},
+                    {id: 'degree_programs', name: 'Program'},
+                    // {id: 'sex', name:'Sex'},
+                ]" label="By"
+                                   @change="fetchData"
+                />
+                <SelectElement @change="fetchData" v-model="getGroupBy" :options="[
+                    {id: '*', name: 'All'},
+                    {id: 'sex', name:'Sex'},
+                    {id: 'civil_status', name: 'Civil Status'},
+                    {id: 'year_lvl', name: 'Year Level'},
+                ]" label="Group By" />
 
-            {{data.hematology}}
-
-            <!--            <PieChartGoogle :options="{title: 'Medical Records',}" :data="pieChartData" class="mx-auto" />-->
-<!--            <BarChartGoogle :options="{-->
-<!--        chart: {-->
-<!--            title: 'Hispoital Revenue',-->
-<!--            subtitle: 'Revenue Per Section: Monthly',-->
-<!--        },-->
-<!--        bars: 'vertical', // Required for Material Bar Charts.-->
-<!--    }" :data="barChartData" />-->
-<!--            <LineChartGoogle />-->
+                <SelectElement @change="fetchData" v-model="getByColumn" :options="byColumn" label="By Specific Group" />
+            </div>
 
             <button @click="fetchPieChartData" class="fixed bottom-3 right-3 bg-vsu-green px-2 py-1 rounded-md shadow-md">Refresh</button>
             <div v-if="data.hematology" class="w-[70rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">

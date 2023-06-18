@@ -16,6 +16,7 @@ import { Head } from '@inertiajs/vue3';
 import {markRaw} from "vue";
 import FinanceIcon from "@/Components/Icons/FinanceIcon.vue";
 import ERIcon from "@/Components/Icons/ERIcon.vue";
+import UserApproveIcon from "@/Components/Icons/UserApproveIcon.vue";
 
 
 export default {
@@ -243,6 +244,17 @@ export default {
                     isOpen: false,
                     icon: markRaw(MoreIcon),
                     form: true,
+                    method: null,
+                },
+                {
+                    show: this.$page.props.auth.user.role === 1,
+                    title: 'Confirm Users',
+                    link: 'user.approve',
+                    tabName: '/approve',
+                    subLinks: null,
+                    isOpen: false,
+                    icon: markRaw(UserApproveIcon),
+                    form: false,
                     method: null,
                 },
                 {

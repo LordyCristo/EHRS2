@@ -142,7 +142,9 @@
                     <span>Unable to retrieve Medical Records</span>
                 </div>
             </ViewForm>
-
+            <Link v-if="infirmary_id" :href="route('records.medcert', {id: infirmary_id})" class="absolute top-20 right-1/3 gap-1 py-1 px-4 bg-vsu-green text-white rounded-md duration-100 active:scale-95 hover:bg-vsu-olive">
+                Generate Medical Certificate
+            </Link>
         </div>
     </Laboratory>
 </template>

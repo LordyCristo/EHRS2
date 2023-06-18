@@ -32,6 +32,7 @@ class PaymentFactory extends Factory
             'collector_id' => $this->faker->randomElement($users),
             'total_amount' => $this->faker->numberBetween(100, 1000),
             'remarks' => $this->faker->sentence(),
+            'created_at' => $this->faker->dateTimeBetween('-2 year', 'now'),
         ];
     }
 }

@@ -4,17 +4,7 @@ import DataTable from '@/Components/DataTable/DataTable.vue';
 </script>
 <script>
 export default {
-    props: {
-        notifMessage: {
-            type: String,
-            required: false,
-        },
-        notifType: {
-            type: String,
-            required: false,
-        },
 
-    },
     data: () => ({
         apiLink: {
             // create form

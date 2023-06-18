@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AccessControlMiddleware;
+use App\Http\Middleware\AdminACM;
 use App\Http\Middleware\AmbulanceACM;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\DentalACM;
@@ -111,5 +112,6 @@ class Kernel extends HttpKernel
         'pacm' => PharmacyACM::class,
         'racm' => RadiologyACM::class,
         'ioacm' => IOACM::class,
+        'aacm' => AdminACM::class,
     ];
 }

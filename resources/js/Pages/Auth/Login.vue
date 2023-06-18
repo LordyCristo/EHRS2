@@ -44,7 +44,7 @@ const submit = () => {
             <template #description>
                 Please log in to your account. <br />
                 <div class="flex">
-                    <span class="text-red-600 mx-auto text-xs">*USHER staffs only*</span>
+                    <span class="text-red-600 mx-auto text-xs">*USHER staff only*</span>
                 </div>
             </template>
 

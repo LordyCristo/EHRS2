@@ -24,6 +24,7 @@ class PaymentsServiceFactory extends Factory
             'payment_id' => $this->faker->randomElement($paymentIds),
             'service_id' => $this->faker->randomElement($serviceIds),
             'fee' => $this->faker->randomFloat(2, 100, 1000),
+            'created_at' => $this->faker->dateTimeBetween('-2 year', 'now'),
         ];
     }
 }

@@ -33,6 +33,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/roles', function () {
-    return AccountRole::select(['id', 'name'])->get();
+    return AccountRole::select(['id', 'name'])->whereNotIn('id', [1])->orderBy('id')->get();
 })->name('api.roles');
 

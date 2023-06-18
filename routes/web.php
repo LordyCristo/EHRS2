@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ApprovalApi;
 use App\Http\Controllers\API\ClientApi;
 use App\Http\Controllers\API\DentalApi;
 use App\Http\Controllers\API\ERDetailApi;
@@ -49,6 +50,7 @@ use App\Models\Services;
 use App\Models\UrinalysisRecord;
 use App\Models\Xray;
 use App\Models\XrayRequest;
+use Carbon\Carbon;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -89,6 +91,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/monthly', [DashboardController::class, 'monthly'])->name('api.monthly');
     });
 
+    // Routes for the User Approval Section
+    Route::prefix('approve')->middleware('aacm')->group(callback: function () {
+        Route::get('/', [ApprovalApi::class, 'index'])->name('user.approve');
+        Route::prefix('api')->group(callback: function () {
+            Route::get('/all', [ApprovalApi::class, 'tableApi'])->name('api.user.approval');
+            Route::put('/approve/{id}', [ApprovalApi::class, 'approve'])->name('api.user.approve');
+            Route::put('/reject/{id}', [ApprovalApi::class, 'update'])->name('api.user.reject');
+        });
+    });
+
     // Routes for the Client Management Section
     Route::prefix('clients')->middleware('ioacm')->group(callback: function () {
         Route::get('/', [ClientController::class, 'index'])->name('client.index');
@@ -110,7 +122,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
     });
 
-    Route::prefix('records')->group(function () {
+    Route::prefix('records')->middleware('aacm')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Records/RecordIndex');
         })->name('records');
@@ -137,10 +149,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             ]);
         })->name('records.show');
 
-        Route::get('/medical-certificate/', function (){
+        Route::get('/medical-certificate/{id}', function (){
             return Inertia::render('Records/MedicalCertificate',[
-                'data' => new MedicalRecordResource( Client::selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
-                    ->where('clients.infirmary_id', request()->id))
+                'data' => new MedicalRecordResource(Client::withCount('hematology')
+                    ->withCount('fecalysis')
+                    ->withCount('urinalysis')
+                    ->withCount('xray')
+                    ->where('infirmary_id', request()->id)
+                    ->whereYear('created_at', Carbon::now()->year)
+                    ->first())
             ]);
         })->name('records.medcert');
 

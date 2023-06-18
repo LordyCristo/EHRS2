@@ -12,6 +12,7 @@ use App\Models\PaymentsService;
 use App\Models\Services;
 use App\Models\UrinalysisRecord;
 use App\Models\Xray;
+use App\Models\XrayRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Client;
@@ -120,7 +121,7 @@ class DashboardController extends Controller
                 'radiology' => [
                     'title' => 'Radiology Report',
                     'description' => 'Number of radiology records per Program, Department, and College',
-                    'records_count' => Xray::all()->count(),
+                    'records_count' => Xray::whereNotNull('rqst_id')->count(),
                     'records_count_per_department' => Department::leftJoin('degree_programs', 'departments.id', '=', 'degree_programs.department_id')
                         ->leftJoin('clients', 'degree_programs.id', '=', 'clients.program_id')
                         ->leftJoin('xray_requests', 'clients.infirmary_id', '=', 'xray_requests.infirmary_id')

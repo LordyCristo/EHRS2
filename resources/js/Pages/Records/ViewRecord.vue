@@ -6,9 +6,6 @@
                     Generate Medical Certificate
                 </Link>
             </div>
-            <div>
-                {{ $page.props.data.data.medical_certificate }}
-            </div>
             <div class="flex flex-col justify-center">
                 <ViewForm :link="route('records')">
                     <ViewHeader>MEDICAL RECORD</ViewHeader>

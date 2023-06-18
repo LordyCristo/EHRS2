@@ -142,6 +142,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         })->name('records.medcert');
         Route::prefix('api')->group(callback: function () {
             Route::post('/new', [MedicalCertificateApi::class, 'store'])->name('api.certificate.store');
+            Route::get('/show/{id}', [MedicalCertificateApi::class, 'show'])->name('api.certificate.show');
+            Route::get('/', [MedicalRecordApi::class, 'index'])->name('api.record.export');
         });
     });
 

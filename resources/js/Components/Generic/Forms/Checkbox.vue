@@ -5,7 +5,7 @@ export default {
     }),
     props: {
         modelValue: {
-            type: Boolean,
+            type: [Boolean, Number],
             default: false
         },
         label: {

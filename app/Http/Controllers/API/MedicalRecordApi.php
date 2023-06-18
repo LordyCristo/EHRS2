@@ -19,7 +19,7 @@ class MedicalRecordApi extends Controller
             ->withCount('fecalysis')
             ->withCount('urinalysis')
             ->withCount('xray')
-            ->withCount('dental'));
+            ->withCount('dental')->get());
     }
 
     /**

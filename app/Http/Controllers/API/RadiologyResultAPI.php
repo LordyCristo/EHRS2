@@ -156,16 +156,21 @@ class RadiologyResultAPI extends Controller
             $searchBy = $request->input('search_by', 'infirmary_id');
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
-                    $q->where('xray_requests.id', 'like', '%' . $search . '%')
-                        ->orwhere('xray_requests.infirmary_id', 'like', '%' . $search . '%')
+                    $q->where('xrays.rqst_id', 'like', '%' . $search . '%')
+                        ->orwhere('clients.infirmary_id', 'like', '%' . $search . '%')
                         ->orWhereRaw('CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) LIKE ?', '%' . $search . '%')
                         ->orWhere('status', 'like', '%' . $search . '%');
-                } elseif ($searchBy == 'name'){
+                } elseif ($searchBy === 'name' || $searchBy === 'infirmary_id') {
                     $q->where('clients.last_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.first_name', 'like', '%' . $search . '%')
-                        ->orWhere('clients.middle_name', 'like', '%' . $search . '%');
-                } else {
+                        ->orWhere('clients.middle_name', 'like', '%' . $search . '%')
+                        ->orWhere('clients.suffix', 'like', '%' . $search . '%')
+                        ->orWhere('clients.infirmary_id', 'like', '%' . $search . '%');
+                } elseif ($searchBy === 'status') {
                     $q->where('xray_requests.' . $searchBy, 'like', '%' . $search . '%');
+                }
+                else {
+                    $q->where('xrays.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });
         }

@@ -24,8 +24,8 @@
                 </div>
                 <div class="grid grid-cols-1 gap-5 mb-16">
                     <ViewField label="Radiographic Findings" :value="data.xray.radiographic_findings" />
-                    <div v-if="data.xray.radiograph">
-                        {{ data.xray.radiograph.image }}
+                    <div v-if="data.xray.radiograph" class="flex justify-center">
+                        <img :src="data.xray.radiograph.image" class="uploading-image max-w-xl"  alt="sass"/>
                     </div>
                     <div v-else>
                         No Radiographic image

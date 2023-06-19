@@ -29,16 +29,19 @@
                     <span class="uppercase">{{rqst_details.age}}</span>
                 </div>
             </div>
-            {{ form.data() }}
             <!--end of header form-->
+
             <!--urinalysis body form-->
             <div class="my-2 border-y py-5">
                 <div class="grid grid-cols-1 gap-1">
                     <InputTextAuto v-model="form.procedure" required label="Prodecure" :options="procedures" :errorMsg="form.errors.procedure" @input="form.errors['procedure'] = null" />
                 </div>
-                <div class="grid grid-cols-1 gap-1">
-                    <input type="file" @change="onFileChange" accept="image/jpeg,image/png,image/jpg" />
-<!--                    <InputText v-model="form.image" type="file" label="Upload Radiolograph Image" @change="onFileChange" accept="image/jpeg,image/png,image/jpg" :errorMsg="form.errors.image" @input="form.errors['image'] = null" />-->
+                <div class="flex flex-col my-2">
+                    <label class="text-sm font-medium text-gray-800 mb-1">Upload X-ray Image</label>
+                    <input type="file" accept="image/jpeg" @change=uploadImage>
+                </div>
+                <div v-if="form.image" class="flex justify-center my-2">
+                    <img :src="form.image" class="uploading-image max-w-xl max-h-60"  alt="sass"/>
                 </div>
                 <div class="grid grid-cols-1 gap-1">
                     <InputTextArea v-model="form.radiographic_findings" required label="Radiolographic Findings" :errorMsg="form.errors.radiographic_findings" @input="form.errors['radiographic_findings'] = null" />
@@ -104,9 +107,16 @@ export default {
         onFocusClearError(field) {
             this.form.errors[field] = null;
         },
-        onFileChange(event) {
-            this.form.image = event.target.files[0].name;
-        },
+        uploadImage(e){
+            const image = e.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(image);
+            reader.onload = e =>{
+                this.previewImage = e.target.result;
+                this.form.image = this.previewImage;
+                console.log(this.previewImage);
+            };
+        }
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;

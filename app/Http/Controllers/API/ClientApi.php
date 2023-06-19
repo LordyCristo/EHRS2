@@ -69,11 +69,12 @@ class ClientApi extends Controller
     public function update(ClientRequest $request)
     {
         $client = Client::findOrFail($request->id);
-        $update = $client->update($request->all());
+        $update = $client->update($request->validated());
         // update the er details
         if ($request->has('is_emergency') && $request->input('is_emergency')) {
             //make an instance of the er details request
             $erDetailsRequest = new ERDetailsRequest($request->all());
+
             // check if er details exists
             if ($client->erDetails()->exists()) {
                 $client->erDetails()->update($erDetailsRequest->all());

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ClientRequest;
+use App\Http\Requests\ERDetailsRequest;
 use App\Http\Resources\ClientCollection;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
@@ -45,6 +46,37 @@ class ERDetailApi extends Controller
                 'message' => $temp?'Successfully deleted '.$temp.' Client record/s':'Failed to delete Client record with id '. $request->id,
             ]
         ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(ClientRequest $request)
+    {
+        $client = Client::findOrFail($request->id);
+        //remove infirmary_id from the request
+        $request->offsetUnset('infirmary_id');
+        $update = $client->update($request->all());
+        // update the er details
+        if ($request->has('is_emergency') && $request->input('is_emergency')) {
+            //make an instance of the er details request
+            $erDetailsRequest = new ERDetailsRequest($request->all());
+            // check if er details exists
+            if ($client->erDetails()->exists()) {
+                $client->erDetails()->update($erDetailsRequest->validated());
+            } else {
+                $client->erDetails()->create($erDetailsRequest->validated());
+            }
+        }
+
+        return response()->json([
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => $update?'success':'failed',
+                'message' => $update?'Successfully updated Client record id '.$request->id:'Failed to update Client record with id '. $request->id,
+            ]
+        ])->setStatusCode($update?202:400);
     }
 
     /**

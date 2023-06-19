@@ -186,7 +186,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     Route::prefix('/emergency')->group(function () {
         Route::get('/', [ERDetailContoller::class, 'index'])->name('er.index');
         Route::get('/new', [ERDetailContoller::class, 'create'])->name('er.new.client');
-        Route::get('/edit/{id}', [ERDetailContoller::class, 'edit'])->name('er.edit.client');
+        Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('er.edit.client');
         //Route::get('/show', [ERDetailContoller::class, 'show'])->name('er.show.client');
         Route::prefix('/api')->group(function () {
             // Emergency Room GET ALL route

@@ -25,7 +25,25 @@ export default {
                 labels: [],
                 datasets: [],
             },
-            options: {
+            optionsBarchart: {
+                responsive: true,
+                plugins: {
+                    //display the legends
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    title: {
+                        display: false,
+                        text: 'Records per College'
+                    },
+                    // automatically assign colors
+                    colors: {
+                        enabled: true,
+                    }
+                }
+            },
+            optionsPieChart: {
                 responsive: true,
                 plugins: {
                     //display the legends
@@ -34,18 +52,19 @@ export default {
                         position: 'right',
                     },
                     title: {
-                        display: true,
-                        text: 'Records per College'
+                        display: false,
+                        text: 'Records per College',
                     },
                     // automatically assign colors
                     colors: {
-                        enabled: true
+                        enabled: true,
                     }
                 }
             },
             getByTable: 'colleges',
-            getByColumn: 'bscs',
-            getGroupBy: 'civil_status',
+            getBySpecific: null,
+            getGroupBy: '*',
+            getSpecific: 'BSCS',
             byColumn: [],
             pieChartData: [],
             barChartData: [],
@@ -56,8 +75,9 @@ export default {
             const response = await axios(route('api.monthly.summary'), {
                 params: {
                     getByTable: this.getByTable,
-                    getByColumn: this.getByColumn,
+                    getBySpecific: this.getBySpecific,
                     getGroupBy: this.getGroupBy,
+                    getSpecific: this.getSpecific,
                 }
             });
             this.data = await response.data;
@@ -94,7 +114,7 @@ export default {
     <AppLayout title="Dashboard">
         <div class="flex flex-col justify-center">
             <h2 class="font-semibold text-xl text-center text-gray-800 leading-tight">
-                Summary of Records for Student
+                Summary of Records for Students
             </h2>
             <div class="grid grid-cols-3">
                 <SelectElement v-model="getByTable" :options="[
@@ -111,30 +131,74 @@ export default {
                     {id: 'civil_status', name: 'Civil Status'},
                     {id: 'year_lvl', name: 'Year Level'},
                 ]" label="Group By" />
-
-                <SelectElement @change="fetchData" v-model="getByColumn" :options="byColumn" label="By Specific Group" />
             </div>
-
-            <button @click="fetchPieChartData" class="fixed bottom-3 right-3 bg-vsu-green px-2 py-1 rounded-md shadow-md">Refresh</button>
-            <div v-if="data.hematology" class="w-[70rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
-                <BarChart :data="data.hematology" :options="options"></BarChart>
-            </div>
-            <div class="grid grid-cols-2">
+            <div class="flex flex-row items-center justify-center">
+                <div class="flex flex-col items-center justify-center">
+                    <h1 class="font-bold">Number of Registered Students</h1>
+                    <div v-if="data.client" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
+                        <BarChart :data="data.client" :options="optionsBarchart"></BarChart>
+                    </div>
+                </div>
                 <div v-if="data.hematology" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
-                    <PieChart :data="data.hematology" :options="options"></PieChart>
+                    <PieChart :data="data.hematology" :options="optionsPieChart"></PieChart>
+                </div>
+            </div>
+
+            <div class="flex flex-row items-center justify-center">
+                <div class="flex flex-col items-center justify-center">
+                    <h1 class="font-bold">Number of Clients with Hematology Record</h1>
+                    <div v-if="data.hematology" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
+                        <BarChart :data="data.hematology" :options="optionsBarchart"></BarChart>
+                    </div>
+                </div>
+                <div v-if="data.hematology" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
+                    <PieChart :data="data.hematology" :options="optionsPieChart"></PieChart>
+                </div>
+            </div>
+            <div class="flex flex-row items-center justify-center">
+                <div class="flex flex-col items-center justify-center">
+                    <h1 class="font-bold">Number of Clients with Fecalysis Record</h1>
+                    <div v-if="data.fecalysis" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
+                        <BarChart :data="data.fecalysis" :options="optionsBarchart"></BarChart>
+                    </div>
                 </div>
                 <div v-if="data.fecalysis" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
-                    <PieChart :data="data.fecalysis" :options="options"></PieChart>
-                </div>
-                <div v-if="data.urinalysis" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
-                    <PieChart :data="data.urinalysis" :options="options"></PieChart>
-                </div>
-                <div v-if="data.radiology" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
-                    <PieChart :data="data.radiology" :options="options"></PieChart>
+                    <PieChart :data="data.fecalysis" :options="optionsPieChart"></PieChart>
                 </div>
             </div>
-
-
+            <div class="flex flex-row items-center justify-center">
+                <div class="flex flex-col items-center justify-center">
+                    <h1 class="font-bold">Number of Clients with Urinalysis Record</h1>
+                    <div v-if="data.urinalysis" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
+                        <BarChart :data="data.urinalysis" :options="optionsBarchart"></BarChart>
+                    </div>
+                </div>
+                <div v-if="data.urinalysis" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
+                    <PieChart :data="data.urinalysis" :options="optionsPieChart"></PieChart>
+                </div>
+            </div>
+            <div class="flex flex-row items-center justify-center">
+                <div class="flex flex-col items-center justify-center">
+                    <h1 class="font-bold">Number of Clients with Radiology Record</h1>
+                    <div v-if="data.radiology" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
+                        <BarChart :data="data.radiology" :options="optionsBarchart"></BarChart>
+                    </div>
+                </div>
+                <div v-if="data.radiology" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
+                    <PieChart :data="data.radiology" :options="optionsPieChart"></PieChart>
+                </div>
+            </div>
+            <div class="flex flex-row items-center justify-center">
+                <div class="flex flex-col items-center justify-center">
+                    <h1 class="font-bold">Number of Clients with Dental Record</h1>
+                    <div v-if="data.dental" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
+                        <BarChart :data="data.dental" :options="optionsBarchart"></BarChart>
+                    </div>
+                </div>
+                <div v-if="data.dental" class="h-auto px-4 py-5 bg-white rounded-lg text-center">
+                    <PieChart :data="data.dental" :options="optionsPieChart"></PieChart>
+                </div>
+            </div>
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-3 my-5 w-full">
                     <CardSection :cards="cards" />

@@ -36,7 +36,9 @@ class ERDetailContoller extends Controller
     {
         $temp = $this->getFlags();
         return Inertia::render('ER/EREditClient', [
-            'data' => new ClientResource(Client::join('er_details', 'clients.infirmary_id', '=', 'er_details.infirmary_id')->findOrFail($request->id)),
+            'data' => new ClientResource(Client::join('er_details', 'clients.infirmary_id', '=', 'er_details.infirmary_id')
+                ->select('clients.id as client_id', 'clients.*', 'er_details.*')
+                ->findOrFail($request->id)),
             'degree_programs' => $temp['degree_programs'],
             'client_types' => $temp['client_types'],
             'last_client_id' => $temp['last_client_id'],

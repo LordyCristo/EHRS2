@@ -57,7 +57,6 @@
                     </div>
                 </div>
             </div>
-
             <template v-if="form.is_emergency">
                 <div class="grid grid-cols-1">
                     <div class="grid grid-cols-4">

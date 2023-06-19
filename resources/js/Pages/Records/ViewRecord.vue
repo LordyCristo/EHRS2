@@ -9,12 +9,13 @@
             <div class="flex flex-col justify-center">
                 <ViewForm :link="route('records')">
                     <ViewHeader>MEDICAL RECORD</ViewHeader>
-                    <div class="grid grid-rows-1 gap-2 mb-5" v-if="data">
-                        <div class="grid grid-cols-4 gap-5">
+                    <div class="grid grid-rows-1 mb-5" v-if="data">
+                        <div class="flex flex-row justify-between">
                             <ViewField label="No." :value="data.infirmary_id" />
+                            <ViewField label="Date Issued" :value="formattedDate(data.created_at)" />
                         </div>
                         <div class="grid grid-cols-2 gap-5">
-                            <ViewField label="Name in Full" :value="formattedFullName(data)" />
+                            <ViewField label="Full name" :value="formattedFullName(data)" />
                             <div  class="grid grid-cols-2 gap-5">
                                 <ViewField label="Age" :value="data.age" />
                                 <ViewField label="Sex" :value="data.sex.toString().toUpperCase()" />
@@ -31,6 +32,34 @@
                             <ViewField label="Current Address" :value="data.curr_address" />
                             <ViewField label="Contact No." :value="data.phone" />
                         </div>
+                        <div v-if="data.physical_exam.length" v-for="physical_exam in data.physical_exam" class="my-5">
+                            <div class="grid grid-cols-4 gap-3">
+                                <ViewFieldBelow label="Weight" :value="physical_exam.weight + ' kg'" />
+                                <ViewFieldBelow label="Height" :value="physical_exam.height + ' cm'" />
+                                <ViewFieldBelow label="Blood Pressure" :value="physical_exam.blood_pressure" />
+                                <ViewFieldBelow label="Pulse" :value="physical_exam.pulse" />
+                                <ViewFieldBelow label="Previous Diseases and Operation" :value="physical_exam.prev_illns_oprtn" />
+                                <ViewFieldBelow label="Immunization or Vaccination" :value="physical_exam.immnztn_vccntn" />
+                                <ViewFieldBelow label="Head and Neck" :value="physical_exam.head_neck" />
+                                <ViewFieldBelow label="Scalp and Face" :value="physical_exam.scalp_face" />
+                                <ViewFieldBelow label="Neck and Thyroid" :value="physical_exam.neck_thyroid" />
+                                <ViewFieldBelow label="Lymph Glands" :value="physical_exam.lymph_glands" />
+                                <ViewFieldBelow label="Vision with glasses" :value="physical_exam.vision_with_glasses" />
+                                <ViewFieldBelow label="Vision without glasses" :value="physical_exam.vision_without_glasses" />
+                                <ViewFieldBelow label="Tonsils" :value="physical_exam.mouth_throat_tonsils" />
+                                <ViewFieldBelow label="Teeth" :value="physical_exam.mouth_throat_teeth" />
+                                <ViewFieldBelow label="Heart" :value="physical_exam.heart" />
+                                <ViewFieldBelow label="Lung" :value="physical_exam.lung" />
+                                <ViewFieldBelow label="Abdomen Tenderness" :value="physical_exam.abdomen_tenderness" />
+                                <ViewFieldBelow label="Abdominal Masses" :value="physical_exam.abdomen_mass" />
+                                <ViewFieldBelow label="Abdomen Scars" :value="physical_exam.abdomen_scars" />
+                                <ViewFieldBelow label="Reproductive Organs" :value="physical_exam.abdomen_rep_organ" />
+                                <ViewFieldBelow label="Deformities" :value="physical_exam.spine_extrts_deformities" />
+                                <ViewFieldBelow label="Varicosities" :value="physical_exam.spine_extrts_varicosities" />
+                                <ViewFieldBelow label="Feet" :value="physical_exam.spine_extrts_feet" />
+                                <ViewFieldBelow label="Skin Diseases" :value="physical_exam.skin_diseases" />
+                            </div>
+                        </div>
                         <div v-if="!data.fecalysis.length && !data.hematology.length && !data.urinalysis.length && !data.xray.length"
                              class="text-center font-bold text-xl" >
                             <span>No Medical Records Found</span>
@@ -38,7 +67,7 @@
                         <div v-if="data.fecalysis.length">
                             <h1 class="w-full text-center font-semibold text-gray-900 uppercase">Fecalysis Results</h1>
                             <div v-for="fecalysis in data.fecalysis" class="flex flex-col gap-3 rounded-md my-3">
-                                <div class="grid grid-cols-2 text-white px-2 py-1 rounded-tl-md rounded-tr-md" style="background-color: rgb(6, 67, 13); color: white;">
+                                <div class="grid grid-cols-2 text-white px-2 py-1" style="background-color: rgb(6, 67, 13); color: white;">
                                     <ViewField label="Date of Examination" :value="formattedDate(fecalysis.created_at)" />
                                     <div class="flex flex-row justify-between items-center">
                                         <ViewField label="Status" :value="fecalysis.status.toString().toUpperCase()" />
@@ -62,7 +91,7 @@
                         <div v-if="data.urinalysis.length">
                             <h1 class="w-full text-center font-semibold text-gray-900 uppercase">Urinalysis Results</h1>
                             <div v-for="urinalysis in data.urinalysis" class="flex flex-col gap-3 rounded-md my-3">
-                                <div class="grid grid-cols-2 text-white px-2 py-1 rounded-tl-md rounded-tr-md" style="background-color: rgb(6, 67, 13); color: white;">
+                                <div class="grid grid-cols-2 text-white px-2 py-1" style="background-color: rgb(6, 67, 13); color: white;">
                                     <ViewField label="Date of Examination" :value="formattedDate(urinalysis.created_at)" />
                                     <ViewField label="Status" :value="urinalysis.status.toString().toUpperCase()" />
                                 </div>
@@ -94,7 +123,7 @@
                         <div v-if="data.hematology.length">
                             <h1 class="w-full text-center font-semibold text-gray-900 uppercase">Hematology Results</h1>
                             <div v-for="hematology in data.hematology" class="flex flex-col gap-3 rounded-md my-3">
-                                <div class="grid grid-cols-2 text-white px-2 py-1 rounded-tl-md rounded-tr-md" style="background-color: rgb(6, 67, 13); color: white;">
+                                <div class="grid grid-cols-2 text-white px-2 py-1" style="background-color: rgb(6, 67, 13); color: white;">
                                     <ViewField label="Date of Examination" :value="formattedDate(hematology.created_at)" />
                                     <ViewField label="Status" :value="hematology.status.toString().toUpperCase()" />
                                 </div>
@@ -115,7 +144,7 @@
                         <div v-if="data.xray.length">
                             <h1 class="w-full text-center font-semibold text-gray-900 uppercase">Radiology Results</h1>
                             <div v-for="xray in data.xray" class="flex flex-col gap-3 rounded-md my-3">
-                                <div class="grid grid-cols-2 text-white px-2 py-1 rounded-tl-md rounded-tr-md" style="background-color: rgb(6, 67, 13); color: white;">
+                                <div class="grid grid-cols-2 text-white px-2 py-1" style="background-color: rgb(6, 67, 13); color: white;">
                                     <ViewField label="Date of Examination" :value="formattedDate(xray.created_at)" />
                                     <ViewField label="Status" :value="xray.status.toString().toUpperCase()" />
                                 </div>
@@ -130,7 +159,7 @@
                         <div v-if="data.dental.length">
                             <h1 class="w-full text-center font-semibold text-gray-900 uppercase">Dental Results</h1>
                             <div v-for="dental in data.dental" class="flex flex-col gap-3 rounded-md my-3">
-                                <div class="grid grid-cols-2 text-white px-2 py-1 rounded-tl-md rounded-tr-md" style="background-color: rgb(6, 67, 13); color: white;">
+                                <div class="grid grid-cols-2 text-white px-2 py-1" style="background-color: rgb(6, 67, 13); color: white;">
                                     <ViewField label="Date of Examination" :value="formattedDate(dental.created_at)" />
                                     <ViewField label="Status" :value="dental.status.toString().toUpperCase()" />
                                 </div>
@@ -158,6 +187,7 @@ import Laboratory from '@/Pages/Laboratories.vue';
 import ViewForm from "@/Components/Generic/Forms/ViewForm.vue";
 import ViewHeader from "@/Components/Generic/Forms/ViewHeader.vue";
 import ViewField from "@/Components/Generic/Forms/ViewField.vue";
+import ViewFieldBelow from "@/Components/Generic/Forms/ViewFieldBelow.vue";
 import ViewDtLabel from "@/Components/Generic/Forms/ViewDtLabel.vue";
 import ViewDtResult from "@/Components/Generic/Forms/ViewDtResult.vue";
 import ViewDtNote from "@/Components/Generic/Forms/ViewDtNote.vue";
@@ -177,6 +207,7 @@ export default {
     }),
     mounted() {
         this.data = this.$page.props.data.data;
+        //this.fetchData();
         this.infirmary_id = this.data.infirmary_id;
     },
     methods: {
@@ -186,6 +217,13 @@ export default {
         formattedDate(date) {
             return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
         },
+        async fetchData(){
+            await axios.get(route('api.record.show', 102))
+                .then(res => {
+                    this.data = res.data;
+                    console.log(this.data);
+                })
+        }
     },
 }
 </script>

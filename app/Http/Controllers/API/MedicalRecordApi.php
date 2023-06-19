@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MedicalRecordCollection;
+use App\Http\Resources\MedicalRecordResource;
 use App\Models\Client;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,9 @@ class MedicalRecordApi extends Controller
             ->withCount('fecalysis')
             ->withCount('urinalysis')
             ->withCount('xray')
-            ->withCount('dental')->get());
+            ->withCount('dental')
+            ->withCount('physicalExam')
+            ->get());
     }
 
     /**
@@ -33,9 +36,31 @@ class MedicalRecordApi extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        //
+        return new MedicalRecordResource(Client::with(['hematology' => function ($query) {
+            $query->orderBy('created_at', 'desc')->first();
+        }])
+        ->with(['fecalysis' => function ($query) {
+            $query->orderBy('created_at', 'desc')->first();
+        }])
+        ->with(['urinalysis' => function ($query) {
+            $query->orderBy('created_at', 'desc')->first();
+        }])
+        ->with(['xray' => function ($query) {
+            $query->orderBy('created_at', 'desc')->first();
+        }])
+        ->with(['dental' => function ($query) {
+            $query->orderBy('created_at', 'desc')->first();
+        }])
+        ->with(['medicalCertificate' => function ($query) {
+            $query->orderBy('created_at', 'desc')->first();
+        }])
+        ->with(['physicalExam' => function ($query) {
+            $query->orderBy('created_at', 'desc')->first();
+        }])
+        ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
+        ->find($request->id));
     }
 
     /**
@@ -65,6 +90,7 @@ class MedicalRecordApi extends Controller
             ->withCount('urinalysis')
             ->withCount('xray')
             ->withCount('dental')
+            ->withCount('physicalExam')
             ->selectRaw('CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
             ->groupBy('clients.infirmary_id');
 
@@ -83,7 +109,8 @@ class MedicalRecordApi extends Controller
                     $q->where('clients.last_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.first_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.middle_name', 'like', '%' . $search . '%');
-                } else {
+                }
+                else {
                     $q->where('clients.' . $searchBy, 'like', '%' . $search . '%');
                 }
             });

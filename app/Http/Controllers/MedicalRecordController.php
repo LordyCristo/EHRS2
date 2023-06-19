@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MedicalRecordResource;
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -34,9 +36,33 @@ class MedicalRecordController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
-        return Inertia::render('Records/ViewRecord');
+        return Inertia::render('Records/ViewRecord',[
+            'data' => new MedicalRecordResource(Client::with(['hematology' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->first();
+                }])
+                ->with(['fecalysis' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->first();
+                }])
+                ->with(['urinalysis' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->first();
+                }])
+                ->with(['xray' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->first();
+                }])
+                ->with(['dental' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->first();
+                }])
+                ->with(['medicalCertificate' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->first();
+                }])
+                ->with(['physicalExam' => function ($query) {
+                    $query->orderBy('created_at', 'desc')->first();
+                }])
+                ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
+                ->find($request->id))
+        ]);
     }
 
     /**

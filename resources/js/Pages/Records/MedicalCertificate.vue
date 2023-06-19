@@ -51,7 +51,7 @@
                         <p>
                             <b>Physician:</b>
                             <InputTextAuto v-model="form.physician_id" :errorMsg="form.errors.physician_id"
-                                           @input="form.errors['physician_id'] = null"
+                                           @change="form.errors.physician_id = null"
                                            :options="physicians"/>
                             <ViewField :value="formattedDate()" label="Date Issued"/>
                         </p>

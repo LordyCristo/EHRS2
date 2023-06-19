@@ -28,6 +28,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FecalysisController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HematologyController;
+use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PhysicalExamController;
@@ -165,21 +166,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             return Inertia::render('Records/EditRecord');
         })->name('editRecord');
 
-        Route::get('/show/{id}', function () {
-            return Inertia::render('Records/ViewRecord',[
-                'data' => new MedicalRecordResource( Client::with('hematology')
-                    ->with('fecalysis')
-                    ->with('urinalysis')
-                    ->with('xray')
-                    ->with('dental')
-                    ->with('medicalCertificate')
-                    ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
-                    ->find(request()->id)),
-            ]);
-        })->name('records.show');
+        Route::get('/show/{id}', [MedicalRecordController::class,'show'])->name('records.show');
 
         Route::prefix('/api')->group(function (){
             Route::get('/all', [MedicalRecordApi::class, 'tableApi'])->name('api.record.index');
+            Route::get('/show', [MedicalRecordApi::class, 'show'])->name('api.record.show');
         });
 
         Route::get('/api/medical-certificate', [MedicalRecordApi::class, 'medicalCertificate'])->name('api.record.medcert');

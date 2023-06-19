@@ -87,4 +87,9 @@ class Client extends Model
     {
         return $this->hasMany(MedicalCertificate::class, 'infirmary_id', 'infirmary_id');
     }
+
+    function physicalExam()
+    {
+        return $this->hasMany(PhysicalExam::class, 'infirmary_id', 'infirmary_id');
+    }
 }

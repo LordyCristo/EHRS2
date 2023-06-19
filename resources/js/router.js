@@ -266,6 +266,21 @@ const routes = [
         name: 'records.medcert',
         component: () => import('@/Pages/Records/MedicalCertificate.vue')
     },
+    {
+        path:'/physicalexam',
+        name: 'physicalexam.index',
+        component: () => import('@/Pages/PhysicalExam/PhysicalExamIndex.vue')
+    },
+    {
+        path:'/physicalexam/new',
+        name: 'physicalexam.create',
+        component: () => import('@/Pages/PhysicalExam/NewPhysicalExam.vue')
+    },
+    {
+        path:'/physicalexam/edit',
+        name: 'physicalexam.edit',
+        component: () => import('@/Pages/PhysicalExam/EditPhysicalExam.vue')
+    },
 
 ]
 

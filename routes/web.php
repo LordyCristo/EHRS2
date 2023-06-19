@@ -13,6 +13,7 @@ use App\Http\Controllers\API\HematologyApi;
 use App\Http\Controllers\API\MedicalCertificateApi;
 use App\Http\Controllers\API\MedicalRecordApi;
 use App\Http\Controllers\API\PaymentApi;
+use App\Http\Controllers\API\PhysicalExamApi;
 use App\Http\Controllers\API\RadiologyRequestApi;
 use App\Http\Controllers\API\RadiologyResultAPI;
 use App\Http\Controllers\API\ServiceApi;
@@ -29,6 +30,7 @@ use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HematologyController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PhysicalExamController;
 use App\Http\Controllers\RadiologyRequestController;
 use App\Http\Controllers\RadiologyResultController;
 use App\Http\Controllers\ServiceController;
@@ -201,6 +203,20 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/all', [ERDetailApi::class, 'tableApi'])->name('api.er.table');
             // Emergency Room import from a CSV file
             Route::post('/import', [ERDetailApi::class, 'import'])->name('api.er.import');
+        });
+    });
+
+    //Routes for physical examination
+    Route::prefix('physicalexam')->middleware('aacm')->group(function (){
+        Route::get('/', [PhysicalExamController::class, 'index'])->name('physicalexam.index');
+        Route::get('/new', [PhysicalExamController::class, 'create'])->name('physicalexam.create');
+        Route::get('/edit/{id}', [PhysicalExamController::class, 'edit'])->name('physicalexam.edit');
+        Route::prefix('/api')->group(function (){
+            Route::get('/', [PhysicalExamApi::class, 'index'])->name('api.physicalexam.index');
+            Route::post('/', [PhysicalExamApi::class, 'store'])->name('api.physicalexam.store');
+            Route::put('/{id}', [PhysicalExamApi::class, 'update'])->name('api.physicalexam.update');
+            Route::delete('/{id}', [PhysicalExamApi::class, 'destroy'])->name('api.physicalexam.destroy');
+            Route::get('/all', [PhysicalExamApi::class, 'tableApi'])->name('api.physicalexam.table');
         });
     });
 

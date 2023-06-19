@@ -17,6 +17,7 @@ import {markRaw} from "vue";
 import FinanceIcon from "@/Components/Icons/FinanceIcon.vue";
 import ERIcon from "@/Components/Icons/ERIcon.vue";
 import UserApproveIcon from "@/Components/Icons/UserApproveIcon.vue";
+import PhysicalExamIcon from "@/Components/Icons/PhysicalExamIcon.vue";
 
 
 export default {
@@ -103,6 +104,17 @@ export default {
                     subLinks: null,
                     isOpen: false,
                     icon: markRaw(MedicalRecordIcon),
+                    form: false,
+                    method: null,
+                },
+                {
+                    show: this.$page.props.auth.user.role === 1,
+                    title: 'Physical Exam',
+                    link: 'physicalexam.index',
+                    tabName: '/physicalexam',
+                    subLinks: null,
+                    isOpen: false,
+                    icon: markRaw(PhysicalExamIcon),
                     form: false,
                     method: null,
                 },

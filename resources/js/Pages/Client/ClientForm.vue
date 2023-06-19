@@ -13,7 +13,7 @@
                 </div>
                 <div class="grid grid-cols-2">
                     <div class="grid grid-cols-2">
-                        <InputText v-model="form.infirmary_id" label="Infirmary No." required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
+                        <InputText v-model="form.infirmary_id" :disabled="true" label="Infirmary No." required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
                         <InputText v-model="form.id_number" label="Student ID No." :errorMsg="form.errors.id_number" autofocus @input="onFocusClearError('id_number'); formatIdNumber($event); " />
 
                     </div>

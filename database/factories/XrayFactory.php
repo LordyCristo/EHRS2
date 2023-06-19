@@ -3,11 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Xray;
 use App\Models\XrayRequest;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Xray>
+ * @extends Factory<Xray>
  */
 class XrayFactory extends Factory
 {

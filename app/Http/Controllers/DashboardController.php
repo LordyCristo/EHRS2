@@ -255,16 +255,16 @@ class DashboardController extends Controller
         $radiology = $this->getRecordsCount($request->getByTable, $request->getBySpecific, $request->getGroupBy, $request->getSpecific, 'xray_requests');
         $dental = $this->getRecordsCount($request->getByTable, $request->getBySpecific, $request->getGroupBy, $request->getSpecific, 'dental_records');
         $labels = $hematology->pluck('name')->toArray();
-        if($request->getGroupBy === 'sex'){
-            $labels = ['Male','Female'];
-        } elseif ($request->getGroupBy === 'civil_status'){
-            $labels = ['Single','Separated','Married','Widowed','Divorced'];
-        } elseif ($request->getGroupBy === 'year_lvl'){
-            $labels = ['1st Year','2nd Year','3rd Year','4th Year','5th Year','6th Year'];
-        }
+//        if($request->getGroupBy === 'sex'){
+//            $labels = ['Male','Female'];
+//        } elseif ($request->getGroupBy === 'civil_status'){
+//            $labels = ['Single','Separated','Married','Widowed','Divorced'];
+//        } elseif ($request->getGroupBy === 'year_lvl'){
+//            $labels = ['1st Year','2nd Year','3rd Year','4th Year','5th Year','6th Year'];
+//        }
         return response()->json([
             'hematology' => [
-                'labels' => $labels,
+                'labels' => $hematology->pluck('name')->toArray(),
                 'datasets' => [
                     [
                         'label' => 'Hematology',
@@ -314,7 +314,7 @@ class DashboardController extends Controller
                 ],
             ],
             'client' => [
-                'labels' => $labels,
+                'labels' => $client->pluck('name')->toArray(),
                 'datasets' => [
                     [
                         'label' => 'Client',
@@ -346,16 +346,16 @@ class DashboardController extends Controller
                     ->leftJoin('departments', 'departments.id', '=', 'degree_programs.department_id')
                     ->leftJoin('colleges', 'colleges.id', '=', 'departments.college_id')
                     ->leftJoin($serviceTable, $serviceTable.'.infirmary_id', '=', 'clients.infirmary_id')
-                    ->select('clients.'.$getGroupBy.' as name', DB::raw('COUNT(clients.id) AS count'))
+                    ->selectRaw('CONCAT(colleges.abbr, " " , clients.'.$getGroupBy.') as name, COUNT(clients.id) AS count')
                     ->whereNotNull($serviceTable.'.infirmary_id')
-                    ->groupBy( 'clients.'.$getGroupBy, 'clients.'.$getGroupBy)
-                    ->orderBy('clients.'.$getGroupBy)
+                    ->groupBy('colleges.abbr', 'clients.'.$getGroupBy)
+                    ->orderBy('colleges.abbr')
                     ->having('count', '>', 0);
         } elseif ($getByTable === 'clients'){
             if ($getGroupBy === '*')
-                $query = Client::select('clients.id as name', DB::raw('COUNT(clients.id) AS count'))
-                    ->groupBy( 'clients.id')
-                    ->orderBy('clients.id')
+                $query = Client::select('clients.infirmary_id as name', DB::raw('COUNT(clients.id) AS count'))
+                    ->groupBy( 'clients.infirmary_id')
+                    ->orderBy('clients.infirmary_id')
                     ->having('count', '>', 0);
             else
                 $query = Client::select('clients.'.$getGroupBy.' as name', DB::raw('COUNT(clients.id) AS count'))

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\XrayRequest;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,6 @@ class XrayRequestSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\XrayRequest::factory()->count(100)->create();
+        XrayRequest::factory()->count(100)->create();
     }
 }

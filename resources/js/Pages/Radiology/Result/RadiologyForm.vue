@@ -114,7 +114,6 @@ export default {
             reader.onload = e =>{
                 this.previewImage = e.target.result;
                 this.form.image = this.previewImage;
-                console.log(this.previewImage);
             };
         }
     },

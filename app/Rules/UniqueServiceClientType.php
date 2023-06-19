@@ -2,9 +2,11 @@
 
 namespace App\Rules;
 
+use App\Models\Fees;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class UniqueServiceClientType implements ValidationRule
 {
@@ -19,13 +21,13 @@ class UniqueServiceClientType implements ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
+     * @param Closure(string): PotentiallyTranslatedString $fail
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         $serviceId = request()->input('service_id');
         $clientType = request()->input('client_type');
-        $exists = \App\Models\Fees::where('service_id', $serviceId)
+        $exists = Fees::where('service_id', $serviceId)
             ->where('client_type', $clientType);
         if ($this->id) {
             $exists = $exists->where('id', '!=', $this->id);

@@ -4,13 +4,14 @@ namespace Database\Factories;
 
 use App\Models\Client;
 use App\Models\Fecalysis;
+use App\Models\FecalysisRecord;
 use App\Models\Fees;
 use App\Models\Payment;
 use App\Models\PaymentsService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FecalysisRecord>
+ * @extends Factory<FecalysisRecord>
  */
 class FecalysisRecordFactory extends Factory
 {

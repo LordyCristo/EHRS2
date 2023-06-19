@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('radiograph_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('xray_id')->constrained('xrays')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('image');
+            //long blob
+            $table->longText('image');
             $table->timestamps();
             $table->softDeletes();
         });

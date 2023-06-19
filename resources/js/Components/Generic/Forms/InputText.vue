@@ -11,6 +11,10 @@ defineProps({
     step: Number,
     autofocus: Boolean,
     required: Boolean,
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
     type: {
         type: String,
         default: 'text',
@@ -41,6 +45,7 @@ defineExpose({ focus: () => input.value.focus() });
             ref="input"
             :step="step"
             :type="type"
+            :disabled="disabled"
             :autofocus="autofocus"
             class="inputText"
             :class="errorMsg?'border-red-300':'border-gray-300'"

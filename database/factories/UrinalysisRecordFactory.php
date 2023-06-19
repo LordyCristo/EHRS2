@@ -8,10 +8,11 @@ use App\Models\Fees;
 use App\Models\Payment;
 use App\Models\PaymentsService;
 use App\Models\Urinalysis;
+use App\Models\UrinalysisRecord;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\UrinalysisRecord>
+ * @extends Factory<UrinalysisRecord>
  */
 class UrinalysisRecordFactory extends Factory
 {

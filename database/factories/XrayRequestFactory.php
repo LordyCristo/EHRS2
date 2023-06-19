@@ -5,10 +5,11 @@ namespace Database\Factories;
 use App\Models\Client;
 use App\Models\PaymentsService;
 use App\Models\User;
+use App\Models\XrayRequest;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\XrayRequest>
+ * @extends Factory<XrayRequest>
  */
 class XrayRequestFactory extends Factory
 {

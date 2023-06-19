@@ -125,20 +125,23 @@ class ClientApi extends Controller
             $query->where(function ($q) use ($search, $searchBy) {
                 if ($searchBy == '*') {
                     $q->where('clients.id', 'like', '%' . $search . '%')
+                        ->orWhere('clients.infirmary_id', 'like', '%' . $search . '%')
                         ->orWhere('clients.first_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.middle_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.last_name', 'like', '%' . $search . '%')
                         ->orWhere('clients.suffix', 'like', '%' . $search . '%')
                         ->orWhere('clients.age', 'like', '%' . $search . '%')
                         ->orWhere('clients.sex', 'like', '%' . $search . '%')
-                        ->orWhere('clients.civil_status', 'like', '%' . $search . '%')
                         ->orWhere('client_types.name', 'like', '%' . $search . '%')
                         ->orWhere('degree_programs.abbr', 'like', '%' . $search . '%');
                 } else if($searchBy == 'client_type'){
                     $q->where('client_types.name', 'like', '%' . $search . '%');
                 } else if ($searchBy == 'program_name'){
                     $q->where('degree_programs.abbr', 'like', '%' . $search . '%');
-                } else{
+                } else if ($searchBy == 'fullname') {
+                    $q->whereRaw('CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) like ?', '%' . $search . '%');
+                }
+                else{
                     $q->where('clients.'.$searchBy, 'like', '%' . $search . '%');
                 }
             });

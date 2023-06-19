@@ -30,28 +30,24 @@ class RadiologyResultAPI extends Controller
     {
         $newRecord = Xray::create($request->validated());
         if ($newRecord) {
-            if ($request->hasFile('image')) {
-                return null;
-//                $image = $request->file('image');
-//                $imagePath = $image->store('images', 'public'); // Store the image in the "public" disk under the "images" directory
-//                // Store the image in the 'radiograph_images' table with the foreign key 'xray_id
-//                $temp = $newRecord->radiograph()->create([
-//                    'xray_id' => $newRecord->id,
-//                    'image' => $imagePath,
-//                ]);
-//                if (!$temp) {
-//                    return response()->json([
-//                        'data' => (new XrayResource($request->all())),
-//                        'notification' => [
-//                            'id' => uniqid(),
-//                            'show' => true,
-//                            'type' => 'failed',
-//                            'message' => 'Failed to upload X-ray image',
-//                        ]
-//                    ])->setStatusCode(500);
-//                }
+            $image = $request->image;
+//            $imagePath = $image->getPathname();
+//            $encoded_image = base64_encode(file_get_contents($imagePath));
+            $temp = $newRecord->radiograph()->create([
+                'xray_id' => $newRecord->id,
+                'image' => $image,
+            ]);
+            if (!$temp) {
+                return response()->json([
+                    'data' => (new XrayResource($request->all())),
+                    'notification' => [
+                        'id' => uniqid(),
+                        'show' => true,
+                        'type' => 'failed',
+                        'message' => 'Failed to upload X-ray image',
+                    ]
+                ])->setStatusCode(500);
             }
-
             // change the status of the xray request to done
             //find the xray request
             $xrayRequest = XrayRequest::findOrFail($request->rqst_id);
@@ -61,7 +57,7 @@ class RadiologyResultAPI extends Controller
             ]);
 
             return response()->json([
-                'data' => (new XrayResource($newRecord)),
+                'data' => (new XrayResource($request->all())),
                 'notification' => [
                     'id' => uniqid(),
                     'show' => true,

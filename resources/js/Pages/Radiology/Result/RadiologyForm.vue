@@ -29,6 +29,7 @@
                     <span class="uppercase">{{rqst_details.age}}</span>
                 </div>
             </div>
+            {{ form.data() }}
             <!--end of header form-->
             <!--urinalysis body form-->
             <div class="my-2 border-y py-5">
@@ -36,7 +37,8 @@
                     <InputTextAuto v-model="form.procedure" required label="Prodecure" :options="procedures" :errorMsg="form.errors.procedure" @input="form.errors['procedure'] = null" />
                 </div>
                 <div class="grid grid-cols-1 gap-1">
-                    <InputText v-model="form.image" type="file" label="Upload Radiolograph Image" @change="onFileChange" accept="image/jpeg,image/png,image/jpg" :errorMsg="form.errors.image" @input="form.errors['image'] = null" />
+                    <input type="file" @change="onFileChange" accept="image/jpeg,image/png,image/jpg" />
+<!--                    <InputText v-model="form.image" type="file" label="Upload Radiolograph Image" @change="onFileChange" accept="image/jpeg,image/png,image/jpg" :errorMsg="form.errors.image" @input="form.errors['image'] = null" />-->
                 </div>
                 <div class="grid grid-cols-1 gap-1">
                     <InputTextArea v-model="form.radiographic_findings" required label="Radiolographic Findings" :errorMsg="form.errors.radiographic_findings" @input="form.errors['radiographic_findings'] = null" />
@@ -103,14 +105,13 @@ export default {
             this.form.errors[field] = null;
         },
         onFileChange(event) {
-            this.form.image = event.target.files[0];
+            this.form.image = event.target.files[0].name;
         },
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;
         this.xray_reqs = this.$page.props.xray_reqs.data;
         this.procedures = this.$page.props.xray_procedures.data;
-        console.log(this.procedures);
         if (this.action === 'update'){
             this.data = this.$page.props.data.data.xray;
             this.form = useForm(this.data);

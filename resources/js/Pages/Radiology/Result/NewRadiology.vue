@@ -6,7 +6,7 @@
                 <p class="text-sm text-gray-600 max-w-[20rem]">
                     <b>Note:</b>This list is in ascending order of the date of request. Request number is enclosed in parentheses.
                 </p>
-                <div class="p-1">
+                <div class="p-1 max-h-screen border overflow-y-scroll">
                     <div v-for="req in xray_reqs.data">
                         {{ xray_reqs.data.indexOf(req) + 1 }}.
                         ({{ req.id }})

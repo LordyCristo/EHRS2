@@ -98,6 +98,7 @@ const storeForm = () => {
     axios
         .post(props.storeLink, props.form)
         .then(res => {
+            console.log(res.data.data);
             goBackToIndex(res);
         })
         .catch(printError);

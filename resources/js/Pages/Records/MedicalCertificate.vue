@@ -153,8 +153,8 @@ export default {
                 this.updateForm();
             }
         },
-        storeForm() {
-            axios.post(route('api.certificate.store'), this.form)
+        async storeForm() {
+            await axios.post(route('api.certificate.store'), this.form)
                 .then(res => {
                     pushNotification(res.data.notification);
                     this.print('printable');

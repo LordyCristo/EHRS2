@@ -30,7 +30,6 @@ class RadiologyResultRequest extends FormRequest
             'radiographic_findings' => ['required', 'string'],
             'rad_tech_id' => ['required', 'integer', 'exists:users,id'],
             'radiologist_id' => ['required', 'integer', 'exists:users,id'],
-            'image' => ['nullable', 'max:2048'],
         ];
     }
 

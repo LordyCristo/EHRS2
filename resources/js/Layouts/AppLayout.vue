@@ -119,7 +119,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 4,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 4,
                     title: 'Radiology',
                     link: 'radiology.index',
                     tabName: '/radiology',
@@ -127,11 +127,13 @@ export default {
                         title: 'More',
                         content: [
                             {
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
                                 name: 'X-ray Request ',
                                 link: 'radiology.request.index',
                                 linkName: 'request',
                             },
                             {
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 4,
                                 name: 'X-ray Result',
                                 link: 'radiology.result.index',
                                 linkName: 'result',
@@ -163,16 +165,19 @@ export default {
                         title: 'More',
                         content: [
                             {
+                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
                                 name: 'Urinalysis',
                                 link: 'laboratory.urinalysis.index',
                                 linkName: 'urinalysis',
                             },
                             {
+                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
                                 name: 'Fecalysis',
                                 link: 'laboratory.fecalysis.index',
                                 linkName: 'fecalysis',
                             },
                             {
+                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
                                 name: 'Hematology',
                                 link: 'laboratory.hematology.index',
                                 linkName: 'hematology',
@@ -194,11 +199,13 @@ export default {
                         title: 'More',
                         content: [
                             {
+                                show: this.$page.props.auth.user.role === 3 || this.$page.props.auth.user.role === 1,
                                 name: 'Fees',
                                 link: 'finance.fee.index',
                                 linkName: 'fee',
                             },
                             {
+                                show: this.$page.props.auth.user.role === 3 || this.$page.props.auth.user.role === 1,
                                 name: 'Payments',
                                 link: 'finance.payment.index',
                                 linkName: 'payment',
@@ -211,17 +218,6 @@ export default {
                     form: true,
                     method: null,
                 },
-                // {
-                //     show: this.$page.props.auth.user.role === 1,
-                //     title: 'Ward',
-                //     link: 'ward',
-                //     tabName: '/ward',
-                //     subLinks: null,
-                //     isOpen: false,
-                //     icon: markRaw(WardIcon),
-                //     form: false,
-                //     method: null,
-                // },
                 {
                     show: this.$page.props.auth.user.role === 1,
                     title: 'More',
@@ -231,21 +227,25 @@ export default {
                         title: 'More',
                         content: [
                             {
+                                show: this.$page.props.auth.user.role === 1,
                                 name: 'Colleges',
                                 link: 'more.college.index',
                                 linkName: 'college',
                             },
                             {
+                                show: this.$page.props.auth.user.role === 1,
                                 name: 'Departments',
                                 link: 'more.department.index',
                                 linkName: 'department',
                             },
                             {
+                                show: this.$page.props.auth.user.role === 1,
                                 name: 'Programs',
                                 link: 'more.program.index',
                                 linkName: 'program',
                             },
                             {
+                                show: this.$page.props.auth.user.role === 1,
                                 name: 'Services',
                                 link: 'more.service.index',
                                 linkName: 'service',

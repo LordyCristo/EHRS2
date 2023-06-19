@@ -78,13 +78,15 @@ export default {
                             leave-from-class="opacity-100"
                             leave-to-class="opacity-0">
                     <div v-if="item.isOpen" class="flex z-50 flex-col bg-vsu-olive p-2 rounded-md mt-1" :class="{'absolute shadow-lg flex-row': isOpen}">
-                        <Link v-for="content in item.content" :href="route(content.link)"
-                              :class="{'bg-vsu-yellow': hightlightSubLinks(content.linkName)}"
-                              class="text-white hover:bg-vsu-yellow py-0.5 px-2 rounded-sm whitespace-nowrap">
-                            <span class="duration-300 ease-in-out text-sm" >
-                                {{ content.name }}
-                            </span>
-                        </Link>
+                        <template v-for="content in item.content">
+                            <Link v-if="content.show" :href="route(content.link)"
+                                  :class="{'bg-vsu-yellow': hightlightSubLinks(content.linkName)}"
+                                  class="text-white hover:bg-vsu-yellow py-0.5 px-2 rounded-sm whitespace-nowrap">
+                                <span class="duration-300 ease-in-out text-sm" >
+                                    {{ content.name }}
+                                </span>
+                            </Link>
+                        </template>
                     </div>
                 </transition>
             </div>

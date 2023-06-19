@@ -221,16 +221,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for the Radiology Section
-    Route::prefix('radiology')->middleware('racm')->group(function(){
+    Route::prefix('radiology')->group(function(){
         // Radiology index page
-        Route::get('/', function (){
+        Route::middleware('racm')->get('/', function (){
             return Inertia::render('Radiology/RadiologyIndex',[
                 'requestsCount' => XrayRequest::count(),
                 'resultsCount' => Xray::count(),
             ]);
         })->name('radiology.index');
         // Routes to handle Xray requests
-        Route::prefix('/request')->group(function(){
+        Route::prefix('/request')->middleware(['ioacm'])->group(function(){
             Route::get('/', [RadiologyRequestController::class, 'index'])->name('radiology.request.index');
             Route::get('/new', [RadiologyRequestController::class, 'create'])->name('radiology.request.create');
             Route::get('/edit/{id}', [RadiologyRequestController::class, 'edit'])->name('radiology.request.edit');
@@ -249,7 +249,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             });
         });
         // Routes to handle radiology results
-        Route::prefix('/result')->group(function(){
+        Route::prefix('/result')->middleware('racm')->group(function(){
             Route::get('/', [RadiologyResultController::class, 'index'])->name('radiology.result.index');
             Route::get('/new', [RadiologyResultController::class, 'create'])->name('radiology.result.create');
             Route::get('/edit/{id}', [RadiologyResultController::class, 'edit'])->name('radiology.result.edit');

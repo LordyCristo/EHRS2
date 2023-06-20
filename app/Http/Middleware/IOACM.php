@@ -19,7 +19,7 @@ class IOACM
         // check if the user is authenticated and the role is IO or a doctor
         if (Auth::check()) {
             // if the user is authenticated and the role is IO proceed to the next request
-            if (Auth::user()->role === 7 || Auth::user()->role === 1)
+            if (Auth::user()->role === 7 || Auth::user()->role === 1 || Auth::user()->role === 6)
                 return $next($request);
         }
         return redirect()->route('dashboard');

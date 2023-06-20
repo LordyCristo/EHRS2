@@ -176,10 +176,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/api/medical-certificate', [MedicalRecordApi::class, 'medicalCertificate'])->name('api.record.medcert');
     });
 
-    Route::prefix('/emergency')->group(function () {
+    Route::prefix('/emergency')->middleware('eracm')->group(function () {
         Route::get('/', [ERDetailContoller::class, 'index'])->name('er.index');
         Route::get('/new', [ERDetailContoller::class, 'create'])->name('er.new.client');
-        Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('er.edit.client');
+        Route::get('/edit/{id}', [ERDetailContoller::class, 'edit'])->name('er.edit.client');
         //Route::get('/show', [ERDetailContoller::class, 'show'])->name('er.show.client');
         Route::prefix('/api')->group(function () {
             // Emergency Room GET ALL route
@@ -187,7 +187,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             // Emergency Room STORE route
             Route::post('/', [ClientApi::class, 'store'])->name('api.er.store');
             // Emergency Room UPDATE route
-            Route::put('/{id}', [ClientApi::class, 'update'])->name('api.er.update');
+            Route::put('/{id}', [ERDetailApi::class, 'update'])->name('api.er.update');
             // Emergency Room DELETE route
             Route::delete('/{id}', [ERDetailApi::class, 'destroy'])->name('api.er.destroy');
             // Emergency Room DATATABLE API route

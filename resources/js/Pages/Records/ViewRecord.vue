@@ -60,7 +60,7 @@
                                 <ViewFieldBelow label="Skin Diseases" :value="physical_exam.skin_diseases" />
                             </div>
                         </div>
-                        <div v-if="!data.fecalysis.length && !data.hematology.length && !data.urinalysis.length && !data.xray.length"
+                        <div v-if="!data.fecalysis.length && !data.hematology.length && !data.urinalysis.length && !data.xray.length && !data.dental.length && !data.physical_exam.length"
                              class="text-center font-bold text-xl" >
                             <span>No Medical Records Found</span>
                         </div>

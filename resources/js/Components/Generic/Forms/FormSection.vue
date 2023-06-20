@@ -12,7 +12,7 @@
         <slot name="formBody" />
         <div class="flex items-center justify-between mt-4">
             <template v-if="action === 'update'">
-                <DeleteButton @click="deleteForm">Delete</DeleteButton>
+                <DeleteButton v-if="$page.props.auth.user.role === 1" @click="deleteForm">Delete</DeleteButton>
                 <CancelButton @click="cancelForm">Cancel</CancelButton>
             </template>
             <ClearButton v-else @click="clearForm">Clear</ClearButton>

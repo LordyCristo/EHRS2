@@ -50,14 +50,14 @@
                     <InputTextAuto v-model="form.program_id" label="Degree Program" :options="degree_programs" :errorMsg="form.errors.program_id" @input="onFocusClearError('program_id')" />
                     <Select v-model="form.year_lvl" label="Year Level" :options="year_levels" :errorMsg="form.errors.year_lvl" @input="onFocusClearError('year_lvl')" />
                 </div>
-                <div class="flex items-center justify-start my-3">
+                <div v-if="$page.props.auth.user.role === 6" class="flex items-center justify-start my-3">
                     <div class="flex items-center">
                         <input type="checkbox" v-model="form.is_emergency" @click="emergencyChange" class="rounded-full border-red-700 active:bg-red-700 checked:bg-red-700">
                         <label for="stayOnPage" class="ml-2 text-md font-medium uppercase text-red-700">Emergency</label>
                     </div>
                 </div>
             </div>
-            <template v-if="form.is_emergency">
+            <template v-if="form.is_emergency && $page.props.auth.user.role === 6">
                 <div class="grid grid-cols-1">
                     <div class="grid grid-cols-4">
                         <Datepicker v-model="form.date_admitted" label="Date" required :errorMsg="form.errors.date_admitted" @input="onFocusClearError('date_admitted')" />
@@ -142,25 +142,25 @@ export default {
             formTitle: null,
             form: useForm({
                 infirmary_id: null,
-                first_name: 'Sample',
+                first_name: null,
                 middle_name: null,
-                last_name: 'Sample',
+                last_name: null,
                 suffix: null,
-                birthdate: '2000-11-22',
-                age: 23,
-                sex: 'male',
-                religion: 'roman-catholic',
+                birthdate: null,
+                age: null,
+                sex: null,
+                religion: null,
                 nationality: null,
-                civil_status: 'single',
-                phone: '09127028272',
-                email_address: 'samples@gmail.com',
-                home_address: 'home',
-                curr_address: 'vsu',
-                employer: 'Visayas State University',
+                civil_status: null,
+                phone: null,
+                email_address: null,
+                home_address: null,
+                curr_address: null,
+                employer: null,
                 id_number: null,
-                program_id: 23,
-                year_lvl: 4,
-                client_type_id: 1,
+                program_id: null,
+                year_lvl: null,
+                client_type_id: null,
                 is_emergency: false,
                 //emergency details
                 date_admitted: null,
@@ -220,6 +220,13 @@ export default {
                     id_number += '-';
                 }
                 this.form.id_number = id_number;
+            }
+        },
+    },
+    watch: {
+        'form.program_id': function (val) {
+            if (!val) {
+                this.form.year_lvl = null;
             }
         },
     },

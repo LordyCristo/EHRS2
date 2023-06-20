@@ -434,11 +434,11 @@ export default {
                     <AddIcon class="w-4 mr-1" />
                     New
                 </DtActionBtn>
-                <DtActionBtn @click="refreshData" class="bg-blue-500">
+                <DtActionBtn v-if="false" @click="refreshData" class="bg-blue-500">
                     <RefreshIcon class="w-4 mr-1" />
                     Refresh
                 </DtActionBtn>
-                <DtActionBtn v-if="totalRecords" @click="exportToCsv" class="bg-green-600">
+                <DtActionBtn v-if="totalRecords && $page.props.auth.user.role === 1" @click="exportToCsv" class="bg-green-600">
                     <DownloadIcon class="w-4 mr-1" />
                     Export
                 </DtActionBtn>
@@ -446,7 +446,7 @@ export default {
                     <UploadIcon class="w-4 mr-1" />
                     Import
                 </DtActionBtn>
-                <DtActionBtn v-if="selected.length > 1 && apiLink.destroy" @click="deleteRecord(null, true)" class="bg-red-600">
+                <DtActionBtn v-if="selected.length > 1 && apiLink.destroy && $page.props.auth.user.role === 1" @click="deleteRecord(null, true)" class="bg-red-600">
                     <DeleteIcon class="w-4 mr-1" />
                     Delete
                 </DtActionBtn>
@@ -460,15 +460,15 @@ export default {
                         Expand
                     </template>
                 </DtActionBtn>
-                <DtActionBtn v-if="isAllSelected && apiLink.destroy" @click="selectAllShown" class="bg-orange-500">
+                <DtActionBtn v-if="isAllSelected && apiLink.destroy && $page.props.auth.user.role === 1" @click="selectAllShown" class="bg-orange-500">
                     <CheckallIcon class="w-4 mr-1" />
                     Select All Shown
                 </DtActionBtn>
-                <DtActionBtn v-if="isAllSelected && false" @click="selectAll" class="bg-indigo-500">
+                <DtActionBtn v-if="isAllSelected && $page.props.auth.user.role === 1 && false" @click="selectAll" class="bg-indigo-500">
                     <CheckallIcon class="w-4 mr-1" />
                     Select All
                 </DtActionBtn>
-                <DtActionBtn v-if="selected.length && apiLink.destroy" class="bg-vsu-olive" @click="deselectAll">
+                <DtActionBtn v-if="selected.length && apiLink.destroy && $page.props.auth.user.role === 1" class="bg-vsu-olive" @click="deselectAll">
                     <CloseIcon class="w-4 mr-1" />
                     Deselect All
                 </DtActionBtn>
@@ -519,7 +519,7 @@ export default {
                                 <Link title="Update" v-if="apiLink.edit" :href="route(apiLink.edit, item.id)" class="w-5 flex hover:text-yellow-600 hover:scale-110 translate-x-0 text-yellow-500 duration-100 ease-in">
                                     <component :is="col.icon[2]" />
                                 </Link>
-                                <button title="Delete" v-if="apiLink.destroy" @click="showDeleteModal(item.id)" class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-gray-500 duration-100 ease-in">
+                                <button title="Delete" v-if="apiLink.destroy && $page.props.auth.user.role === 1" @click="showDeleteModal(item.id)" class="w-5 flex hover:text-red-600 hover:scale-110 translate-x-0 text-gray-500 duration-100 ease-in">
                                     <component :is="col.icon[1]" />
                                 </button>
                             </div>

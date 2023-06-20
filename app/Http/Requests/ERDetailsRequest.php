@@ -25,7 +25,7 @@ class ERDetailsRequest extends FormRequest
         return [
             'client_id' => ['nullable', 'exists:clients,infirmary_id'],
             'date_admitted' => ['nullable', 'date'],
-            'time_admitted' => ['nullable', 'date_format:H:i'],
+            'time_admitted' => ['nullable'],
             'brought_by' => ['nullable', 'string'],
             'arrival_condition' => ['nullable', 'string'],
             'temperature' => ['nullable', 'numeric'],
@@ -45,7 +45,7 @@ class ERDetailsRequest extends FormRequest
             'diagnosis' => ['nullable', 'string'],
             'disposition' => ['nullable', 'string'],
             'date_disposition' => ['nullable', 'date'],
-            'time_disposition' => ['nullable', 'date_format:H:i'],
+            'time_disposition' => ['nullable'],
             'discharge_condition' => ['nullable', 'string'],
             'attending_nurse' => ['nullable', 'string'],
             'attending_physician' => ['nullable', 'string'],

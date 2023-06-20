@@ -8,6 +8,23 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <div class="grid grid-cols-1">
+                <div v-if="data" class="flex flex-col gap-2 pb-2 border-b">
+                    <div class="grid grid-cols-6 gap-2">
+                        <DisplayValue label="Infirmary ID" :value="data.infirmary_id" />
+                        <DisplayValue label="Birthdate" :value="data.birthdate" />
+                        <DisplayValue label="Age" :value="data.age" />
+                        <DisplayValue label="Sex" :value="data.sex" />
+                        <DisplayValue label="Civil Status" :value="data.civil_status" />
+                        <DisplayValue label="Nationality" :value="data.nationality" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <DisplayValue label="Full name" :value="formatFullName(data)" />
+                        <div class="grid grid-cols-2">
+                            <DisplayValue label="Religion" :value="Religion.find(rel => rel.id === data.religion).name" />
+                            <DisplayValue label="Email" :value="data.email_address" />
+                        </div>
+                    </div>
+                </div>
                 <div class="grid grid-cols-4">
                     <Datepicker v-model="form.date_admitted" label="Date" required :errorMsg="form.errors.date_admitted" @input="onFocusClearError('date_admitted')" />
                     <DateTimePicker v-model="form.time_admitted" label="Time" required :errorMsg="form.errors.time_admitted" @input="onFocusClearError('time_admitted')" />
@@ -69,6 +86,7 @@ import {
     TemperatureLocation
 } from "@/Legends/legends";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
+import DisplayValue from "@/Components/Generic/Forms/ViewFieldBelow.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -136,6 +154,9 @@ export default {
             }
             this.form.age = age;
         },
+        formatFullName(data){
+            return `${data.first_name} ${data.middle_name?[0]:""} ${data.last_name} ${data.suffix?data.suffix:""}`;
+        },
         formatIdNumber(event) {
             const { data, inputType } = event;
             if (data === '-' || inputType === 'deleteContentBackward' || this.form.id_number.length > 10) {
@@ -154,7 +175,33 @@ export default {
     mounted() {
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;
-            this.form = useForm(this.data);
+            this.form = useForm({
+                date_admitted: this.data.date_admitted,
+                time_admitted: this.data.time_admitted,
+                brought_by: this.data.brought_by,
+                arrival_condition: this.data.arrival_condition,
+                temperature: this.data.temperature,
+                temperature_location: this.data.temperature_location,
+                weight: this.data.weight,
+                pulse_rate: this.data.pulse_rate,
+                blood_pressure: this.data.blood_pressure,
+                cardiac_rate: this.data.cardiac_rate,
+                respiratory_rate: this.data.respiratory_rate,
+                oxygen_saturation: this.data.oxygen_saturation,
+                chief_complaint: this.data.chief_complaint,
+                allergies: this.data.allergies,
+                physical_exam: this.data.physical_exam,
+                current_medications: this.data.current_medications,
+                treatment: this.data.treatment,
+                nurse_notes: this.data.nurse_notes,
+                diagnosis: this.data.diagnosis,
+                date_disposition: this.data.date_disposition,
+                time_disposition: this.data.time_disposition,
+                disposition: this.data.disposition,
+                discharge_condition: this.data.discharge_condition,
+                attending_nurse: this.data.attending_nurse,
+                attending_physician: this.data.attending_physician,
+            });
             this.formTitle = 'Update Client Details';
             this.data = this.$page.props.data.data;
             console.log(this.data);

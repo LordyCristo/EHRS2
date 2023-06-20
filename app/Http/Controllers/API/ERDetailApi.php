@@ -8,6 +8,7 @@ use App\Http\Requests\ERDetailsRequest;
 use App\Http\Resources\ClientCollection;
 use App\Http\Resources\ClientResource;
 use App\Models\Client;
+use App\Models\ERDetail;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -51,23 +52,10 @@ class ERDetailApi extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ClientRequest $request)
+    public function update(ERDetailsRequest $request)
     {
-        $client = Client::findOrFail($request->id);
-        //remove infirmary_id from the request
-        $request->offsetUnset('infirmary_id');
-        $update = $client->update($request->all());
-        // update the er details
-        if ($request->has('is_emergency') && $request->input('is_emergency')) {
-            //make an instance of the er details request
-            $erDetailsRequest = new ERDetailsRequest($request->all());
-            // check if er details exists
-            if ($client->erDetails()->exists()) {
-                $client->erDetails()->update($erDetailsRequest->validated());
-            } else {
-                $client->erDetails()->create($erDetailsRequest->validated());
-            }
-        }
+        $update = ERDetail::findOrFail($request->id);
+        $update->update($request->all());
 
         return response()->json([
             'notification' => [

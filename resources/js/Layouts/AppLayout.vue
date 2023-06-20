@@ -64,7 +64,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 6,
                     title: 'Clients',
                     link: 'client.index',
                     tabName: '/clients',
@@ -86,7 +86,7 @@ export default {
                 //     method: null,
                 // },
                 {
-                    show: this.$page.props.auth.user.role === 1,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 6,
                     title: 'ER Section',
                     link: 'er.index',
                     tabName: '/emergency',

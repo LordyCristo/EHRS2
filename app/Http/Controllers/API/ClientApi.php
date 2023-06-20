@@ -68,7 +68,7 @@ class ClientApi extends Controller
      */
     public function update(ClientRequest $request)
     {
-        $client = Client::findOrFail($request->id);
+        $client = Client::findOrFail($request->client_id);
         $update = $client->update($request->validated());
         // update the er details
         if ($request->has('is_emergency') && $request->input('is_emergency')) {
@@ -77,18 +77,18 @@ class ClientApi extends Controller
 
             // check if er details exists
             if ($client->erDetails()->exists()) {
+                unset($erDetailsRequest['client_id']);
                 $client->erDetails()->update($erDetailsRequest->all());
             } else {
                 $client->erDetails()->create($erDetailsRequest->all());
             }
         }
-
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => $update?'success':'failed',
-                'message' => $update?'Successfully updated Client record id '.$request->id:'Failed to update Client record with id '. $request->id,
+                'message' => $update?'Successfully updated Client record id '.$request->client_id:'Failed to update Client record with id '. $request->id,
             ]
         ])->setStatusCode($update?202:400);
     }
@@ -115,9 +115,8 @@ class ClientApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Client::join('degree_programs','degree_programs.id','=','clients.program_id')
+        $query = Client::leftJoin('degree_programs','degree_programs.id','=','clients.program_id')
             ->join('client_types','client_types.id','=','clients.client_type_id')
-            ->where('clients.is_emergency', '0')
             ->selectRaw('clients.*, degree_programs.abbr as program_name, client_types.name as client_type, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as fullname');        $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

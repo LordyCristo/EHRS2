@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $user = User::factory()->create([
-            'email' => 'docyu@ehrs',
+            'email' => 'docyu@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Elwin Jay',
             'middle_name' => 'B.',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
         $user->withoutApproval()->save();
 
         User::factory()->create([
-            'email' => 'docguinocor@ehrs',
+            'email' => 'docguinocor@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Merry Christ\'l',
             'middle_name' => 'T.',
@@ -49,7 +49,7 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'email' => 'doctabada@ehrs',
+            'email' => 'doctabada@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Sarah',
             'middle_name' => 'W.',
@@ -66,7 +66,7 @@ class UserSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'email' => 'docbuson@ehrs',
+            'email' => 'docbuson@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Maria Belen',
             'middle_name' => 'J.',
@@ -84,7 +84,7 @@ class UserSeeder extends Seeder
 
         //Laboratory
         User::factory()->create([
-            'email' => 'laboratory@ehrs',
+            'email' => 'laboratory@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Laboratory',
             'middle_name' => 'L.',
@@ -102,7 +102,7 @@ class UserSeeder extends Seeder
 
         //Cashier
         User::factory()->create([
-            'email' => 'cashier@ehrs',
+            'email' => 'cashier@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Cashier',
             'middle_name' => 'C.',
@@ -120,7 +120,7 @@ class UserSeeder extends Seeder
 
         //ER
         User::factory()->create([
-            'email' => 'er@ehrs',
+            'email' => 'er@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'ER',
             'middle_name' => 'E.',
@@ -138,7 +138,7 @@ class UserSeeder extends Seeder
 
         //radiology
         User::factory()->create([
-            'email' => 'xray@ehrs',
+            'email' => 'xray@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Radiology',
             'middle_name' => 'E.',
@@ -156,7 +156,7 @@ class UserSeeder extends Seeder
 
         //dental
         User::factory()->create([
-            'email' => 'dental@ehrs',
+            'email' => 'dental@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Dental',
             'middle_name' => 'D.',
@@ -174,7 +174,7 @@ class UserSeeder extends Seeder
 
         //Information Officer
         User::factory()->create([
-            'email' => 'io@ehrs',
+            'email' => 'io@ehrs.com',
             'password' => Hash::make('password'),
             'first_name' => 'Information',
             'middle_name' => 'D.',

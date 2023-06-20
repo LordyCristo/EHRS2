@@ -25,7 +25,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'last_name' => ['required', 'string', 'max:255'],
             'suffix' => ['nullable','string', 'max:255'],
             'birthdate' => ['required', 'date'],
-            'age' => ['required','int'],
+            'age' => ['required','int','min:18'],
             'sex' => ['nullable','string', 'max:255'],
             'specialization' => ['nullable','string', 'max:255'],
             'curr_position' => ['nullable','string', 'max:255'],
@@ -46,6 +46,8 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'birthdate.required' => 'Required field',
             'birthdate.date' => 'Invalid birthdate',
             'age.required' => 'Required field',
+            'age.int' => 'Invalid age',
+            'age.min' => 'Must be at least 18 years old',
             'sex.required' => 'Required field',
             'specialization.string' => 'Invalid specialization',
             'specialization.max' => 'Invalid specialization',
@@ -85,7 +87,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'license_no' => $input['license_no'],
                 'telephone' => $input['telephone'],
                 'mobile' => $input['mobile'],
-            ])->save();
+            ])->withoutApproval()->save();
         }
     }
 

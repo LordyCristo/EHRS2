@@ -7,17 +7,20 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <div class="w-full">
-                <div class="flex gap-1">
-<!--                    <InputText v-model.number="form.or_no" required @keydown.prevent="null" @click.prevent="null" label="OR No." :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />-->
-                    <DisplayValue label="OR No." :value="form.or_no" :errorMsg="form.errors.or_no"  required />
-                    <div class="w-full">
-                        <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                    </div>
+                <div class="flex justify-between gap-1">
+                    <DisplayValue v-if="form.or_no" label="OR No." :value="form.or_no" :errorMsg="form.errors.or_no" required />
+                    <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />
+                    <DisplayValue label="Date Issued" :value="dateNow" :errorMsg="form.errors.or_no" />
                 </div>
-                <InputText v-model="form.payor_name" required label="Payor Name" :errorMsg="form.errors.payor_name" @input="form.errors['payor_name'] = null" />
+                <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <div class="flex items-center justify-end text-sm gap-1 mx-1">
+                    Payer and Patient are the same
+                    <input type="checkbox" v-model="payor_same_as_client">
+                </div>
+                <InputText v-model="form.payor_name" required label="Payer Name" :errorMsg="form.errors.payor_name" @input="form.errors['payor_name'] = null" />
                 <div class="grid grid-cols-2">
-                    <InputText v-model="form.payor_email" label="Payor Email" :errorMsg="form.errors.payor_email" @input="form.errors['payor_email'] = null" />
-                    <InputText v-model="form.payor_mobile" label="Payor Mobile No." :errorMsg="form.errors.payor_mobile" @input="form.errors['payor_mobile'] = null" />
+                    <InputText v-model="form.payor_email" label="Payer Email" :errorMsg="form.errors.payor_email" @input="form.errors['payor_email'] = null" />
+                    <InputText v-model="form.payor_mobile" label="Payer Mobile No." :errorMsg="form.errors.payor_mobile" @input="form.errors['payor_mobile'] = null" />
                 </div>
                 <div class="flex flex-col">
                     <div class="inline-flex justify-evenly items-center my-2 border-y border-gray-400 py-1">
@@ -32,13 +35,12 @@
                     <div v-for="(row, index) in form.rows" :key="index" class="flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
                         <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
                         <div class="w-full">
-                            <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null" />
+                            <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee);setFee(row)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null;" />
                         </div>
                         <InputText v-model="row.fee" type="number" class="max-w-[6rem]" @input="calculateTotalAmount(row.fee);form.errors['rows.' + index + '.fee'] = null;" :errorMsg="form.errors['rows.' + index + '.fee']" />
                         <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm" @click="deleteRow(index)" >
                             <CloseIcon class="w-5 h-auto text-red-500 bw-sm" />
                         </div>
-
                     </div>
                     <div class="inline-flex justify-end items-center border-b border-gray-400 py-2">
                         <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm">
@@ -95,6 +97,8 @@ export default {
             services: [],
             data: null,
             formTitle: null,
+            payor_same_as_client: false,
+            selected_client: null,
         };
     },
     watch: {
@@ -106,6 +110,13 @@ export default {
                 });
             },
             deep: true,
+        },
+        'form.infirmary_id':function (val) {
+            this.selected_client = this.clients.find(client => client.id === val);
+            this.sameAsPayer(this.selected_client && this.payor_same_as_client);
+        },
+        payor_same_as_client: function (val) {
+            this.sameAsPayer(val);
         },
     },
     computed: {
@@ -120,10 +131,16 @@ export default {
         },
     },
     methods: {
-        filterServices() {
-            this.services = this.data.services.filter((service) => {
-                return service.infirmary_id === this.form.infirmary_id;
-            });
+        sameAsPayer (val) {
+            if (val && this.selected_client) {
+                this.form.payor_name = this.selected_client.name;
+                this.form.payor_email = this.selected_client.email_address;
+                this.form.payor_mobile = this.selected_client.phone;
+            } else {
+                this.form.payor_name = null;
+                this.form.payor_email = null;
+                this.form.payor_mobile = null;
+            }
         },
         addRow() {
             this.form.rows.push({ service_id: null, fee: null });
@@ -158,7 +175,6 @@ export default {
                 if (row.service_id)
                     this.form.total_amount += parseInt(row.fee);
             });
-
             //this.form.total_amount += parseInt(fee); // Add the fee to the total amount
         },
     },
@@ -184,8 +200,8 @@ export default {
             this.form.payor_mobile = this.data.payor_mobile;
             this.form.infirmary_id = this.data.infirmary_id;
             this.form.collector_id = this.data.collector_id;
-            this.calculateTotalAmount(0);
             this.form.remarks = this.data.remarks;
+            this.calculateTotalAmount(0);
 
             this.formTitle = 'Update Form Details';
         }

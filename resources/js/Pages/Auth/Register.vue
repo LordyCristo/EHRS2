@@ -63,6 +63,7 @@ export default {
                         return;
                 }else{
                     this.form.errors.role = !this.form.role?'Required field':null;
+                    this.form.errors.license_no = !this.form.license_no?'Required field':null;
                     this.form.errors.position = !this.form.position?'Required field':null;
                     if (!this.form.role || !this.form.position)
                         return;

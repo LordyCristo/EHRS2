@@ -13,6 +13,7 @@ import SelectElement from "@/Components/Generic/Forms/SelectElement.vue";
 import InputField from "@/Components/Generic/Forms/InputField.vue";
 import RadioButton from "@/Components/Generic/Forms/RadioButton.vue";
 import InputText from "@/Components/Generic/Forms/InputText.vue";
+import {Sex} from "@/Legends/legends";
 const props = defineProps({
     user: Object,
 });
@@ -48,7 +49,10 @@ const updateProfileInformation = () => {
     form.post(route('user-profile-information.update'), {
         errorBag: 'updateProfileInformation',
         preserveScroll: true,
-        onSuccess: () => clearPhotoFileInput(),
+        onSuccess: res => {
+            console.log(res);
+            clearPhotoFileInput();
+        },
     });
     console.log(form.errors);
 };
@@ -59,6 +63,17 @@ const updateSex = (event) => {
 
 const sendEmailVerification = () => {
     verificationLinkSent.value = true;
+};
+
+const computeAge = () => {
+    const birthdate = new Date(form.birthdate);
+    const today = new Date();
+    let age = today.getFullYear() - birthdate.getFullYear();
+    const month = today.getMonth() - birthdate.getMonth();
+    if (month < 0 || (month === 0 && today.getDate() < birthdate.getDate())) {
+        age--;
+    }
+    form.age = age;
 };
 
 const selectNewPhoto = () => {
@@ -150,19 +165,12 @@ const clearPhotoFileInput = () => {
                 </div>
             </div>
             <div class="col-span-6 sm:col-span-6">
-                <div class="flex sm:flex-row flex-col">
+                <div class="grid grid-cols-3 gap-2">
                     <Datepicker id="birthdate" v-model="form.birthdate" :required="true" label="Birthdate" class="mt-1 mr-1 block w-full"
-                        autocomplete="birthdate" :errorMsg="form.errors.suffix" />
+                        autocomplete="birthdate" :errorMsg="form.errors.suffix" @change="computeAge()" />
                     <TextInput id="age" v-model="form.age" :required="true" label="Age" type="text" class="mt-1 mr-1 block w-full"
                        autocomplete="age" :errorMsg="form.errors.age" />
-                    <InputField name="sex" :errorMsg="form.errors.sex" label="Sex" class="mt-4" :required="true">
-                        <div class="flex flex-row items-center justify-center gap-5 mt-3">
-                            <radio-button id="sex-male" name="sex" v-model="form.sex" value="male"
-                                          @change="updateSex">Male</radio-button>
-                            <radio-button id="sex-female" name="sex" v-model="form.sex" value="female"
-                                          @change="updateSex">Female</radio-button>
-                        </div>
-                    </InputField>
+                    <RadioButton v-model="form.sex" label="Sex" :options="Sex" required :errorMsg="form.errors.sex" @input="form.errors.sex = null" />
                 </div>
             </div>
             <div class="col-span-6 sm:col-span-6">

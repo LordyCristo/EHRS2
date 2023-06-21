@@ -14,7 +14,7 @@
                     </div>
                     <div v-if="data">
                         <div class="flex justify-between">
-                            <span class="w-full whitespace-nowrap"><b>OR No. </b>{{ data.id }}</span>
+                            <span class="w-full whitespace-nowrap"><b>OR No. </b>{{ data.or_no }}</span>
                             <span class="w-full whitespace-nowrap"><b>Date Issued:</b> {{ new Date(data.created_at).toLocaleDateString('en-US', { day: 'numeric', month: 'long', year: 'numeric' }) }}</span>
                         </div>
                         <div class="flex justify-between">

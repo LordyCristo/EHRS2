@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('urinalysis_records', function(Blueprint $table){
             $table->id();
-            $table->foreignId('rqst_id')->constrained('laboratory_requests')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('infirmary_id')->nullable()->constrained('clients', 'infirmary_id')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('urinalysis_id')->unique()->constrained('urinalysis')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('rqst_physician')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();

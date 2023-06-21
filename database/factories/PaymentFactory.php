@@ -22,6 +22,7 @@ class PaymentFactory extends Factory
     public function definition(): array
     {
         $clientIds = Client::pluck('infirmary_id')->toArray();
+        $services = Fees::pluck('service_id')->toArray();
         $users = User::pluck('id')->toArray();
         return [
             'or_no' => $this->faker->unique()->numerify('#####'),

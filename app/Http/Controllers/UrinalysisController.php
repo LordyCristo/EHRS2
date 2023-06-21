@@ -9,6 +9,7 @@ use App\Http\Resources\UrinalysisResource;
 use App\Http\Resources\UserCollection;
 use App\Models\Client;
 use App\Models\LaboratoryRequest;
+use App\Models\Payment;
 use App\Models\UrinalysisRecord;
 use App\Models\PaymentsService;
 use App\Models\Urinalysis;
@@ -82,12 +83,12 @@ class UrinalysisController extends Controller
      */
     public function getOrNos()
     {
-        return new PaymentCollection(PaymentsService::join('payments', 'payments_service.payment_id', '=', 'payments.id')
-            ->join('clients', 'clients.infirmary_id', '=', 'payments.infirmary_id')
-            ->leftJoin('fees', 'payments_service.service_id', '=', 'fees.service_id')
-            ->leftJoin('services', 'services.id', '=', 'fees.service_id')
-            ->selectRaw("payments_service.payment_id AS id, CONCAT(payments_service.payment_id, ' - ', clients.infirmary_id) AS name")
-            ->where('services.section_name', 'LIKE', '%Laboratory%')
+        return new PaymentCollection(Payment::join('payments_service', 'payments_service.payment_id', '=', 'payments.or_no')
+            ->join('services', 'services.id', '=', 'payments_service.service_id')
+            ->where('services.room_no', '=', 'Room-3')
+            ->whereNotIn('payments.or_no', UrinalysisRecord::select('or_no')->get())
+            ->selectRaw('payments.or_no as id, CONCAT(payments.or_no) as name')
+            ->orderBy('payments.or_no', 'asc')
             ->get());
     }
 

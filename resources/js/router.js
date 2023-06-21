@@ -127,6 +127,21 @@ const routes = [
         component: () => import('@/Pages/Laboratory/LaboratoryIndex.vue')
     },
     {
+        path:'/laboratory/requests',
+        name: 'laboratory.requests.index',
+        component: () => import('@/Pages/Laboratory/Request/LaboratoryRequestIndex.vue')
+    },
+    {
+        path:'/laboratory/requests/new',
+        name: 'laboratory.requests.create',
+        component: () => import('@/Pages/Laboratory/Request/NewLaboratoryRequest.vue')
+    },
+    {
+        path:'/laboratory/requests/edit',
+        name: 'laboratory.requests.edit',
+        component: () => import('@/Pages/Laboratory/Request/EditLaboratoryRequest.vue')
+    },
+    {
         path:'/laboratory/hematology',
         name: 'laboratory.hematology.index',
         component: () => import('@/Pages/Laboratory/Hematology/HematologyIndex.vue')

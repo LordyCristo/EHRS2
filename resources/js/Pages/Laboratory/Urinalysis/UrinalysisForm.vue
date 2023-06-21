@@ -93,16 +93,16 @@ export default {
             form: useForm({
                 // urinalysis record
                 infirmary_id: null,
-                rqst_physician: 2,
-                medical_technologist: 2,
-                pathologist: 3,
-                ward: 'OP',
+                rqst_physician: 1,
+                medical_technologist: 1,
+                pathologist: 1,
+                ward: 'opd',
                 or_no: null,
-                status: null,
-                is_out_patient: null,
+                status: 'pending',
+                is_out_patient: 1,
                 //urinalysis
                 color: 'red',
-                clarity: 'turpid',
+                clarity: 'turbid',
                 ph: '7.9',
                 specific_gravity: 14,
                 albumin: null,

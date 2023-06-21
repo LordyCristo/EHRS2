@@ -166,6 +166,12 @@ export default {
                         content: [
                             {
                                 show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
+                                name: 'Request',
+                                link: 'laboratory.requests.index',
+                                linkName: 'requests',
+                            },
+                            {
+                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
                                 name: 'Urinalysis',
                                 link: 'laboratory.urinalysis.index',
                                 linkName: 'urinalysis',

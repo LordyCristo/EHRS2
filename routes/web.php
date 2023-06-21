@@ -10,6 +10,7 @@ use App\Http\Controllers\API\DepartmentApi;
 use App\Http\Controllers\API\FecalysisApi;
 use App\Http\Controllers\API\FeeApi;
 use App\Http\Controllers\API\HematologyApi;
+use App\Http\Controllers\API\LaboratoryRequestApi;
 use App\Http\Controllers\API\MedicalCertificateApi;
 use App\Http\Controllers\API\MedicalRecordApi;
 use App\Http\Controllers\API\PaymentApi;
@@ -28,6 +29,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\FecalysisController;
 use App\Http\Controllers\FeeController;
 use App\Http\Controllers\HematologyController;
+use App\Http\Controllers\LaboratoryRequestController;
 use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\PatientInformationController;
 use App\Http\Controllers\PaymentController;
@@ -348,6 +350,28 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 'urinalysisCount' => UrinalysisRecord::count(),
             ]);
         })->name('laboratory.index');
+        //route for laboratory request
+        Route::prefix('/requests')->group(function () {
+            Route::get('/', [LaboratoryRequestController::class, 'index'])->name('laboratory.requests.index');
+            Route::get('/new', [LaboratoryRequestController::class, 'create'])->name('laboratory.requests.create');
+            Route::get('/edit/{id}', [LaboratoryRequestController::class, 'edit'])->name('laboratory.requests.edit');
+            Route::get('/show/{id}', [LaboratoryRequestController::class, 'show'])->name('laboratory.requests.show');
+            Route::prefix('api')->group(function (){
+                // Laboratory Request GET ALL route
+                Route::get('/', [LaboratoryRequestApi::class, 'index'])->name('api.laboratory.requests.index');
+                // Laboratory Request STORE route
+                Route::post('/', [LaboratoryRequestApi::class, 'store'])->name('api.laboratory.requests.store');
+                // Laboratory Request UPDATE route
+                Route::put('/{id}', [LaboratoryRequestApi::class, 'update'])->name('api.laboratory.requests.update');
+                // Laboratory Request DELETE route
+                Route::delete('/{id}', [LaboratoryRequestApi::class, 'destroy'])->name('api.laboratory.requests.destroy');
+                // Laboratory Request DATATABLE API route
+                Route::get('/all', [LaboratoryRequestApi::class, 'tableApi'])->name('api.laboratory.requests.table');
+                // Laboratory Request import from a CSV file
+                Route::post('/import', [LaboratoryRequestApi::class, 'import'])->name('api.laboratory.requests.import');
+            });
+        });
+
         // Routes for hematology record management
         Route::prefix('/hematology')->group(function () {
             Route::get('/', [HematologyController::class, 'index'])->name('laboratory.hematology.index');

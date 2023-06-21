@@ -434,7 +434,7 @@ export default {
                     <AddIcon class="w-4 mr-1" />
                     New
                 </DtActionBtn>
-                <DtActionBtn v-if="false" @click="refreshData" class="bg-blue-500">
+                <DtActionBtn @click="refreshData" class="bg-blue-500">
                     <RefreshIcon class="w-4 mr-1" />
                     Refresh
                 </DtActionBtn>

@@ -107,6 +107,6 @@ class HematologyController extends Controller
      */
     public function getPhysicians()
     {
-        return new UserCollection(User::where('role', '<>', 1)->selectRaw("id, CONCAT(first_name, ' ', last_name) AS name")->get());
+        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get());
     }
 }

@@ -48,8 +48,8 @@
                 <div class="grid grid-cols-4">
                     <InputText v-model.number="form.height" label="Height (cm)" required type="number" step="0.1" :errorMsg="form.errors.height" @input="onFocusClearError('height');" />
                     <InputText v-model.number="form.weight" label="Weight (kg)" required type="number" step="0.1" :errorMsg="form.errors.weight" @input="onFocusClearError('weight');" />
-                    <InputText v-model.number="form.blood_pressure" label="Blood Pressure" type="number" step="0.1" required :errorMsg="form.errors.blood_pressure" @input="onFocusClearError('blood_pressure');" />
-                    <InputText v-model.number="form.pulse" label="Pulse Rate" type="number" required :errorMsg="form.errors.pulse" @input="onFocusClearError('pulse');" />
+                    <InputText v-model="form.blood_pressure" label="Blood Pressure" required :errorMsg="form.errors.blood_pressure" @input="onFocusClearError('blood_pressure');" />
+                    <InputText v-model="form.pulse" label="Pulse Rate" required :errorMsg="form.errors.pulse" @input="onFocusClearError('pulse');" />
                 </div>
                 <div class="grid grid-cols-2">
                     <InputTextArea v-model="form.prev_illns_oprtn" label="Previous Illness/Operation" :errorMsg="form.errors.prev_illns_oprtn" @input="onFocusClearError('prev_illns_oprtn');" />

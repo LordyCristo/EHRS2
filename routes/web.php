@@ -140,7 +140,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                     ->where('infirmary_id', request()->id)
                     ->whereYear('created_at', Carbon::now()->year)
                     ->first()),
-                'physicians' => User::selectRaw('CONCAT(first_name, " ", last_name) as name, id')->get()
+                'physicians' => User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get(),
             ]);
         })->name('records.medcert');
         Route::prefix('api')->group(callback: function () {

@@ -53,7 +53,7 @@ class ClientController extends Controller
         return [
             'degree_programs' => DegreeProgram::select(['id', DB::raw("CONCAT(`name`, IFNULL(CONCAT(' major in ', `major`), '')) AS `name`")])->orderBy('id', 'asc')->get(),
             'client_types' => ClientType::select(['id', 'name'])->orderBy('id', 'asc')->get(),
-            'last_client_id' => Client::select('infirmary_id')->orderBy('infirmary_id', 'desc')->first() ?? '0',
+            'last_client_id' => Client::select('infirmary_id')->withTrashed()->orderBy('infirmary_id', 'desc')->first() ?? '0',
         ];
     }
 }

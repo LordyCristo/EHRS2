@@ -63,7 +63,6 @@ export default {
                         return;
                 }else{
                     this.form.errors.role = !this.form.role?'Required field':null;
-                    this.form.errors.license_no = !this.form.license_no?'Required field':null;
                     this.form.errors.position = !this.form.position?'Required field':null;
                     if (!this.form.role || !this.form.position)
                         return;
@@ -203,10 +202,10 @@ export default {
 
                 <div class="grid grid-cols-2 gap-3">
                     <InputField name="mobile" :errorMsg="form.errors.mobile" label="Mobile" class="mt-4" :required="true">
-                        <TextInput id="mobile" name="mobile" v-model="form.mobile" type="number" class="mt-1 block w-full" autocomplete="mobile" />
+                        <TextInput id="mobile" name="mobile" v-model="form.mobile" type="text" class="mt-1 block w-full" autocomplete="mobile" />
                     </InputField>
                     <InputField name="telephone" :errorMsg="form.errors.telephone" label="Landline" class="mt-4">
-                        <TextInput id="telephone" name="telephone" v-model="form.telephone" type="number" class="mt-1 block w-full" autocomplete="telephone" />
+                        <TextInput id="telephone" name="telephone" v-model="form.telephone" type="text" class="mt-1 block w-full" autocomplete="telephone" />
                     </InputField>
                 </div>
 
@@ -235,7 +234,7 @@ export default {
                     <TextInput id="specialization" name="specialization" v-model="form.specialization" type="text"
                                class="mt-1 block w-full" autocomplete="specialization" />
                 </InputField>
-                <InputField name="license_no" :errorMsg="form.errors.license_no" label="License Number" class="mt-4" :required="true">
+                <InputField name="license_no" :errorMsg="form.errors.license_no" label="License Number" class="mt-4" >
                     <TextInput id="license_no" name="license_no" v-model="form.license_no" type="text"
                                class="mt-1 block w-full" autocomplete="license_no" />
                 </InputField>

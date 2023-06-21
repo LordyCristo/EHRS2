@@ -62,7 +62,7 @@ class CreateNewUser implements CreatesNewUsers
             'specialization' => ['nullable','string', 'max:255'],
             'position' => ['required', 'string', 'max:255'],
             'role' => ['required'],
-            'license_no' => ['required','string', 'max:255', 'unique:users'],
+            'license_no' => ['nullable','string', 'max:255', 'unique:users'],
             'telephone' => ['nullable','string', 'max:255'],
             'mobile' => ['required','string', 'max:255'],
         ];

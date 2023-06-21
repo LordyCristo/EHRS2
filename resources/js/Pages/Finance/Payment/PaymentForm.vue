@@ -71,6 +71,7 @@ import Datepicker from "@/Components/Generic/Forms/Datepicker.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
+import ViewFieldBelow from "@/Components/Generic/Forms/ViewFieldBelow.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";

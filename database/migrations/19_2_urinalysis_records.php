@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('rqst_physician')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('medical_technologist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('pathologist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
-            $table->foreignId('or_no')->nullable()->constrained('payments','or_no')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->nullOnDelete();
             $table->string('ward')->nullable();
             $table->enum('status',['pending','done','released']);
             $table->boolean('is_out_patient')->default(false);

@@ -7,11 +7,16 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
-            <div class="grid grid-cols-2 gap-1">
-                <InputTextAuto v-model.number="form.infirmary_id" label="Infirmary No." :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                <div class="grid grid-cols-2 gap-1">
-                    <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                    <SelectElement v-model="form.ward" label="Ward" :options="WardType" :required="true" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+            <div class="grid grid-cols-4 gap-1">
+                <DisplayValue label="Request No." :value="form.rqst_id?form.rqst_id:'none'" />
+                <DisplayValue label="Date Requested" :value="formatDate(new Date())" />
+                <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
+                <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
+            </div>
+            <div class="flex gap-3">
+                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />
+                <div class="w-full">
+                    <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 </div>
             </div>
             <!--end of header form-->
@@ -39,8 +44,8 @@
                 <SelectElement v-model="form.medical_technologist" :required="true" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
                 <SelectElement v-model="form.pathologist" :required="true" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
-            <div class="grid grid-cols-2">
-                <RadioButton v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
+            <div class="grid grid-cols-1">
+                <RadioButton v-if="false" v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
                 <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :required="true" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             </div>
             <!--end of hematology footer form-->
@@ -59,6 +64,7 @@ import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import {InOutPatient, WardType} from "@/Legends/legends";
+import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -72,6 +78,7 @@ export default {
         return {
             form: useForm({
                 // hematology record
+                rqst_id: null,
                 infirmary_id: null,
                 rqst_physician: 2,
                 medical_technologist: 2,
@@ -79,7 +86,7 @@ export default {
                 or_no: null,
                 ward: 'OP',
                 status: null,
-                is_out_patient: null,
+                is_out_patient: false,
                 //hematology
                 hemoglobin: 11,
                 hematocrit: 0.35,
@@ -105,19 +112,25 @@ export default {
         onFocusClearError(field) {
             this.form.errors[field] = null;
         },
+        formatDate(date) {
+            // format date to yyyy-mm-dd
+            return date.toLocaleDateString();
+        },
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;
-        this.clients = this.$page.props.clients.data;
+
         this.or_nos = this.$page.props.or_nos.data;
         if (this.action === 'update'){
             this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
             this.formTitle = 'Update Hematology Record';
+            this.clients = this.$page.props.clients.data;
         }
         else {
             this.formTitle = 'Create Hematology Record';
             this.form.infirmary_id = this.$page.props.last_client_id;
+            this.clients = this.$page.props.requests.data;
         }
 
     }

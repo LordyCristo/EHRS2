@@ -37,7 +37,7 @@ class FecalysisController extends Controller
         return Inertia::render('Laboratory/Fecalysis/NewFecalysis',[
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
-            'or_nos' => $this->getOrNos(),
+            'or_nos' => $this->getUnsedOrNos(),
             'requests' => $this->getRequests(),
         ]);
     }
@@ -61,7 +61,7 @@ class FecalysisController extends Controller
             'data' => new FecalysisResource(FecalysisRecord::join('fecalysis','fecalysis.id','=','fecalysis_records.id')->findOrFail($request->id)),
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
-            'or_nos' => $this->getOrNos(),
+            'or_nos' => $this->getAllOrNos(),
             'requests' => $this->getRequests(),
         ]);
     }
@@ -91,7 +91,7 @@ class FecalysisController extends Controller
     /**
      * Get all the or_no that is for fecalysis service and hasn't been used in fecalysis records
      */
-    public function getOrNos()
+    public function getUnsedOrNos()
     {
         return new PaymentCollection(Payment::join('payments_service', 'payments_service.payment_id', '=', 'payments.or_no')
             ->join('services', 'services.id', '=', 'payments_service.service_id')
@@ -101,6 +101,18 @@ class FecalysisController extends Controller
             ->orderBy('payments.or_no', 'asc')
             ->get());
     }
+
+    public function getAllOrNos()
+    {
+        return new PaymentCollection(Payment::join('payments_service', 'payments_service.payment_id', '=', 'payments.or_no')
+            ->join('services', 'services.id', '=', 'payments_service.service_id')
+            ->where('services.room_no', '=', 'Room-3')
+            ->selectRaw('payments.or_no as id, CONCAT(payments.or_no) as name')
+            ->orderBy('payments.or_no', 'asc')
+            ->get());
+    }
+
+
 
     /**
      * Get all the physicians

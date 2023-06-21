@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('dentist')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('or_no')->nullable()->constrained('payments_service','payment_id')->cascadeOnUpdate()->nullOnDelete();
             $table->foreignId('dental_result_id')->nullable()->constrained('dentals')->cascadeOnUpdate()->nullOnDelete();
-            $table->boolean('is_out_patient')->default(false);
+            $table->boolean('is_out_patient')->nullable()->default(false);
             $table->enum('status', ['pending','done','released']);
             $table->timestamps();
             $table->softDeletes();

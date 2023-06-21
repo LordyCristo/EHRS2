@@ -8,12 +8,15 @@ use App\Http\Resources\HematologyCollection;
 use App\Http\Resources\HematologyRecordCollection;
 use App\Http\Resources\HematologyRecordResource;
 use App\Http\Resources\HematologyResource;
+use App\Http\Resources\LaboratoryCollection;
 use App\Http\Resources\PaymentCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\Client;
 use App\Models\FecalysisRecord;
 use App\Models\Hematology;
 use App\Models\HematologyRecord;
+use App\Models\LaboratoryRequest;
+use App\Models\Payment;
 use App\Models\PaymentsService;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -38,7 +41,8 @@ class HematologyController extends Controller
         return Inertia::render('Laboratory/Hematology/NewHematology', [
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
-            'or_nos' => $this->getOrNos(),
+            'or_nos' => $this->getUnsedOrNos(),
+            'requests' => $this->getRequests(),
         ]);
     }
 
@@ -61,7 +65,8 @@ class HematologyController extends Controller
             'data' => new HematologyResource(HematologyRecord::join('hematology', 'hematology.id', '=', 'hematology_records.id')->findOrFail($request->id)),
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
-            'or_nos' => $this->getOrNos(),
+            'or_nos' => $this->getAllOrNos(),
+            'requests' => $this->getRequests(),
         ]);
     }
 
@@ -71,8 +76,15 @@ class HematologyController extends Controller
     private function getClients()
     {
         // get all clients
-        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
-
+        return new ClientCollection(LaboratoryRequest::join('clients','clients.infirmary_id','laboratory_requests.infirmary_id')
+            ->where('laboratory_requests.cbc', 1)
+            ->orWhere('laboratory_requests.platelet_count', 1)
+            ->orWhere('laboratory_requests.bleeding_clottting_time', 1)
+            ->orWhere('laboratory_requests.hemoglobin', 1)
+            ->orWhere('laboratory_requests.hematocrit', 1)
+            ->orWhere('laboratory_requests.blood_typing', 1)
+            ->orWhere('laboratory_requests.wbc_diff_count', 1)
+            ->selectRaw("clients.infirmary_id AS id, laboratory_requests.id as rqst_id, CONCAT(first_name, ' ', last_name) AS name")->get());
 //        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
 //            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
 //            ->leftJoin('hematology_records', function ($join) {
@@ -88,18 +100,25 @@ class HematologyController extends Controller
     /**
      * Get all the or_no that is for hematology service and hasn't been used in hematology records
      */
-    public function getOrNos()
+    public function getUnsedOrNos()
     {
-        return new PaymentCollection(
-            PaymentsService::selectRaw("payments.or_no AS id, CONCAT(payments.or_no, ' - ', clients.first_name, ' ', clients.last_name) AS name")
-                ->join('payments', 'payments.id', '=', 'payments_service.payment_id')
-                ->join('clients', 'clients.infirmary_id', '=', 'payments.infirmary_id')
-                ->leftJoin('hematology_records', 'hematology_records.or_no', '=', 'payments.or_no')
-                ->where('payments_service.service_id', 128)  //128 is the id for hematology/CBC service\
-                ->whereNull('hematology_records.or_no') // Filter out used or_no in hematology_records
-                ->groupBy('payments.or_no')
-                ->get()
-        );
+        return new PaymentCollection(Payment::join('payments_service', 'payments_service.payment_id', '=', 'payments.or_no')
+            ->join('services', 'services.id', '=', 'payments_service.service_id')
+            ->where('services.room_no', '=', 'Room-3')
+            ->whereNotIn('payments.or_no', FecalysisRecord::select('or_no')->get())
+            ->selectRaw('payments.or_no as id, CONCAT(payments.or_no) as name')
+            ->orderBy('payments.or_no', 'asc')
+            ->get());
+    }
+
+    public function getAllOrNos()
+    {
+        return new PaymentCollection(Payment::join('payments_service', 'payments_service.payment_id', '=', 'payments.or_no')
+            ->join('services', 'services.id', '=', 'payments_service.service_id')
+            ->where('services.room_no', '=', 'Room-3')
+            ->selectRaw('payments.or_no as id, CONCAT(payments.or_no) as name')
+            ->orderBy('payments.or_no', 'asc')
+            ->get());
     }
 
     /**
@@ -108,5 +127,23 @@ class HematologyController extends Controller
     public function getPhysicians()
     {
         return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get());
+    }
+
+    /**
+     * Get all the requests
+     */
+    public function getRequests()
+    {
+        return new LaboratoryCollection(LaboratoryRequest::join('clients', 'clients.infirmary_id', 'laboratory_requests.infirmary_id')
+            ->where('laboratory_requests.status', 'pending')
+            ->where('laboratory_requests.cbc', 1)
+            ->orWhere('laboratory_requests.platelet_count', 1)
+            ->orWhere('laboratory_requests.bleeding_clottting_time', 1)
+            ->orWhere('laboratory_requests.hemoglobin', 1)
+            ->orWhere('laboratory_requests.hematocrit', 1)
+            ->orWhere('laboratory_requests.blood_typing', 1)
+            ->orWhere('laboratory_requests.wbc_diff_count', 1)
+            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
+            ->get());
     }
 }

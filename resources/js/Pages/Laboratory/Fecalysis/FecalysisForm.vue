@@ -80,7 +80,7 @@ export default {
                 or_no: null,
                 ward: null,
                 status: null,
-                is_out_patient: null,
+                is_out_patient: false,
                 //fecalysis
                 color: null,
                 consistency: null,
@@ -111,16 +111,18 @@ export default {
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;
-        this.clients = this.$page.props.clients.data;
+
         this.or_nos = this.$page.props.or_nos.data;
         if (this.action === 'update'){
             this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
             this.formTitle = 'Update Fecalysis Record';
+            this.clients = this.$page.props.clients.data;
         }
         else {
             this.formTitle = 'Create Fecalysis Record';
             this.form.ova = 'No Ova or parasites seen';
+            this.clients = this.$page.props.requests.data;
         }
     }
 };

@@ -14,6 +14,11 @@
             <div class="grid grid-cols-1 gap-1">
                 <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
             </div>
+            <div v-if="selctedClient" class="grid grid-cols-3 gap-1">
+                <ViewField label="Infirmary ID" :value="selctedClient.id" class="text-xs" />
+                <ViewField label="Sex" :value="selctedClient.sex" class="text-xs capitalize" />
+                <ViewField label="Age" :value="selctedClient.age" class="text-xs" />
+            </div>
             <!--end of header form-->
             <!--urinalysis body form-->
             <div class="my-2 border-y py-5">
@@ -29,7 +34,6 @@
                     <Checkbox v-model="form.blood_typing" label="Blood Typing"/>
                     <Checkbox v-model="form.pregnancy_test" label="Pregnancy Test"/>
                     <Checkbox v-model="form.afb_straining" label="AFB Staining"/>
-
                 </div>
                 <div class="flex flex-col">
                     <Checkbox v-model="form.is_other" label="Others"/>
@@ -71,6 +75,7 @@ import {
 import Checkbox from "@/Components/Generic/Forms/Checkbox.vue";
 import ViewFieldBelow from "@/Components/Generic/Forms/ViewFieldBelow.vue";
 import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
+import ViewField from "@/Components/Generic/Forms/ViewField.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -108,8 +113,14 @@ export default {
             physicians: [],
             or_nos: [],
             clients: [],
+            selctedClient: null,
             formTitle: null,
         };
+    },
+    watch:{
+        'form.infirmary_id': function (val){
+            this.selctedClient = this.clients.find(client => client.id === val);
+        }
     },
     methods: {
         onFocusClearError(field) {

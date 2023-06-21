@@ -75,7 +75,7 @@ class UrinalysisController extends Controller
         //return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
         return new ClientCollection(LaboratoryRequest::join('clients','clients.infirmary_id','laboratory_requests.infirmary_id')
             ->where('laboratory_requests.urinalysis', 1)
-            ->selectRaw("clients.infirmary_id AS id, laboratory_requests.id as rqst_id, CONCAT(clients.infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
+            ->selectRaw("clients.infirmary_id AS id, laboratory_requests.id as rqst_id, CONCAT(first_name, ' ', last_name) AS name")->get());
     }
 
     /**

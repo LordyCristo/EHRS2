@@ -7,11 +7,16 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
-            <div class="grid grid-cols-2 gap-1">
-                <InputTextAuto v-model="form.infirmary_id" :required="true" :autofocus="true"  label="Infirmary No" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                <div class="grid grid-cols-2 gap-1">
-                    <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                    <SelectElement v-model="form.ward" :required="true" label="Ward" :options="wards" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
+            <div class="grid grid-cols-4 gap-1">
+                <DisplayValue label="Request No." :value="form.rqst_id?form.rqst_id:'none'" />
+                <DisplayValue label="Date Requested" :value="formatDate(new Date())" />
+                <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
+                <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
+            </div>
+            <div class="flex gap-3">
+                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />
+                <div class="w-full">
+                    <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 </div>
             </div>
             <!--end of header form-->
@@ -37,8 +42,8 @@
                 <SelectElement v-model="form.medical_technologist" :required="true" label="Medical Technologist" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
                 <SelectElement v-model="form.pathologist" :required="true" label="Pathologist" :options="physicians" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
-            <div class="grid grid-cols-2">
-                <RadioButton v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
+            <div class="grid grid-cols-1">
+                <RadioButton v-if="false" v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
                 <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :required="true" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             </div>
             <!--end of fecalysis footer form-->
@@ -53,6 +58,7 @@ import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import {InOutPatient, Lab_Group_4, Lab_Group_6} from "@/Legends/legends";
+import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -66,6 +72,7 @@ export default {
         return {
             form: useForm({
                 // fecalysis record
+                rqst_id: null,
                 infirmary_id: null,
                 rqst_physician: 2,
                 medical_technologist: 4,
@@ -96,6 +103,10 @@ export default {
     methods: {
         onFocusClearError(field) {
             this.form.errors[field] = null;
+        },
+        formatDate(date) {
+            // format date to yyyy-mm-dd
+            return date.toLocaleDateString();
         },
     },
     mounted() {

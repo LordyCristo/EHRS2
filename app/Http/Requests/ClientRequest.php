@@ -35,7 +35,7 @@ class ClientRequest extends FormRequest
             'sex' => ['required'],
             'civil_status' => ['required'],
             'phone' => ['required', 'string', Rule::unique('clients', 'phone')->ignore($id), 'starts_with:09', 'size:11'],
-            'email_address' => ['required', 'string', 'email', 'max:255', Rule::unique('clients', 'email_address')->ignore($id)],
+            'email_address' => ['nullable', 'string', 'email', 'max:255', Rule::unique('clients', 'email_address')->ignore($id)],
             'home_address' => ['required', 'string', 'max:255'],
             'curr_address' => ['required', 'string', 'max:255'],
             'employer' => ['nullable', 'string', 'max:255'],

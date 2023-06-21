@@ -39,7 +39,7 @@
                     <InputText v-model.trim="form.nationality" label="Nationality" :errorMsg="form.errors.nationality" @input="onFocusClearError('nationality')" />
                 </div>
                 <div class="grid grid-cols-2">
-                    <InputText v-model.trim="form.email_address" label="Email" required type="text" :errorMsg="form.errors.email_address" @input="onFocusClearError('email_address')" />
+                    <InputText v-model.trim="form.email_address" label="Email" type="text" :errorMsg="form.errors.email_address" @input="onFocusClearError('email_address')" />
                     <InputText v-model.trim="form.phone" label="Phone" type="tel" required :errorMsg="form.errors.phone" @input="onFocusClearError('phone')" />
                 </div>
                 <div class="grid grid-cols-2">

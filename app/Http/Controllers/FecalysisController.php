@@ -6,10 +6,12 @@ use App\Http\Resources\ClientCollection;
 use App\Http\Resources\ClientResource;
 use App\Http\Resources\fecalysisCollection;
 use App\Http\Resources\fecalysisResource;
+use App\Http\Resources\LaboratoryCollection;
 use App\Http\Resources\PaymentCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\Fecalysis;
 use App\Models\FecalysisRecord;
+use App\Models\LaboratoryRequest;
 use App\Models\Payment;
 use App\Models\Client;
 use App\Models\PaymentsService;
@@ -36,6 +38,7 @@ class FecalysisController extends Controller
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
             'or_nos' => $this->getOrNos(),
+            'requests' => $this->getRequests(),
         ]);
     }
 
@@ -59,6 +62,7 @@ class FecalysisController extends Controller
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
             'or_nos' => $this->getOrNos(),
+            'requests' => $this->getRequests(),
         ]);
     }
 
@@ -68,7 +72,9 @@ class FecalysisController extends Controller
     private function getClients()
     {
         // get all clients
-        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
+        return new ClientCollection(LaboratoryRequest::join('clients','clients.infirmary_id','laboratory_requests.infirmary_id')
+            ->where('laboratory_requests.stool_exam', 1)
+            ->selectRaw("clients.infirmary_id AS id, laboratory_requests.id as rqst_id, CONCAT(first_name, ' ', last_name) AS name")->get());
 //        Get all client who paid for fecalysis service but hasn't been used in fecalysis records
 //        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
 //            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
@@ -87,20 +93,12 @@ class FecalysisController extends Controller
      */
     public function getOrNos()
     {
-        $selectedFecalysisId = request()->id;
-        $selectedFecalysisInfirmaryId = FecalysisRecord::where('id', $selectedFecalysisId)->value('infirmary_id');
-
-        return new PaymentCollection(PaymentsService::select('payments_service.payment_id AS id', 'payments_service.payment_id AS name')
-            ->leftJoin('fecalysis_records', function ($join) use ($selectedFecalysisId, $selectedFecalysisInfirmaryId) {
-                $join->on('fecalysis_records.or_no', '=', 'payments_service.payment_id')
-                    ->where(function ($query) use ($selectedFecalysisId, $selectedFecalysisInfirmaryId) {
-                        $query->whereNull('fecalysis_records.or_no')
-                            ->orWhere('fecalysis_records.id', $selectedFecalysisId)
-                            ->orWhere('fecalysis_records.infirmary_id', $selectedFecalysisInfirmaryId);
-                    });
-            })
-            ->where('payments_service.service_id', 2)
-            ->orderBy('payments_service.payment_id', 'asc')
+        return new PaymentCollection(Payment::join('payments_service', 'payments_service.payment_id', '=', 'payments.or_no')
+            ->join('services', 'services.id', '=', 'payments_service.service_id')
+            ->where('services.room_no', '=', 'Room-3')
+            ->whereNotIn('payments.or_no', FecalysisRecord::select('or_no')->get())
+            ->selectRaw('payments.or_no as id, CONCAT(payments.or_no) as name')
+            ->orderBy('payments.or_no', 'asc')
             ->get());
     }
 
@@ -110,5 +108,17 @@ class FecalysisController extends Controller
     public function getPhysicians()
     {
         return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get());
+    }
+
+    /**
+     * Get all the requests
+     */
+    public function getRequests()
+    {
+        return new LaboratoryCollection(LaboratoryRequest::join('clients', 'clients.infirmary_id', 'laboratory_requests.infirmary_id')
+            ->where('laboratory_requests.stool_exam', 1)
+            ->where('laboratory_requests.status', 'pending')
+            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
+            ->get());
     }
 }

@@ -74,8 +74,8 @@ class LaboratoryRequestApi extends Controller
 
     public function tableApi(Request $request): JsonResponse
     {
-        $query = \App\Models\LaboratoryRequest::join('clients', 'laboratory_requests.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('laboratory_requests.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
+        $query = LaboratoryRequest::join('clients', 'laboratory_requests.infirmary_id', '=', 'clients.infirmary_id')
+            ->selectRaw('laboratory_requests.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

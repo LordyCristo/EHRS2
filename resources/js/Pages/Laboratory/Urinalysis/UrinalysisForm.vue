@@ -7,11 +7,16 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
-            <div class="grid grid-cols-2 gap-1">
-                <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Infirmary No." :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
-                <div class="grid grid-cols-2 gap-1">
-                    <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
-                    <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
+            <div class="grid grid-cols-4 gap-1">
+                <DisplayValue label="Request No." :value="form.rqst_id?form.rqst_id:'none'" />
+                <DisplayValue label="Date Requested" :value="formatDate(new Date())" />
+                <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
+                <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
+            </div>
+            <div class="flex gap-3">
+                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />
+                <div class="w-full">
+                    <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 </div>
             </div>
             <!--end of header form-->
@@ -34,8 +39,8 @@
                    <SelectElement v-model="form.rbc" label="RBC" :options="Lab_Group_4" :errorMsg="form.errors.rbc" :required="true" @input="onFocusClearError('rbc')" />
                    <SelectElement v-model="form.epithelial_cells" :options="Lab_Group_1" label="Epithelial Cells" :required="true" :errorMsg="form.errors.epithelial_cells" @input="onFocusClearError('epithelial_cells')" />
                    <SelectElement v-model="form.bacteria" label="Bacteria" :options="Lab_Group_1" :errorMsg="form.errors.bacteria" :required="true" @input="onFocusClearError('bacteria')" />
-                   <SelectElement v-model="form.amorphous_urates" :options="Lab_Group_1" label="Amorphous Urates" :required="true" :errorMsg="form.errors.amorphous_urates" @input="onFocusClearError('amorphous_urates')" />
-                   <SelectElement v-model="form.amorphous_phosphates" :options="Lab_Group_1" label="Amorphous Phosphates" :required="true" :errorMsg="form.errors.amorphous_phosphates" @input="onFocusClearError('amorphous_phosphates')" />
+                   <SelectElement v-model="form.amorphous_urates" :options="Lab_Group_1" label="Urates" :required="true" :errorMsg="form.errors.amorphous_urates" @input="onFocusClearError('amorphous_urates')" />
+                   <SelectElement v-model="form.amorphous_phosphates" :options="Lab_Group_1" label="Phosphates" :required="true" :errorMsg="form.errors.amorphous_phosphates" @input="onFocusClearError('amorphous_phosphates')" />
                    <SelectElement v-model="form.mucous_threads" :options="Lab_Group_1" label="Mucus Threads" :required="true" :errorMsg="form.errors.mucous_threads" @input="onFocusClearError('mucous_threads')" />
                    <InputText v-model="form.crystals" label="Crystals" :errorMsg="form.errors.crystals" @input="onFocusClearError('crystals')" />
                    <InputText v-model="form.cast" label="Cast" :errorMsg="form.errors.cast" @input="onFocusClearError('cast')" />
@@ -51,8 +56,8 @@
                 <SelectElement v-model="form.medical_technologist" label="Medical Technologist" :required="true" :options="physicians" :errorMsg="form.errors.medical_technologist" @input="form.errors['medical_technologist'] = null" />
                 <SelectElement v-model="form.pathologist" label="Pathologist" :options="physicians" :required="true" :errorMsg="form.errors.pathologist" @input="form.errors['pathologist'] = null" />
             </div>
-            <div class="grid grid-cols-2">
-                <RadioButton v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
+            <div class="grid grid-cols-1">
+                <RadioButton v-if="false" v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
                 <RadioButton v-model="form.status" id="status" label="Status" :options="statuses" :required="true" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             </div>
             <!--end of urinalysis footer form-->
@@ -79,6 +84,7 @@ import {
     Lab_Group_5,
     WardType
 } from "@/Legends/legends";
+import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -93,6 +99,7 @@ export default {
             form: useForm({
                 // urinalysis record
                 infirmary_id: null,
+                rqst_id: null,
                 rqst_physician: 1,
                 medical_technologist: 1,
                 pathologist: 1,
@@ -137,17 +144,31 @@ export default {
         onFocusClearError(field) {
             this.form.errors[field] = null;
         },
+        formatDate(date) {
+            // format date to yyyy-mm-dd
+            return date.toLocaleDateString();
+        },
+    },
+    watch:{
+        'form.infirmary_id': function (val) {
+            const temp = this.clients.find(client => client.id === val);
+            if (temp)
+                this.form.rqst_id = temp.rqst_id;
+            else
+                this.form.rqst_id = null;
+        },
     },
     mounted() {
         this.physicians = this.$page.props.physicians.data;
-        this.clients = this.$page.props.clients.data;
         this.or_nos = this.$page.props.or_nos.data;
         if (this.action === 'update'){
             this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
             this.formTitle = 'Update Urinalysis Record';
+            this.clients = this.$page.props.clients.data;
         }
         else {
+            this.clients = this.$page.props.requests.data;
             this.formTitle = 'Create Urinalysis Record';
             this.form.infirmary_id = this.$page.props.last_client_id;
             // set all required field to negative as default

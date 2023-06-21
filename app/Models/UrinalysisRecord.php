@@ -14,6 +14,7 @@ class UrinalysisRecord extends Model
     protected $table = 'urinalysis_records';
     protected $fillable = [
         'id',
+        'rqst_id',
         'infirmary_id',
         'urinalysis_id',
         'rqst_physician',

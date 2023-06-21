@@ -35,6 +35,7 @@ class Urinalysis extends Model
         'mucous_threads',
         'crystals',
         'cast',
+        'remarks',
     ];
 
     public function urinalysisRecord()

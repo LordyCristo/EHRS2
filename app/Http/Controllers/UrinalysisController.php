@@ -55,10 +55,13 @@ class UrinalysisController extends Controller
     public function edit(Request $request)
     {
         return Inertia::render('Laboratory/Urinalysis/EditUrinalysis',[
-            'data' => new UrinalysisResource(UrinalysisRecord::join('urinalysis', 'urinalysis.id', '=', 'urinalysis_records.id')->findOrFail($request->id)),
+            'data' => new UrinalysisResource(UrinalysisRecord::join('urinalysis', 'urinalysis.id', '=', 'urinalysis_records.id')
+                ->selectRaw('urinalysis.*, urinalysis_records.*')
+                ->findOrFail($request->id)),
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
             'or_nos' => $this->getOrNos(),
+            'requests' => $this->getRequests(),
         ]);
     }
 
@@ -69,17 +72,9 @@ class UrinalysisController extends Controller
     {
         // get all clients
         //return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
-        return new ClientCollection(LaboratoryRequest::join('clients','clients.infirmary_id','laboratory_requests.infirmary_id')->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
-//        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
-//            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-//            ->leftJoin('urinalysis_records', function ($join) {
-//                $join->on('urinalysis_records.or_no', '=', 'payments_service.payment_id')
-//                    ->whereNull('urinalysis_records.or_no');
-//            })
-//            ->where('payments_service.service_id', 1)
-//            ->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")
-//            ->groupBy('clients.infirmary_id')
-//            ->get());
+        return new ClientCollection(LaboratoryRequest::join('clients','clients.infirmary_id','laboratory_requests.infirmary_id')
+            ->where('laboratory_requests.urinalysis', 1)
+            ->selectRaw("clients.infirmary_id AS id, laboratory_requests.id as rqst_id, CONCAT(clients.infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
     }
 
     /**
@@ -112,7 +107,7 @@ class UrinalysisController extends Controller
         return new LaboratoryCollection(LaboratoryRequest::join('clients', 'clients.infirmary_id', 'laboratory_requests.infirmary_id')
             ->where('laboratory_requests.urinalysis', 1)
             ->where('laboratory_requests.status', 'pending')
-            ->selectRaw('clients.infirmary_id as id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
+            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
             ->get());
     }
 }

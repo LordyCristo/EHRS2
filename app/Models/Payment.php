@@ -15,7 +15,6 @@ class Payment extends Model
     protected $table = 'payments';
 
     protected $fillable = [
-        'id',
         'or_no',
         'payor_name',
         'payor_email',
@@ -38,6 +37,6 @@ class Payment extends Model
 
     public function paidServices()
     {
-        return $this->hasMany(PaymentsService::class, 'payment_id', 'id')->with('fees');
+        return $this->hasMany(PaymentsService::class, 'payment_id', 'or_no')->with('fees');
     }
 }

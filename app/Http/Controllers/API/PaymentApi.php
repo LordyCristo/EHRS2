@@ -59,14 +59,35 @@ class PaymentApi extends Controller
     public function store(PaymentRequest $request)
     {
         if (!empty($request['rows'])) {
-            $newPayment = Payment::create($request->all());
+            $newPayment = Payment::create($request->validated());
             if ($newPayment) {
                 $rows = $request['rows'];
+                //row validation
+                $validator = Validator::make($rows, [
+                    '*.service_id' => ['required', 'integer', Rule::exists('services', 'id')],
+                    '*.fee' => ['required', 'numeric'],
+                ]);
+
+                if ($validator->fails()) {
+                    $newPayment->forceDelete();
+                    return response()->json([
+                        'data' => null,
+                        'errors' => $validator->errors(),
+                        'notification' => [
+                            'id' => uniqid(),
+                            'show' => true,
+                            'type' => 'warning',
+                            'message' => 'Failed to create transaction record',
+                            'data' => $request->all(),
+                        ]
+                    ])->setStatusCode(422);
+                }
+
                 // Save rows in payments_services table
                 foreach ($rows as $row) {
                     $newPayment->paidServices()->create([
                         'service_id' => $row['service_id'],
-                        'payment_id' => $request->or_no,
+                        'payment_id' => $newPayment->or_no,
                         'fee' => $row['fee'],
                     ]);
                 }

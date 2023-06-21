@@ -64,6 +64,8 @@ class UrinalysisRequest extends FormRequest
             //fecalysis record
             'infirmary_id.required' => 'Required field',
             'infirmary_id.exists' => 'Patient ID does not exist',
+            'rqst_id.required' => 'Required field',
+            'rqst_id.exists' => 'Request ID does not exist',
             'ward.required' => 'Required field',
             'age.numeric' => 'Invalid format',
             'sex.required' => 'Required field',

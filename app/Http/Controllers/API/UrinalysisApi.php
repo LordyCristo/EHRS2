@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UrinalysisRequest;
 use App\Http\Resources\UrinalysisCollection;
 use App\Http\Resources\UrinalysisResource;
+use App\Models\LaboratoryRequest;
 use App\Models\Urinalysis;
 use App\Models\UrinalysisRecord;
 use Exception;
@@ -31,8 +32,9 @@ class UrinalysisApi extends Controller
         $newUrinalysis = Urinalysis::create($request->validated());
         if ($newUrinalysis){
             $request->merge(['urinalysis_id' => $newUrinalysis->id]);
-            $newRecord = $newUrinalysis->urinalysisRecord()->create($request->all());
+            $newRecord = $newUrinalysis->urinalysisRecord()->create($request->validated());
             if ($newRecord){
+                LaboratoryRequest::find($request->rqst_id)->update(['status' => 'done']);
                 return response()->json([
                     'data' => (new UrinalysisResource($newRecord)),
                     'notification' => [

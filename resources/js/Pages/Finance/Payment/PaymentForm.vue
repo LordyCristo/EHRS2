@@ -10,7 +10,7 @@
                 <div class="flex justify-between gap-1">
                     <DisplayValue v-if="form.or_no" label="OR No." :value="form.or_no" :errorMsg="form.errors.or_no" required />
                     <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />
-                    <DisplayValue label="Date Issued" :value="dateNow" :errorMsg="form.errors.or_no" />
+                    <DisplayValue label="Date Issued" :value="dateNow" />
                 </div>
                 <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 <div class="flex items-center justify-end text-sm gap-1 mx-1">
@@ -35,7 +35,7 @@
                     <div v-for="(row, index) in form.rows" :key="index" class="flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
                         <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
                         <div class="w-full">
-                            <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee);setFee(row)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null;" />
+                            <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null;" />
                         </div>
                         <InputText v-model="row.fee" type="number" class="max-w-[6rem]" @input="calculateTotalAmount(row.fee);form.errors['rows.' + index + '.fee'] = null;" :errorMsg="form.errors['rows.' + index + '.fee']" />
                         <div class="bg-gray-300 rounded-md mx-3 p-0.5 hover:scale-110 duration-100 active:scale-95 shadow-sm" @click="deleteRow(index)" >

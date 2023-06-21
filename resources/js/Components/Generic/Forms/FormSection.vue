@@ -60,6 +60,7 @@ onMounted(() => {
 });
 
 const submit = () => {
+    console.log(props.form);
     if (props.action === 'store') {
         storeForm();
     } else if (props.action === 'update') {

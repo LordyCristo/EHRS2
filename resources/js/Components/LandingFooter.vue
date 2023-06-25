@@ -133,33 +133,33 @@ import { Head, Link } from '@inertiajs/vue3';
                         Introducing our state-of-the-art Electronic Health Record (EHR) system, designed to streamline and improve the way healthcare providers manage patient information. Our EHR system is an advanced software application that allows doctors and medical staff to quickly and easily access patient data, view medical history, and manage health records all in one place. The system is designed with cutting-edge security measures to ensure patient confidentiality, and it is customizable to meet the unique needs of any healthcare organization. Our EHR system is a powerful tool that simplifies clinical workflows and helps healthcare providers provide better care to their patients.
                     </p>
                 </div>
-                <div>
-                    <h4>Pages</h4>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Services</a></li>
-                        <li><a href="#">Events</a></li>
-                        <template v-if="!$page.props.auth.user">
-                        <li>
-                            <Link :href="route('login')">
-                                Login
-                            </Link>
-                        </li>
-                        <li>
-                            <Link :href="route('register')">
-                                Register
-                            </Link>
-                        </li>
-                        </template>
-                    </ul>
-                </div>
-                <div>
-                    <h4>Help</h4>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Payments Options</a></li>
-                    </ul>
-                </div>
+<!--                <div>-->
+<!--                    <h4>Pages</h4>-->
+<!--                    <ul>-->
+<!--                        <li><a href="#">About Us</a></li>-->
+<!--                        <li><a href="#">Our Services</a></li>-->
+<!--                        <li><a href="#">Events</a></li>-->
+<!--                        <template v-if="!$page.props.auth.user">-->
+<!--                        <li>-->
+<!--                            <Link :href="route('login')">-->
+<!--                                Login-->
+<!--                            </Link>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <Link :href="route('register')">-->
+<!--                                Register-->
+<!--                            </Link>-->
+<!--                        </li>-->
+<!--                        </template>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <h4>Help</h4>-->
+<!--                    <ul>-->
+<!--                        <li><a href="#">FAQ</a></li>-->
+<!--                        <li><a href="#">Payments Options</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
             </div>
         </div>
         <div class="text-center text-white p-5 bg-vsu-green">

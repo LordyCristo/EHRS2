@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('xrays', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rqst_id')->unique()->constrained('xray_requests')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('procedure');
+            $table->foreignId('procedure')->constrained('services')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('impression');
             $table->string('radiographic_findings');
             $table->foreignId('rad_tech_id')->nullable()->constrained('users')->cascadeOnUpdate()->nullOnDelete();

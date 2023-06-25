@@ -20,16 +20,16 @@
                     <ViewField label="Requesting Physician" :value="formattedFullName(data.rqst_physician)" />
                 </div>
                 <div class="grid grid-cols-1 gap-5">
-                    <ViewField label="Procedure" :value="data.xray.procedure" />
+                    <ViewField label="Procedure" :value="data.xray.xray_procedures.name" />
                 </div>
                 <div class="grid grid-cols-1 gap-5 mb-16">
                     <ViewField label="Radiographic Findings" :value="data.xray.radiographic_findings" />
-                    <div v-if="data.xray.radiograph" class="flex justify-center">
-                        <img :src="data.xray.radiograph.image" class="uploading-image max-w-xl"  alt="sass"/>
-                    </div>
-                    <div v-else>
-                        No Radiographic image
-                    </div>
+<!--                    <div v-if="data.xray.radiograph" class="flex justify-center">-->
+<!--                        <img :src="data.xray.radiograph.image" class="uploading-image max-w-md max-h-72"  alt="sass"/>-->
+<!--                    </div>-->
+<!--                    <div v-else>-->
+<!--                        No Radiographic image-->
+<!--                    </div>-->
                 </div>
                 <div class="grid grid-cols-1 gap-5">
                     <ViewField label="Impression" :value="data.xray.impression" />

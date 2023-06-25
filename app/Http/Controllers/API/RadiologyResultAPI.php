@@ -7,6 +7,7 @@ use App\Http\Requests\RadiologyRequestRequest;
 use App\Http\Requests\RadiologyResultRequest;
 use App\Http\Resources\XrayCollection;
 use App\Http\Resources\XrayResource;
+use App\Models\Radiograph;
 use App\Models\Xray;
 use App\Models\XrayRequest;
 use Illuminate\Http\JsonResponse;
@@ -83,6 +84,9 @@ class RadiologyResultAPI extends Controller
     public function update(RadiologyResultRequest $request)
     {
         $record = XrayRequest::findOrFail($request->rqst_id);
+        Radiograph::findOrFail($record->xray->id)->update([
+            'image' => $request->image,
+        ]);
         if ($record->xray()->update($request->validated())) {
             return response()->json([
                 'data' => (new XrayResource($record)),

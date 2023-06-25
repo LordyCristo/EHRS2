@@ -105,13 +105,13 @@ export default{
 <!--                            </Popover>-->
 <!--                            <a href="#" class="text-xs leading-6">EVENTS</a>-->
 <!--                            <a href="#" class="text-xs leading-6">ABOUT</a>-->
-                            <Link :href="'/'" class="text-sm font-light" :class="{ 'text-vsu-yellow': isHomePage }">
+                            <Link :href="'/'" class="text-sm font-medium" :class="{ 'text-vsu-yellow': isHomePage }">
                                 HOME
                             </Link>
-                            <Link :href="route('login')" class="text-sm font-light" :class="{ 'text-vsu-yellow': isLoginPage }">
+                            <Link :href="route('login')" class="text-sm font-medium" :class="{ 'text-vsu-yellow': isLoginPage }">
                                 LOGIN
                             </Link>
-                            <Link :href="route('register')" class="text-sm font-light" :class="{ 'text-vsu-yellow': isRegisterPage }">
+                            <Link :href="route('register')" class="text-sm font-medium" :class="{ 'text-vsu-yellow': isRegisterPage }">
                                 REGISTER
                             </Link>
                         </PopoverGroup>

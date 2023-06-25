@@ -11,38 +11,13 @@
                 <div class="grid grid-cols-2">
                     <div class="grid grid-cols-2">
                         <InputTextAuto v-model="form.infirmary_id" label="Patient" :options="clients" required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-700">Infirmary ID:</span>
-                            <div v-if="selected_client" class="flex flex-row h-full items-center justify-center">
-                                {{ selected_client.id }}
-                            </div>
-                        </div>
+                        <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />
                     </div>
                     <div class="grid grid-cols-4">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-700">Sex:</span>
-                            <div v-if="selected_client" class="flex flex-row h-full items-center capitalize justify-center">
-                                {{ selected_client.sex }}
-                            </div>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-700">Birthdate:</span>
-                            <div v-if="selected_client" class="flex flex-row h-full items-center justify-center">
-                                {{ selected_client.birthdate }}
-                            </div>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-700">Age:</span>
-                            <div v-if="selected_client" class="flex flex-row h-full items-center justify-center">
-                                {{ selected_client.age }}
-                            </div>
-                        </div>
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-700">Civil Status:</span>
-                            <div v-if="selected_client" class="flex flex-row h-full items-center capitalize justify-center">
-                                {{ selected_client.civil_status }}
-                            </div>
-                        </div>
+                        <DisplayValue v-if="selected_client" label="Sex:" :value="selected_client.sex" />
+                        <DisplayValue v-if="selected_client" label="Birthdate:" :value="selected_client.birthdate" />
+                        <DisplayValue v-if="selected_client" label="Age:" :value="selected_client.age" />
+                        <DisplayValue v-if="selected_client" label="Civil Status:" :value="selected_client.civil_status" />
                     </div>
                 </div>
                 <div class="grid grid-cols-4">
@@ -51,7 +26,7 @@
                     <InputText v-model="form.blood_pressure" label="Blood Pressure" required :errorMsg="form.errors.blood_pressure" @input="onFocusClearError('blood_pressure');" />
                     <InputText v-model="form.pulse" label="Pulse Rate" required :errorMsg="form.errors.pulse" @input="onFocusClearError('pulse');" />
                 </div>
-                <div class="grid grid-cols-2">
+                <div class="grid grid-cols-4">
                     <InputTextArea v-model="form.prev_illns_oprtn" label="Previous Illness/Operation" :errorMsg="form.errors.prev_illns_oprtn" @input="onFocusClearError('prev_illns_oprtn');" />
                     <InputTextArea v-model="form.immnztn_vccntn" label="Immunization/Vaccination" :errorMsg="form.errors.immnztn_vccntn" @input="onFocusClearError('immnztn_vccntn');" />
                     <InputTextArea v-model="form.head_neck" label="Head and Neck" :errorMsg="form.errors.head_neck" @input="onFocusClearError('head_neck');" />
@@ -99,6 +74,7 @@ import {
     TemperatureLocation
 } from "@/Legends/legends";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
+import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";

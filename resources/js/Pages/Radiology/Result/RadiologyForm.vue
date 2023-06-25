@@ -30,7 +30,6 @@
                 </div>
             </div>
             <!--end of header form-->
-
             <!--urinalysis body form-->
             <div class="my-2 border-y py-5">
                 <div class="grid grid-cols-1 gap-1">
@@ -123,7 +122,15 @@ export default {
         this.procedures = this.$page.props.xray_procedures.data;
         if (this.action === 'update'){
             this.data = this.$page.props.data.data.xray;
-            this.form = useForm(this.data);
+            this.form = useForm({
+                rqst_id: this.data.rqst_id,
+                procedure: this.data.procedure,
+                impression: this.data.impression,
+                radiographic_findings: this.data.radiographic_findings,
+                rad_tech_id: this.data.rad_tech_id,
+                radiologist_id: this.data.radiologist_id,
+                image: this.data.radiograph.image,
+            });
             this.formTitle = 'Update X-ray Result';
         }
         else {

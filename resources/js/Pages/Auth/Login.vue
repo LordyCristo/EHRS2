@@ -63,6 +63,7 @@ const submit = () => {
                         v-model="form.email"
                         type="text"
                         class="mt-1 block w-full"
+                        @input="form.errors.email = null"
                         autofocus
                         autocomplete="username"
                     />
@@ -79,6 +80,7 @@ const submit = () => {
                         v-model="form.password"
                         type="password"
                         class="mt-1 block w-full"
+                        @input="form.errors.password = null"
                         autocomplete="current-password"
                     />
 

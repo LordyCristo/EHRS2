@@ -42,4 +42,9 @@ class Xray extends Model
     {
         return $this->hasOne(Radiograph::class, 'xray_id', 'id');
     }
+
+    public function xrayProcedures()
+    {
+        return $this->hasOne(Services::class,'id', 'procedure');
+    }
 }

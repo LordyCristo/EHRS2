@@ -108,7 +108,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 8,
                     title: 'Physical Exam',
                     link: 'physicalexam.index',
                     tabName: '/physicalexam',

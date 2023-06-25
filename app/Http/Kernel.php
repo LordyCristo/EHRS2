@@ -16,6 +16,7 @@ use App\Http\Middleware\IOACM;
 use App\Http\Middleware\LaboratoryACM;
 use App\Http\Middleware\MaternityACM;
 use App\Http\Middleware\MorepagesACM;
+use App\Http\Middleware\NurseACM;
 use App\Http\Middleware\PharmacyACM;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RadiologyACM;
@@ -113,5 +114,6 @@ class Kernel extends HttpKernel
         'racm' => RadiologyACM::class,
         'ioacm' => IOACM::class,
         'aacm' => AdminACM::class,
+        'nacm' => NurseACM::class,
     ];
 }

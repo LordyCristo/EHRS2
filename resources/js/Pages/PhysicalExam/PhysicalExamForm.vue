@@ -144,7 +144,7 @@ export default {
             this.form = useForm(this.data);
             this.formTitle = 'Update Physical Exam';
         }else{
-            this.formTitle = 'New Physical Exam Report';
+            this.formTitle = 'New Physical Exam Report';;
         }
         this.clients = this.$page.props.clients.data;
         this.physicians = this.$page.props.physicians.data;

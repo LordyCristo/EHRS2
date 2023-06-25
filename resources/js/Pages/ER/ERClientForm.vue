@@ -1,9 +1,9 @@
 <template>
     <FormSection :data="data" :form="form" :action="action"
                  index-link="client.index"
-                 :update-link="data? route('api.er.update', data.client_id): null"
+                 :update-link="data? route('api.er.update', data.id): null"
                  :store-link="route('api.client.store')"
-                 :delete-link="data? route('api.client.destroy', data.client_id): null"
+                 :delete-link="data? route('api.client.destroy', data.id): null"
     >
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
@@ -24,6 +24,10 @@
                             <DisplayValue label="Email" :value="data.email_address" />
                         </div>
                     </div>
+                </div>
+                <div>
+                    <InputTextAuto v-model="form.infirmary_id" label="Infirmary ID" :options="clients" required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id')" />
+
                 </div>
                 <div class="grid grid-cols-4">
                     <Datepicker v-model="form.date_admitted" label="Date" required :errorMsg="form.errors.date_admitted" @input="onFocusClearError('date_admitted')" />
@@ -104,7 +108,7 @@ export default {
             data: null,
             degree_programs: null,
             client_types: null,
-            last_client_id: null,
+            clients: [],
             formTitle: null,
             form: useForm({
                 is_emergency: false,
@@ -175,42 +179,15 @@ export default {
     mounted() {
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;
-            this.form = useForm({
-                date_admitted: this.data.date_admitted,
-                time_admitted: this.data.time_admitted,
-                brought_by: this.data.brought_by,
-                arrival_condition: this.data.arrival_condition,
-                temperature: this.data.temperature,
-                temperature_location: this.data.temperature_location,
-                weight: this.data.weight,
-                pulse_rate: this.data.pulse_rate,
-                blood_pressure: this.data.blood_pressure,
-                cardiac_rate: this.data.cardiac_rate,
-                respiratory_rate: this.data.respiratory_rate,
-                oxygen_saturation: this.data.oxygen_saturation,
-                chief_complaint: this.data.chief_complaint,
-                allergies: this.data.allergies,
-                physical_exam: this.data.physical_exam,
-                current_medications: this.data.current_medications,
-                treatment: this.data.treatment,
-                nurse_notes: this.data.nurse_notes,
-                diagnosis: this.data.diagnosis,
-                date_disposition: this.data.date_disposition,
-                time_disposition: this.data.time_disposition,
-                disposition: this.data.disposition,
-                discharge_condition: this.data.discharge_condition,
-                attending_nurse: this.data.attending_nurse,
-                attending_physician: this.data.attending_physician,
-            });
-            this.formTitle = 'Update Client Details';
+            this.form = useForm( this.data );
+            this.formTitle = 'Update ER Record';
             this.data = this.$page.props.data.data;
             console.log(this.data);
         }else{
-            this.formTitle = 'Register New Client';
-            this.form.infirmary_id = this.$page.props.last_client_id.infirmary_id? this.$page.props.last_client_id.infirmary_id + 1: 1;
+            this.formTitle = 'New ER Record';
             this.form.nationality = 'Filipino';
         }
-
+        this.form.infirmary_id = this.$page.props.last_client_id.infirmary_id? this.$page.props.last_client_id.infirmary_id + 1: 1;
         this.degree_programs = this.$page.props.degree_programs;
         this.client_types = this.$page.props.client_types;
     }

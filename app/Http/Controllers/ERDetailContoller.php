@@ -7,6 +7,7 @@ use App\Http\Resources\DegreeProgramCollection;
 use App\Models\Client;
 use App\Models\ClientType;
 use App\Models\DegreeProgram;
+use App\Models\ERDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -26,7 +27,7 @@ class ERDetailContoller extends Controller
      */
     public function create()
     {
-        return Inertia::render('ER/ERNewClient', $this->getFlags());
+        return Inertia::render('Client/NewClient', $this->getFlags());
     }
 
     /**
@@ -36,7 +37,7 @@ class ERDetailContoller extends Controller
     {
         $temp = $this->getFlags();
         return Inertia::render('ER/EREditClient', [
-            'data' => new ClientResource(Client::join('er_details', 'clients.infirmary_id', '=', 'er_details.infirmary_id')
+            'data' => new ClientResource(ERDetail::join('clients', 'clients.infirmary_id', '=', 'er_details.infirmary_id')
                 ->select('clients.id as client_id', 'clients.*', 'er_details.*')
                 ->findOrFail($request->id)),
             'degree_programs' => $temp['degree_programs'],

@@ -7,7 +7,7 @@ export default {
     data: () => ({
         apiLink: {
             // create form
-            create: 'client.create',
+            create: 'er.new.client',
             // edit form
             edit: 'er.edit.client',
             // return all data

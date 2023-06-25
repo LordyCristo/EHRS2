@@ -38,13 +38,13 @@ class ERDetailApi extends Controller
     public function destroy(Request $request)
     {
         $id = explode(',', $request->id);
-        $temp = Client::destroy($id);
+        $temp = ERDetail::destroy($id);
         return response()->json([
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => $temp?'success':'failed',
-                'message' => $temp?'Successfully deleted '.$temp.' Client record/s':'Failed to delete Client record with id '. $request->id,
+                'message' => $temp?'Successfully deleted '.$temp.' ER record/s':'Failed to delete ER record with id '. $request->id,
             ]
         ]);
     }
@@ -72,11 +72,12 @@ class ERDetailApi extends Controller
      */
     public function tableApi(Request $request): JsonResponse
     {
-        $query = Client::leftJoin('degree_programs','degree_programs.id','=','clients.program_id')
+        $query = ERDetail::join('clients','er_details.infirmary_id','=','clients.infirmary_id')
+            ->leftJoin('degree_programs','degree_programs.id','=','clients.program_id')
             ->join('client_types','client_types.id','=','clients.client_type_id')
-            ->join('er_details','er_details.infirmary_id','=','clients.infirmary_id')
             ->where('clients.is_emergency','=', 1)
-            ->selectRaw('clients.*, degree_programs.abbr as program_name, client_types.name as client_type, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as fullname');        $totalRecords = $query->count();
+            ->selectRaw('er_details.id as id, clients.sex, clients.age, clients.infirmary_id, degree_programs.abbr as program_name, client_types.name as client_type, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as fullname');
+        $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');
             $searchBy = $request->input('search_by', 'id');

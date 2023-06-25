@@ -50,6 +50,7 @@ use App\Models\Department;
 use App\Models\FecalysisRecord;
 use App\Models\Fees;
 use App\Models\HematologyRecord;
+use App\Models\LaboratoryRequest;
 use App\Models\MedicalCertificate;
 use App\Models\Payment;
 use App\Models\PaymentsService;
@@ -341,17 +342,18 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for Laboratory Services
-    Route::prefix('laboratory')->middleware('lacm')->group(function () {
+    Route::prefix('laboratory')->group(function () {
         // Summary index page for laboratories
         Route::get('/', function () {
             return Inertia::render('Laboratory/LaboratoryIndex',[
                 'hematologyCount' => HematologyRecord::count(),
                 'fecalysisCount' => FecalysisRecord::count(),
                 'urinalysisCount' => UrinalysisRecord::count(),
+                'labrequestCount' => LaboratoryRequest::count(),
             ]);
         })->name('laboratory.index');
         //route for laboratory request
-        Route::prefix('/requests')->group(function () {
+        Route::prefix('/requests')->middleware('ioacm')->group(function () {
             Route::get('/', [LaboratoryRequestController::class, 'index'])->name('laboratory.requests.index');
             Route::get('/new', [LaboratoryRequestController::class, 'create'])->name('laboratory.requests.create');
             Route::get('/edit/{id}', [LaboratoryRequestController::class, 'edit'])->name('laboratory.requests.edit');
@@ -373,7 +375,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
 
         // Routes for hematology record management
-        Route::prefix('/hematology')->group(function () {
+        Route::prefix('/hematology')->middleware('lacm')->group(function () {
             Route::get('/', [HematologyController::class, 'index'])->name('laboratory.hematology.index');
             Route::get('/new', [HematologyController::class, 'create'])->name('laboratory.hematology.create');
             Route::get('/edit/{id}', [HematologyController::class, 'edit'])->name('laboratory.hematology.edit');
@@ -394,7 +396,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             });
         });
         // Routes for Fecalaysis Record Management
-        Route::prefix('/fecalysis')->group(function () {
+        Route::prefix('/fecalysis')->middleware('lacm')->group(function () {
             Route::get('/', [FecalysisController::class, 'index'])->name('laboratory.fecalysis.index');
             Route::get('/new', [FecalysisController::class, 'create'])->name('laboratory.fecalysis.create');
             Route::get('/edit/{id}', [FecalysisController::class, 'edit'])->name('laboratory.fecalysis.edit');
@@ -415,7 +417,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             });
         });
         // Routes for Urinalysis Result Record Management
-        Route::prefix('/urinalysis')->group(function () {
+        Route::prefix('/urinalysis')->middleware('lacm')->group(function () {
             Route::get('/', [UrinalysisController::class, 'index'])->name('laboratory.urinalysis.index');
             Route::get('/new', [UrinalysisController::class, 'create'])->name('laboratory.urinalysis.create');
             Route::get('/edit/{id}', [UrinalysisController::class, 'edit'])->name('laboratory.urinalysis.edit');

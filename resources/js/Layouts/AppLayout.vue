@@ -157,7 +157,7 @@ export default {
                     form: false,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
+                    show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
                     title: 'Laboratories',
                     link: 'laboratory.index',
                     tabName: '/laboratory',
@@ -165,7 +165,7 @@ export default {
                         title: 'More',
                         content: [
                             {
-                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
+                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
                                 name: 'Request',
                                 link: 'laboratory.requests.index',
                                 linkName: 'requests',

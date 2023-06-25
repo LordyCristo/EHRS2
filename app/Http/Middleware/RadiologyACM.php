@@ -19,7 +19,7 @@ class RadiologyACM
         // check if the user is authenticated and the role is radiology or a doctor
         if (Auth::check()) {
             // if the user is authenticated and the role is radiology proceed to the next request
-            if (Auth::user()->role === 4 || Auth::user()->role === 1)
+            if (Auth::user()->role === 4 || Auth::user()->role === 1 || Auth::user()->role === 7)
                 return $next($request);
         }
         return redirect()->route('dashboard');

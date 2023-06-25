@@ -2,7 +2,7 @@
     <FormTitleHeader :link="route(props.indexLink)">
         <slot name="formTitle" />
     </FormTitleHeader>
-    <div class="flex items-center justify-end">
+    <div v-if="action === 'store'" class="flex items-center justify-end">
         <div>
             <input type="checkbox" v-model="stayOnPage" @click="stayOnPageChange" class="rounded-full">
             <label for="stayOnPage" class="ml-2 text-sm text-gray-500">Stay on page</label>

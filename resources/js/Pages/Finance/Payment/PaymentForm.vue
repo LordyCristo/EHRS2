@@ -9,7 +9,7 @@
             <div class="w-full">
                 <div class="flex justify-between gap-1">
                     <DisplayValue v-if="form.or_no" label="OR No." :value="form.or_no" :errorMsg="form.errors.or_no" required />
-                    <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />
+<!--                    <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />-->
                     <DisplayValue label="Date Issued" :value="dateNow" />
                 </div>
                 <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
@@ -32,7 +32,7 @@
                     <div class="w-full flex justify-center">
                         <input-error :message="form.errors.rows" />
                     </div>
-                    <div v-for="(row, index) in form.rows" :key="index" class="flex justify-between items-center my-0.5 rounded-md" :class="{'border border-red-300': form.errors.rows}">
+                    <div v-for="(row, index) in form.rows" :key="index" class="flex justify-between items-center my-0.5 rounded-md min-w-[40rem]" :class="{'border border-red-300': form.errors.rows}">
                         <span class="text-gray-500 mx-1">{{ index + 1 }}</span>
                         <div class="w-full">
                             <InputTextAuto v-model="row.service_id" :options="services" @change="calculateTotalAmount(row.fee)" :errorMsg="form.errors['rows.' + index + '.service_id']" @input="form.errors['rows.' + index + '.service_id'] = null;" />
@@ -134,7 +134,7 @@ export default {
     methods: {
         sameAsPayer (val) {
             if (val && this.selected_client) {
-                this.form.payor_name = this.selected_client.name;
+                this.form.payor_name = this.selected_client.fullname;
                 this.form.payor_email = this.selected_client.email_address;
                 this.form.payor_mobile = this.selected_client.phone;
             } else {

@@ -14,7 +14,7 @@
                 <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
             </div>
             <div class="flex gap-3">
-                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />
+<!--                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />-->
                 <div class="w-full">
                     <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 </div>
@@ -42,10 +42,10 @@
                    <SelectElement v-model="form.amorphous_urates" :options="Lab_Group_1" label="Urates" :required="true" :errorMsg="form.errors.amorphous_urates" @input="onFocusClearError('amorphous_urates')" />
                    <SelectElement v-model="form.amorphous_phosphates" :options="Lab_Group_1" label="Phosphates" :required="true" :errorMsg="form.errors.amorphous_phosphates" @input="onFocusClearError('amorphous_phosphates')" />
                    <SelectElement v-model="form.mucous_threads" :options="Lab_Group_1" label="Mucus Threads" :required="true" :errorMsg="form.errors.mucous_threads" @input="onFocusClearError('mucous_threads')" />
+               </div>
+               <div class="grid grid-cols-1">
                    <InputText v-model="form.crystals" label="Crystals" :errorMsg="form.errors.crystals" @input="onFocusClearError('crystals')" />
                    <InputText v-model="form.cast" label="Cast" :errorMsg="form.errors.cast" @input="onFocusClearError('cast')" />
-               </div>
-               <div class="grid grid-cols-2">
                    <InputTextArea v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
                </div>
            </div>

@@ -14,7 +14,7 @@
                 <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
             </div>
             <div class="flex gap-3">
-                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />
+<!--                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />-->
                 <div class="w-full">
                     <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 </div>
@@ -33,7 +33,7 @@
                     <InputText v-model.number="form.monocyte" :required="true" label="Monocytes" type="number" :step="0.01" :errorMsg="form.errors.monocyte" @input="onFocusClearError('monocyte')" />
                     <SelectElement v-model.number="form.blood_type" :required="true" label="Blood Type" :options="bloodTypes" :errorMsg="form.errors.blood_type" @input="onFocusClearError('blood_type')" />
                 </div>
-                <div class="grid grid-cols-2">
+                <div class="grid grid-cols-1">
                     <InputTextArea v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
                 </div>
             </div>
@@ -115,6 +115,15 @@ export default {
         formatDate(date) {
             // format date to yyyy-mm-dd
             return date.toLocaleDateString();
+        },
+    },
+    watch: {
+        'form.infirmary_id': function (val) {
+            const temp = this.clients.find(client => client.id === val);
+            if (temp)
+                this.form.rqst_id = temp.rqst_id;
+            else
+                this.form.rqst_id = null;
         },
     },
     mounted() {

@@ -32,8 +32,8 @@ export default {
         this.cards[0].count = this.requestsCount? this.requestsCount : 0;
         this.cards[1].count = this.resultsCount? this.resultsCount : 0;
 
-        this.cards[0].show = this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 4 || this.$page.props.auth.user.role === 1;
-        this.cards[1].show = this.$page.props.auth.user.role === 4 || this.$page.props.auth.user.role === 1;
+        this.cards[0].show = this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 1;
+        this.cards[1].show = this.$page.props.auth.user.role === 6 || this.$page.props.auth.user.role === 1;
     }
 }
 

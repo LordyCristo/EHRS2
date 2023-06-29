@@ -39,9 +39,9 @@ export default {
         this.cards[3].count = this.urinalysisCount? this.urinalysisCount : 0;
 
         this.cards[0].show = this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 1;
-        this.cards[1].show = this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1;
-        this.cards[2].show = this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1;
-        this.cards[3].show = this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1;
+        this.cards[1].show = this.$page.props.auth.user.role === 5 || this.$page.props.auth.user.role === 1;
+        this.cards[2].show = this.$page.props.auth.user.role === 5 || this.$page.props.auth.user.role === 1;
+        this.cards[3].show = this.$page.props.auth.user.role === 5 || this.$page.props.auth.user.role === 1;
     }
 }
 

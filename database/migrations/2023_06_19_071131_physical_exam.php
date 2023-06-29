@@ -39,6 +39,8 @@ return new class extends Migration
             $table->string('spine_extrts_varicosities')->nullable();
             $table->string('spine_extrts_feet')->nullable();
             $table->string('skin_diseases')->nullable();
+            $table->string('radiography')->nullable();
+            $table->string('laboratory')->nullable();
             $table->longText('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -8,6 +8,7 @@ use App\Http\Resources\PaymentCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\Client;
 use App\Models\DentalRecord;
+use App\Models\Payment;
 use App\Models\PaymentsService;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -74,11 +75,11 @@ class DentalController extends Controller
      */
     public function getOrNos()
     {
-        return new PaymentCollection(PaymentsService::join('payments', 'payments_service.payment_id', '=', 'payments.id')
-            ->join('clients', 'clients.infirmary_id', '=', 'payments.infirmary_id')
-            ->leftJoin('services', 'payments_service.service_id', '=', 'services.id')
-            ->selectRaw("payments_service.payment_id AS id, CONCAT(payments_service.payment_id, ' - ', clients.infirmary_id) AS name")
-            ->where('services.section_name', 'LIKE', '%Dental  Section%')
+        return new PaymentCollection(Payment::join('payments_service', 'payments_service.payment_id', '=', 'payments.or_no')
+            ->join('services', 'services.id', '=', 'payments_service.service_id')
+            ->where('services.room_no', '=', 'Room-1')
+            ->selectRaw('payments.or_no as id, CONCAT(payments.or_no) as name')
+            ->orderBy('payments.or_no', 'asc')
             ->get());
     }
 
@@ -87,6 +88,6 @@ class DentalController extends Controller
      */
     public function getPhysicians()
     {
-        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get());
+        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',2)->get());
     }
 }

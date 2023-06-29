@@ -91,6 +91,10 @@ Route::get('/', function () {
 // Route::post('/', [ClientApi::class, 'store'])->name('api.public.client.store');
 //});
 
+Route::get('unauthorized', function () {
+    return Inertia::render('AccessDeniedPage');
+})->name('unauthorized.access');
+
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -101,7 +105,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for the User Approval Section
-    Route::prefix('approve')->middleware('aacm')->group(callback: function () {
+    Route::prefix('approve')->middleware('administrator')->group(callback: function () {
         Route::get('/', [ApprovalApi::class, 'index'])->name('user.approve');
         Route::prefix('api')->group(callback: function () {
             Route::get('/all', [ApprovalApi::class, 'tableApi'])->name('api.user.approval');
@@ -112,7 +116,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
 
     // Routes for the Client Management Section
-    Route::prefix('clients')->middleware('ioacm')->group(callback: function () {
+    Route::prefix('clients')->middleware('information.section')->group(callback: function () {
         Route::get('/', [ClientController::class, 'index'])->name('client.index');
         Route::get('/new', [ClientController::class, 'create'])->name('client.create');
         Route::get('/edit/{id}', [ClientController::class, 'edit'])->name('client.edit');
@@ -133,7 +137,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for the Medical Certificates
-    Route::prefix('records')->middleware('aacm')->group(callback: function () {
+    Route::prefix('records')->middleware('record.section')->group(callback: function () {
         Route::get('/medical-certificate/{id}', function (){
             return Inertia::render('Records/MedicalCertificate',[
                 'data' => new MedicalRecordResource(Client::withCount('hematology')
@@ -154,7 +158,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for Medical Records
-    Route::prefix('records')->middleware('aacm')->group(function () {
+    Route::prefix('records')->middleware('record.section')->group(function () {
         Route::get('/', function () {
             return Inertia::render('Records/RecordIndex');
         })->name('records');
@@ -179,7 +183,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/api/medical-certificate', [MedicalRecordApi::class, 'medicalCertificate'])->name('api.record.medcert');
     });
 
-    Route::prefix('/emergency')->middleware('eracm')->group(function () {
+    Route::prefix('/emergency')->middleware('physician.nurse')->group(function () {
         Route::get('/', [ERDetailContoller::class, 'index'])->name('er.index');
         Route::get('/new', [ERDetailContoller::class, 'create'])->name('er.new.client');
         Route::get('/edit/{id}', [ERDetailContoller::class, 'edit'])->name('er.edit.client');
@@ -201,7 +205,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     //Routes for physical examination
-    Route::prefix('physicalexam')->middleware('aacm')->group(function (){
+    Route::prefix('physicalexam')->middleware('physician.nurse')->group(function (){
         Route::get('/', [PhysicalExamController::class, 'index'])->name('physicalexam.index');
         Route::get('/new', [PhysicalExamController::class, 'create'])->name('physicalexam.create');
         Route::get('/edit/{id}', [PhysicalExamController::class, 'edit'])->name('physicalexam.edit');
@@ -217,14 +221,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     // Routes for the Radiology Section
     Route::prefix('radiology')->group(function(){
         // Radiology index page
-        Route::middleware('racm')->get('/', function (){
+        Route::middleware('radiology.section')->get('/', function (){
             return Inertia::render('Radiology/RadiologyIndex',[
                 'requestsCount' => XrayRequest::count(),
                 'resultsCount' => Xray::count(),
             ]);
         })->name('radiology.index');
         // Routes to handle Xray requests
-        Route::prefix('/request')->middleware(['ioacm'])->group(function(){
+        Route::prefix('/request')->middleware(['information.section'])->group(function(){
             Route::get('/', [RadiologyRequestController::class, 'index'])->name('radiology.request.index');
             Route::get('/new', [RadiologyRequestController::class, 'create'])->name('radiology.request.create');
             Route::get('/edit/{id}', [RadiologyRequestController::class, 'edit'])->name('radiology.request.edit');
@@ -243,7 +247,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             });
         });
         // Routes to handle radiology results
-        Route::prefix('/result')->middleware('racm')->group(function(){
+        Route::prefix('/result')->middleware('radiology.section')->group(function(){
             Route::get('/', [RadiologyResultController::class, 'index'])->name('radiology.result.index');
             Route::get('/new', [RadiologyResultController::class, 'create'])->name('radiology.result.create');
             Route::get('/edit/{id}', [RadiologyResultController::class, 'edit'])->name('radiology.result.edit');
@@ -264,7 +268,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for the Dental Section
-    Route::prefix('dental')->middleware('dacm')->group(function(){
+    Route::prefix('dental')->middleware('dental.section')->group(function(){
         Route::get('/', [DentalController::class, 'index'])->name('dental.index');
         Route::get('/new', [DentalController::class, 'create'])->name('dental.create');
         Route::get('/edit/{id}', [DentalController::class, 'edit'])->name('dental.edit');
@@ -284,7 +288,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for the Payment Section
-    Route::prefix('finance')->middleware('facm')->group(function (){
+    Route::prefix('finance')->middleware('cashier.section')->group(function (){
         // Finance dashboard and summary of revenue
         Route::get('/', function (){
             return Inertia::render('Finance/FinanceIndex',[
@@ -353,7 +357,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             ]);
         })->name('laboratory.index');
         //route for laboratory request
-        Route::prefix('/requests')->middleware('ioacm')->group(function () {
+        Route::prefix('/requests')->middleware('information.section')->group(function () {
             Route::get('/', [LaboratoryRequestController::class, 'index'])->name('laboratory.requests.index');
             Route::get('/new', [LaboratoryRequestController::class, 'create'])->name('laboratory.requests.create');
             Route::get('/edit/{id}', [LaboratoryRequestController::class, 'edit'])->name('laboratory.requests.edit');
@@ -375,7 +379,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         });
 
         // Routes for hematology record management
-        Route::prefix('/hematology')->middleware('lacm')->group(function () {
+        Route::middleware('laboratory.section')->prefix('/hematology')->group(function () {
             Route::get('/', [HematologyController::class, 'index'])->name('laboratory.hematology.index');
             Route::get('/new', [HematologyController::class, 'create'])->name('laboratory.hematology.create');
             Route::get('/edit/{id}', [HematologyController::class, 'edit'])->name('laboratory.hematology.edit');
@@ -396,7 +400,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             });
         });
         // Routes for Fecalaysis Record Management
-        Route::prefix('/fecalysis')->middleware('lacm')->group(function () {
+        Route::middleware('laboratory.section')->prefix('/fecalysis')->group(function () {
             Route::get('/', [FecalysisController::class, 'index'])->name('laboratory.fecalysis.index');
             Route::get('/new', [FecalysisController::class, 'create'])->name('laboratory.fecalysis.create');
             Route::get('/edit/{id}', [FecalysisController::class, 'edit'])->name('laboratory.fecalysis.edit');
@@ -417,7 +421,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             });
         });
         // Routes for Urinalysis Result Record Management
-        Route::prefix('/urinalysis')->middleware('lacm')->group(function () {
+        Route::middleware('laboratory.section')->prefix('/urinalysis')->group(function () {
             Route::get('/', [UrinalysisController::class, 'index'])->name('laboratory.urinalysis.index');
             Route::get('/new', [UrinalysisController::class, 'create'])->name('laboratory.urinalysis.create');
             Route::get('/edit/{id}', [UrinalysisController::class, 'edit'])->name('laboratory.urinalysis.edit');
@@ -440,7 +444,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     });
 
     // Routes for the more pages section of the application.
-    Route::prefix('more')->middleware('macm')->group(function () {
+    Route::prefix('more')->middleware('administrator')->group(function () {
         // Summary page for all the pages in the more section.
         Route::get('/', function () {
             return Inertia::render('MorePages/MorePageIndex',[

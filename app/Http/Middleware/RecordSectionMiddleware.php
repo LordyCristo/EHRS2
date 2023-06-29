@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class NurseACM
+class RecordSectionMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,12 +16,9 @@ class NurseACM
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // check if the user is authenticated and the role is more pages or a doctor
-        if (Auth::check()) {
-            // if the user is authenticated and the role is more pages proceed to the next request
-            if (Auth::user()->role === 1 || Auth::user()->role === 8)
-                return $next($request);
+        if (Auth::check() && (Auth::user()->role === 8 || Auth::user()->role === 2 || Auth::user()->role === 1)) {
+            return $next($request);
         }
-        return redirect()->route('dashboard');
+        return redirect()->route('unauthorized.access');
     }
 }

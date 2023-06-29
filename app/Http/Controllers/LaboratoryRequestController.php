@@ -55,11 +55,11 @@ class LaboratoryRequestController extends Controller
 
     public function getPhysicians()
     {
-        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get());
+        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',2)->get());
     }
 
     public function getPatients()
     {
-        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(first_name, ' ', last_name) AS name, age, sex")->get());
+        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' ', first_name, ' ', last_name) AS name, age, sex")->orderBy('infirmary_id', 'asc')->get());
     }
 }

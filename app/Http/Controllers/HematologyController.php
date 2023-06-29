@@ -84,17 +84,7 @@ class HematologyController extends Controller
             ->orWhere('laboratory_requests.hematocrit', 1)
             ->orWhere('laboratory_requests.blood_typing', 1)
             ->orWhere('laboratory_requests.wbc_diff_count', 1)
-            ->selectRaw("clients.infirmary_id AS id, laboratory_requests.id as rqst_id, CONCAT(first_name, ' ', last_name) AS name")->get());
-//        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
-//            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-//            ->leftJoin('hematology_records', function ($join) {
-//                $join->on('hematology_records.or_no', '=', 'payments_service.payment_id')
-//                    ->whereNull('hematology_records.or_no');
-//            })
-//            ->where('payments_service.service_id', 3)
-//            ->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")
-//            ->groupBy('clients.infirmary_id')
-//            ->get());
+            ->selectRaw("clients.infirmary_id AS id, laboratory_requests.id as rqst_id, CONCAT(clients.infirmary_id, ' ', first_name, ' ', last_name) AS name")->get());
     }
 
     /**
@@ -126,7 +116,7 @@ class HematologyController extends Controller
      */
     public function getPhysicians()
     {
-        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get());
+        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',2)->get());
     }
 
     /**
@@ -143,7 +133,7 @@ class HematologyController extends Controller
             ->orWhere('laboratory_requests.hematocrit', 1)
             ->orWhere('laboratory_requests.blood_typing', 1)
             ->orWhere('laboratory_requests.wbc_diff_count', 1)
-            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
+            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.infirmary_id, " ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
             ->get());
     }
 }

@@ -40,25 +40,25 @@ class MedicalRecordController extends Controller
     {
         return Inertia::render('Records/ViewRecord',[
             'data' => new MedicalRecordResource(Client::with(['hematology' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->with(['fecalysis' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->with(['urinalysis' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->with(['xray' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->with(['dental' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->with(['medicalCertificate' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->with(['physicalExam' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->first();
+                    $query->orderBy('created_at', 'asc');
                 }])
                 ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
                 ->find($request->id))

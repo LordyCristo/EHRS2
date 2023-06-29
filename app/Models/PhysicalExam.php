@@ -38,6 +38,8 @@ class PhysicalExam extends Model
         'spine_extrts_varicosities',
         'spine_extrts_feet',
         'skin_diseases',
+        'radiography',
+        'laboratory',
         'remarks',
     ];
 }

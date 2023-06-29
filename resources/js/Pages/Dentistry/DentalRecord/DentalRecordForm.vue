@@ -277,8 +277,8 @@
                 </div>
             </div>
             <div class="grid grid-cols-2">
-                <Datepicker v-model="form.examination_date" required label="Examination Date" :errorMsg="form.errors.examination_date" @input="form.errors['examination_date'] = null" />
-                <InputText v-model="form.age_last_birthday" type="number" required label="Age Last Birthday" :errorMsg="form.errors.age_last_birthday" @input="form.errors['age_last_birthday'] = null" />
+                <Datepicker v-model="form.examination_date" required label="Examination Date" :errorMsg="form.errors.examination_date" @input="form.errors['examination_date'] = null; computeAge();" />
+                <InputText v-model="form.age_last_birthday" type="number" required label="Age Last Birthday" :errorMsg="form.errors.age_last_birthday" @input="form.errors['age_last_birthday'] = null;" />
             </div>
             <div class="grid grid-cols-2 gap-1">
                 <SelectElement v-model="form.dentist" required :options="physicians" label="Dentist" :errorMsg="form.errors.dentist" @input="form.errors['dentist'] = null" />
@@ -517,6 +517,18 @@ export default {
     methods: {
         onFocusClearError(field) {
             this.form.errors[field] = null;
+        },
+        computeAge() {
+            const examination_date = new Date(this.form.examination_date);
+            const today = new Date();
+            let age = today.getFullYear() - examination_date.getFullYear();
+            const month = today.getMonth() - examination_date.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < examination_date.getDate())) {
+                age--;
+            }else{
+                age = null;
+            }
+            this.form.age_last_birthday = age;
         },
     },
     mounted() {

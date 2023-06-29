@@ -36,8 +36,8 @@ export default {
 </script>
 <template>
     <div class="min-h-screen flex flex-row">
-        <div :class="isOpen ? 'w-14' : 'w-48'" class="flex flex-col min-h-full duration-700 pt-5 px-1 bg-vsu-green shadow-md">
-            <div class="flex flex-col">
+        <div :class="isOpen ? 'w-14' : 'w-44'" class="flex flex-col items-center min-h-full duration-700 pt-5 px-1 bg-vsu-green shadow-md">
+            <div class="flex flex-col fixed">
                 <div class="flex mb-2" :class="isOpen ? 'flex-col justify-center items-center' : 'justify-between px-2'">
                     <h2 class="sr-only">ELECTRONIC HEALTH RECORDS SYSTEM</h2>
                     <Link :href="route('dashboard')">

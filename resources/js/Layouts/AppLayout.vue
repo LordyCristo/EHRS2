@@ -64,7 +64,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 6,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 4,
                     title: 'Clients',
                     link: 'client.index',
                     tabName: '/clients',
@@ -74,19 +74,8 @@ export default {
                     form: false,
                     method: null,
                 },
-                // {
-                //     show: this.$page.props.auth.user.role === 1,
-                //     title: 'Outpatient',
-                //     link: 'surgery',
-                //     tabName: '/surgery',
-                //     subLinks: null,
-                //     isOpen: false,
-                //     icon: markRaw(SurgeryIcon),
-                //     form: false,
-                //     method: null,
-                // },
                 {
-                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 6,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 4,
                     title: 'ER Section',
                     link: 'er.index',
                     tabName: '/emergency',
@@ -97,7 +86,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 8,
                     title: 'Medical Records',
                     link: 'records',
                     tabName: '/records',
@@ -108,7 +97,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 8,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 4,
                     title: 'Physical Exam',
                     link: 'physicalexam.index',
                     tabName: '/physicalexam',
@@ -119,7 +108,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 4,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7 || this.$page.props.auth.user.role === 6,
                     title: 'Radiology',
                     link: 'radiology.index',
                     tabName: '/radiology',
@@ -133,7 +122,7 @@ export default {
                                 linkName: 'request',
                             },
                             {
-                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 4,
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 6,
                                 name: 'X-ray Result',
                                 link: 'radiology.result.index',
                                 linkName: 'result',
@@ -147,7 +136,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 5,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 3,
                     title: 'Dental',
                     link: 'dental.index',
                     tabName: '/dental',
@@ -157,7 +146,7 @@ export default {
                     form: false,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 5 || this.$page.props.auth.user.role === 7,
                     title: 'Laboratories',
                     link: 'laboratory.index',
                     tabName: '/laboratory',
@@ -165,25 +154,25 @@ export default {
                         title: 'More',
                         content: [
                             {
-                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 7,
                                 name: 'Request',
                                 link: 'laboratory.requests.index',
                                 linkName: 'requests',
                             },
                             {
-                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 5,
                                 name: 'Urinalysis',
                                 link: 'laboratory.urinalysis.index',
                                 linkName: 'urinalysis',
                             },
                             {
-                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 5,
                                 name: 'Fecalysis',
                                 link: 'laboratory.fecalysis.index',
                                 linkName: 'fecalysis',
                             },
                             {
-                                show: this.$page.props.auth.user.role === 2 || this.$page.props.auth.user.role === 1,
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 5,
                                 name: 'Hematology',
                                 link: 'laboratory.hematology.index',
                                 linkName: 'hematology',
@@ -197,7 +186,7 @@ export default {
                     method: null,
                 },
                 {
-                    show: this.$page.props.auth.user.role === 3 || this.$page.props.auth.user.role === 1,
+                    show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 9,
                     title: 'Finance',
                     link: 'finance.index',
                     tabName: '/finance',
@@ -205,13 +194,13 @@ export default {
                         title: 'More',
                         content: [
                             {
-                                show: this.$page.props.auth.user.role === 3 || this.$page.props.auth.user.role === 1,
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 9,
                                 name: 'Fees',
                                 link: 'finance.fee.index',
                                 linkName: 'fee',
                             },
                             {
-                                show: this.$page.props.auth.user.role === 3 || this.$page.props.auth.user.role === 1,
+                                show: this.$page.props.auth.user.role === 1 || this.$page.props.auth.user.role === 9,
                                 name: 'Payments',
                                 link: 'finance.payment.index',
                                 linkName: 'payment',

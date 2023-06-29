@@ -13,7 +13,7 @@
                 </div>
                 <div class="grid grid-cols-2">
                     <div class="grid grid-cols-2">
-                        <InputText v-model="form.infirmary_id" :disabled="true" label="Infirmary No." required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
+                        <DisplayValue :value="form.infirmary_id" :disabled="true" label="Infirmary No." required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
                         <InputText v-model="form.id_number" label="Student ID No." :errorMsg="form.errors.id_number" autofocus @input="onFocusClearError('id_number'); formatIdNumber($event); " />
 
                     </div>
@@ -50,14 +50,14 @@
                     <InputTextAuto v-model="form.program_id" label="Degree Program" :options="degree_programs" :errorMsg="form.errors.program_id" @input="onFocusClearError('program_id')" />
                     <Select v-model="form.year_lvl" label="Year Level" :options="year_levels" :errorMsg="form.errors.year_lvl" @input="onFocusClearError('year_lvl')" />
                 </div>
-                <div v-if="($page.props.auth.user.role === 6 || $page.props.auth.user.role === 1)" class="flex items-center justify-start my-3">
+                <div v-if="($page.props.auth.user.role === 6 || $page.props.auth.user.role === 8 || $page.props.auth.user.role === 1)" class="flex items-center justify-start my-3">
                     <div class="flex items-center">
                         <input type="checkbox" v-model="form.is_emergency" @click="emergencyChange" class="rounded-full border-red-700 active:bg-red-700 checked:bg-red-700">
                         <label for="stayOnPage" class="ml-2 text-md font-medium uppercase text-red-700">Emergency</label>
                     </div>
                 </div>
             </div>
-            <template v-if="form.is_emergency && ($page.props.auth.user.role === 6 || $page.props.auth.user.role === 1)">
+            <template v-if="form.is_emergency && ($page.props.auth.user.role === 6 || $page.props.auth.user.role === 8 || $page.props.auth.user.role === 1)">
                 <div class="grid grid-cols-1">
                     <div class="grid grid-cols-4">
                         <Datepicker v-model="form.date_admitted" label="Date" required :errorMsg="form.errors.date_admitted" @input="onFocusClearError('date_admitted')" />
@@ -121,6 +121,7 @@ import {
     TemperatureLocation
 } from "@/Legends/legends";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
+import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";

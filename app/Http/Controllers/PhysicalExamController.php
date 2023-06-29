@@ -48,7 +48,7 @@ class PhysicalExamController extends Controller
     {
         return Inertia::render('PhysicalExam/EditPhysicalExam', [
             'data' => new PhysicalExamResource(PhysicalExam::findOrFail($request->id)),
-            'physicians' => new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get()),
+            'physicians' => new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',2)->get()),
             'clients' => new ClientCollection(Client::selectRaw('infirmary_id as id, CONCAT(first_name, " ", last_name) as name, sex, civil_status, age, birthdate')->get()),
         ]);
     }

@@ -5,7 +5,7 @@
                 <CloseIcon class="w-7 h-auto hover:rotate-90 duration-300" />
             </Link>
         </div>
-        <div id="printableSection" class="printTable shadow-2xl text-sm px-10 py-10 mx-auto max-w-full">
+        <div id="printableSection" class="printTable shadow-2xl text-md px-10 py-10 mx-auto max-w-full">
             <slot />
         </div>
         <div class="fixed bottom-5 right-5">
@@ -13,6 +13,7 @@
                 <PrintIcon class="w-5 h-auto text-white" />
                 Print
             </button>
+<!--            <button @click="generatePDF">Generate PDF</button>-->
         </div>
     </div>
 </template>
@@ -44,12 +45,29 @@
 import {Link} from "@inertiajs/vue3";
 import CloseIcon from "@/Components/Icons/CloseIcon.vue";
 import PrintIcon from "@/Components/Icons/PrintIcon.vue";
+import jsPDF from 'jspdf';
 const props = defineProps({
     link: {
         type: String,
         default: ''
     },
 });
+
+const generatePDF = () => {
+    const doc = new jsPDF();
+
+    // Add content to the PDF
+    doc.html(document.querySelector("#printableSection"), {
+        callback: function (pdf) {
+            pdf.save("sample.pdf");
+        },
+        x: 100,
+        y: 100,
+    });
+
+    // Save the PDF
+    doc.save('sample.pdf');
+}
 
 const print = () => {
     const sectionID = "printableSection";

@@ -14,7 +14,7 @@
                 <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
             </div>
             <div class="flex gap-3">
-                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />
+<!--                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />-->
                 <div class="w-full">
                     <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 </div>
@@ -27,12 +27,14 @@
                     <SelectElement v-model="form.consistency" :required="true" label="Consistency" :options="Lab_Group_6" :errorMsg="form.errors.consistency" @input="onFocusClearError('consistency')" />
                     <SelectElement v-model="form.wbc" :required="true" label="WBC" :options="Lab_Group_4" :errorMsg="form.errors.wbc" @input="onFocusClearError('wbc')" />
                     <SelectElement v-model="form.rbc" :required="true" label="RBC" :options="Lab_Group_4" :errorMsg="form.errors.rbc" @input="onFocusClearError('rbc')" />
+                </div>
+                <div class="grid grid-cols-2">
                     <InputText v-model.number="form.fat_globules" :required="true" label="Fat Globules" type="number" :step="0.01" :errorMsg="form.errors.fat_globules" @input="onFocusClearError('fat_globules')" />
                     <InputText v-model="form.ova" label="Ova" :errorMsg="form.errors.ova" @input="onFocusClearError('ova')" />
                 </div>
                 <!--end of fecalysis body form-->
                 <!--fecalysis footer form-->
-                <div class="grid grid-cols-2">
+                <div class="grid grid-cols-1">
                     <InputTextArea v-model="form.others" label="Others" type="others" :errorMsg="form.errors.others" @input="onFocusClearError('others')" />
                     <input-text-area v-model.number="form.remarks" label="Remarks" :errorMsg="form.errors.remarks" @input="onFocusClearError('remarks')" />
                 </div>
@@ -107,6 +109,15 @@ export default {
         formatDate(date) {
             // format date to yyyy-mm-dd
             return date.toLocaleDateString();
+        },
+    },
+    watch: {
+        'form.infirmary_id': function (val) {
+            const temp = this.clients.find(client => client.id === val);
+            if (temp)
+                this.form.rqst_id = temp.rqst_id;
+            else
+                this.form.rqst_id = null;
         },
     },
     mounted() {

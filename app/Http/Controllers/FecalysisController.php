@@ -112,14 +112,12 @@ class FecalysisController extends Controller
             ->get());
     }
 
-
-
     /**
      * Get all the physicians
      */
     public function getPhysicians()
     {
-        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get());
+        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',2)->get());
     }
 
     /**
@@ -130,7 +128,7 @@ class FecalysisController extends Controller
         return new LaboratoryCollection(LaboratoryRequest::join('clients', 'clients.infirmary_id', 'laboratory_requests.infirmary_id')
             ->where('laboratory_requests.stool_exam', 1)
             ->where('laboratory_requests.status', 'pending')
-            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
+            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.infirmary_id, " ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
             ->get());
     }
 }

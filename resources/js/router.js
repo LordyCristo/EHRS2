@@ -43,7 +43,7 @@ const routes = [
         component: () => import('@/Pages/Finance/Fees/NewFee.vue')
     },
     {
-        path:'/finance/fee/edit',
+        path:'/finance/fee/edit/:id',
         name: 'finance.fee.edit',
         component: () => import('@/Pages/Finance/Fees/EditFee.vue')
     },
@@ -58,7 +58,7 @@ const routes = [
         component: () => import('@/Pages/Finance/Payment/NewPayment.vue')
     },
     {
-        path:'/finance/payment/edit',
+        path:'/finance/payment/edit/:id',
         name: 'finance.payment.edit',
         component: () => import('@/Pages/Finance/Payment/EditPayment.vue')
     },
@@ -73,7 +73,7 @@ const routes = [
         component: () => import('@/Pages/Client/NewClient.vue')
     },
     {
-        path:'/clients/edit/',
+        path:'/clients/edit/:id',
         name: 'client.edit',
         component: () => import('@/Pages/Client/EditClient.vue')
     },
@@ -88,7 +88,7 @@ const routes = [
         component: () => import('@/Pages/Radiology/Request/NewRadiologyRequest.vue')
     },
     {
-        path:'/radiology/request/edit',
+        path:'/radiology/request/edit/:id',
         name: 'radiology.request.edit',
         component: () => import('@/Pages/Radiology/Request/EditRadiologyRequest.vue')
     },
@@ -103,22 +103,22 @@ const routes = [
         component: () => import('@/Pages/Radiology/Result/NewRadiology.vue')
     },
     {
-        path:'/radiology/result/edit',
+        path:'/radiology/result/edit/:id',
         name: 'radiology.result.edit',
         component: () => import('@/Pages/Radiology/Result/EditRadiology.vue')
     },{
         path:'/dental',
-        name: 'dental.index',
+        name: 'dental.record.index',
         component: () => import('@/Pages/Dentistry/DentalRecord/DentalRecordIndex.vue')
     },
     {
         path:'/dental/new',
-        name: 'dental.create',
+        name: 'dental.record.create',
         component: () => import('@/Pages/Dentistry/DentalRecord/NewDentalRecord.vue')
     },
     {
-        path:'/dental/edit',
-        name: 'dental.edit',
+        path:'/dental/edit/:id',
+        name: 'dental.record.edit',
         component: () => import('@/Pages/Dentistry/DentalRecord/EditDentalRecord.vue')
     },
     {
@@ -137,7 +137,7 @@ const routes = [
         component: () => import('@/Pages/Laboratory/Request/NewLaboratoryRequest.vue')
     },
     {
-        path:'/laboratory/requests/edit',
+        path:'/laboratory/requests/edit/:id',
         name: 'laboratory.requests.edit',
         component: () => import('@/Pages/Laboratory/Request/EditLaboratoryRequest.vue')
     },
@@ -152,12 +152,12 @@ const routes = [
         component: () => import('@/Pages/Laboratory/Hematology/NewHematology.vue')
     },
     {
-        path:'/laboratory/hematology/edit',
+        path:'/laboratory/hematology/edit/:id',
         name: 'laboratory.hematology.edit',
         component: () => import('@/Pages/Laboratory/Hematology/EditHematology.vue')
     },
     {
-        path:'/laboratory/hematology/show',
+        path:'/laboratory/hematology/show/:id',
         name: 'laboratory.hematology.show',
         component: () => import('@/Pages/Laboratory/Hematology/ViewHematology.vue')
     },
@@ -172,12 +172,12 @@ const routes = [
         component: () => import('@/Pages/Laboratory/Fecalysis/NewFecalysis.vue')
     },
     {
-        path:'/laboratory/fecalysis/edit',
+        path:'/laboratory/fecalysis/edit/:id',
         name: 'laboratory.fecalysis.edit',
         component: () => import('@/Pages/Laboratory/Fecalysis/EditFecalysis.vue')
     },
     {
-        path:'/laboratory/fecalysis/show',
+        path:'/laboratory/fecalysis/show/:id',
         name: 'laboratory.fecalysis.show',
         component: () => import('@/Pages/Laboratory/Fecalysis/ViewFecalysis.vue')
     },
@@ -192,12 +192,12 @@ const routes = [
         component: () => import('@/Pages/Laboratory/Urinalysis/NewUrinalysis.vue')
     },
     {
-        path:'/laboratory/urinalysis/edit',
+        path:'/laboratory/urinalysis/edit/:id',
         name: 'laboratory.urinalysis.edit',
         component: () => import('@/Pages/Laboratory/Urinalysis/EditUrinalysis.vue')
     },
     {
-        path:'/laboratory/urinalysis/show',
+        path:'/laboratory/urinalysis/show/:id',
         name: 'laboratory.urinalysis.show',
         component: () => import('@/Pages/Laboratory/Urinalysis/ViewUrinalysis.vue')
     },
@@ -217,7 +217,7 @@ const routes = [
         component: () => import('@/Pages/MorePages/Colleges/NewCollege.vue')
     },
     {
-        path:'/more/college/edit/',
+        path:'/more/college/edit/:id',
         name: 'more.college.edit',
         component: () => import('@/Pages/MorePages/Colleges/EditCollege.vue')
     },
@@ -232,7 +232,7 @@ const routes = [
         component: () => import('@/Pages/MorePages/Departments/NewDepartment.vue')
     },
     {
-        path:'/more/department/edit/',
+        path:'/more/department/edit/:id',
         name: 'more.department.edit',
         component: () => import('@/Pages/MorePages/Departments/EditDepartment.vue')
     },
@@ -247,7 +247,7 @@ const routes = [
         component: () => import('@/Pages/MorePages/Programs/NewProgram.vue')
     },
     {
-        path:'/more/program/edit/',
+        path:'/more/program/edit/:id',
         name: 'more.program.edit',
         component: () => import('@/Pages/MorePages/Programs/EditProgram.vue')
     },
@@ -262,7 +262,7 @@ const routes = [
         component: () => import('@/Pages/MorePages/Services/NewService.vue')
     },
     {
-        path:'/more/service/edit/',
+        path:'/more/service/edit/:id',
         name: 'more.service.edit',
         component: () => import('@/Pages/MorePages/Services/EditService.vue')
     },
@@ -272,14 +272,19 @@ const routes = [
         component: () => import('@/Pages/Records/RecordIndex.vue')
     },
     {
-        path:'/records/show',
+        path:'/records/show/:id',
         name: 'records',
         component: () => import('@/Pages/Records/ViewRecord.vue')
     },
     {
-        path:'/records/medical-certificate/',
+        path:'/records/medical-certificate/:id',
         name: 'records.medcert',
         component: () => import('@/Pages/Records/MedicalCertificate.vue')
+    },
+    {
+        path:'/records/printable/:id',
+        name: 'records.medcert.printable',
+        component: () => import('@/Pages/Records/MedicalCertificatePrintable.vue')
     },
     {
         path:'/physicalexam',
@@ -292,7 +297,7 @@ const routes = [
         component: () => import('@/Pages/PhysicalExam/NewPhysicalExam.vue')
     },
     {
-        path:'/physicalexam/edit',
+        path:'/physicalexam/edit/:id',
         name: 'physicalexam.edit',
         component: () => import('@/Pages/PhysicalExam/EditPhysicalExam.vue')
     },

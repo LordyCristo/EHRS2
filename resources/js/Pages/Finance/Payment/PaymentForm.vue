@@ -9,10 +9,10 @@
             <div class="w-full">
                 <div class="flex justify-between gap-1">
                     <DisplayValue v-if="form.or_no" label="OR No." :value="form.or_no" :errorMsg="form.errors.or_no" required />
-<!--                    <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />-->
+                    <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />
                     <DisplayValue label="Date Issued" :value="dateNow" />
                 </div>
-                <InputTextAuto v-model="form.infirmary_id" required autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <InputTextAuto v-model="form.infirmary_id" required :combinedNameId="true" autofocus label="Patient" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
                 <div class="flex items-center justify-end text-sm gap-1 mx-1">
                     Payer and Patient are the same
                     <input type="checkbox" v-model="payor_same_as_client">

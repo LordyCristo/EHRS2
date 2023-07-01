@@ -1,9 +1,12 @@
 <template>
     <Laboratory title="Medical Records">
-        <div v-if="data" class="flex flex-col p-10 mx-10">
+        <div v-if="data" class="flex flex-col p-10 mx-10 shadow-lg">
             <form @submit.prevent="submit">
                 <div id="printable">
-                    <ViewHeader>MEDICAL CERTIFICATE</ViewHeader>
+                    <FormTitleHeader>
+                        MEDICAL CERTIFICATE
+                    </FormTitleHeader>
+
                     <div v-if="data" class="grid grid-rows-3 gap-2 mb-5">
                         <ViewField label="Laboratory Requirements"/>
                         <div class="grid grid-cols-2">
@@ -80,11 +83,13 @@ import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import InputError from "@/Components/Generic/Forms/InputError.vue";
 import SubmitButton from "@/Components/Generic/Buttons/SubmitButton.vue";
+import FormTitleHeader from "@/Components/Generic/Forms/FormTitleHeader.vue";
 </script>
 <script>
 import {useForm} from "@inertiajs/vue3";
 import axios from "axios";
 import {pushNotification} from "@/Components/Generic/Modals/NotifBanner.vue";
+import {router} from "@/router";
 
 export default {
     data: () => ({
@@ -154,17 +159,33 @@ export default {
             }
         },
         async storeForm() {
+            if(this.form.purpose === 4 && !this.form.purpose_sport){
+                this.form.errors.purpose_sport = 'Required field';
+                return;
+            }else if(this.form.purpose === 5 && !this.form.specific_purpose){
+                this.form.errors.specific_purpose = 'Required field';
+                return;
+            }
             await axios.post(route('api.certificate.store'), this.form)
                 .then(res => {
                     pushNotification(res.data.notification);
-                    this.print('printable');
+                    //redirect to print
+                    this.form.reset();
+                    window.location.href = route('records.medcert.printable', res.data.data.id);
                 })
                 .catch((error) => {
                     this.form.errors = error.response.data.errors;
-                    console.log(error.response.data.errors);
+                    console.log(error.response);
                 });
         },
         updateForm() {
+            if(this.form.purpose === 4 && !this.form.purpose_sport){
+                this.form.errors.purpose_sport = 'Required field';
+                return;
+            }else if(this.form.purpose === 5 && !this.form.specific_purpose){
+                this.form.errors.specific_purpose = 'Required field';
+                return;
+            }
             axios.put(route('api.certificate.store'), this.form)
                 .then(res => {
                     pushNotification(res.data.notification);
@@ -189,6 +210,41 @@ export default {
             window.print();
             // set back the ID of the section to what it was...
             section.setAttribute("id", sectionID)
+        },
+        printForm(sectionID){
+            const printableContent = document.getElementById(sectionID);
+            if (printableContent) {
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <title>Print Form</title>
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css">
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
+                        @media print {
+                            @page {
+                                size: A4;
+                                margin: 0;
+                            }
+                            body {
+                                margin: 0.8cm;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${printableContent.innerHTML}
+                </body>
+            </html>
+        `);
+                printWindow.document.close();
+                printWindow.onload = function () {
+                    printWindow.print();
+                    printWindow.close();
+                };
+            }
         }
     },
 

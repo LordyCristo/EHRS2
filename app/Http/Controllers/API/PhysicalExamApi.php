@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PhysicalExamRequest;
 use App\Http\Resources\PhysicalExamCollection;
 use App\Models\PhysicalExam;
+use App\Models\PhysicalExamAttachment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -25,6 +26,11 @@ class PhysicalExamApi extends Controller
     public function store(PhysicalExamRequest $request)
     {
         $record = PhysicalExam::create($request->validated());
+        foreach ($request->attachments as $attachment){
+            $record->attachments()->create([
+                'image' => $attachment['image'],
+            ]);
+        }
         if ($record){
             return response()->json([
                 'data' => $record,
@@ -54,6 +60,25 @@ class PhysicalExamApi extends Controller
     {
         $record = PhysicalExam::findOrFail($request->id);
         $record->update($request->all());
+        foreach ($request->attachments as $attachment){
+            //delete old attachments
+            $oldAttachments = PhysicalExamAttachment::where('physical_exam_id', $record->id)->whereNotIn('image', $request->attachments)->get();
+            foreach ($oldAttachments as $oldAttachment){
+                $oldAttachment->delete();
+            }
+            //update or create new attachments
+            $record->attachments()->updateOrCreate([
+                'physical_exam_id' => $record->id,
+                'image' => $attachment,
+            ]);
+        }
+        // if no attachments are passed, delete all attachments
+        if (count($request->attachments) == 0){
+            $oldAttachments = PhysicalExamAttachment::where('physical_exam_id', $record->id)->get();
+            foreach ($oldAttachments as $oldAttachment){
+                $oldAttachment->delete();
+            }
+        }
         if ($record){
             return response()->json([
                 'data' => $record,

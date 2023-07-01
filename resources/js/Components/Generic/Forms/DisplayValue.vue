@@ -11,7 +11,7 @@ defineProps({
 </script>
 <template>
     <InputField :label="label" :required="required" :errorMsg="errorMsg" autofocus>
-        <div class="text-center p-2 w-full border overflow-ellipsis rounded-md">
+        <div class="text-center p-2 w-full border overflow-ellipsis rounded-md whitespace-nowrap min-w-fit">
             {{ value }}
         </div>
     </InputField>

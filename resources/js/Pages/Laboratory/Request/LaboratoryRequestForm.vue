@@ -12,12 +12,12 @@
                 <SelectElement v-model.number="form.ward" autofocus label="Ward" :required="true" :options="wards" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
             </div>
             <div class="grid grid-cols-1 gap-1">
-                <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <InputTextAuto v-model.number="form.infirmary_id" autofocus :combinedNameId="true" label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
             </div>
-            <div v-if="selctedClient" class="grid grid-cols-2 gap-1">
-<!--                <ViewField label="Infirmary ID" :value="selctedClient.id" class="text-xs" />-->
-                <ViewField label="Sex" :value="selctedClient.sex" class="text-xs capitalize" />
-                <ViewField label="Age" :value="selctedClient.age" class="text-xs" />
+            <div v-if="selctedClient" class="flex justify-between gap-1">
+                <ViewField label="Infirmary ID" :value="selctedClient.id" class="text-sm" />
+                <ViewField label="Sex" :value="selctedClient.sex" class="text-sm capitalize" />
+                <ViewField label="Age" :value="selctedClient.age" class="text-sm" />
             </div>
             <!--end of header form-->
             <!--urinalysis body form-->

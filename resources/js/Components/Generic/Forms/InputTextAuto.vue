@@ -19,7 +19,7 @@
                     @input="filterOptions"
                 />
                 <div class="flex items-center mx-1">
-                    <CloseIcon v-if="query.length" class="right-2 top-2 cursor-pointer w-6 hover:bg-gray-200 hover:shadow-md rounded-md" @click="query = ''; $emit('update:modelValue', null); show = false" />
+                    <CloseIcon v-if="query.length" class="right-2 top-2 cursor-pointer w-6 hover:bg-gray-200 hover:shadow-md rounded-md" @click="query = ''; $emit('update:modelValue', null); show = false;" />
                 </div>
             </div>
             <div v-if="show" class="absolute bg-white z-50 w-fit mt-2 rounded-md shadow-md border p-1 max-h-72 overflow-y-scroll">
@@ -32,7 +32,7 @@
                             class="py-0.5 px-4 cursor-pointer hover:bg-vsu-olive hover:text-white rounded-md"
                             @click="selectOption(opt); $emit('update:modelValue', opt.id);"
                         >
-                            {{ opt.name }}
+                            {{ combinedNameId? opt.id + " - " + opt.name: opt.name }}
                         </div>
                     </div>
                 </div>
@@ -56,6 +56,10 @@ const props = defineProps({
     options: [Array, Function],
     class: String,
     step: Number,
+    combinedNameId: {
+        type: Boolean,
+        default: false,
+    },
     autofocus: Boolean,
     type: {
         type: String,
@@ -71,10 +75,18 @@ const filteredOptions = computed(() =>
     query.value === ''
         ? props.options
         : props.options.filter((option) =>
-            option.name
-                .toString() // Convert the numeric value to string for comparison
-                .toLowerCase()
-                .includes(query.value)
+            // option.name
+            //     .toString() // Convert the numeric value to string for comparison
+            //     .toLowerCase()
+            //     .includes(query.value)
+        //can search by name or id
+        option.name
+            .toString() // Convert the numeric value to string for comparison
+            .toLowerCase()
+            .includes(query.value) || option.id
+            .toString() // Convert the numeric value to string for comparison
+            .toLowerCase()
+            .includes(query.value)
         )
 );
 

@@ -66,18 +66,7 @@ class RadiologyRequestController extends Controller
     private function getClients()
     {
         // get all clients
-        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
-
-//        return new ClientCollection(Client::join('payments', 'payments.infirmary_id', '=', 'clients.infirmary_id')
-//            ->join('payments_service', 'payments_service.payment_id', '=', 'payments.id')
-//            ->leftJoin('hematology_records', function ($join) {
-//                $join->on('hematology_records.or_no', '=', 'payments_service.payment_id')
-//                    ->whereNull('hematology_records.or_no');
-//            })
-//            ->where('payments_service.service_id', 5)
-//            ->selectRaw("clients.infirmary_id AS id, CONCAT(clients.infirmary_id, ' - ', clients.first_name, ' ', clients.last_name) AS name")
-//            ->groupBy('clients.infirmary_id')
-//            ->get());
+        return new ClientCollection(Client::selectRaw('infirmary_id AS id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""),last_name, IFNULL(CONCAT(" ",suffix), ""))) as name, age, sex')->get());
     }
 
     /**

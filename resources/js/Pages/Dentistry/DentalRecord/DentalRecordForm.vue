@@ -1,14 +1,21 @@
 <template>
     <FormSection :data="data" :form="form" :action="action"
-                 index-link="dental.index"
-                 :update-link="data? route('api.dental.update', data.id): null"
-                 :store-link="route('api.dental.store')"
-                 :delete-link="data? route('api.dental.destroy', data.id): null">
+                 index-link="dental.record.index"
+                 :update-link="data? route('api.dental.record.update', data.id): null"
+                 :store-link="route('api.dental.record.store')"
+                 :delete-link="data? route('api.dental.record.destroy', data.id): null">
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <!--header form-->
             <div class="grid grid-cols-2 gap-1">
-                <InputTextAuto v-model="form.infirmary_id" required :autofocus="true"  label="Infirmary No" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <div>
+                    <InputTextAuto v-model="form.infirmary_id" required :autofocus="true" :combinedNameId="true" label="Infirmary No" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null;" />
+                    <div v-if="selectedClient" class="flex justify-between gap-1">
+                        <ViewField label="Infirmary ID" :value="selectedClient.id" class="text-sm" />
+                        <ViewField label="Sex" :value="selectedClient.sex" class="text-sm capitalize" />
+                        <ViewField label="Age" :value="selectedClient.age" class="text-sm" />
+                    </div>
+                </div>
                 <div class="grid grid-cols-2 gap-1">
                     <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
                     <RadioButton v-model="form.is_out_patient" required label="In/Out Patient" :options="InOutPatient" :errorMsg="form.errors.is_out_patient" @input="form.errors['is_out_patient'] = null" />
@@ -276,12 +283,12 @@
                     <InputText v-model="form.flouride_app" required type="number" label="Fluoride Application" :errorMsg="form.errors.flouride_app" @input="form.errors['flouride_app'] = null" />
                 </div>
             </div>
-            <div class="grid grid-cols-2">
+            <div class="flex">
                 <Datepicker v-model="form.examination_date" required label="Examination Date" :errorMsg="form.errors.examination_date" @input="form.errors['examination_date'] = null; computeAge();" />
-                <InputText v-model="form.age_last_birthday" type="number" required label="Age Last Birthday" :errorMsg="form.errors.age_last_birthday" @input="form.errors['age_last_birthday'] = null;" />
-            </div>
-            <div class="grid grid-cols-2 gap-1">
-                <SelectElement v-model="form.dentist" required :options="physicians" label="Dentist" :errorMsg="form.errors.dentist" @input="form.errors['dentist'] = null" />
+                <InputText v-model="form.age_last_birthday" type="number" disabled required label="Age Last Birthday" :errorMsg="form.errors.age_last_birthday" @input="form.errors['age_last_birthday'] = null;" />
+                <div class="w-full">
+                    <SelectElement v-model="form.dentist" required :options="physicians" label="Dentist" :errorMsg="form.errors.dentist" @input="form.errors['dentist'] = null" />
+                </div>
             </div>
             <RadioButton v-model="form.status" required id="status" label="Status" :options="statuses" :errorMsg="form.errors.status" @input="onFocusClearError('status')" />
             <!--end of fecalysis footer form-->
@@ -298,6 +305,7 @@ import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import {BooleanValues, InOutPatient, Lab_Group_4, Lab_Group_6} from "@/Legends/legends";
 import Checkbox from "@/Components/Generic/Forms/Checkbox.vue";
 import Datepicker from "@/Components/Generic/Forms/Datepicker.vue";
+import ViewField from "@/Components/Generic/Forms/ViewField.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -315,7 +323,7 @@ export default {
                 dentist: null,
                 or_no: null,
                 is_out_patient: null,
-                status: null,
+                status: 'pending',
                 //dental result
                 examination_date: null,
                 age_last_birthday: null,
@@ -512,6 +520,7 @@ export default {
             clients: [],
             or_nos: [],
             formTitle: null,
+            selectedClient: null,
         };
     },
     methods: {
@@ -519,16 +528,41 @@ export default {
             this.form.errors[field] = null;
         },
         computeAge() {
-            const examination_date = new Date(this.form.examination_date);
-            const today = new Date();
-            let age = today.getFullYear() - examination_date.getFullYear();
-            const month = today.getMonth() - examination_date.getMonth();
-            if (month < 0 || (month === 0 && today.getDate() < examination_date.getDate())) {
+            // const examination_date = new Date(this.form.examination_date);
+            // const today = new Date();
+            // let age = today.getFullYear() - examination_date.getFullYear();
+            // const month = today.getMonth() - examination_date.getMonth();
+            // if (month < 0 || (month === 0 && today.getDate() < examination_date.getDate())) {
+            //     age--;
+            // }else{
+            //     age = null;
+            // }
+            // this.form.age_last_birthday = age;
+            //compute age using the birthdate
+            if(!this.selectedClient)
+                return;
+            const birthdate = new Date(this.selectedClient.birthdate);
+            const today = this.form.examination_date ? new Date(this.form.examination_date) : new Date();
+            let age = today.getFullYear() - birthdate.getFullYear();
+            const month = today.getMonth() - birthdate.getMonth();
+            if (month < 0 || (month === 0 && today.getDate() < birthdate.getDate())) {
                 age--;
-            }else{
-                age = null;
             }
             this.form.age_last_birthday = age;
+        },
+    },
+    watch: {
+        'form.infirmary_id': function (val) {
+            const temp = this.clients.find(client => client.id === val);
+            if (temp) {
+                this.form.rqst_id = temp.rqst_id;
+                this.selectedClient = temp;
+            }
+            else {
+                this.form.rqst_id = null;
+                this.selectedClient = null;
+            }
+            this.computeAge();
         },
     },
     mounted() {
@@ -542,6 +576,7 @@ export default {
         }
         else {
             this.formTitle = 'Create Dental Record';
+            this.form.examination_date = new Date().toISOString().substr(0, 10);
         }
     }
 };

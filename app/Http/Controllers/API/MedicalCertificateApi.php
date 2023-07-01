@@ -4,18 +4,37 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MedicalCertificateRequest;
+use App\Http\Resources\MedicalRecordResource;
 use App\Models\Client;
 use App\Models\MedicalCertificate;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Inertia\Inertia;
 
 class MedicalCertificateApi extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return Inertia::render('Records/MedicalCertificate',[
+            'data' => new MedicalRecordResource(Client::withCount('hematology')
+                ->withCount('fecalysis')
+                ->withCount('urinalysis')
+                ->withCount('xray')
+                ->where('infirmary_id', request()->id)
+                ->whereYear('created_at', Carbon::now()->year)
+                ->first()),
+            'physicians' => User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',2)->get(),
+        ]);
+    }
+
+    public function printable(Request $request){
+        return Inertia::render('Records/MedicalCertificatePrintable', [
+            'data' => new MedicalRecordResource(MedicalCertificate::with('client')->with('physician')->findOrFail($request->id)),
+        ]);
     }
 
     /**
@@ -73,4 +92,5 @@ class MedicalCertificateApi extends Controller
     {
         //
     }
+
 }

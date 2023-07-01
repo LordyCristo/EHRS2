@@ -8,16 +8,18 @@
         <template #formTitle>{{ formTitle }}</template>
         <template #formBody>
             <div class="grid grid-cols-1">
-                <div class="grid grid-cols-2">
-                    <div class="grid grid-cols-2">
-                        <InputTextAuto v-model="form.infirmary_id" label="Patient" :options="clients" required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
-                        <DisplayValue v-if="selected_client" label="Infirmary ID:" :value="selected_client.id" />
+                <div class="grid grid-cols-2 border-b mb-2 pb-2">
+                    <div>
+                        <InputTextAuto v-model="form.infirmary_id" label="Patient" :combinedNameId="true" :options="clients" required :errorMsg="form.errors.infirmary_id" @input="onFocusClearError('infirmary_id');" />
+                        <div v-if="selected_client" class="flex justify-between gap-1">
+                            <ViewField label="Infirmary ID" :value="selected_client.id" class="text-sm" />
+                            <ViewField label="Sex" :value="selected_client.sex" class="text-sm capitalize" />
+                            <ViewField label="Age" :value="selected_client.age" class="text-sm" />
+                        </div>
                     </div>
-                    <div class="grid grid-cols-4">
-                        <DisplayValue v-if="selected_client" label="Sex:" :value="selected_client.sex" />
-                        <DisplayValue v-if="selected_client" label="Birthdate:" :value="selected_client.birthdate" />
-                        <DisplayValue v-if="selected_client" label="Age:" :value="selected_client.age" />
-                        <DisplayValue v-if="selected_client" label="Civil Status:" :value="selected_client.civil_status" />
+                    <div class="grid grid-cols-2">
+                        <DisplayValue label="Birthdate:" :value="selected_client?selected_client.birthdate:'none'" />
+                        <DisplayValue label="Civil Status:" :value="selected_client?selected_client.civil_status:'none'" />
                     </div>
                 </div>
                 <div class="grid grid-cols-4">
@@ -52,6 +54,18 @@
                 <div>
                     <InputTextAuto v-model="form.examiner" label="Examiner" :errorMsg="form.errors.examiner" :options="physicians" @input="onFocusClearError('examiner');" />
                 </div>
+                <div class="flex flex-col my-2">
+                    <label class="text-sm font-medium text-gray-800 mb-1">Upload Attachement Files</label>
+                    <input type="file" accept="image/jpeg" multiple @change=uploadImage>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                    <template v-for="image in form.attachments">
+                        <div class="relative">
+                            <CloseIcon @click="removeImage(image)" class="absolute m-0.5 bg-vsu-olive bg-opacity-50 rounded-sm text-white w-6 top-0 right-0 cursor-pointer" tooltip="remove" />
+                            <img :src="image"  :alt="image"/>
+                        </div>
+                    </template>
+                </div>
             </div>
         </template>
     </FormSection>
@@ -75,6 +89,8 @@ import {
 } from "@/Legends/legends";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
+import CloseIcon from "@/Components/Icons/CloseIcon.vue";
+import ViewField from "@/Components/Generic/Forms/ViewField.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -121,6 +137,7 @@ export default {
                 spine_extrts_varicosities: null,
                 spine_extrts_feet: null,
                 skin_diseases: null,
+                attachments: [],
                 remarks: null,
             }),
             clients: [],
@@ -132,6 +149,21 @@ export default {
         onFocusClearError(field) {
             this.form.errors[field] = null;
         },
+        uploadImage(e) {
+            //can handle multiple files
+            const files = e.target.files;
+            if (!files.length) return;
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.readAsDataURL(files[i]);
+                reader.onload = e => {
+                    this.form.attachments.push(e.target.result);
+                }
+            }
+        },
+        removeImage(index) {
+            this.form.attachments.splice(index, 1);
+        },
     },
     watch:{
         'form.infirmary_id': function (val) {
@@ -142,6 +174,7 @@ export default {
         if (this.action === 'update') {
             this.data = this.$page.props.data.data;
             this.form = useForm(this.data);
+            this.form.attachments = this.data.attachments.map(attachment => attachment.image);
             this.formTitle = 'Update Physical Exam';
         }else{
             this.formTitle = 'New Physical Exam Report';;

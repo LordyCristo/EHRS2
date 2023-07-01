@@ -58,7 +58,7 @@ class PaymentController extends Controller
     }
 
     private function getClients(){
-        return new ClientCollection(Client::selectRaw("infirmary_id as id, CONCAT(infirmary_id, ' ' , first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name, CONCAT(first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as fullname, email_address, phone")->get());
+        return new ClientCollection(Client::selectRaw("infirmary_id as id, CONCAT(first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as name, CONCAT(first_name, IF(middle_name IS NOT NULL, CONCAT(' ', middle_name), ''),' ', last_name, IF(suffix IS NOT NULL, CONCAT(' ', suffix), '')) as fullname, email_address, phone")->get());
     }
 
     private function getServices(){

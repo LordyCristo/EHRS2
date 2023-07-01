@@ -13,10 +13,15 @@
                 <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
                 <SelectElement v-model="form.ward" label="Ward" :options="WardType" :errorMsg="form.errors.ward" :required="true" @input="form.errors['ward'] = null" />
             </div>
-            <div class="flex gap-3">
+            <div class="flex flex-col">
 <!--                <DisplayValue label="Infirmary ID" :value="form.infirmary_id?form.infirmary_id:'none'" />-->
                 <div class="w-full">
-                    <InputTextAuto v-model.number="form.infirmary_id" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                    <InputTextAuto v-model.number="form.infirmary_id" :combinedNameId="true" autofocus label="Patient" :required="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                </div>
+                <div v-if="selectedClient" class="flex justify-between gap-1">
+                    <ViewField label="Infirmary ID" :value="selectedClient.id" class="text-sm" />
+                    <ViewField label="Sex" :value="selectedClient.sex" class="text-sm capitalize" />
+                    <ViewField label="Age" :value="selectedClient.age" class="text-sm" />
                 </div>
             </div>
             <!--end of header form-->
@@ -61,6 +66,7 @@ import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import {InOutPatient, Lab_Group_4, Lab_Group_6} from "@/Legends/legends";
 import DisplayValue from "@/Components/Generic/Forms/DisplayValue.vue";
+import ViewField from "@/Components/Generic/Forms/ViewField.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -81,7 +87,7 @@ export default {
                 pathologist: 3,
                 or_no: null,
                 ward: null,
-                status: null,
+                status: 'pending',
                 is_out_patient: false,
                 //fecalysis
                 color: null,
@@ -99,6 +105,7 @@ export default {
             physicians: [],
             clients: [],
             or_nos: [],
+            selectedClient: null,
             formTitle: null,
         };
     },
@@ -114,10 +121,14 @@ export default {
     watch: {
         'form.infirmary_id': function (val) {
             const temp = this.clients.find(client => client.id === val);
-            if (temp)
+            if (temp) {
                 this.form.rqst_id = temp.rqst_id;
-            else
+                this.selectedClient = temp;
+            }
+            else {
                 this.form.rqst_id = null;
+                this.selectedClient = null;
+            }
         },
     },
     mounted() {

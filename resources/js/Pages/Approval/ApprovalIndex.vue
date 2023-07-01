@@ -47,7 +47,7 @@ export default {
                 });
         },
         formatName(data) {
-            return data.first_name + ' ' + data.middle_name + ' ' + data.last_name;
+            return `${data.first_name} ${data.middle_name?data.middle_name:''} ${data.last_name} ${data.suffix?data.suffix:''}`;
         }
     },
     mounted() {
@@ -62,7 +62,7 @@ export default {
         <h1 class="font-bold uppercase mb-3 text-xl">New Users that needs approval</h1>
         <div class="grid grid-cols-3 gap-3 h-fit">
             <template v-if="data.length" v-for="user in data">
-                <div class="bg-gray-200 shadow-md rounded-md p-5 border">
+                <div v-if="stringToJSON(user.new_data).first_name && stringToJSON(user.new_data).last_name && stringToJSON(user.new_data).email" class="bg-gray-200 shadow-md rounded-md p-5 border">
                     <div class="min-h-[12rem]">
                         <ViewField  label="Approval ID" :value="user.id" />
                         <ViewField  label="Name" :value="formatName(stringToJSON(user.new_data))" />

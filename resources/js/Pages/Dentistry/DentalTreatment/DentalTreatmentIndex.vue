@@ -7,23 +7,23 @@ export default {
     data: () => ({
         apiLink: {
             // create form
-            create: 'dental.record.create',
+            create: 'dental.treatment.create',
             // edit form
-            edit: 'dental.record.edit',
+            edit: 'dental.treatment.edit',
             //view form
-            //show: 'dental.record.show',
+            show: 'dental.treatment.show',
             // return all data
-            index: 'api.dental.record.index',
+            index: 'api.dental.treatment.index',
             // return data compatible for datatable requests
-            table: 'api.dental.record.table',
+            table: 'api.dental.treatment.table',
             // store data from create form
-            store: 'api.dental.record.store',
+            store: 'api.dental.treatment.store',
             // update data from edit form
-            update: 'api.dental.record.update',
+            update: 'api.dental.treatment.update',
             // delete a specific data
-            destroy: 'api.dental.record.destroy',
+            destroy: 'api.dental.treatment.destroy',
             // import data from excel
-            import: 'api.dental.record.import',
+            import: 'api.dental.treatment.import',
         },
         columnsSmall:[
             {
@@ -56,6 +56,15 @@ export default {
         ],
         columnsLarge: [
             {
+                data: 'id',
+                name:'id',
+                title: 'Dental ID',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-center dt-border-sm px-2 text-center'
+            },
+            {
                 data: 'infirmary_id',
                 name:'infirmary_id',
                 title: 'Infirmary ID',
@@ -74,9 +83,9 @@ export default {
                 className: 'dt-border-sm px-2 ',
             },
             {
-                data: 'status',
-                name: 'status',
-                title: 'Status',
+                data: 'treatment_count',
+                name: 'treatment_count',
+                title: 'Treatments Count',
                 searchable: true,
                 orderable: true,
                 collapsable: true,

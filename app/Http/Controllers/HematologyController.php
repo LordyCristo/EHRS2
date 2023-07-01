@@ -133,7 +133,7 @@ class HematologyController extends Controller
             ->orWhere('laboratory_requests.hematocrit', 1)
             ->orWhere('laboratory_requests.blood_typing', 1)
             ->orWhere('laboratory_requests.wbc_diff_count', 1)
-            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.infirmary_id, " ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
+            ->selectRaw('clients.infirmary_id as id,laboratory_requests.id as rqst_id, CONCAT(CONCAT(clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), clients.last_name, IFNULL(CONCAT(" ",clients.suffix), "")) ) as name, clients.age, clients.sex, clients.infirmary_id')
             ->get());
     }
 }

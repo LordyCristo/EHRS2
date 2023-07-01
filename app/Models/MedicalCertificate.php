@@ -32,4 +32,14 @@ class MedicalCertificate extends Model
         'physician_id',
         'infirmary_id',
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'infirmary_id', 'infirmary_id');
+    }
+
+    public function physician()
+    {
+        return $this->belongsTo(User::class, 'physician_id', 'id');
+    }
 }

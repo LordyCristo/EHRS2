@@ -146,7 +146,7 @@ export default {
 
             <div class="flex flex-row items-center justify-center">
                 <div class="flex flex-col items-center justify-center">
-                    <h1 class="font-bold">Number of Clients with Hematology Record</h1>
+                    <h1 class="font-bold">Number of Patients with Hematology Record</h1>
                     <div v-if="data.hematology" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
                         <BarChart :data="data.hematology" :options="optionsBarchart"></BarChart>
                     </div>
@@ -157,7 +157,7 @@ export default {
             </div>
             <div class="flex flex-row items-center justify-center">
                 <div class="flex flex-col items-center justify-center">
-                    <h1 class="font-bold">Number of Clients with Fecalysis Record</h1>
+                    <h1 class="font-bold">Number of Patients with Fecalysis Record</h1>
                     <div v-if="data.fecalysis" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
                         <BarChart :data="data.fecalysis" :options="optionsBarchart"></BarChart>
                     </div>
@@ -168,7 +168,7 @@ export default {
             </div>
             <div class="flex flex-row items-center justify-center">
                 <div class="flex flex-col items-center justify-center">
-                    <h1 class="font-bold">Number of Clients with Urinalysis Record</h1>
+                    <h1 class="font-bold">Number of Patients with Urinalysis Record</h1>
                     <div v-if="data.urinalysis" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
                         <BarChart :data="data.urinalysis" :options="optionsBarchart"></BarChart>
                     </div>
@@ -179,7 +179,7 @@ export default {
             </div>
             <div class="flex flex-row items-center justify-center">
                 <div class="flex flex-col items-center justify-center">
-                    <h1 class="font-bold">Number of Clients with Radiology Record</h1>
+                    <h1 class="font-bold">Number of Patients with Radiology Record</h1>
                     <div v-if="data.radiology" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
                         <BarChart :data="data.radiology" :options="optionsBarchart"></BarChart>
                     </div>
@@ -190,7 +190,7 @@ export default {
             </div>
             <div class="flex flex-row items-center justify-center">
                 <div class="flex flex-col items-center justify-center">
-                    <h1 class="font-bold">Number of Clients with Dental Record</h1>
+                    <h1 class="font-bold">Number of Patients with Dental Record</h1>
                     <div v-if="data.dental" class="w-[30rem] h-auto px-4 py-5 bg-white rounded-lg mx-auto">
                         <BarChart :data="data.dental" :options="optionsBarchart"></BarChart>
                     </div>

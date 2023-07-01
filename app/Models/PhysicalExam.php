@@ -42,4 +42,14 @@ class PhysicalExam extends Model
         'laboratory',
         'remarks',
     ];
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class, 'infirmary_id', 'infirmary_id');
+    }
+
+    public function attachments()
+    {
+        return $this->hasMany(PhysicalExamAttachment::class, 'physical_exam_id', 'id');
+    }
 }

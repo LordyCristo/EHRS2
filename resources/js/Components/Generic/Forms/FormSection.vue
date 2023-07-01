@@ -1,4 +1,4 @@
-<template>
+ro<template>
     <FormTitleHeader :link="route(props.indexLink)">
         <slot name="formTitle" />
     </FormTitleHeader>
@@ -31,6 +31,7 @@ import SubmitButton from '@/Components/Generic/Buttons/SubmitButton.vue';
 import { pushNotification } from "@/Components/Generic/Modals/NotifBanner.vue";
 import axios from 'axios';
 import { router } from '@/router';
+import {createWebHistory as $router} from "vue-router";
 const props = defineProps({
     indexLink: {
         type: String,
@@ -88,8 +89,11 @@ const goBackToIndex = (response) => {
         // reload the page to get the updated data using the same url but without loading the page.
         location.reload();
     } else {
-        router.push({name: props.indexLink});
-        router.back();
+        // router.push({name: props.indexLink});
+        // router.back();
+
+        // go back to the previous page
+        router.go(-1);
     }
 };
 

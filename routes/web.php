@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\ApprovalApi;
 use App\Http\Controllers\API\ClientApi;
 use App\Http\Controllers\API\DentalApi;
+use App\Http\Controllers\API\DentalTreatmentApi;
 use App\Http\Controllers\API\ERDetailApi;
 use App\Http\Controllers\API\CollegeApi;
 use App\Http\Controllers\API\DegreeProgramApi;
@@ -21,6 +22,7 @@ use App\Http\Controllers\API\ServiceApi;
 use App\Http\Controllers\API\UrinalysisApi;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\DentalController;
+use App\Http\Controllers\DentalTreatmentController;
 use App\Http\Controllers\ERDetailContoller;
 use App\Http\Controllers\CollegeController;
 use App\Http\Controllers\DashboardController;
@@ -127,8 +129,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::post('/', [ClientApi::class, 'store'])->name('api.client.store');
             // Client UPDATE route
             Route::put('/{id}', [ClientApi::class, 'update'])->name('api.client.update');
+            Route::put('/{id}', [ClientApi::class, 'update'])->name('api.client.update');
             // Client DELETE route
-            Route::delete('/{id}', [ClientApi::class, 'destroy'])->name('api.client.destroy');
+            Route::middleware('administrator')->delete('/{id}', [ClientApi::class, 'destroy'])->name('api.client.destroy');
             // Client DATATABLE API route
             Route::get('/all', [ClientApi::class, 'tableApi'])->name('api.client.table');
             // Client import from a CSV file
@@ -138,18 +141,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     // Routes for the Medical Certificates
     Route::prefix('records')->middleware('record.section')->group(callback: function () {
-        Route::get('/medical-certificate/{id}', function (){
-            return Inertia::render('Records/MedicalCertificate',[
-                'data' => new MedicalRecordResource(Client::withCount('hematology')
-                    ->withCount('fecalysis')
-                    ->withCount('urinalysis')
-                    ->withCount('xray')
-                    ->where('infirmary_id', request()->id)
-                    ->whereYear('created_at', Carbon::now()->year)
-                    ->first()),
-                'physicians' => User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',1)->get(),
-            ]);
-        })->name('records.medcert');
+        Route::get('/medical-certificate/{id}', [MedicalCertificateApi::class, 'index'])->name('records.medcert');
+        Route::get('/printable/{id}', [MedicalCertificateApi::class, 'printable'])->name('records.medcert.printable');
         Route::prefix('api')->group(callback: function () {
             Route::post('/new', [MedicalCertificateApi::class, 'store'])->name('api.certificate.store');
             Route::get('/show/{id}', [MedicalCertificateApi::class, 'show'])->name('api.certificate.show');
@@ -196,7 +189,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             // Emergency Room UPDATE route
             Route::put('/{id}', [ERDetailApi::class, 'update'])->name('api.er.update');
             // Emergency Room DELETE route
-            Route::delete('/{id}', [ERDetailApi::class, 'destroy'])->name('api.er.destroy');
+            Route::middleware('administrator')->delete('/{id}', [ERDetailApi::class, 'destroy'])->name('api.er.destroy');
             // Emergency Room DATATABLE API route
             Route::get('/all', [ERDetailApi::class, 'tableApi'])->name('api.er.table');
             // Emergency Room import from a CSV file
@@ -213,7 +206,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/', [PhysicalExamApi::class, 'index'])->name('api.physicalexam.index');
             Route::post('/', [PhysicalExamApi::class, 'store'])->name('api.physicalexam.store');
             Route::put('/{id}', [PhysicalExamApi::class, 'update'])->name('api.physicalexam.update');
-            Route::delete('/{id}', [PhysicalExamApi::class, 'destroy'])->name('api.physicalexam.destroy');
+            Route::middleware('administrator')->delete('/{id}', [PhysicalExamApi::class, 'destroy'])->name('api.physicalexam.destroy');
             Route::get('/all', [PhysicalExamApi::class, 'tableApi'])->name('api.physicalexam.table');
         });
     });
@@ -241,7 +234,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Radiology UPDATE route
                 Route::put('/{id}', [RadiologyRequestApi::class, 'update'])->name('api.radiology.request.update');
                 // Radiology DELETE route
-                Route::delete('/{id}', [RadiologyRequestApi::class, 'destroy'])->name('api.radiology.request.destroy');
+                Route::middleware('administrator')->delete('/{id}', [RadiologyRequestApi::class, 'destroy'])->name('api.radiology.request.destroy');
                 // Radiology DATATABLE API route
                 Route::get('/all', [RadiologyRequestApi::class, 'tableApi'])->name('api.radiology.request.table');
             });
@@ -260,7 +253,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Radiology UPDATE route
                 Route::put('/{id}', [RadiologyResultAPI::class, 'update'])->name('api.radiology.result.update');
                 // Radiology DELETE route
-                Route::delete('/{id}', [RadiologyResultAPI::class, 'destroy'])->name('api.radiology.result.destroy');
+                Route::middleware('administrator')->delete('/{id}', [RadiologyResultAPI::class, 'destroy'])->name('api.radiology.result.destroy');
                 // Radiology DATATABLE API route
                 Route::get('/all', [RadiologyResultAPI::class, 'tableApi'])->name('api.radiology.result.table');
             });
@@ -269,21 +262,44 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
     // Routes for the Dental Section
     Route::prefix('dental')->middleware('dental.section')->group(function(){
-        Route::get('/', [DentalController::class, 'index'])->name('dental.index');
-        Route::get('/new', [DentalController::class, 'create'])->name('dental.create');
-        Route::get('/edit/{id}', [DentalController::class, 'edit'])->name('dental.edit');
-        Route::get('/show/{id}', [DentalController::class, 'show'])->name('dental.show');
-        Route::prefix('api')->group(function (){
-            // Dental GET ALL route
-            Route::get('/', [DentalApi::class, 'index'])->name('api.dental.index');
-            // Dental STORE route
-            Route::post('/', [DentalApi::class, 'store'])->name('api.dental.store');
-            // Dental UPDATE route
-            Route::put('/{id}', [DentalApi::class, 'update'])->name('api.dental.update');
-            // Dental DELETE route
-            Route::delete('/{id}', [DentalApi::class, 'destroy'])->name('api.dental.destroy');
-            // Dental DATATABLE API route
-            Route::get('/all', [DentalApi::class, 'tableApi'])->name('api.dental.table');
+        Route::prefix('dental-records')->group(function (){
+            Route::get('/', [DentalController::class, 'index'])->name('dental.record.index');
+            Route::get('/new', [DentalController::class, 'create'])->name('dental.record.create');
+            Route::get('/edit/{id}', [DentalController::class, 'edit'])->name('dental.record.edit');
+            Route::get('/show/{id}', [DentalController::class, 'show'])->name('dental.record.show');
+            Route::prefix('api')->group(function (){
+                // Dental GET ALL route
+                Route::get('/', [DentalApi::class, 'index'])->name('api.dental.record.index');
+                // Dental STORE route
+                Route::post('/', [DentalApi::class, 'store'])->name('api.dental.record.store');
+                // Dental UPDATE route
+                Route::put('/{id}', [DentalApi::class, 'update'])->name('api.dental.record.update');
+                // Dental DELETE route
+                Route::middleware('administrator')->delete('/{id}', [DentalApi::class, 'destroy'])->name('api.dental.record.destroy');
+                // Dental DATATABLE API route
+                Route::get('/all', [DentalApi::class, 'tableApi'])->name('api.dental.record.table');
+            });
+        });
+
+        Route::prefix('dental-treatment')->group(function (){
+            Route::get('/', [DentalTreatmentController::class, 'index'])->name('dental.treatment.index');
+            Route::get('/new', [DentalTreatmentController::class, 'create'])->name('dental.treatment.create');
+            Route::get('/edit/{id}', [DentalTreatmentController::class, 'edit'])->name('dental.treatment.edit');
+            Route::get('/show/{id}', [DentalTreatmentController::class, 'show'])->name('dental.treatment.show');
+            Route::prefix('api')->group(function (){
+                // Dental GET ALL route
+                Route::get('/', [DentalTreatmentApi::class, 'index'])->name('api.dental.treatment.index');
+                // Dental STORE route
+                Route::post('/', [DentalTreatmentApi::class, 'store'])->name('api.dental.treatment.store');
+                // Dental UPDATE route
+                Route::put('/{id}', [DentalTreatmentApi::class, 'update'])->name('api.dental.treatment.update');
+                // Dental DELETE route
+                Route::middleware('administrator')->delete('/{id}', [DentalTreatmentApi::class, 'destroy'])->name('api.dental.treatment.destroy');
+                // Dental DATATABLE API route
+                Route::get('/all', [DentalTreatmentApi::class, 'tableApi'])->name('api.dental.treatment.table');
+                // Dental treatments by dental record
+                Route::get('/by-record/{id}', [DentalTreatmentApi::class, 'getTreatments'])->name('api.dental.treatments.get');
+            });
         });
     });
 
@@ -313,7 +329,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Fee UPDATE route
                 Route::put('/{id}', [FeeApi::class, 'update'])->name('api.fee.update');
                 // Fee DELETE route
-                Route::delete('/{id}', [FeeApi::class, 'destroy'])->name('api.fee.destroy');
+                Route::middleware('administrator')->delete('/{id}', [FeeApi::class, 'destroy'])->name('api.fee.destroy');
                 // Fee DATATABLE API route
                 Route::get('/all', [FeeApi::class, 'tableApi'])->name('api.fee.table');
                 // Fee import from a CSV file
@@ -336,7 +352,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Payment UPDATE route
                 Route::put('/{id}', [PaymentApi::class, 'update'])->name('api.payment.update');
                 // Payment DELETE route
-                Route::delete('/{id}', [PaymentApi::class, 'destroy'])->name('api.payment.destroy');
+                Route::middleware('administrator')->delete('/{id}', [PaymentApi::class, 'destroy'])->name('api.payment.destroy');
                 // Payment DATATABLE API route
                 Route::get('/all', [PaymentApi::class, 'tableApi'])->name('api.payment.table');
                 // Payment import from a CSV file
@@ -370,7 +386,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Laboratory Request UPDATE route
                 Route::put('/{id}', [LaboratoryRequestApi::class, 'update'])->name('api.laboratory.requests.update');
                 // Laboratory Request DELETE route
-                Route::delete('/{id}', [LaboratoryRequestApi::class, 'destroy'])->name('api.laboratory.requests.destroy');
+                Route::middleware('administrator')->delete('/{id}', [LaboratoryRequestApi::class, 'destroy'])->name('api.laboratory.requests.destroy');
                 // Laboratory Request DATATABLE API route
                 Route::get('/all', [LaboratoryRequestApi::class, 'tableApi'])->name('api.laboratory.requests.table');
                 // Laboratory Request import from a CSV file
@@ -392,7 +408,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Hematology UPDATE route
                 Route::put('/{id}', [HematologyApi::class, 'update'])->name('api.hematology.update');
                 // Hematology DELETE route
-                Route::delete('/{id}', [HematologyApi::class, 'destroy'])->name('api.hematology.destroy');
+                Route::middleware('administrator')->delete('/{id}', [HematologyApi::class, 'destroy'])->name('api.hematology.destroy');
                 // Hematology DATATABLE API route
                 Route::get('/all', [HematologyApi::class, 'tableApi'])->name('api.hematology.table');
                 // Hematology import from a CSV file
@@ -413,7 +429,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Fecalysis UPDATE route
                 Route::put('/{id}', [FecalysisApi::class, 'update'])->name('api.fecalysis.update');
                 // Fecalysis DELETE route
-                Route::delete('/{id}', [FecalysisApi::class, 'destroy'])->name('api.fecalysis.destroy');
+                Route::middleware('administrator')->delete('/{id}', [FecalysisApi::class, 'destroy'])->name('api.fecalysis.destroy');
                 // Fecalysis DATATABLE API route
                 Route::get('/all', [FecalysisApi::class, 'tableApi'])->name('api.fecalysis.table');
                 // Fecalysis import from a CSV file
@@ -434,7 +450,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Urinalysis UPDATE route
                 Route::put('/{id}', [UrinalysisApi::class, 'update'])->name('api.urinalysis.update');
                 // Urinalysis DELETE route
-                Route::delete('/{id}', [UrinalysisApi::class, 'destroy'])->name('api.urinalysis.destroy');
+                Route::middleware('administrator')->delete('/{id}', [UrinalysisApi::class, 'destroy'])->name('api.urinalysis.destroy');
                 // Urinalysis DATATABLE API route
                 Route::get('/all', [UrinalysisApi::class, 'tableApi'])->name('api.urinalysis.table');
                 // Urinalysis import from a CSV file
@@ -467,7 +483,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Colleges UPDATE route
                 Route::put('/{id}', [CollegeApi::class, 'update'])->name('api.college.update');
                 // Colleges DELETE route
-                Route::delete('/{id}', [CollegeApi::class, 'destroy'])->name('api.college.destroy');
+                Route::middleware('administrator')->delete('/{id}', [CollegeApi::class, 'destroy'])->name('api.college.destroy');
                 // Colleges DATATABLE API route
                 Route::get('/all', [CollegeApi::class, 'tableApi'])->name('api.college.table');
                 // Colleges import from a CSV file
@@ -487,7 +503,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Department UPDATE route
                 Route::put('/{id}', [DepartmentApi::class, 'update'])->name('api.department.update');
                 // Department DELETE route
-                Route::delete('/{id}', [DepartmentApi::class, 'destroy'])->name('api.department.destroy');
+                Route::middleware('administrator')->delete('/{id}', [DepartmentApi::class, 'destroy'])->name('api.department.destroy');
                 // Department DATATABLE API route
                 Route::get('/all', [DepartmentApi::class, 'tableApi'])->name('api.department.table');
                 // Department import from a CSV file
@@ -507,7 +523,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Degree Program UPDATE route
                 Route::put('/{id}', [DegreeProgramApi::class, 'update'])->name('api.program.update');
                 // Degree Program DELETE route
-                Route::delete('/{id}', [DegreeProgramApi::class, 'destroy'])->name('api.program.destroy');
+                Route::middleware('administrator')->delete('/{id}', [DegreeProgramApi::class, 'destroy'])->name('api.program.destroy');
                 // Degree Program DATATABLE API route
                 Route::get('/all', [DegreeProgramApi::class, 'tableApi'])->name('api.program.table');
                 // Degree Program import from a CSV file
@@ -527,7 +543,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 // Services UPDATE route
                 Route::put('/{id}', [ServiceApi::class, 'update'])->name('api.service.update');
                 // Services DELETE route
-                Route::delete('/{id}', [ServiceApi::class, 'destroy'])->name('api.service.destroy');
+                Route::middleware('administrator')->delete('/{id}', [ServiceApi::class, 'destroy'])->name('api.service.destroy');
                 // Services DATATABLE API route
                 Route::get('/all', [ServiceApi::class, 'tableApi'])->name('api.service.table');
                 // Services import from a CSV file

@@ -60,6 +60,6 @@ class LaboratoryRequestController extends Controller
 
     public function getPatients()
     {
-        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' ', first_name, ' ', last_name) AS name, age, sex")->orderBy('infirmary_id', 'asc')->get());
+        return new ClientCollection(Client::selectRaw('infirmary_id AS id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""),last_name, IFNULL(CONCAT(" ",suffix), ""))) as name, age, sex')->orderBy('infirmary_id', 'asc')->get());
     }
 }

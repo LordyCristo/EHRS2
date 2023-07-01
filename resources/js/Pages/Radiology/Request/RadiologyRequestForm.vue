@@ -8,7 +8,14 @@
         <template #formBody>
             <!--header form-->
             <div class="grid grid-cols-2 gap-1">
-                <InputTextAuto v-model.number="form.infirmary_id" required label="Infirmary No." :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                <div>
+                    <InputTextAuto v-model.number="form.infirmary_id" required label="Patient" :combinedNameId="true" :options="clients" :errorMsg="form.errors.infirmary_id" @input="form.errors['infirmary_id'] = null" />
+                    <div v-if="selectedClient" class="flex justify-between gap-1">
+                        <ViewField label="Infirmary ID" :value="selectedClient.id" class="text-sm" />
+                        <ViewField label="Sex" :value="selectedClient.sex" class="text-sm capitalize" />
+                        <ViewField label="Age" :value="selectedClient.age" class="text-sm" />
+                    </div>
+                </div>
                 <div class="grid grid-cols-2 gap-1">
                     <InputTextAuto v-model="form.or_no" label="OR No." :options="or_nos" :errorMsg="form.errors.or_no" @input="form.errors['or_no'] = null" />
                     <SelectElement v-model="form.ward" label="Ward" required :options="WardType" :errorMsg="form.errors.ward" @input="form.errors['ward'] = null" />
@@ -46,6 +53,7 @@ import FormSection from "@/Components/Generic/Forms/FormSection.vue";
 import InputTextAuto from "@/Components/Generic/Forms/InputTextAuto.vue";
 import InputTextArea from "@/Components/Generic/Forms/InputTextArea.vue";
 import {WardType} from "@/Legends/legends";
+import ViewField from "@/Components/Generic/Forms/ViewField.vue";
 </script>
 <script>
 import { useForm } from "@inertiajs/vue3";
@@ -62,7 +70,7 @@ export default {
                 or_no: null,
                 rqst_for: null,
                 history: null,
-                rqst_physician: null,
+                rqst_physician: 2,
                 ward: null,
                 status: null,
             }),
@@ -72,11 +80,25 @@ export default {
             or_nos: [],
             clients: [],
             formTitle: null,
+            selectedClient: null,
         };
     },
     methods: {
         onFocusClearError(field) {
             this.form.errors[field] = null;
+        },
+    },
+    watch: {
+        'form.infirmary_id': function (val) {
+            const temp = this.clients.find(client => client.id === val);
+            if (temp) {
+                this.form.rqst_id = temp.rqst_id;
+                this.selectedClient = temp;
+            }
+            else {
+                this.form.rqst_id = null;
+                this.selectedClient = null;
+            }
         },
     },
     mounted() {

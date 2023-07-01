@@ -67,7 +67,7 @@ class DentalController extends Controller
     private function getClients()
     {
         // get all clients
-        return new ClientCollection(Client::selectRaw("infirmary_id AS id, CONCAT(infirmary_id, ' - ', first_name, ' ', last_name) AS name")->get());
+        return new ClientCollection(Client::selectRaw('infirmary_id AS id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""),last_name, IFNULL(CONCAT(" ",suffix), ""))) as name, sex, age, birthdate')->orderBy('infirmary_id')->get());
     }
 
     /**
@@ -88,6 +88,6 @@ class DentalController extends Controller
      */
     public function getPhysicians()
     {
-        return new UserCollection(User::selectRaw('id, CONCAT(first_name, " ", last_name) as name')->where('role',2)->get());
+        return new UserCollection(User::selectRaw('id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""),last_name, IFNULL(CONCAT(" ",suffix), ""))) as name')->where('role',2)->get());
     }
 }

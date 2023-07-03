@@ -99,6 +99,7 @@ const goBackToIndex = (response) => {
 
 
 const storeForm = () => {
+    console.log(props.form);
     axios
         .post(props.storeLink, props.form)
         .then(res => {

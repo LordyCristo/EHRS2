@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DentalCertifcateRequest;
 use App\Http\Requests\DentalRequest;
 use App\Http\Resources\DentalCollection;
 use App\Models\Dental;
+use App\Models\DentalCertificate;
 use App\Models\DentalRecord;
 use Illuminate\Http\Request;
 
@@ -38,6 +40,33 @@ class DentalApi extends Controller
             'message' => 'Dental record created successfully',
             'data' => null,
         ]);
+    }
+
+    /**
+     * Store Dental Certificate
+     */
+    public function certificate(DentalCertifcateRequest $request){
+        $record = DentalCertificate::create($request->validated());
+        if($record){
+            return response()->json([
+                'data' => $record,
+                'notification' => [
+                    'id' => uniqid(),
+                    'show' => true,
+                    'type' => 'success',
+                    'message' => 'Successfully created Medical Certificate with id '.$record->id,
+                ]
+            ])->setStatusCode(201);
+        }
+        return response()->json([
+            'data' => $record,
+            'notification' => [
+                'id' => uniqid(),
+                'show' => true,
+                'type' => 'failed',
+                'message' => 'Failed to create Medical Certificate',
+            ]
+        ])->setStatusCode(200);
     }
 
     /**
@@ -84,7 +113,9 @@ class DentalApi extends Controller
     public function tableApi(Request $request)
     {
         $query = DentalRecord::join('clients', 'dental_records.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('dental_records.*, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
+            ->join('dental_treatment_records', 'dental_treatment_records.dental_record_id', '=', 'dental_records.id')
+            ->groupBy('dental_records.id')
+            ->selectRaw('dental_records.*, COUNT(dental_treatment_records.id) as treatment_count, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

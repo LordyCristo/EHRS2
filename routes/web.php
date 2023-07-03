@@ -267,6 +267,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/new', [DentalController::class, 'create'])->name('dental.record.create');
             Route::get('/edit/{id}', [DentalController::class, 'edit'])->name('dental.record.edit');
             Route::get('/show/{id}', [DentalController::class, 'show'])->name('dental.record.show');
+            Route::get('/printable/{id}', [DentalController::class, 'printable'])->name('dental.record.printable');
             Route::prefix('api')->group(function (){
                 // Dental GET ALL route
                 Route::get('/', [DentalApi::class, 'index'])->name('api.dental.record.index');
@@ -278,6 +279,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
                 Route::middleware('administrator')->delete('/{id}', [DentalApi::class, 'destroy'])->name('api.dental.record.destroy');
                 // Dental DATATABLE API route
                 Route::get('/all', [DentalApi::class, 'tableApi'])->name('api.dental.record.table');
+                // Dental Certificate route
+                Route::post('/dental-certificate/', [DentalApi::class, 'certificate'])->name('api.dental.certificate.store');
             });
         });
 
@@ -286,6 +289,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/new', [DentalTreatmentController::class, 'create'])->name('dental.treatment.create');
             Route::get('/edit/{id}', [DentalTreatmentController::class, 'edit'])->name('dental.treatment.edit');
             Route::get('/show/{id}', [DentalTreatmentController::class, 'show'])->name('dental.treatment.show');
+
             Route::prefix('api')->group(function (){
                 // Dental GET ALL route
                 Route::get('/', [DentalTreatmentApi::class, 'index'])->name('api.dental.treatment.index');

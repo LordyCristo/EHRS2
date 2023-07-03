@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('dental_treatment_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('dental_record_id')->nullable()->constrained('dental_records', 'dental_result_id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('dental_record_id')->nullable()->constrained('dental_records', 'id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('diagnosis');
-            $table->foreignId('service_id')->nullable()->constrained('fees')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->string('service_id');
             $table->string('tooth_location');
             $table->string('operator');
             $table->timestamps();

@@ -11,7 +11,7 @@ export default {
             // edit form
             edit: 'dental.record.edit',
             //view form
-            //show: 'dental.record.show',
+            show: 'dental.record.show',
             // return all data
             index: 'api.dental.record.index',
             // return data compatible for datatable requests
@@ -74,13 +74,22 @@ export default {
                 className: 'dt-border-sm px-2 ',
             },
             {
+                data: 'treatment_count',
+                name: 'treatment_count',
+                title: 'No. of Treatments',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-border-sm px-2 text-center',
+            },
+            {
                 data: 'status',
                 name: 'status',
                 title: 'Status',
                 searchable: true,
                 orderable: true,
                 collapsable: true,
-                className: 'dt-border-sm px-2 uppercase',
+                className: 'dt-border-sm px-2 uppercase text-center',
             },
         ],
     }),

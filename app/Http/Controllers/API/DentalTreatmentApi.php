@@ -7,6 +7,7 @@ use App\Http\Requests\DentalTreatmentRequest;
 use App\Http\Resources\DataCollection;
 use App\Http\Resources\DentalResource;
 use App\Models\Client;
+use App\Models\DentalRecord;
 use App\Models\DentalTreatment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,16 +25,40 @@ class DentalTreatmentApi extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DentalTreatmentRequest $request)
+    public function store(Request $request)
     {
-        $record = DentalTreatment::create($request->validated());
+        $record = $request->all();
+        $dental_record = DentalRecord::findOrFail($request->dental_record_id);
+        //for each row in rows
+        foreach ($request->rows as $row) {
+            //check first if the record already exists
+            $record = DentalTreatment::where('dental_record_id', $request->dental_record_id)
+                ->where('service_id', $row['service_id'])
+                ->where('tooth_location', $row['tooth_location'])
+                ->where('operator', $row['operator'])
+                ->first();
+            if ($record) {
+                //update the record
+                $record->update([
+                    'diagnosis' => $row['diagnosis'],
+                ]);
+                continue;
+            }
+            //create a new record
+            $dental_record->treatments()->create([
+                'diagnosis' => $row['diagnosis'],
+                'service_id' => $row['service_id'],
+                'tooth_location' => $row['tooth_location'],
+                'operator' => $row['operator'],
+            ]);
+        }
         return response()->json([
-            'data' => (new DentalResource($record)),
+            'data' => new DentalResource($record),
             'notification' => [
                 'id' => uniqid(),
                 'show' => true,
                 'type' => $record?'success':'failed',
-                'message' => $record?'Successfully created Dental treatment with id '.$record->id:'Failed to create Dental treatment record',
+                'message' => $record?'Successfully created Dental treatment with id ':'Failed to create Dental treatment record',
             ]
         ])->setStatusCode(201);
     }

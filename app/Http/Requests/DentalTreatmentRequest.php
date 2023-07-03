@@ -23,10 +23,15 @@ class DentalTreatmentRequest extends FormRequest
     {
         return [
             'dental_record_id' => ['required', 'exists:dental_records,id'],
-            'diagnosis' => ['required', 'string'],
-            'service_id' => ['required', 'string'],
-            'tooth_location' => ['required', 'string'],
-            'operator' => ['required', 'string']
+            //check if rows is not empty
+            'rows' => ['required', 'array', 'min:1'],
+            //check if rows is an array of objects
+            'rows.*' => ['required', 'array'],
+            //check if rows is an array of objects with the following keys
+            'rows.*.diagnosis' => ['required', 'string'],
+            'rows.*.service_id' => ['required', 'string'],
+            'rows.*.tooth_location' => ['required', 'string'],
+            'rows.*.operator' => ['required', 'string'],
         ];
     }
 }

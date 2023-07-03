@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ClientCollection;
+use App\Http\Resources\DataCollection;
 use App\Http\Resources\DentalResource;
 use App\Http\Resources\PaymentCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\Client;
+use App\Models\DentalCertificate;
 use App\Models\DentalRecord;
+use App\Models\DentalTreatment;
 use App\Models\Payment;
 use App\Models\PaymentsService;
 use App\Models\User;
@@ -42,7 +45,16 @@ class DentalController extends Controller
     public function show(Request $request)
     {
         return Inertia::render('Dentistry/DentalRecord/ViewDentalRecord',[
-            'data' => new DentalResource(DentalRecord::with('client')->with('dental')->with('dentist')->with('payment')->findOrFail($request->id)),
+            'data' => new DentalResource(DentalRecord::with(['client','dentist'])->findOrFail($request->id)),
+            'dentists' => $this->getPhysicians(),
+            'or_nos' => $this->getOrNos(),
+        ]);
+    }
+
+    public function printable(Request $request)
+    {
+        return Inertia::render('Dentistry/DentalRecord/DentalCertificatePrintable',[
+            'data' => new DentalResource(DentalCertificate::with(['client','dentist','payment'])->findOrFail($request->id)),
         ]);
     }
 
@@ -53,8 +65,9 @@ class DentalController extends Controller
     {
         return Inertia::render('Dentistry/DentalRecord/EditDentalRecord',[
             'data' => new DentalResource(DentalRecord::join('dentals', 'dental_records.dental_result_id', '=', 'dentals.id')
-                ->selectRaw('dental_records.*, dentals.*')
+                ->selectRaw('dental_records.id as dental_record_id, dental_records.*, dentals.*')
                 ->findOrFail($request->id)),
+            'treatments' => new DataCollection(DentalTreatment::where('dental_record_id','=',$request->id)->get()),
             'physicians' => $this->getPhysicians(),
             'clients' => $this->getClients(),
             'or_nos' => $this->getOrNos(),

@@ -16,7 +16,7 @@ export default {
 </script>
 <style>
 .selectElement {
-    @apply sm:p-2 p-1 border w-full overflow-hidden overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300;
+    @apply sm:p-2 p-1 border w-full overflow-ellipsis rounded-md shadow-sm focus:border-vsu-olive focus:ring focus:ring-indigo-200 focus:ring-opacity-50 duration-300;
 }
 </style>
 <template>

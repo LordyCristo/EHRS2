@@ -22,7 +22,7 @@ class DentalRecord extends Model
 
     public function client()
     {
-        return $this->belongsTo(Client::class, 'infirmary_id');
+        return $this->belongsTo(Client::class, 'infirmary_id', 'infirmary_id');
     }
 
     public function dentist()

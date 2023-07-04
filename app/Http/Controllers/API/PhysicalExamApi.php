@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PhysicalExamRequest;
 use App\Http\Resources\PhysicalExamCollection;
+use App\Models\Client;
 use App\Models\PhysicalExam;
 use App\Models\PhysicalExamAttachment;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +26,18 @@ class PhysicalExamApi extends Controller
      */
     public function store(PhysicalExamRequest $request)
     {
-        $record = PhysicalExam::create($request->validated());
+        $record = Client::where('infirmary_id', $request->infirmary_id)->first();
+        if ($request->type === 'student') {
+            $record = $record->physicalExam->create($request->validated());
+        } elseif ($request->type === 'outpatient') {
+            foreach ($request->rows as $row){
+                $record->physicalExam->create($row);
+            }
+        }
+//        elseif ($request->type === 'er') {
+//            $record = PhysicalExam::create($request->validated());
+//        }
+
         foreach ($request->attachments as $attachment){
             $record->attachments()->create([
                 'image' => $attachment['image'],

@@ -113,7 +113,7 @@ class DentalApi extends Controller
     public function tableApi(Request $request)
     {
         $query = DentalRecord::join('clients', 'dental_records.infirmary_id', '=', 'clients.infirmary_id')
-            ->join('dental_treatment_records', 'dental_treatment_records.dental_record_id', '=', 'dental_records.id')
+            ->LeftJoin('dental_treatment_records', 'dental_treatment_records.dental_record_id', '=', 'dental_records.id')
             ->groupBy('dental_records.id')
             ->selectRaw('dental_records.*, COUNT(dental_treatment_records.id) as treatment_count, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();

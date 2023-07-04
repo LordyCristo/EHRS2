@@ -55,7 +55,7 @@
                     <InputTextAuto v-model="form.examiner" label="Examiner" :errorMsg="form.errors.examiner" :options="physicians" @input="onFocusClearError('examiner');" />
                 </div>
                 <div class="flex flex-col my-2">
-                    <label class="text-sm font-medium text-gray-800 mb-1">Upload Attachement Files</label>
+                    <label class="text-sm font-medium text-gray-800 mb-1">Upload Attachment Files</label>
                     <input type="file" accept="image/jpeg" multiple @change=uploadImage>
                 </div>
                 <div class="grid grid-cols-4 gap-2">
@@ -139,6 +139,7 @@ export default {
                 skin_diseases: null,
                 attachments: [],
                 remarks: null,
+                type: 'student',
             }),
             clients: [],
             selected_client: null,

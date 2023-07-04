@@ -13,6 +13,7 @@ class PhysicalExam extends Model
 
     protected $fillable = [
         'infirmary_id',
+        //student
         'examiner',
         'weight',
         'height',
@@ -40,6 +41,11 @@ class PhysicalExam extends Model
         'skin_diseases',
         'radiography',
         'laboratory',
+        //outpatient
+        'history',
+        'treatment',
+        //er
+
         'remarks',
     ];
 

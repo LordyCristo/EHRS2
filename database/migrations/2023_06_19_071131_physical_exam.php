@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('physical_exams', function (Blueprint $table) {
             $table->id();
             $table->foreignId('infirmary_id')->constrained('clients', 'infirmary_id')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('examiner')->constrained('users', 'id')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('examiner')->nullable()->constrained('users', 'id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('weight')->nullable();
             $table->string('height')->nullable();
             $table->string('blood_pressure')->nullable();
@@ -41,6 +41,8 @@ return new class extends Migration
             $table->string('skin_diseases')->nullable();
             $table->string('radiography')->nullable();
             $table->string('laboratory')->nullable();
+            $table->longText('history')->nullable();
+            $table->longText('treatment')->nullable();
             $table->longText('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();

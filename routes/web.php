@@ -200,8 +200,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
     //Routes for physical examination
     Route::prefix('physicalexam')->middleware('physician.nurse')->group(function (){
         Route::get('/', [PhysicalExamController::class, 'index'])->name('physicalexam.index');
-        Route::get('/new', [PhysicalExamController::class, 'create'])->name('physicalexam.create');
-        Route::get('/edit/{id}', [PhysicalExamController::class, 'edit'])->name('physicalexam.edit');
+        Route::get('/new/student', [PhysicalExamController::class, 'student'])->name('student.physicalexam.create');
+        Route::get('/new/outpatient', [PhysicalExamController::class, 'outpatient'])->name('outpatient.physicalexam.create');
+        Route::get('/new/er', [PhysicalExamController::class, 'er'])->name('er.physicalexam.create');
+        Route::get('/edit/{id}', [PhysicalExamController::class, 'edit'])->name('student.physicalexam.edit');
+        Route::get('/ask', [PhysicalExamController::class, 'ask'])->name('physicalexam.ask');
         Route::prefix('/api')->group(function (){
             Route::get('/', [PhysicalExamApi::class, 'index'])->name('api.physicalexam.index');
             Route::post('/', [PhysicalExamApi::class, 'store'])->name('api.physicalexam.store');

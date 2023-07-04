@@ -7,9 +7,9 @@ export default {
     data: () => ({
         apiLink: {
             // create form
-            create: 'physicalexam.create',
+            create: 'physicalexam.ask',
             // edit form
-            edit: 'physicalexam.edit',
+            edit: 'student.physicalexam.edit',
             //view form
             //show: 'radiology.result.show',
             // return all data

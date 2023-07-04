@@ -22,15 +22,33 @@ class PhysicalExamController extends Controller
         return Inertia::render('PhysicalExam/PhysicalExamIndex');
     }
 
+    public function ask()
+    {
+        return Inertia::render('PhysicalExam/AskPhysicalExam');
+    }
+
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function student()
     {
         return Inertia::render('PhysicalExam/NewPhysicalExam',[
             'physicians' => new UserCollection(User::selectRaw('id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""), last_name, IFNULL(CONCAT(" ",suffix), ""))) as name')->get()),
             'clients' => new ClientCollection(Client::selectRaw('infirmary_id as id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""), last_name, IFNULL(CONCAT(" ",suffix), ""))) as name, sex, civil_status, age, birthdate')->get()),
         ]);
+    }
+
+    public function outpatient()
+    {
+        return Inertia::render('PhysicalExam/PhysicalExamOutpatient',[
+            'physicians' => new UserCollection(User::selectRaw('id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""), last_name, IFNULL(CONCAT(" ",suffix), ""))) as name')->get()),
+            'clients' => new ClientCollection(Client::selectRaw('clients.*, infirmary_id as id, CONCAT(CONCAT(first_name, IFNULL(CONCAT(" ",middle_name, " "), ""), last_name, IFNULL(CONCAT(" ",suffix), ""))) as name')->get()),
+        ]);
+    }
+
+    public function er()
+    {
+
     }
 
     /**

@@ -23,11 +23,12 @@ class PhysicalExamRequest extends FormRequest
     {
         return [
             'infirmary_id' => ['required', 'exists:clients,infirmary_id'],
-            'examiner' => ['required', 'exists:users,id'],
-            'weight' => ['required', 'numeric'],
-            'height' => ['required', 'numeric'],
-            'blood_pressure' => ['required', 'string'],
-            'pulse' => ['required', 'string'],
+            //student
+            'examiner' => ['nullable', 'exists:users,id'],
+            'weight' => ['nullable', 'numeric'],
+            'height' => ['nullable', 'numeric'],
+            'blood_pressure' => ['nullable', 'string'],
+            'pulse' => ['nullable', 'string'],
             'prev_illns_oprtn' => ['nullable', 'string'],
             'immnztn_vccntn' => ['nullable', 'string'],
             'head_neck' => ['nullable', 'string'],
@@ -48,6 +49,9 @@ class PhysicalExamRequest extends FormRequest
             'spine_extrts_varicosities' => ['nullable', 'string'],
             'spine_extrts_feet' => ['nullable', 'string'],
             'skin_diseases' => ['nullable', 'string'],
+            //outpatient
+            'history' => ['nullable', 'string'],
+            'treatment' => ['nullable', 'string'],
             'remarks' => ['nullable', 'string'],
         ];
     }

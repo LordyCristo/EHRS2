@@ -271,17 +271,22 @@ export default {
         },
         addRow() {
             //check the formTreatment fields if null
-            if (this.formTreatment.diagnosis === null ||
-                this.formTreatment.service_id === null ||
-                this.formTreatment.tooth_location === null ||
-                this.formTreatment.operator === null)
+            if (this.formTreatment.diagnosis === null)
+                this.formTreatment.errors.diagnosis = 'Required fields';
+            if (this.formTreatment.service_id === null)
+                this.formTreatment.errors.service_id = 'Required fields';
+            if (this.formTreatment.tooth_location === null)
+                this.formTreatment.errors.tooth_location = 'Required fields';
+            if (this.formTreatment.operator === null)
+                this.formTreatment.errors.operator = 'Required fields';
+            if (!this.formTreatment.diagnosis || !this.formTreatment.service_id || !this.formTreatment.tooth_location || !this.formTreatment.operator)
                 return;
             //push the formTreatment to treatmentsData
                 this.formTreatment.rows.push({
                 examination_date: this.formattedDate(this.formTreatment.created_at),
                 diagnosis: this.formTreatment.diagnosis,
                 service_id: this.formTreatment.service_id,
-                tooth_location: this.formTreatment.tooth_location,
+                tooth_location: this.formTreatment. tooth_location,
                 operator: this.formTreatment.operator,
             });
             //clear the formTreatment fields
@@ -384,16 +389,16 @@ export default {
                                     {{formattedDate(formTreatment.created_at)}}
                                 </td>
                                 <td>
-                                    <SelectElement v-model="formTreatment.diagnosis" :options="DentalCondition" required />
+                                    <SelectElement v-model="formTreatment.diagnosis" :options="DentalCondition" required :errorMsg="formTreatment.errors.diagnosis" @input="formTreatment.errors.diagnosis = null" />
                                 </td>
                                 <td>
-                                    <SelectElement v-model="formTreatment.service_id" :options="DentalRestoration" required />
+                                    <SelectElement v-model="formTreatment.service_id" :options="DentalRestoration" required :errorMsg="formTreatment.errors.service_id" @input="formTreatment.errors.service_id = null" />
                                 </td>
                                 <td>
-                                    <InputText v-model="formTreatment.tooth_location" required />
+                                    <InputText v-model="formTreatment.tooth_location" required :errorMsg="formTreatment.errors.tooth_location" @input="formTreatment.errors.tooth_location = null" />
                                 </td>
                                 <td class="flex justify-center items-center gap-2">
-                                    <SelectElement v-model="formTreatment.operator" required :options="DentalOperation" />
+                                    <SelectElement v-model="formTreatment.operator" required :options="DentalOperation" :errorMsg="formTreatment.errors.operator" @input="formTreatment.errors.operator = null" />
                                     <AddIcon class="w-5 h-5 bg-vsu-green text-white rounded-sm" @click="addRow" />
                                 </td>
 <!--                                <td>-->

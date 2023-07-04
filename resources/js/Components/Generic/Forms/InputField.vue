@@ -7,6 +7,10 @@ defineProps({
     label: String,
     errorMsg: [String, Array],
     required: Boolean,
+    showError: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 </script>
@@ -14,7 +18,7 @@ defineProps({
     <div class="flex flex-col m-1">
         <div class="flex justify-between">
             <InputLabel :for="name" :value="label" :required="required" />
-            <InputError :message="errorMsg" />
+            <InputError :message="showError?errorMsg:null" />
         </div>
         <slot />
     </div>

@@ -64,15 +64,15 @@ export default {
             },
         ],
         columnsLarge: [
-            {
-                data: 'id',
-                name:'id',
-                title: 'Record ID',
-                searchable: true,
-                orderable: true,
-                collapsable: false,
-                className: 'dt-center dt-border-sm px-2 text-center'
-            },
+            // {
+            //     data: 'id',
+            //     name:'id',
+            //     title: 'Record ID',
+            //     searchable: true,
+            //     orderable: true,
+            //     collapsable: false,
+            //     className: 'dt-center dt-border-sm px-2 text-center'
+            // },
             {
                 data: 'infirmary_id',
                 name:'infirmary_id',
@@ -90,6 +90,15 @@ export default {
                 orderable: true,
                 collapsable: false,
                 className: 'dt-border-sm px-2 ',
+            },
+            {
+                data: 'form_type',
+                name: 'form_type',
+                title: 'Type',
+                searchable: true,
+                orderable: true,
+                collapsable: false,
+                className: 'dt-border-sm px-2 capitalize text-center',
             },
         ],
     }),

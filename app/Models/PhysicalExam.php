@@ -47,6 +47,7 @@ class PhysicalExam extends Model
         //er
 
         'remarks',
+        'form_type',
     ];
 
     public function client()

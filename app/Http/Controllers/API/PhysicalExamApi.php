@@ -26,20 +26,9 @@ class PhysicalExamApi extends Controller
      */
     public function store(PhysicalExamRequest $request)
     {
-        $record = Client::where('infirmary_id', $request->infirmary_id)->first();
-        if ($request->type === 'student') {
-            $record = $record->physicalExam->create($request->validated());
-        } elseif ($request->type === 'outpatient') {
-            foreach ($request->rows as $row){
-                $record->physicalExam->create($row);
-            }
-        }
-//        elseif ($request->type === 'er') {
-//            $record = PhysicalExam::create($request->validated());
-//        }
-
+        $record = PhysicalExam::create($request->validated());
         foreach ($request->attachments as $attachment){
-            $record->attachments()->create([
+            $record->physicalExam->attachments()->create([
                 'image' => $attachment['image'],
             ]);
         }
@@ -118,8 +107,8 @@ class PhysicalExamApi extends Controller
      */
     public function destroy(Request $request)
     {
-        $record = PhysicalExam::findOrFail($request->id);
-        $record->delete();
+        $ids = explode(',',$request->id);
+        $record = PhysicalExam::destroy($ids);
         if ($record){
             return response()->json([
                 'data' => $record,
@@ -127,7 +116,7 @@ class PhysicalExamApi extends Controller
                     'id' => uniqid(),
                     'show' => true,
                     'type' => 'success',
-                    'message' => 'Successfully deleted Physical Exam with id '.$record->id,
+                    'message' => 'Successfully deleted Physical Exam with id '.$ids,
                 ]
             ])->setStatusCode(201);
         }
@@ -145,7 +134,7 @@ class PhysicalExamApi extends Controller
     public function tableApi(Request $request): JsonResponse
     {
         $query = PhysicalExam::join('clients', 'physical_exams.infirmary_id', '=', 'clients.infirmary_id')
-            ->selectRaw('physical_exams.id, clients.infirmary_id, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
+            ->selectRaw('physical_exams.id, physical_exams.form_type, clients.infirmary_id, CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name');
         $totalRecords = $query->count();
         if ($request->has('search')) {
             $search = $request->input('search');

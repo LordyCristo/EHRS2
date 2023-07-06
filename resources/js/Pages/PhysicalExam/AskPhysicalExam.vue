@@ -21,7 +21,7 @@ export default {
     data: () => ({
         action: 'store',
         clientTypes: [
-            { id:'student', name:'Student', link: 'student.physicalexam.create' },
+            { id:'student', name:'Enrollment', link: 'student.physicalexam.create' },
             { id:'outpatient', name:'Outpatient', link: 'outpatient.physicalexam.create' },
             { id:'er', name:'Emergency Room ', link: 'er.physicalexam.create'}
         ],

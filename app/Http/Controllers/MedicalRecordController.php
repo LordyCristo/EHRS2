@@ -58,7 +58,8 @@ class MedicalRecordController extends Controller
                     $query->orderBy('created_at', 'asc');
                 }])
                 ->with(['physicalExam' => function ($query) {
-                    $query->orderBy('created_at', 'asc');
+                    $query->where('form_type', 'student')
+                    ->orderBy('created_at', 'asc');
                 }])
                 ->selectRaw('clients.*,CONCAT(clients.last_name, ", ", clients.first_name, IFNULL(CONCAT(" ",clients.middle_name, " "), ""), IFNULL(clients.suffix, "")) as name')
                 ->find($request->id))

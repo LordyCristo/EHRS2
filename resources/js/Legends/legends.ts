@@ -19,6 +19,15 @@ export const BroughtBy = Array(
     { id: 'others', name: 'Others' },
     { id: 'unknown', name: 'Unknown' },
 );
+
+export const CARED = Array(
+    {id: 'C', name: 'Carried'},
+    {id: 'A', name: 'Administered'},
+    {id: 'R', name: 'Request Made'},
+    {id: 'E', name: 'Endorsed'},
+    {id: 'D', name: 'Discontinued'},
+);
+
 export const ArrivalCondition = Array(
     //good, fair, poor, shock, comatose, haemorrhagic, doa
     { id: 'good', name: 'Good' },

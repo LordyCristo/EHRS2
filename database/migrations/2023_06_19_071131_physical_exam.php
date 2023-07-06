@@ -43,7 +43,15 @@ return new class extends Migration
             $table->string('laboratory')->nullable();
             $table->longText('history')->nullable();
             $table->longText('treatment')->nullable();
-            $table->enum('form_type', ['student', 'outpatient'])->default('student');
+//            doctors_order: null,
+//                cared: null,
+//                time_posted: null,
+//                nurses_notes: null,
+            $table->longText('doctors_order')->nullable();
+            $table->string('cared')->nullable();
+            $table->time('time_posted')->nullable();
+            $table->longText('nurses_notes')->nullable();
+            $table->enum('form_type', ['student', 'outpatient','er'])->default('student');
             $table->longText('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -21,7 +21,9 @@ class MedicalRecordApi extends Controller
             ->withCount('urinalysis')
             ->withCount('xray')
             ->withCount('dental')
-            ->withCount('physicalExam')
+            ->withCount(['physicalExam' => function ($query) {
+                $query->where('form_type', '=', 'student');
+            }])
             ->get());
     }
 

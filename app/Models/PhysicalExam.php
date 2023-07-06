@@ -45,6 +45,10 @@ class PhysicalExam extends Model
         'history',
         'treatment',
         //er
+        'doctors_order',
+        'cared',
+        'time_posted',
+        'nurses_notes',
 
         'remarks',
         'form_type',

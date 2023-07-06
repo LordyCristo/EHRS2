@@ -98,7 +98,7 @@ export default {
                 searchable: true,
                 orderable: true,
                 collapsable: false,
-                className: 'dt-border-sm px-2 capitalize text-center',
+                className: 'dt-border-sm px-2 uppercase text-center',
             },
         ],
     }),

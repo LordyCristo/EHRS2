@@ -64,7 +64,6 @@
                 <label class="text-sm font-medium text-gray-800 mb-1">Upload Attachment Files</label>
                 <input type="file" accept="image/jpeg" multiple @change=uploadImage>
             </div>
-            {{ form }}
             <div class="grid grid-cols-4 gap-2">
                 <template v-for="image in form.attachments">
                     <div class="relative">

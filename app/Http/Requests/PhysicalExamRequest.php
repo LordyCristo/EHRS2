@@ -53,6 +53,12 @@ class PhysicalExamRequest extends FormRequest
             'history' => ['nullable', 'string'],
             'treatment' => ['nullable', 'string'],
             'remarks' => ['nullable', 'string'],
+            //er
+            'doctors_order' => ['nullable', 'string'],
+            'cared' => ['nullable', 'in:C,A,R,E,D'],
+            'time_posted' => ['nullable', 'string'],
+            'nurses_notes' => ['nullable', 'string'],
+
             'form_type' => ['required', 'in:student,outpatient,er'],
         ];
     }

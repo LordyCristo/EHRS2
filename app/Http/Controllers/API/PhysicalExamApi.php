@@ -28,8 +28,8 @@ class PhysicalExamApi extends Controller
     {
         $record = PhysicalExam::create($request->validated());
         foreach ($request->attachments as $attachment){
-            $record->physicalExam->attachments()->create([
-                'image' => $attachment['image'],
+            $record->attachments()->create([
+                'image' => $attachment,
             ]);
         }
         if ($record){
